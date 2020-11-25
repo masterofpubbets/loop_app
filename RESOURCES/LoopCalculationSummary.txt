@@ -1,0 +1,22 @@
+Declare @Unit nvarchar(50)
+select @unit='u01'
+
+select
+Area
+,count(loopname) as Scope
+,count(l_done) as Done
+,min(l_done) as [Starting Loop Shoot Date]
+,max(l_done) as [Last Loop Shoot Date]
+,datediff(day,min(l_done),max(l_done)) as [Duration(Days)]
+,round(convert(float,count(l_done)) / convert(float,datediff(day,min(l_done),max(l_done))),2) as [Average Loop Shoot (Day)]
+,sum(case when l_done is null and STATUS is not null then 1 else 0 end) as [Number Of Constraints]
+,count(loopname) - count(l_done) as [Pending To Shoot]
+,round(
+(count(loopname) - count(l_done) - sum(case when l_done is null and STATUS is not null then 1 else 0 end)) / 
+((convert(float,count(l_done)) / convert(float,datediff(day,min(l_done),max(l_done)))))
+,0)
+ as [Est.Duration(Days) To Finish Without Constraints]
+from tblinsloop
+where Active=1
+group by Area
+order by area

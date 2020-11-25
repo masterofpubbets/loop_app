@@ -1,0 +1,11 @@
+SELECT 
+[TBL_ID]
+,Area
+,JunctionBox as [TAG]
+,JI_Type as [Type]
+,JI_Description as [Description]
+,JI_Installed as [Installed Date]
+,JI_Installed_con as [Installed Date Confirm]
+,[Active]
+FROM JunctionBox
+order by Area,JunctionBox

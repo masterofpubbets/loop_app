@@ -1,0 +1,7 @@
+select Area
+,case when datediff(day,getdate(),max(tblInsLoop.Planning_FINISH_Date))<0 then 0 else 
+ datediff(day,getdate(),max(tblInsLoop.Planning_FINISH_Date))
+ end as [Remaining Days]
+from tblInsLoop
+group by area
+order by area

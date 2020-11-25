@@ -1,0 +1,11 @@
+SELECT 
+[TBL_ID]
+,Area
+,[TAG]
+,JE_Type as [Type]
+,JE_Description as [Description]
+,JE_Installed as [Installed Date]
+,JE_Installed_con as [Installed Date Confirm]
+,[Active]
+FROM tblEleJunctionBox
+order by Area,TAG

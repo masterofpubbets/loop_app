@@ -1,0 +1,11 @@
+SELECT 'No RFI' as Remark,[Unit],[Loop Name],[Type],[Folder Preparation],tblInsLoop.[Subsystem],tblInsLoop.[Subcontractor]
+,tblInsLoop.STATUS,tblInsLoop.L_Constr_Release as [Const Comp Date]
+FROM [tblILDFB] with (nolock)
+inner join tblInsLoop
+on [tblILDFB].[Loop Name]=tblInsLoop.LoopName
+where [Const. Completed]=1
+and [HCS. Completed]<>1
+and tblInsLoop.HCS_Folder_Ready is null
+and tblInsLoop.Active=1
+and tblInsLoop.STATUS is null
+order by unit

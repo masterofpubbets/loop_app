@@ -1,0 +1,142 @@
+select distinct
+vmap.[Item Area]
+,vmap.[Discipline]
+,vmap.[Type]
+,vmap.[Item]
+,vmap.[Item Subsystem]
+,vmap.[Forecast]
+,vmap.[Available]
+,vmap.[Pulled/Installed]
+,vmap.[Cable Con 1]
+,vmap.[Cable Con 2]
+,vmap.[Calibrated/Tested]
+,vmap.[QC/HCS Released]
+
+from
+(
+SELECT 
+tblInsLoop.Subsystem,tblInsLoop.Area,tblInsLoop.LoopName
+,VILDMAP.Area as [Item Area]
+,case when VILDMAP.Discipline is null then 'No ILD' else VILDMAP.Discipline end as Discipline
+,VILDMAP.Type,VILDMAP.Item,VILDMAP.SubSystem AS [Item Subsystem],VILDMAP.Forecast,VILDMAP.Available
+,VILDMAP.[Pulled/Installed],VILDMAP.[Cable Con 1],VILDMAP.[Cable Con 2],VILDMAP.[Calibrated/Tested],VILDMAP.[QC/HCS Released]
+FROM TBLINSLOOP
+LEFT JOIN 
+(
+SELECT TBLILD.Item,TBLILD.Loop_Name,VMAP.*
+FROM TBLILD 
+LEFT JOIN
+(
+select Area,'Electrical Cable' as Discipline,ec_type as Type,'IC-' + ec_id as Tag,ec_length as Length
+,null AS Forecast,EC_Status as Available,vCableTotal.Pro_Date as [Pulled/Installed]
+,convert(nvarchar (50),eC_Plan_Connected_Date_From) as [Cable Con 1]
+,convert(nvarchar (50),eC_Plan_Connected_Date_To) as [Cable Con 2]
+,convert(nvarchar (50),EC_Megger) as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,'No Mat Info' PO
+,Subsystem,tblEleCableList.TR_QC_Released as [QC/HCS Released]
+from tblEleCableList with (Nolock)
+left join (
+select vCblParProductionTotal_Vendor.tag,vCblParProductionTotal_Vendor.Pro_Date from vCblParProductionTotal_Vendor
+where vCblParProductionTotal_Vendor.Percentage=100
+) as vCableTotal
+on tblEleCableList.EC_ID=vCableTotal.Tag
+
+
+UNION ALL
+select Area,'Instrument Cable' as Discipline,ic_type as Type,'IC-' + ic_id as Tag,ic_length as Length
+,null AS Forecast,iC_Status as Available,vCableTotal.Pro_Date as [Pulled/Installed]
+,convert(nvarchar (50),IC_Plan_Connected_Date_From) as [Cable Con 1]
+,convert(nvarchar (50),IC_Plan_Connected_Date_To) as [Cable Con 2]
+,convert(nvarchar (50),IC_Megger) as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,null as PO
+,Subsystem,tblinsCableList.TR_QC_Released as [QC/HCS Released]
+from tblinsCableList with (Nolock)
+left join (
+select vCblParProductionTotal_Vendor.tag,vCblParProductionTotal_Vendor.Pro_Date from vCblParProductionTotal_Vendor
+where vCblParProductionTotal_Vendor.Percentage=100
+) as vCableTotal
+on tblinsCableList.IC_ID=vCableTotal.Tag
+ 
+
+UNION ALL
+select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblElectricalEquipment.Installed_Date as [QC/HCS Released]
+from tblElectricalEquipment with (Nolock)
+
+
+UNION ALL
+select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblInsEquipment.Installed_Date as [QC/HCS Released]
+from tblInsEquipment with (Nolock)
+
+
+UNION ALL
+select Area,'Electrical JB' as Discipline,JE_Type as Type,Tag,0 as Length
+,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblEleJunctionBox.JE_TRQC as [QC/HCS Released]
+from tblEleJunctionBox with (Nolock)
+
+UNION ALL
+select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
+,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,JunctionBox.JI_TRQC as [QC/HCS Released]
+from JunctionBox with (Nolock)
+
+UNION ALL
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then 'Instrument' else 'Instrument' + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available
+,[Installation_Date] as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,case when Calibration_Type='no' then 'N/A'
+else convert(nvarchar (50),Calibration_Date) end as [Calibrated/Tested]
+,case when hookup_name is null then 'N/A'
+else convert(nvarchar (50),HookUp_Date) end as [Hookup]
+,hookup_name as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblInstruments.Final_Installed_Date as [QC/HCS Released]
+from tblInstruments with (Nolock)
+) AS VMAP
+ON CASE WHEN TBLILD.Item_Type LIKE '%INS%CABLE%' THEN  'IC-' + tblILD.Item ELSE tblILD.Item END =VMAP.Tag
+WHERE TBLILD.Item_Type IS NOT NULL
+) AS VILDMAP
+ON tblInsLoop.LoopName=VILDMAP.Loop_Name
+where tblInsLoop.Active=1
+) as vMap
+left join [HCS10031_PLANNING].[dbo].[getProjectTasks('10031')] as HCS
+on vmap.Item=hcs.ElementCode collate Latin1_General_100_CI_AS
+where hcs.ElementCode is null
+and vmap.Item is not null
+and vmap.[QC/HCS Released] is null

@@ -1,0 +1,3 @@
+SELECT [tbl_id] as ID,[loop_constraint] as [Constraint],[Department],[issued_date] as [Issued Date],[action_by] as [Action By]
+,[forecast_released_date] as [Forecast Date],[released_date] as [Released Date],[Remarks]
+FROM [TREICAKNPC].[dbo].[tblLoopConstraint]

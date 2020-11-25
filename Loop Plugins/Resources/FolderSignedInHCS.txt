@@ -1,0 +1,22 @@
+SELECT 'Folder Signed in HCS' as [Status]
+,CASE WHEN tblInsLoop.Submitted_to_Precom IS NULL THEN 'Not Submitted To Precomm' else convert(nvarchar(50),format(tblInsLoop.Submitted_to_Precom,'dd/MM/yyyy'))
+ end as [Submission To Precomm Date]
+,Area,[LoopName],l_type as [Type],tblInsLoop.[Subsystem],tblInsLoop.[Subcontractor]
+,tblInsLoop.HCS_Folder_Ready as [Signed Date]
+,case when tblInsLoop.STATUS is null then 'Active' else tblInsLoop.STATUS end as [Engineering Status]
+--,count(*) over (order by Area,tblInsLoop.STATUS) as x
+FROM tblInsLoop with (nolock)
+where tblInsLoop.HCS_Folder_Ready is not null
+and tblInsLoop.Active=1
+and l_done is null
+UNION ALL
+SELECT 'Loop Done' as [Status]
+,CASE WHEN tblInsLoop.Submitted_to_Precom IS NULL THEN 'Not Submitted To Precomm' else convert(nvarchar(50),format(tblInsLoop.Submitted_to_Precom,'dd/MM/yyyy'))
+ end as [Submission To Precomm Date]
+,Area,[LoopName],l_type as [Type],tblInsLoop.[Subsystem],tblInsLoop.[Subcontractor]
+,tblInsLoop.HCS_Folder_Ready as [Signed Date]
+,case when tblInsLoop.STATUS is null then 'Active' else tblInsLoop.STATUS end as [Engineering Status]
+--,count(*) over (order by Area,tblInsLoop.STATUS) as x
+FROM tblInsLoop with (nolock)
+where tblInsLoop.Active=1
+and l_done is not null

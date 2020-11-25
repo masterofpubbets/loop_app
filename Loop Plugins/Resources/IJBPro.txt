@@ -1,0 +1,5 @@
+SELECT
+JunctionBox as [TAG]
+,Ji_Installed as [Installed Date]
+,[Active]
+FROM JunctionBox

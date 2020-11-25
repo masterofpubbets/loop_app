@@ -1,0 +1,20 @@
+SELECT 
+[TBL_ID]
+,[Area]
+,[Instrument_Tag] as Tag
+,[Furnished_By] as [Furnished By]
+,case when [Instrument] = 'instrument' then 'Device'
+when [Instrument] is null then 'Accessory' else [Instrument] end as [Type]
+,[Instrument_Type_Desc] as [Description]
+,[Equipment_Name] as [Equipment Name]
+,case when [Calibration_Type] ='no' then 'N/A' else 'Yes' end as [Calibration Scope]
+,[Calibration_Date] as [Calibration Date]
+,[Calibration_Date_co] as [Calibration Date Confirm]
+,[Installation_Date] as [Installation Date]
+,[Installation_Date_co] as [Installation Date Confirmation]
+,case when [hookup_name] is null then 'N/A' else [hookup_name] end as [Hookup Scope]
+,[HookUp_Date] as [HookUp Date]
+,[HookUp_Date_co] as [HookUp Date Confirm]
+,Active
+FROM [tblInstruments]
+order by Area,Instrument_Tag

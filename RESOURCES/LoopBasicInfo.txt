@@ -1,0 +1,10 @@
+SELECT 
+[TBL_ID],[Subsystem],[Area],[Subcontractor]
+,[L_Type] as [Type]
+,[LoopName]
+,[L_Description] as [Description]
+,[L_Done] as [Precomm Done Date]
+,[STATUS] as [Constraint]
+,[Constraints] as [Constraints Description]
+,[Active]
+FROM [tblInsLoop]

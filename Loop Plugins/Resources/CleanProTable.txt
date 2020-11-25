@@ -1,0 +1,13 @@
+UPDATE V
+SET update_err='To Remove'
+FROM
+(
+SELECT 
+[tbl_id],update_err
+FROM [tbl_Update_MileStone]
+INNER JOIN [vCblParProductionTotal_Vendor]
+ON [tbl_Update_MileStone].tag=[vCblParProductionTotal_Vendor].TAG
+WHERE [tbl_Update_MileStone].update_user='userxxx'
+AND [tbl_Update_MileStone].item_type IN (11,31,101)
+AND [ms_3]=Percentage
+) AS V

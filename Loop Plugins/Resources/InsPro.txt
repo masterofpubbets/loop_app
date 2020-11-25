@@ -1,0 +1,9 @@
+SELECT
+[Instrument_Tag] as Tag
+,[Instrument] as [Type]
+,[Equipment_Name] as [For Equipment]
+,[Calibration_Date]
+,[Installation_Date]
+,[HookUp_Date]
+,[Active]
+FROM [tblInstruments]

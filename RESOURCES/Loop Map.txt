@@ -1,0 +1,127 @@
+select tblild.Loop_Name
+,tblild.Item 
+,tblild.Item_Type
+,case when vItems.Type is null then tblild.Item_Type else vItems.Type end as [EICA Type]
+,vItems.PO
+,vItems.Forecast
+,vItems.Available
+,vItems.SubSystem
+,vItems.Length
+,vItems.[Pulled/Installed]
+,vItems.[Cable Con 1]
+,vItems.[Cable Con 2]
+,vItems.[Calibrated/Tested]
+
+FROM tblild
+left join
+(
+select
+Area
+,Discipline
+,Type
+,Tag
+,Length
+,Forecast
+,Available
+,[Pulled/Installed]
+,[Cable Con 1]
+,[Cable Con 2]
+,[Calibrated/Tested]
+,PO
+,Subsystem
+FROM
+(
+select Area,'Electrical Cable' as Discipline,ec_type as Type,ec_id as Tag,ec_length as Length
+,EC_Proc_Arrival_AtSite_Forecasted AS Forecast,EC_Status as Available,EC_Plan_Pulled_Date as [Pulled/Installed]
+,convert(nvarchar (50),eC_Plan_Connected_Date_From) as [Cable Con 1]
+,convert(nvarchar (50),eC_Plan_Connected_Date_To) as [Cable Con 2]
+,convert(nvarchar (50),EC_Megger) as [Calibrated/Tested]
+,case when EC_Proc_TRPO_Number is null then 'No Mat Info' else EC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblEleCableList
+where active=1
+
+UNION ALL
+select Area,'Instrument Cable' as Discipline,ic_type as Type,'IC-' + ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,iC_Plan_Pulled_Date as [Pulled/Installed]
+,convert(nvarchar (50),IC_Plan_Connected_Date_From) as [Cable Con 1]
+,convert(nvarchar (50),IC_Plan_Connected_Date_To) as [Cable Con 2]
+,convert(nvarchar (50),IC_Megger) as [Calibrated/Tested]
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+where active=1 
+
+UNION ALL
+select Area,'Fire and Gas' as Discipline
+,ins_type as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,convert(nvarchar (50),Calibration_Date) as [Calibrated/Tested]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where active=1 and instrument='Building_FG'
+
+UNION ALL
+select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblElectricalEquipment
+where active=1
+
+UNION ALL
+select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInsEquipment
+where active=1
+
+UNION ALL
+select Area,'Electrical JB' as Discipline,JE_Type as Type,Tag,0 as Length
+,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblEleJunctionBox
+where active=1
+
+UNION ALL
+select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
+,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from JunctionBox
+where active=1
+
+UNION ALL
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then 'Accessory/Signal' else 'Accessory/Signal' + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available
+,[Installation_Date] as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,convert(nvarchar (50),Calibration_Date) as [Calibrated/Tested]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where active=1 and ((instrument='instrument') or (Instrument is null))
+) as vItems01
+) as vItems
+on (case when tblild.Item_Type like 'ins cable%' then 'IC-' + tblild.Item else tblild.Item end)  = vItems.Tag

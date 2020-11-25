@@ -1,0 +1,23 @@
+SELECT 
+[TBL_ID]
+,[tblInsCableList].Area
+,[IC_ID] as Tag
+,[IC_Type] as [Type]
+,[Sub_Type] as Subtype
+,[IC_Description] as [Description]
+,[IC_Length] as [Eng. Length]
+,[IC_From] as [From]
+,[IC_To] as [To]
+,vCblParProductionTotal_Vendor.Pro_Date
+,vCblParProductionTotal_Vendor.Percentage
+,[Pulled_con] as [Pulled Confirm]
+,[IC_Plan_Connected_Date_From] as [Connected From Date]
+,[IC_Plan_Connected_Date_From_con] as [Connect From Confirm]
+,[IC_Plan_Connected_Date_To] as [Connected To Date]
+,[IC_Plan_Connected_Date_To_con] as [Connect To Confirm]
+,[IC_Megger] as [Test Date]
+,[IC_Megger_con] as [Test Confirm]
+,[Active]
+FROM [tblInsCableList]
+left join vCblParProductionTotal_Vendor on [tblInsCableList].IC_ID = vCblParProductionTotal_Vendor.Tag
+order by [tblInsCableList].Area,[IC_ID]

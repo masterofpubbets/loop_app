@@ -1,0 +1,12 @@
+SELECT 
+[TBL_ID]
+,Area
+,[TAG]
+,[Type]
+,[Type_Description]
+,[Des]
+,[Installed_Date] as [Installed Date]
+,[Installed_Date_con] as [Installed Date Confirm]
+,[Active]
+FROM tblInsEquipment
+order by Area,TAG

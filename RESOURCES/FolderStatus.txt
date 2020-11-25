@@ -1,0 +1,9 @@
+SELECT [LoopName]
+,case when L_Done is not null then 'Loop Done'
+when Submitted_to_Precom is not null then 'Submitted To Precomm'
+when HCS_Folder_Ready is not null then 'Folder Index Signed'
+when TR_Loop_Folder_QC_Release is not null then 'QC Released' 
+when STATUS is null then 'No Action'
+else STATUS
+end as [Folder Location]
+FROM [tblInsLoop]

@@ -1,0 +1,8 @@
+SELECT 'No RFI' as Remark,[Unit],[Loop Name],[Type],[Folder Preparation],tblInsLoop.[Subsystem],tblInsLoop.[Subcontractor]
+FROM [tblILDFB] with (nolock)
+inner join tblInsLoop
+on [tblILDFB].[Loop Name]=tblInsLoop.LoopName
+where [Const. Completed]=1
+and [HCS. Completed]<>1
+and tblInsLoop.HCS_Folder_Ready is null
+order by unit

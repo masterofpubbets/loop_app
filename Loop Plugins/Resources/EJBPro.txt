@@ -1,0 +1,5 @@
+SELECT
+[TAG]
+,JE_Installed as [Installed Date]
+,[Active]
+FROM tblEleJunctionBox

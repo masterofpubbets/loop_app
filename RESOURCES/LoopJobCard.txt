@@ -1,0 +1,739 @@
+select tblInsLoop.LoopName as [Loop Name],tblInsLoop.Area AS Unit,tblInsLoop.Area,tblInsLoop.L_Type as [Type]
+,tblInsLoop.Folder_Preparation as [Folder Preparation]
+,tblInsLoop.Subsystem,tblInsLoop.Subcontractor
+,tblInsLoop.HCS_Folder_Ready as [Loop Test HCS Final Folder Ready]
+,'' as [LT Supervisor],'' as [QC Coordinator],tblInsLoop.LoopPriority as [Priority],Planning_START_Date as [Target Test Date],Planning_FINISH_Date as [Forecast Test Date]
+--,tblInsLoop.sub_type as [Sub Type]
+--,tblInsLoop.L_Done
+
+,CASE WHEN convert(float,v9.[Total JB]+v9.[Total Instruments]+v9.[Total Cabinet]) =0 THEN 0
+ELSE
+convert(float,v9.[JB Received]+v9.[Ins Received]+v9.[Cabinet Received]) /
+convert(float,v9.[Total JB]+v9.[Total Instruments]+v9.[Total Cabinet])
+END
+AS [Material Status]
+
+,v9.[Total JB],v9.[JB Received],v9.[JB Installed]
+,case when v9.[Total JB]=0 then 1 else convert(float,v9.[JB Installed])/convert(float,v9.[Total JB]) end as [JB%]
+
+,v9.[Multi Cable Total] as [Multi Pair Total],v9.[Multi Pair Pulled],v9.[Multi Pair Connected],v9.[Multi Pair Test]
+,case when v9.[Multi Cable Total]=0 then 1 else convert(float,(v9.[Multi Pair Pulled]+v9.[Multi Pair Connected]+v9.[Multi Pair Test]))/convert(float,(4*v9.[Multi Cable Total])) end  as [MP%]
+
+,v9.[Single Cable Total] as [Single Pair Total],v9.[Single Pair Pulled],v9.[Single Pair Connected],v9.[Single Pair Test]
+,case when v9.[Single Cable Total]=0 then 1 else convert(float,v9.[Single Pair Pulled]+v9.[Single Pair Connected]+v9.[Single Pair Test])/convert(float,4*v9.[Single Cable Total]) end as [SP%]
+
+,v9.[Total Instruments],v9.[Ins Received],v9.[Ins Installed]
+,case when v9.[Total Instruments]=0 then 1 else convert(float,v9.[Ins Installed])/convert(float,v9.[Total Instruments]) end as [Ins%]
+
+,v9.[Total Hook up],v9.[Hookup Done]
+,case when v9.[Total Hook up]=0 then 1 else convert(float,v9.[Hookup Done])/convert(float,v9.[Total Hook up]) end as [Hk%]
+
+,v9.[Total Cabinet],v9.[Cabinet Received],v9.[Cabinet Installed]
+,case when v9.[Total Cabinet]=0 then 1 else convert(float,v9.[Cabinet Installed])/convert(float,v9.[Total Cabinet]) end as [Cab%]
+
+,CASE WHEN 
+convert(float,v9.[Total JB]+3*v9.[Multi Cable Total]+3*v9.[Single Cable Total]+v9.[Total Instruments]+v9.[Total Cabinet]) =0 THEN 0
+ELSE
+CONVERT(float,v9.[JB Installed]+v9.[Multi Pair Pulled]+v9.[Multi Pair Connected]+v9.[Single Pair Pulled]+v9.[Single Pair Connected]+v9.[Ins Installed]
++v9.[Cabinet Installed]) / convert(float,v9.[Total JB]+3*v9.[Multi Cable Total]+3*v9.[Single Cable Total]+v9.[Total Instruments]+v9.[Total Cabinet]) 
+END
+as [Const. Completed]
+
+,'' as [A Items],'' as [A Items Pending],tblInsLoop.TR_Loop_Folder_QC_Release as [QC TR Released],tblInsLoop.Loops_Client_QC_Release as [QC Folder Approval by Client]
+,'' as [TR RFI],tblInsLoop.L_Done as [Loop Done],tblInsLoop.L_FinalApproval as [Client Approval]
+,tblInsLoop.ReInstatement_Date as [ReInstatement Date]
+from tblInsLoop
+LEFT Join
+(
+select [Loop Name]
+,CASE WHEN sum([Total JB]) IS NULL THEN 0 ELSE sum([Total JB]) END as [Total JB]
+,CASE WHEN SUM([JB Received]) IS NULL THEN 0 ELSE SUM([JB Received]) END AS [JB Received]
+,CASE WHEN SUM([JB Installed]) IS NULL THEN 0 ELSE SUM([JB Installed]) END AS [JB Installed]
+,CASE WHEN SUM([JB Released]) IS NULL THEN 0 ELSE SUM([JB Released]) END AS [JB Released]
+
+,CASE WHEN sum([Multi Cable Total]) IS NULL THEN 0 ELSE sum([Multi Cable Total]) END as [Multi Cable Total]
+,CASE WHEN SUM([Multi Pair Received]) IS NULL THEN 0 ELSE SUM([Multi Pair Received]) END AS [Multi Pair Received]
+,CASE WHEN SUM([Multi Pair Pulled]) IS NULL THEN 0 ELSE SUM([Multi Pair Pulled]) END AS [Multi Pair Pulled]
+,CASE WHEN SUM([Multi Pair Connected]) IS NULL THEN 0 ELSE SUM([Multi Pair Connected]) END AS [Multi Pair Connected]
+,CASE WHEN SUM([Multi Pair Test]) IS NULL THEN 0 ELSE SUM([Multi Pair Test]) END AS [Multi Pair Test]
+
+,CASE WHEN sum([Single Cable Total]) IS NULL THEN 0 ELSE sum([Single Cable Total]) END as [Single Cable Total]
+,CASE WHEN SUM([Single Pair Received]) IS NULL THEN 0 ELSE SUM([Single Pair Received]) END AS [Single Pair Received]
+,CASE WHEN SUM([Single Pair Pulled]) IS NULL THEN 0 ELSE SUM([Single Pair Pulled]) END AS [Single Pair Pulled]
+,CASE WHEN SUM([Single Pair Connected]) IS NULL THEN 0 ELSE SUM([Single Pair Connected]) END AS [Single Pair Connected]
+,CASE WHEN SUM([Single Pair Test]) IS NULL THEN 0 ELSE SUM([Single Pair Test]) END AS [Single Pair Test]
+
+,CASE WHEN sum([Total Instruments]) IS NULL THEN 0 ELSE sum([Total Instruments]) END as [Total Instruments]
+,CASE WHEN SUM([Ins Received]) IS NULL THEN 0 ELSE SUM([Ins Received]) END AS [Ins Received]
+,CASE WHEN SUM([Ins Installed]) IS NULL THEN 0 ELSE SUM([Ins Installed]) END AS [Ins Installed]
+
+,CASE WHEN sum([Total Hook up]) IS NULL THEN 0 ELSE sum([Total Hook up]) END as [Total Hook up]
+,CASE WHEN SUM([Hookup Done]) IS NULL THEN 0 ELSE SUM([Hookup Done]) END AS [Hookup Done]
+
+,CASE WHEN sum([Total Cabinet]) IS NULL THEN 0 ELSE sum([Total Cabinet]) END as [Total Cabinet]
+,CASE WHEN SUM([Cabinet Received]) IS NULL THEN 0 ELSE SUM([Cabinet Received]) END AS [Cabinet Received]
+,CASE WHEN SUM([Cabinet Installed]) IS NULL THEN 0 ELSE SUM([Cabinet Installed]) END AS [Cabinet Installed]
+
+From
+(
+
+	--Scope ------------------------------=====================================================*****************************************
+select Loop_Name as [Loop Name]
+,sum(Junctionbox) as [Total JB]
+,0 AS [JB Received]
+,0 AS [JB Installed]
+,0 AS [JB Released]
+
+,sum([Ins Cable-Multi Pair]) as [Multi Cable Total]
+,0 AS [Multi Pair Received]
+,0 AS [Multi Pair Pulled]
+,0 AS [Multi Pair Connected]
+,0 AS [Multi Pair Test]
+
+,sum([Ins Cable-Single Pair]) as [Single Cable Total]
+,0 AS [Single Pair Received]
+,0 AS [Single Pair Pulled]
+,0 AS [Single Pair Connected]
+,0 AS [Single Pair Test]
+
+,CASE WHEN sum(Instrument) IS NULL THEN SUM([Instrument-Accessory])
+WHEN SUM([Instrument-Accessory]) IS NULL THEN sum(Instrument)
+ELSE
+sum(Instrument) + SUM([Instrument-Accessory])
+END
+as [Total Instruments]
+,0 AS [Ins Received]
+,0 AS [Ins Installed]
+
+,sum([Hookup]) as [Total Hook up]
+,0 AS [Hookup Done]
+
+,case when sum([Electrical Equipment]) is null then sum([Panel-Cabinet]) else sum([Panel-Cabinet])+sum([Electrical Equipment]) end as [Total Cabinet]
+,0 AS [Cabinet Received]
+,0 AS [Cabinet Installed]
+
+from
+(
+select loop_name	--vendor cable
+,case when item_type='Ins Cable-Vendor' then 'Ins Cable-Single Pair' else item_type end as item_type
+,count(item) as [Item Scope]
+,count(received) as Received
+,count(done) as [Erected]
+from
+(
+SELECT distinct TblInsLoop.Folder_Preparation,tblInsLoop.L_Done as [Loop Done],tblInsLoop.Area,V4.*
+from tblInsLoop
+Right Join
+(
+select distinct tblild.Loop_Name
+,case when v3.type='Instruments Hookup' then 'Hookup' else tblild.Item_Type end as Item_Type
+,v3.Type as Subtype
+,tblild.Item
+,v3.Length,v3.PO,v3.Forecast,v3.Available as Received,v3.Done,v3.SubSystem
+
+from tblild
+left join 
+(
+select * from 
+(
+select Area,Discipline,Type,Tag,Length,PO
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) 
+when Available is not null then convert(nvarchar (255),Available) else convert(nvarchar (255),Forecast) end as Forecast
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) else convert(nvarchar (255),Available) end as Available
+,Done,Subsystem
+from (
+
+select Area,'Electrical Cable' as Discipline,ec_type as Type,ec_id as Tag,ec_length as Length
+,eC_Proc_Arrival_AtSite_Forecasted AS Forecast,EC_Status as Available,EC_Plan_Pulled_Date as Done
+,case when EC_Proc_TRPO_Number is null then 'No Mat Info' else EC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblEleCableList
+--where active=1
+
+Union All
+
+select Area,'Instrument Cable' as Discipline,replace(ic_type,'vendor','Single Pair') as Type,'I-' + ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,iC_Plan_Pulled_Date as Done
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+--where active=1 
+
+Union All
+select Area,'Fire and Gas' as Discipline
+,ins_type as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where instrument='Building_FG'
+
+Union All
+select Area,'Cable Tray and Cobuits' as Discipline,IN_Tray_Type as Type
+,tag as Tag,IN_Tray_Length as Length
+,null AS Forecast,null as Available,IN_Tray_Installed as Done
+,'No Mat Info' as PO
+,Subsystem
+from tblInsCableTray
+--where active=1 
+
+Union All
+select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblElectricalEquipment
+--where active=1
+
+Union All
+select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInsEquipment
+--where active=1
+
+Union All
+select Area,'Electrical JB' as Discipline,JE_Type as Type,Tag as Tag,0 as Length
+,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblEleJunctionBox
+--where active=1
+
+Union All
+select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
+,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from JunctionBox
+--where active=1 
+
+Union All
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then location else location + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+--where active=1 
+
+Union All
+select Area,'Instruments Hookup' as Discipline
+,'Instruments Hookup' as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,HookUp_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where hookup_name is not null
+-- and active=1 
+
+Union All
+select Area,'Lighting Fixtures' as Discipline,LF_Ref_Desc as Type
+,tag as Tag,0 as Length
+,null AS Forecast,null as Available,[LF_Installed] as Done
+,'No Mat Info' as PO
+,Subsystem
+from tblLightingFixture
+--where active=1 
+
+) as v1
+) as v2
+) as v3
+on (case when tblild.Item_Type in('Ins Cable-Single Pair','Ins Cable-Multi Pair','Ins Cable-Vendor') then 'I-' + tblild.Item else  tblild.Item end)= v3.Tag
+) as v4
+on tblInsLoop.LoopName = v4.Loop_Name
+
+) as v5
+group by loop_name,item_type
+) as v6
+pivot
+(
+sum([item scope]) for [ITEM_TYPE] in (Junctionbox,[Ins Cable-Single Pair],[Ins Cable-Multi Pair],Instrument,Hookup,[Panel-Cabinet],[Electrical Equipment],[Instrument-Accessory])
+) as v7
+group by Loop_Name
+---------------------------------------------------------------------------
+
+--Received ------------------------------=====================================================*****************************************
+Union All
+
+select Loop_Name as [Loop Name]
+,0 as [Total JB]
+,sum(Junctionbox) AS [JB Received]
+,0 AS [JB Installed]
+,0 AS [JB Released]
+
+,0 as [Multi Cable Total]
+,sum([Ins Cable-Multi Pair]) AS [Multi Pair Received]
+,0 AS [Multi Pair Pulled]
+,0 AS [Multi Pair Connected]
+,0 AS [Multi Pair Test]
+
+,0 as [Single Cable Total]
+,sum([Ins Cable-Single Pair]) AS [Single Pair Received]
+,0 AS [Single Pair Pulled]
+,0 AS [Single Pair Connected]
+,0 AS [Single Pair Test]
+
+,0 as [Total Instruments]
+
+,CASE WHEN sum(Instrument) IS NULL THEN SUM([Instrument-Accessory])
+WHEN SUM([Instrument-Accessory]) IS NULL THEN sum(Instrument)
+ELSE
+sum(Instrument) + SUM([Instrument-Accessory])
+END
+AS [Ins Received]
+
+,0 AS [Ins Installed]
+
+,0 as [Total Hook up]
+,0 AS [Hookup Done]
+
+,0 as [Total Cabinet]
+,case when sum([Electrical Equipment]) is null then sum([Panel-Cabinet]) else sum([Panel-Cabinet])+sum([Electrical Equipment]) end AS [Cabinet Received]
+,0 AS [Cabinet Installed]
+
+from
+(
+select loop_name
+,case when item_type='Ins Cable-Vendor' then 'Ins Cable-Single Pair' else item_type end as item_type
+,count(item) as [Item Scope]
+,count(received) as Received
+,count(done) as [Erected]
+from
+(
+SELECT distinct TblInsLoop.Folder_Preparation,tblInsLoop.L_Done as [Loop Done],tblInsLoop.Area,V4.*
+from tblInsLoop
+Right Join
+(
+select distinct tblild.Loop_Name
+,case when v3.type='Instruments Hookup' then 'Hookup' else tblild.Item_Type end as Item_Type
+,v3.Type as Subtype
+,tblild.Item
+,v3.Length,v3.PO,v3.Forecast,v3.Available as Received,v3.Done,v3.SubSystem
+
+from tblild
+left join 
+(
+select * from 
+(
+select Area,Discipline,Type,Tag,Length,PO
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) 
+when Available is not null then convert(nvarchar (255),Available) else convert(nvarchar (255),Forecast) end as Forecast
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) else convert(nvarchar (255),Available) end as Available
+,Done,Subsystem
+from (
+
+select Area,'Electrical Cable' as Discipline,ec_type as Type,ec_id as Tag,ec_length as Length
+,eC_Proc_Arrival_AtSite_Forecasted AS Forecast,EC_Status as Available,EC_Plan_Pulled_Date as Done
+,case when EC_Proc_TRPO_Number is null then 'No Mat Info' else EC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblEleCableList
+--where active=1
+
+Union All
+select Area,'Instrument Cable' as Discipline,replace(ic_type,'vendor','Single Pair') as Type,'I-' + ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,iC_Plan_Pulled_Date as Done
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+--where active=1 
+
+Union All
+select Area,'Fire and Gas' as Discipline
+,ins_type as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where instrument='Building_FG'
+
+Union All
+select Area,'Cable Tray and Cobuits' as Discipline,IN_Tray_Type as Type
+,tag as Tag,IN_Tray_Length as Length
+,null AS Forecast,null as Available,IN_Tray_Installed as Done
+,'No Mat Info' as PO
+,Subsystem
+from tblInsCableTray
+--where active=1 
+
+Union All
+select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblElectricalEquipment
+--where active=1
+
+Union All
+select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInsEquipment
+--where active=1
+
+Union All
+select Area,'Electrical JB' as Discipline,JE_Type as Type,tag as Tag,0 as Length
+,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblEleJunctionBox
+where JE_ArriveSite is not null
+
+Union All
+select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
+,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from JunctionBox
+--where active=1 
+
+Union All
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then location else location + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+--where active=1 
+
+Union All
+select Area,'Instruments Hookup' as Discipline
+,'Instruments Hookup' as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,HookUp_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where hookup_name is not null
+
+Union All
+select Area,'Lighting Fixtures' as Discipline,LF_Ref_Desc as Type
+,tag as Tag,0 as Length
+,null AS Forecast,null as Available,[LF_Installed] as Done
+,'No Mat Info' as PO
+,Subsystem
+from tblLightingFixture
+--where active=1 
+
+) as v1
+) as v2
+) as v3
+on (case when tblild.Item_Type in('Ins Cable-Single Pair','Ins Cable-Multi Pair','Ins Cable-Vendor') then 'I-' + tblild.Item else  tblild.Item end)= v3.Tag
+) as v4
+on tblInsLoop.LoopName = v4.Loop_Name
+
+) as v5
+group by loop_name,item_type
+) as v6
+pivot
+(
+sum([Received]) for [ITEM_TYPE] in ([Junctionbox],[Ins Cable-Single Pair],[Ins Cable-Multi Pair],Instrument,Hookup,[Panel-Cabinet],[Electrical Equipment],[Instrument-Accessory])
+) as v7
+group by Loop_Name
+---------------------------------------------------------------------------
+
+--Done ------------------------------=====================================================*****************************************
+Union All
+
+select Loop_Name as [Loop Name]
+,0 as [Total JB]
+,0 AS [JB Received]
+,sum(Junctionbox) AS [JB Installed]
+,0 AS [JB Released]
+
+
+,0 as [Multi Cable Total]
+,0 AS [Multi Pair Received]
+,sum([Ins Cable-Multi Pair]) AS [Multi Pair Pulled]
+,0 AS [Multi Pair Connected]
+,0 AS [Multi Pair Test]
+
+,0 as [Single Cable Total]
+,0 AS [Single Pair Received]
+,sum([Ins Cable-Single Pair]) AS [Single Pair Pulled]
+,0 AS [Single Pair Connected]
+,0 AS [Single Pair Test]
+
+,0 as [Total Instruments]
+,0 AS [Ins Received]
+
+,CASE WHEN sum(Instrument) IS NULL THEN SUM([Instrument-Accessory])
+WHEN SUM([Instrument-Accessory]) IS NULL THEN sum(Instrument)
+ELSE
+sum(Instrument) + SUM([Instrument-Accessory])
+END
+AS [Ins Installed]
+
+,0 as [Total Hook up]
+,sum([Hookup]) AS [Hookup Done]
+
+,0 as [Total Cabinet]
+,0 AS [Cabinet Received]
+,case when sum([Electrical Equipment]) is null then sum([Panel-Cabinet]) else sum([Panel-Cabinet])+sum([Electrical Equipment]) end AS [Cabinet Installed]
+
+from
+(
+select loop_name
+,case when item_type='Ins Cable-Vendor' then 'Ins Cable-Single Pair' else item_type end as item_type
+,count(item) as [Item Scope]
+,count(received) as Received
+,count(done) as [Erected]
+from
+(
+SELECT distinct TblInsLoop.Folder_Preparation,tblInsLoop.L_Done as [Loop Done],tblInsLoop.Area,V4.*
+from tblInsLoop
+Right Join
+(
+select distinct tblild.Loop_Name
+,case when v3.type='Instruments Hookup' then 'Hookup' else tblild.Item_Type end as Item_Type
+,v3.Type as Subtype
+,tblild.Item
+,v3.Length,v3.PO,v3.Forecast,v3.Available as Received,v3.Done,v3.SubSystem
+
+from tblild
+left join 
+(
+select * from 
+(
+select Area,Discipline,Type,Tag,Length,PO
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) 
+when Available is not null then convert(nvarchar (255),Available) else convert(nvarchar (255),Forecast) end as Forecast
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) else convert(nvarchar (255),Available) end as Available
+,Done,Subsystem
+from (
+
+select Area,'Electrical Cable' as Discipline,ec_type as Type,ec_id as Tag,ec_length as Length
+,eC_Proc_Arrival_AtSite_Forecasted AS Forecast,EC_Status as Available,EC_Plan_Pulled_Date as Done
+,case when EC_Proc_TRPO_Number is null then 'No Mat Info' else EC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblEleCableList
+--where active=1
+
+Union All
+select Area,'Instrument Cable' as Discipline,replace(ic_type,'vendor','Single Pair') as Type,'I-' + ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,iC_Plan_Pulled_Date as Done
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+--where active=1
+
+Union All
+select Area,'Fire and Gas' as Discipline
+,ins_type as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where instrument='Building_FG'
+
+Union All
+select Area,'Cable Tray and Cobuits' as Discipline,IN_Tray_Type as Type
+,tag as Tag,IN_Tray_Length as Length
+,null AS Forecast,null as Available,IN_Tray_Installed as Done
+,'No Mat Info' as PO
+,Subsystem
+from tblInsCableTray
+--where active=1 
+
+Union All
+select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblElectricalEquipment
+--where active=1
+
+Union All
+select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInsEquipment
+--where active=1
+
+Union All
+select Area,'Electrical JB' as Discipline,JE_Type as Type,tag as Tag,0 as Length
+,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblEleJunctionBox
+where JE_Installed is not null
+
+Union All
+select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
+,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from JunctionBox
+where ji_Installed is not null
+
+Union All
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then location else location + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,[Installation_Date] as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+--where active=1 
+
+Union All
+select Area,'Instruments Hookup' as Discipline
+,'Instruments Hookup' as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available,HookUp_Date as Done
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem
+from tblInstruments
+where hookup_name is not null
+
+Union All
+select Area,'Lighting Fixtures' as Discipline,LF_Ref_Desc as Type
+,tag as Tag,0 as Length
+,null AS Forecast,null as Available,[LF_Installed] as Done
+,'No Mat Info' as PO
+,Subsystem
+from tblLightingFixture
+--where active=1 
+
+) as v1
+) as v2
+) as v3
+on (case when tblild.Item_Type in('Ins Cable-Single Pair','Ins Cable-Multi Pair','Ins Cable-Vendor') then 'I-' + tblild.Item else  tblild.Item end)= v3.Tag
+) as v4
+on tblInsLoop.LoopName = v4.Loop_Name
+
+) as v5
+group by loop_name,item_type
+) as v6
+pivot
+(
+sum([Erected]) for [ITEM_TYPE] in (Junctionbox,[Ins Cable-Single Pair],[Ins Cable-Multi Pair],Instrument,Hookup,[Panel-Cabinet],[Electrical Equipment],[Instrument-Accessory])
+) as v7
+group by Loop_Name
+---------------------------------------------------------------------------
+
+--Cable Connected and Megger JB Released ------------------------------=====================================================*****************************************
+Union All
+
+select Loop_Name as [Loop Name]
+,0 as [Total JB]
+,0 AS [JB Received]
+,0 AS [JB Installed]
+,sum([Instrument JB Released]) AS [JB Released]
+
+,0 as [Multi Cable Total]
+,0 AS [Multi Pair Received]
+,0 AS [Multi Pair Pulled]
+,sum([Multi Pair Con1])+sum([Multi Pair Con2]) AS [Multi Pair Connected]
+,sum([Multi Pair Megger]) AS [Multi Pair Test]
+
+,0 as [Single Cable Total]
+,0 AS [Single Pair Received]
+,0 AS [Single Pair Pulled]
+,sum([Single Pair Con1])+sum([Single Pair Con2]) AS [Single Pair Connected]
+,sum([Single Pair Megger]) AS [Single Pair Test]
+
+,0 as [Total Instruments]
+,0 AS [Ins Received]
+,0 AS [Ins Installed]
+
+,0 as [Total Hook up]
+,0 AS [Hookup Done]
+
+,0 as [Total Cabinet]
+,0 AS [Cabinet Received]
+,0 AS [Cabinet Installed]
+
+from
+(
+select loop_name
+,case when item_type='Ins Cable-Vendor' then 'Ins Cable-Single Pair' else item_type end as item_type
+,count(done) as [Connected]
+from
+(
+SELECT distinct TblInsLoop.Folder_Preparation,tblInsLoop.L_Done as [Loop Done],tblInsLoop.Area,V4.*
+from tblInsLoop
+Right Join
+(
+select distinct tblild.Loop_Name
+,case when v3.type='Instruments Hookup' then 'Hookup'
+when v3.type='Multi Pair Con1' then 'Multi Pair Con1'
+when v3.type='Multi Pair Con2' then 'Multi Pair Con2'
+when v3.type='Single Pair Con1' then 'Single Pair Con1'
+when v3.type='Single Pair Con2' then 'Single Pair Con2'
+when v3.type='Multi Pair Megger' then 'Multi Pair Megger'
+when v3.type='Single Pair Megger' then 'Single Pair Megger'
+else tblild.Item_Type end as Item_Type
+,v3.Type as Subtype
+,tblild.Item
+,v3.Length,v3.PO,v3.Forecast,v3.Available as Received,v3.Done,v3.SubSystem
+
+from tblild
+left join 
+(
+select * from 
+(
+select Area,Discipline,Type,Tag,Length,PO
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) 
+when Available is not null then convert(nvarchar (255),Available) else convert(nvarchar (255),Forecast) end as Forecast
+,case when (done is not null) and (Forecast is null) and (Available is null) then convert(nvarchar (255),done) else convert(nvarchar (255),Available) 
+end as Available
+,Done,Subsystem
+from (
+
+select Area,'Instrument JB Released' as Discipline,'JB Released' as Type,JunctionBox as Tag,0 as Length
+,null AS Forecast,null as Available,[JI_TRQC] as Done
+,case when po is null then 'No Mat Info' else po end as PO
+,Subsystem
+from JunctionBox
+--where active=1
+Union All
+select Area,'Instrument Cable Con1' as Discipline,replace(ic_type,'vendor','Single Pair') + ' Con1' as Type,'I-' + ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,[IC_Plan_Connected_Date_From] as Done
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+--where active=1
+Union All
+select Area,'Instrument Cable Con2' as Discipline,replace(ic_type,'vendor','Single Pair') + ' Con2' as Type,ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,[IC_Plan_Connected_Date_To] as Done
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+--where active=1
+Union All
+select Area,'Instrument Cable Megger' as Discipline,replace(ic_type,'vendor','Single Pair') + ' Megger' as Type,ic_id as Tag,ic_length as Length
+,iC_Proc_Arrival_AtSite_Forecasted AS Forecast,iC_Status as Available,[TR_QC_Released] as Done
+,case when iC_Proc_TRPO_Number is null then 'No Mat Info' else iC_Proc_TRPO_Number end as PO
+,Subsystem
+from tblinsCableList
+--where active=1
+) as v1
+) as v2
+) as v3
+on (case when tblild.Item_Type in('Ins Cable-Single Pair','Ins Cable-Multi Pair','Ins Cable-Vendor') then 'I-' + tblild.Item else  tblild.Item end)= v3.Tag
+) as v4
+on tblInsLoop.LoopName = v4.Loop_Name
+
+) as v5
+group by loop_name,item_type
+) as v6
+pivot
+(
+sum([connected]) for [ITEM_TYPE] in ([Multi Pair Con1],[Multi Pair Con2],[Single Pair Con1],[Single Pair Con2],[Multi Pair Megger],[Single Pair Megger],[Instrument JB Released])
+) as v7
+group by Loop_Name
+) as v8
+group by [Loop Name]
+) as v9
+ON tblInsLoop.LoopName = v9.[Loop Name]
+where tblInsLoop.active=1

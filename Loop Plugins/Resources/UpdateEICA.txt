@@ -1,0 +1,917 @@
+--UPDATE INS INSTALLATION
+UPDATE V
+SET V.Installation_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInstruments.Installation_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInstruments WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInstruments.Instrument_Tag
+WHERE [tbl_Update_MileStone].item_type=21
+AND tblInstruments.Installation_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE INS Calibration
+UPDATE V
+SET V.Calibration_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInstruments.Calibration_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInstruments WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInstruments.Instrument_Tag
+WHERE [tbl_Update_MileStone].item_type=22
+AND tblInstruments.Calibration_Date IS NULL
+) AS V
+--
+-------------------------------------------
+GO
+--UPDATE INS HookUp
+UPDATE V
+SET V.HookUp_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInstruments.HookUp_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInstruments WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInstruments.Instrument_Tag
+WHERE [tbl_Update_MileStone].item_type=23
+AND tblInstruments.HookUp_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE INS Final_Installed_Date
+UPDATE V
+SET V.Final_Installed_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInstruments.Final_Installed_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInstruments WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInstruments.Instrument_Tag
+WHERE [tbl_Update_MileStone].item_type=24
+AND tblInstruments.Final_Installed_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--INSTRUMENTS NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblInstruments WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInstruments.Instrument_Tag
+WHERE [tbl_Update_MileStone].item_type IN (21,22,23,24)
+AND tblInstruments.Instrument_Tag IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE elecablelist EC_Plan_Connected_Date_From
+UPDATE V
+SET V.EC_Plan_Connected_Date_From=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblelecablelist.EC_Plan_Connected_Date_From
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type=12
+AND tblelecablelist.EC_Plan_Connected_Date_From IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE elecablelist EC_Plan_Connected_Date_To
+UPDATE V
+SET V.EC_Plan_Connected_Date_To=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblelecablelist.EC_Plan_Connected_Date_To
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type=13
+AND tblelecablelist.EC_Plan_Connected_Date_To IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE elecablelist EC_Megger
+UPDATE V
+SET V.EC_Megger=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblelecablelist.EC_Megger
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type=14
+AND tblelecablelist.EC_Megger IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE elecablelist TR_QC_Released
+UPDATE V
+SET V.TR_QC_Released=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblelecablelist.TR_QC_Released
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type=15
+AND tblelecablelist.TR_QC_Released IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE elecablelist EC_Cable_Gland_From
+UPDATE V
+SET V.EC_Cable_Gland_From=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblelecablelist.EC_Cable_Gland_From
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type=16
+AND tblelecablelist.EC_Cable_Gland_From IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE elecablelist EC_Cable_Gland_To
+UPDATE V
+SET V.EC_Cable_Gland_To=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblelecablelist.EC_Cable_Gland_To
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type=17
+AND tblelecablelist.EC_Cable_Gland_To IS NULL
+) AS V
+---------------------------------------------
+GO
+--elecablelist NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblelecablelist WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblelecablelist.EC_ID
+WHERE [tbl_Update_MileStone].item_type IN (12,13,14,15,16,17)
+AND tblelecablelist.EC_ID IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsCableList IC_Plan_Connected_Date_From
+UPDATE V
+SET V.IC_Plan_Connected_Date_From=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsCableList.IC_Plan_Connected_Date_From
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type=32
+AND tblInsCableList.IC_Plan_Connected_Date_From IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsCableList IC_Plan_Connected_Date_To
+UPDATE V
+SET V.IC_Plan_Connected_Date_To=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsCableList.IC_Plan_Connected_Date_To
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type=33
+AND tblInsCableList.IC_Plan_Connected_Date_To IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsCableList IC_Megger
+UPDATE V
+SET V.IC_Megger=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsCableList.IC_Megger
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type=34
+AND tblInsCableList.IC_Megger IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsCableList IC_Cable_Gland_From
+UPDATE V
+SET V.IC_Cable_Gland_From=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsCableList.IC_Cable_Gland_From
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type=35
+AND tblInsCableList.IC_Cable_Gland_From IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsCableList IC_Cable_Gland_TO
+UPDATE V
+SET V.IC_Cable_Gland_TO=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsCableList.IC_Cable_Gland_TO
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type=36
+AND tblInsCableList.IC_Cable_Gland_TO IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsCableList TR_QC_Released
+UPDATE V
+SET V.TR_QC_Released=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsCableList.TR_QC_Released
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type=37
+AND tblInsCableList.TR_QC_Released IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblInsCableList NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblInsCableList WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsCableList.IC_ID
+WHERE [tbl_Update_MileStone].item_type IN (31,32,33,34,35,36,37)
+AND tblInsCableList.IC_ID IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE JunctionBox JI_Installed
+UPDATE V
+SET V.JI_Installed=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,JunctionBox.JI_Installed
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN JunctionBox WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=JunctionBox.JunctionBox
+WHERE [tbl_Update_MileStone].item_type=61
+AND JunctionBox.JI_Installed IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE JunctionBox JI_Frame_Installed
+UPDATE V
+SET V.JI_Frame_Installed=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,JunctionBox.JI_Frame_Installed
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN JunctionBox WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=JunctionBox.JunctionBox
+WHERE [tbl_Update_MileStone].item_type=62
+AND JunctionBox.JI_Frame_Installed IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE JunctionBox JI_TRQC
+UPDATE V
+SET V.JI_TRQC=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,JunctionBox.JI_TRQC
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN JunctionBox WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=JunctionBox.JunctionBox
+WHERE [tbl_Update_MileStone].item_type=63
+AND JunctionBox.JI_TRQC IS NULL
+) AS V
+---------------------------------------------
+GO
+--JunctionBox NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN JunctionBox WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=JunctionBox.JunctionBox
+WHERE [tbl_Update_MileStone].item_type IN (63,62,61)
+AND JunctionBox.JunctionBox IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblMotor installed_date
+UPDATE V
+SET V.installed_date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblMotor.installed_date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMotor WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMotor.TAG 
+WHERE [tbl_Update_MileStone].item_type=71
+AND tblMotor.installed_date IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblMotor motor_test_date
+UPDATE V
+SET V.motor_test_date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblMotor.motor_test_date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMotor WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMotor.TAG 
+WHERE [tbl_Update_MileStone].item_type=72
+AND tblMotor.motor_test_date IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblMotor solo_run_date
+UPDATE V
+SET V.solo_run_date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblMotor.solo_run_date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMotor WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMotor.TAG 
+WHERE [tbl_Update_MileStone].item_type=73
+AND tblMotor.solo_run_date IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblMotor NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblMotor WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMotor.TAG 
+WHERE [tbl_Update_MileStone].item_type IN (73,72,71)
+AND tblMotor.TAG IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop L_Constr_Release
+UPDATE V
+SET V.L_Constr_Release=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.L_Constr_Release
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=90
+AND tblInsLoop.L_Constr_Release IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop L_Done
+UPDATE V
+SET V.L_Done=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.L_Done
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=91
+AND tblInsLoop.L_Done IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop TR_Loop_Folder_QC_Release
+UPDATE V
+SET V.TR_Loop_Folder_QC_Release=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.TR_Loop_Folder_QC_Release
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=92
+AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Punch_To_SubContractor
+UPDATE V
+SET V.Punch_To_SubContractor=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Punch_To_SubContractor
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=93
+AND tblInsLoop.Punch_To_SubContractor IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop SubContractor_To_Cons
+UPDATE V
+SET V.SubContractor_To_Cons=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.SubContractor_To_Cons
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=94
+AND tblInsLoop.SubContractor_To_Cons IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Loops_Client_QC_Release
+UPDATE V
+SET V.Loops_Client_QC_Release=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Loops_Client_QC_Release
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=95
+AND tblInsLoop.Loops_Client_QC_Release IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Folder_Preparation
+UPDATE V
+SET V.Folder_Preparation=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Folder_Preparation
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=96
+AND tblInsLoop.Folder_Preparation IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop HCS_Folder_Ready
+UPDATE V
+SET V.HCS_Folder_Ready=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.HCS_Folder_Ready
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=97
+AND tblInsLoop.HCS_Folder_Ready IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop L_FinalApproval
+UPDATE V
+SET V.L_FinalApproval=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.L_FinalApproval
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=98
+AND tblInsLoop.L_FinalApproval IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop HCS_Submitted_To_Client
+UPDATE V
+SET V.HCS_Submitted_To_Client=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.HCS_Submitted_To_Client
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=99
+AND tblInsLoop.HCS_Submitted_To_Client IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Folder_Client_Approved
+UPDATE V
+SET V.Folder_Client_Approved=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Folder_Client_Approved
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=910
+AND tblInsLoop.Folder_Client_Approved IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Submitted_to_Precom
+UPDATE V
+SET V.Submitted_to_Precom=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Submitted_to_Precom
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=911
+AND tblInsLoop.Submitted_to_Precom IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Submitted_To_Client_Precom
+UPDATE V
+SET V.Submitted_To_Client_Precom=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Submitted_To_Client_Precom
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=912
+AND tblInsLoop.Submitted_To_Client_Precom IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Client_Precom_Approved
+UPDATE V
+SET V.Client_Precom_Approved=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Client_Precom_Approved
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=913
+AND tblInsLoop.Client_Precom_Approved IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Submitted_For_Certificate
+UPDATE V
+SET V.Submitted_For_Certificate=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Submitted_For_Certificate
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=914
+AND tblInsLoop.Submitted_For_Certificate IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Precom_Reject
+UPDATE V
+SET V.Precom_Reject=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Precom_Reject
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=915
+AND tblInsLoop.Precom_Reject IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Client_Precom_Reject
+UPDATE V
+SET V.Client_Precom_Reject=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Client_Precom_Reject
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=916
+AND tblInsLoop.Client_Precom_Reject IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsLoop Client_Reject
+UPDATE V
+SET V.Client_Reject=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsLoop.Client_Reject
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type=917
+AND tblInsLoop.Client_Reject IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblInsLoop NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblInsLoop WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsLoop.LoopName 
+WHERE [tbl_Update_MileStone].item_type LIKE '9%'
+AND tblInsLoop.LoopName IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblElectricalEquipment Installed_Date
+UPDATE V
+SET V.Installed_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblElectricalEquipment.Installed_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblElectricalEquipment WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblElectricalEquipment.TAG 
+WHERE [tbl_Update_MileStone].item_type=111
+AND tblElectricalEquipment.Installed_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblElectricalEquipment NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblElectricalEquipment WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblElectricalEquipment.TAG 
+WHERE [tbl_Update_MileStone].item_type=111
+AND tblElectricalEquipment.TAG IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblEleJunctionBox JE_Installed
+UPDATE V
+SET V.JE_Installed=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblEleJunctionBox.JE_Installed
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblEleJunctionBox WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblEleJunctionBox.TAG 
+WHERE [tbl_Update_MileStone].item_type=112
+AND tblEleJunctionBox.JE_Installed IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblEleJunctionBox NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblEleJunctionBox WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblEleJunctionBox.TAG 
+WHERE [tbl_Update_MileStone].item_type=112
+AND tblEleJunctionBox.TAG IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblInsEquipment Installed_Date
+UPDATE V
+SET V.Installed_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblInsEquipment.Installed_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblInsEquipment WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsEquipment.TAG 
+WHERE [tbl_Update_MileStone].item_type=211
+AND tblInsEquipment.Installed_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblInsEquipment NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblInsEquipment WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblInsEquipment.TAG 
+WHERE [tbl_Update_MileStone].item_type=211
+AND tblInsEquipment.TAG IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblLightingFixture lf_Installed
+UPDATE V
+SET V.lf_Installed=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblLightingFixture.lf_Installed
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblLightingFixture WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblLightingFixture.TAG 
+WHERE [tbl_Update_MileStone].item_type=113
+AND tblLightingFixture.lf_Installed IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblLightingFixture not in eica
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+LEFT JOIN tblLightingFixture WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblLightingFixture.TAG 
+WHERE [tbl_Update_MileStone].item_type=113
+AND tblLightingFixture.TAG IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblMSCCable Glanding_FROM_Date
+UPDATE V
+SET V.Glanding_FROM_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblMSCCable.Glanding_FROM_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMSCCable WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMSCCable.TAG 
+WHERE [tbl_Update_MileStone].item_type=102
+AND tblMSCCable.Glanding_FROM_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblMSCCable Connection_From_Date
+UPDATE V
+SET V.Connection_From_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblMSCCable.Connection_From_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMSCCable WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMSCCable.TAG 
+WHERE [tbl_Update_MileStone].item_type=103
+AND tblMSCCable.Connection_From_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--UPDATE tblMSCCable QCReleased_Date
+UPDATE V
+SET V.QCReleased_Date=V.update_date
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+,tblMSCCable.QCReleased_Date
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMSCCable WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMSCCable.TAG 
+WHERE [tbl_Update_MileStone].item_type=104
+AND tblMSCCable.QCReleased_Date IS NULL
+) AS V
+---------------------------------------------
+GO
+--tblMSCCable NOT IN EICA
+UPDATE V
+SET V.[update_err]='NOT IN EICA'
+FROM
+(
+SELECT 
+[item_type],[tbl_Update_MileStone].[tag],[ms_1],[ms_2],[ms_3],[update_user],[update_date],[update_err],[reported_by],[ms_4]
+FROM [tbl_Update_MileStone] WITH (NOLOCK)
+INNER JOIN tblMSCCable WITH (NOLOCK)
+ON [tbl_Update_MileStone].TAG=tblMSCCable.TAG 
+WHERE [tbl_Update_MileStone].item_type IN (104,102,103)
+AND tblMSCCable.TAG IS NULL
+) AS V
+---------------------------------------------

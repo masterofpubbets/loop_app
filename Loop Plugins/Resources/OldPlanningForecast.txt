@@ -1,0 +1,25 @@
+select
+[tblActIDS].[ActName],[tblActIDS].[EICA_Area]
+,vEQ.*
+FROM
+(
+SELECT 'Ele' as Discipline,[TAG],[Type],[Type_Description]
+,IC_Plan_P6_ActID_Install
+,ForeCast_Date,Arrived_Date
+,[Planned_Finished_Date]
+,[Actual_Forecast_Date]
+FROM [tblElectricalEquipment]
+where [Actual_Forecast_Date] <= getdate()
+and Installed_Date is null and active=1
+UNION
+SELECT 'Ins' as Discipline,[TAG],[Type],[Type_Description]
+,IC_Plan_P6_ActID_Install
+,ForeCast_Date,Arrived_Date
+,[Planned_Finished_Date]
+,[Actual_Forecast_Date]
+FROM tblInsEquipment
+where [Actual_Forecast_Date] <= getdate()
+and Installed_Date is null and active=1
+) as vEQ
+inner join [tblActIDS]
+on vEQ.IC_Plan_P6_ActID_Install = [tblActIDS].[ActID]

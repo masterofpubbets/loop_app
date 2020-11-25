@@ -1,0 +1,5 @@
+SELECT [tbl_id] as ID,[tblConstraints].cons_name as [Constraint],tblDepartments.dep_name as [Department],[issued_date] as [Issued Date],[action_by] as [Action By]
+,[forecast_released_date] as [Forecast Date],[released_date] as [Released Date],[Remarks]
+FROM [tblLoopConstraint]
+inner join tblDepartments on [tblLoopConstraint].dep_id = tblDepartments.dep_id
+inner join [tblConstraints] on [tblLoopConstraint].cons_id = [tblConstraints].cons_id

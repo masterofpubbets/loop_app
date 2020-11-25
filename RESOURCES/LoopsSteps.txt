@@ -1,0 +1,298 @@
+declare @wk date
+select @wk=tmp_date from [tblTMP] where tmp_id=1
+
+select vloop.Area as Unit
+,vArea.Description
+
+,SUM(SCOPE) as Scope
+,SUM([Loop Test Construction Finished Cumm]) as [Construction Finished]
+,SUM([Loop Test TR QC Punched Cumm]) as [QC Released]
+,SUM([Loop Test HCS Folder Ready Cumm]) as [HCS Folder Ready]
+,sum([Ready For Loop Cumm]) as  [Submitted To Precomm]
+,SUM([Tested Loop Test Cumm]) as [Loop Done]
+
+
+
+
+From
+(
+select Area
+,Count(loopname) as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+group by Area
+
+Union
+
+select Area
+,0 as Scope
+
+,count(Folder_Preparation) as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,count(L_Constr_Release) as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,count(TR_Loop_Folder_QC_Release) as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,count(hcs_folder_ready) as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,count(l_done) as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,count(L_FinalApproval) as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,count(client_precom_approved) as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+group by Area
+
+UNION
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,count(Folder_Preparation) as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and Folder_Preparation between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+UNION
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,count(L_Constr_Release) as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and L_Constr_Release between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+UNION
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,count(TR_Loop_Folder_QC_Release) as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and TR_Loop_Folder_QC_Release between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+UNION
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,count(hcs_folder_ready) as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and hcs_folder_ready between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+UNION
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,count(l_done) as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and l_done between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+UNION
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,count(L_FinalApproval) as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,0 as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and L_FinalApproval between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+Union
+select Area
+,0 as Scope
+
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready WK]
+
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+
+,0 as [Ready For Loop Cumm]
+,count(client_precom_approved) as [Ready For Loop WK]
+
+from tblInsLoop
+where active=1
+and ((status not like 'on hold%') or (STATUS is null))
+and client_precom_approved between DATEADD(DAY,-6,@wk) and @wk
+group by Area
+
+) as vLoop
+Inner Join 
+(
+select Area.Area,Area.Description,Area.[Priority] from Area
+) as vArea
+on vLoop.Area = vArea.Area
+
+
+Group by vloop.Area,vArea.Description,vArea.[Priority]
+order by vArea.[Priority]

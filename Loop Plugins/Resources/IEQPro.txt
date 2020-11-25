@@ -1,0 +1,6 @@
+SELECT
+[TAG]
+,[Type]
+,[Installed_Date]
+,[Active]
+FROM [tblInsEquipment]

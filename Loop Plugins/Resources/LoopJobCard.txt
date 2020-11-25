@@ -1,0 +1,272 @@
+IF OBJECT_ID('tempdb..#Loop') IS NOT NULL
+DROP TABLE #Loop
+Create table #Loop
+(
+Loop_Name nvarchar (50)
+,Discipline nvarchar (50)
+,Item_Type nvarchar (50)
+,Scope float
+,[Conn Scope] float
+,Available float
+,Done float
+,Connected float
+,[Calibrated/Tested] float
+,[Hookup Scope] float null
+,Hookup float
+,[QC Released] float
+)
+insert into #Loop
+Select
+Loop_Name,Discipline,Item_Type,Scope,[Conn Scope],Available,Done,Connected,[Calibrated/Tested],[Hookup Scope],Hookup,[QC Released]
+FROM
+(
+select
+Loop_Name,Discipline
+,Item_Type
+,COUNT(tag) as Scope
+,case when Item_Type like '%cable%' then COUNT(tag)*2 else 0 end as [Conn Scope]
+,count(Available) as Available
+,count([Pulled/Installed]) as Done
+,count(case when [Cable Con 1]='N/A' then null else [Cable Con 1] end) +count(case when [Cable Con 2]='N/A' then null else [Cable Con 2] end) as Connected
+,count(case when [Calibrated/Tested]='N/A' then null else [Calibrated/Tested] end) as [Calibrated/Tested]
+,count(case when [Hookup Name]='N/A' then null else [Hookup Name] end) as [Hookup Scope]
+,count(case when hookup='N/A' then null else hookup end) as Hookup
+,count([QC Released]) as [QC Released]
+FROM 
+(
+select distinct tblild.Loop_Name,Discipline
+,tblild.Item 
+,case when tblild.Item_Type='Ins Cable-Vendor' then 'Ins Cable-Single Pair'
+when tblild.Item_Type in ('Instrument-Vendor','Instrument-Accessory') then 'Instrument'
+else tblild.Item_Type end as Item_Type
+,case when vItems.Type is null then tblild.Item_Type else vItems.Type end as [EICA Type]
+,vItems.Tag
+,vItems.PO
+,vItems.Forecast
+,vItems.Available
+,vItems.SubSystem
+,vItems.Length
+,vItems.[Pulled/Installed]
+,vItems.[Cable Con 1]
+,vItems.[Cable Con 2]
+,vItems.[Calibrated/Tested]
+,vItems.[Hookup Name]
+,vItems.Hookup
+,vItems.[QC Released]
+FROM tblild
+inner join
+(
+select
+Area
+,Discipline
+,Type
+,Tag
+,Length
+,Forecast
+,Available
+,[Pulled/Installed]
+,[Cable Con 1]
+,[Cable Con 2]
+,[Calibrated/Tested]
+,Hookup
+,[Hookup Name]
+,PO
+,Subsystem
+,[QC Released]
+FROM
+(
+select Area,'Electrical Cable' as Discipline,Type,'IC-' + Tag AS Tag,[Eng Length] as Length
+,NULL AS Forecast,NULL as Available,[Last Pulling Update] as [Pulled/Installed]
+,convert(nvarchar (50),[Connect From Date]) as [Cable Con 1]
+,convert(nvarchar (50),[Connect To Date]) as [Cable Con 2]
+,convert(nvarchar (50),[Test Date]) as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,NULL as PO
+,Subsystem,[Qc Released Date] as [QC Released]
+from vECList with (Nolock)
+
+
+UNION ALL
+select Area,'Instrument Cable' as Discipline,Type,'IC-' + TAG as Tag,[Eng Length] as Length
+,NULL AS Forecast,NULL as Available,[Last Pulling Update] as [Pulled/Installed]
+,convert(nvarchar (50),[Connect From Date]) as [Cable Con 1]
+,convert(nvarchar (50),[Connect To Date]) as [Cable Con 2]
+,convert(nvarchar (50),[Test Date]) as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,NULL as PO
+,Subsystem,[Qc Released Date] as [QC Released]
+from vICList with (Nolock)
+ 
+
+UNION ALL
+select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblElectricalEquipment.Installed_Date as [QC Released]
+from tblElectricalEquipment with (Nolock)
+
+
+UNION ALL
+select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
+,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblInsEquipment.Installed_Date as [QC Released]
+from tblInsEquipment with (Nolock)
+
+
+UNION ALL
+select Area,'Electrical JB' as Discipline,JE_Type as Type,Tag,0 as Length
+,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblEleJunctionBox.JE_TRQC as [QC Released]
+from tblEleJunctionBox with (Nolock)
+
+UNION ALL
+select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
+,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,JunctionBox.JI_TRQC as [QC Released]
+from JunctionBox with (Nolock)
+
+UNION ALL
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then 'Instrument' else 'Instrument' + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available
+,[Installation_Date] as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,case when Calibration_Type='no' then 'N/A'
+else convert(nvarchar (50),Calibration_Date) end as [Calibrated/Tested]
+,case when hookup_name is null then 'N/A'
+else convert(nvarchar (50),HookUp_Date) end as [Hookup]
+,hookup_name as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblInstruments.Final_Installed_Date as [QC Released]
+from tblInstruments with (Nolock)
+
+) as vItems01
+) as vItems
+on (case when tblild.Item_Type like 'ins cable%' then 'IC-' + tblild.Item else tblild.Item end)  = vItems.Tag
+) as vILD
+where vILD.Item_Type is not null
+group by
+Loop_Name,Discipline,Item_Type
+) as VLMap
+SELECT 
+tblInsLoop.LoopName as [Loop Name],tblInsLoop.Area AS Unit,tblInsLoop.Area,tblInsLoop.L_Type as [Type]
+,tblInsLoop.Folder_Preparation as [Folder Preparation]
+,tblInsLoop.Subsystem,tblInsLoop.Subcontractor
+,tblInsLoop.HCS_Folder_Ready as [Loop Test HCS Final Folder Ready]
+,'' as [LT Supervisor],'' as [QC Coordinator],tblInsLoop.LoopPriority as [Priority],tblInsLoop.Planning_START_Date as [Target Test Date],tblInsLoop.Planning_FINISH_Date as [Forecast Test Date]
+
+,CASE WHEN VMJ01.[Total JB]+VMJ01.[Total Instruments]+VMJ01.[Total Cabinet]=0 THEN 0
+ELSE (VMJ01.[JB Received]+VMJ01.[Ins Received]+VMJ01.[Cabinet Received])/(VMJ01.[Total JB]+VMJ01.[Total Instruments]+VMJ01.[Total Cabinet]) END AS [Material Status]
+
+,VMJ01.[Total JB],VMJ01.[JB Received],VMJ01.[JB Installed],VMJ01.[JB%]
+,VMJ01.[Multi Pair Total],VMJ01.[Multi Pair Pulled],VMJ01.[Multi Pair Connected],VMJ01.[Multi Pair Test],VMJ01.[MP%]
+,VMJ01.[Single Pair Total],VMJ01.[Single Pair Pulled],VMJ01.[Single Pair Connected],VMJ01.[Single Pair Test],VMJ01.[SP%]
+,VMJ01.[Total Instruments],VMJ01.[Ins Received],VMJ01.[Ins Installed],VMJ01.[Ins%]
+,VMJ01.[Total Hook up],VMJ01.[Hookup Done],VMJ01.[Hk%]
+,VMJ01.[Total Cabinet],VMJ01.[Cabinet Received],VMJ01.[Cabinet Installed],VMJ01.[Cab%]
+
+,CASE WHEN 
+VMJ01.[Total JB]+3*VMJ01.[Multi Pair Total]+3*VMJ01.[Single Pair Total]+VMJ01.[Total Instruments]+VMJ01.[Total Cabinet] =0 THEN 0
+ELSE
+(VMJ01.[JB Installed]+VMJ01.[Multi Pair Pulled]+VMJ01.[Multi Pair Connected]+VMJ01.[Single Pair Pulled]+VMJ01.[Single Pair Connected]+VMJ01.[Ins Installed]
++VMJ01.[Cabinet Installed]) / (VMJ01.[Total JB]+3*VMJ01.[Multi Pair Total]+3*VMJ01.[Single Pair Total]+VMJ01.[Total Instruments]+VMJ01.[Total Cabinet]) 
+END
+as [Const. Completed]
+
+,CASE WHEN 
+VMJ01.[Total JB]+3*VMJ01.[Multi Pair Total]+3*VMJ01.[Single Pair Total]+VMJ01.[Total Instruments]+VMJ01.[Total Cabinet] =0 THEN 0
+ELSE
+(VMJ01.[JB Released]+VMJ01.[Multi Pair Test]+VMJ01.[Single Pair Test]+VMJ01.[Ins Released]
++VMJ01.[Cabinet Installed]) / (VMJ01.[Total JB]+VMJ01.[Multi Pair Total]+VMJ01.[Single Pair Total]+VMJ01.[Total Instruments]+VMJ01.[Total Cabinet]) 
+END
+as [HCS. Completed]
+
+,tblInsLoop.ReInstatement_Date as [ReInstatement Date]
+
+,'' as [A Items],'' as [A Items Pending],tblInsLoop.TR_Loop_Folder_QC_Release as [QC TR Released],tblInsLoop.Loops_Client_QC_Release as [QC Folder Approval by Client]
+,'' as [TR RFI],tblInsLoop.L_Done as [Loop Done],tblInsLoop.L_FinalApproval as [Client Approval]
+
+
+FROM tblInsLoop
+LEFT JOIN
+(
+SELECT
+Loop_Name
+,sum([Total JB]) AS [Total JB],sum([JB Received]) AS [JB Received],sum([JB Installed]) AS [JB Installed],sum([JB Released]) as [JB Released]
+,CASE WHEN sum([Total JB])<>0 THEN sum([JB Installed])/sum([Total JB]) ELSE 0 END AS [JB%]
+,SUM([Multi Pair Total]) AS [Multi Pair Total],SUM([Multi Pair Pulled]) AS [Multi Pair Pulled],SUM([Multi Pair Connected]) AS [Multi Pair Connected],SUM([Multi Pair Test]) AS [Multi Pair Test]
+,CASE WHEN SUM([Multi Pair Total])<>0 THEN (SUM([Multi Pair Pulled])+SUM([Multi Pair Connected]))/(3*SUM([Multi Pair Total])) ELSE 0 END AS [MP%]
+,SUM([Single Pair Total]) AS [Single Pair Total],SUM([Single Pair Pulled]) AS [Single Pair Pulled],SUM([Single Pair Connected]) AS [Single Pair Connected],SUM([Single Pair Test]) AS [Single Pair Test]
+,CASE WHEN SUM([Single Pair Total])<>0 THEN (SUM([Single Pair Pulled])+SUM([Single Pair Connected]))/(3*SUM([Single Pair Total])) ELSE 0 END AS [SP%]
+,SUM([Total Instruments]) AS [Total Instruments],SUM([Ins Received]) AS [Ins Received],SUM([Ins Installed]) AS [Ins Installed],sum([Ins Released]) as [Ins Released]
+,CASE WHEN SUM([Total Instruments])<>0 THEN SUM([Ins Installed])/SUM([Total Instruments]) ELSE 0 END AS [Ins%]
+,SUM([Total Hook up]) AS [Total Hook up],SUM([Hookup Done]) AS [Hookup Done]
+,CASE WHEN SUM([Total Hook up])<>0 THEN SUM([Hookup Done])/SUM([Total Hook up]) ELSE 0 END AS [Hk%]
+,SUM([Total Cabinet]) AS [Total Cabinet],SUM([Cabinet Received]) AS [Cabinet Received],SUM([Cabinet Installed]) AS [Cabinet Installed]
+,CASE WHEN SUM([Total Cabinet])<>0 THEN SUM([Cabinet Installed])/SUM([Total Cabinet]) ELSE 0 END AS [Cab%]
+FROM
+(
+select 
+JBLoop.Loop_Name
+
+,CASE WHEN Discipline='Instrument JB' THEN JBLoop.Scope ELSE 0 END as [Total JB]
+,CASE WHEN Discipline='Instrument JB' THEN JBLoop.Available ELSE 0 END as [JB Received]
+,CASE WHEN Discipline='Instrument JB' THEN JBLoop.Done ELSE 0 END as [JB Installed]
+,CASE WHEN Discipline='Instrument JB' THEN JBLoop.[QC Released] ELSE 0 END as [JB Released]
+
+,CASE WHEN Item_Type='Ins Cable-Multi Pair' THEN JBLoop.Scope ELSE 0 END as [Multi Pair Total]
+,CASE WHEN Item_Type='Ins Cable-Multi Pair' THEN  JBLoop.Done ELSE 0 END as [Multi Pair Pulled]
+,CASE WHEN Item_Type='Ins Cable-Multi Pair' THEN  JBLoop.Connected ELSE 0 END as [Multi Pair Connected]
+,CASE WHEN Item_Type='Ins Cable-Multi Pair' THEN  JBLoop.[QC Released] ELSE 0 END as [Multi Pair Test]
+
+,CASE WHEN Item_Type='Ins Cable-Single Pair' THEN JBLoop.Scope ELSE 0 END as [Single Pair Total]
+,CASE WHEN Item_Type='Ins Cable-Single Pair' THEN  JBLoop.Done ELSE 0 END as [Single Pair Pulled]
+,CASE WHEN Item_Type='Ins Cable-Single Pair' THEN  JBLoop.Connected ELSE 0 END as [Single Pair Connected]
+,CASE WHEN Item_Type='Ins Cable-Single Pair' THEN  JBLoop.[QC Released] ELSE 0 END as [Single Pair Test]
+
+,CASE WHEN Discipline='Instruments' THEN JBLoop.Scope ELSE 0 END as [Total Instruments]
+,CASE WHEN Discipline='Instruments' THEN JBLoop.Available ELSE 0 END as [Ins Received]
+,CASE WHEN Discipline='Instruments' THEN JBLoop.Done ELSE 0 END as [Ins Installed]
+,CASE WHEN Discipline='Instruments' THEN JBLoop.[QC Released] ELSE 0 END as [Ins Released]
+
+,CASE WHEN Discipline='Instruments' THEN JBLoop.[Hookup Scope] ELSE 0 END as [Total Hook up]
+,CASE WHEN Discipline='Instruments' THEN JBLoop.Hookup ELSE 0 END as [Hookup Done]
+
+,CASE WHEN Discipline like '%Equipment%' THEN JBLoop.Scope ELSE 0 END as [Total Cabinet]
+,CASE WHEN Discipline like '%Equipment%' THEN JBLoop.Available ELSE 0 END as [Cabinet Received]
+,CASE WHEN Discipline like '%Equipment%' THEN JBLoop.Done ELSE 0 END as [Cabinet Installed]
+
+FROM #Loop as JBLoop
+) as vMJ00
+GROUP BY Loop_Name
+) AS VMJ01
+ON tblInsLoop.LoopName collate Modern_Spanish_CI_AS =VMJ01.Loop_Name
+where tblInsLoop.Active=1
+

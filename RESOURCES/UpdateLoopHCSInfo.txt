@@ -1,0 +1,22 @@
+update v
+set v.[EICA Loop Subsystem]=v.SubSystem
+,v.[EICA Loop Subcontractor]=v.Subcontractor
+from
+(
+SELECT 
+case when [TREICAKNPC].[dbo].[tblInsLoop].LoopName is null then 'New HCS Loop' 
+     when [TREICAKNPC].[dbo].[tblInsLoop].Active=0 then 'Re-Activated Loop in HCS'
+	 when [HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].GroupID is null then 'Deactivated Loop in HCS'
+	 ELSE 'No Remark'
+	end as Remark
+,[HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].[Area],[Unit],[System],[HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].[SubSystem],GroupID,[Type]
+,[HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].[Subcontractor]
+,[TREICAKNPC].[dbo].[tblInsLoop].LoopName
+,[TREICAKNPC].[dbo].[tblInsLoop].Subsystem as [EICA Loop Subsystem]
+,[TREICAKNPC].[dbo].[tblInsLoop].Subcontractor as [EICA Loop Subcontractor]
+,[TREICAKNPC].[dbo].[tblInsLoop].Active
+FROM [HCS10031_PLANNING].[dbo].[getProjectGroups('10031')]
+full outer join [TREICAKNPC].[dbo].[tblInsLoop]
+on [HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].GroupID collate Modern_Spanish_CI_AS=[TREICAKNPC].[dbo].[tblInsLoop].LoopName
+where [HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].type='CONTROL_LOOP' and [HCS10031_PLANNING].[dbo].[getProjectGroups('10031')].Active=1
+) as v

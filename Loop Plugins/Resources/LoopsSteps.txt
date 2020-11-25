@@ -1,0 +1,49 @@
+select *
+from
+(
+Select 
+Area
+,[Activity Name]
+,Done,Type,Unit
+FROM
+(
+---Loop DONE
+select Area,
+'Loop' as [Activity Name]
+,count([L_Done]) as 'Done','Loop Test' as [Type],'Each' as [Unit] FROM tblInsLoop where active=1
+group by Area
+--*********************************************************
+UNION ALL
+---SUBMIT TO PRECOMM
+select Area,
+'Loop' as [Activity Name]
+,count([Submitted_to_Precom]) as 'Done','Submitted_to_Precom' as [Type],'Each' as [Unit] FROM tblInsLoop where active=1
+group by Area
+--*********************************************************
+UNION ALL
+---HCS_Folder_Ready
+select Area,
+'Loop' as [Activity Name]
+,count([HCS_Folder_Ready]) as 'Done','HCS_Folder_Ready' as [Type],'Each' as [Unit] FROM tblInsLoop where active=1
+group by Area
+--*********************************************************
+UNION ALL
+---TR_Loop_Folder_QC_Release
+select Area,
+'Loop' as [Activity Name]
+,count([TR_Loop_Folder_QC_Release]) as 'Done','TR_Loop_Folder_QC_Release' as [Type],'Each' as [Unit] FROM tblInsLoop where active=1
+group by Area
+--*********************************************************
+UNION ALL
+---Diff QC_Release And Loop Done
+select Area,
+'Loop' as [Activity Name]
+,abs(count([TR_Loop_Folder_QC_Release])-count([L_Done])) as 'Done','Diff QC_Release And Loop Done' as [Type],'Each' as [Unit] FROM tblInsLoop where active=1
+group by Area
+--*********************************************************
+) as vLoopSteps
+) vStepsP
+pivot
+(
+sum(done) for area in ([U01],[U02],[U03],[U04],[U05],[U06],[U11],[U12],[U13],[U14],[U21],[U22],[U23],[U25],[U34-PL1],[U34-PL2],[U34-COMN],[U78]) 
+) as p

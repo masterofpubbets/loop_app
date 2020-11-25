@@ -1,0 +1,19 @@
+WITH ILD
+AS
+(
+SELECT DISTINCT 
+[Loop_Name],[Loop_Type]
+FROM [tblILD]
+WHERE Loop_Type IS NOT NULL
+)
+UPDATE V
+SET L_Description=Loop_Type
+FROM
+(
+SELECT 
+ILD.Loop_Type
+,tblInsLoop.LoopName,tblInsLoop.L_Description
+FROM ILD
+INNER JOIN tblInsLoop
+ON ILD.Loop_Name=tblInsLoop.LoopName
+) AS V

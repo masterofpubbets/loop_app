@@ -1,0 +1,143 @@
+select *
+from
+(
+select Area,[STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND [STATUS] like 'on%hold%'
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+group by Area,[STATUS]
+--*********************************************************
+UNION ALL
+select Area,'Index Not Signed' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND (([STATUS] not like 'on%hold%') or ([status] is null))
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+and HCS_Folder_Ready is null
+and Submitted_to_Precom is null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Ready With HCS' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND (([STATUS] not like 'on%hold%') or ([status] is null))
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+and HCS_Folder_Ready is not null
+and Submitted_to_Precom is null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Precomm Workfront' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND (([STATUS] not like 'on%hold%') or ([status] is null))
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+and HCS_Folder_Ready is not null
+and Submitted_to_Precom is not null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Submitt For HCS Certificate' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND L_Done is not null
+and Submitted_For_Certificate is not null
+and L_FinalApproval is null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Submitting For HCS Certificate Pending' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND L_Done is not null
+and Submitted_For_Certificate is null
+and L_FinalApproval is null
+group by Area
+--*********************************************************
+) vStepsP
+pivot
+(
+sum(Loops) for area in ([U01],[U02],[U03],[U04],[U05],[U06],[U11],[U12],[U13],[U14],[U21],[U22],[U23],[U25],[U34-PL1],[U34-PL2],[U34-COMN],[U78]) 
+) as p
+union all
+select 
+'Total' as Total
+,sum([U01]) as [U01],sum([U02]) as [U02],sum([U03]) as [U03],sum([U04]) as [U04],sum([U05]) as [U05],sum([U06]) as [U06],sum([U11]) as [U11],sum([U12]) as [U12]
+,sum([U13]) as [U13],sum([U14]) as [U14],sum([U21]) as [U21],sum([U22]) as [U22]
+,sum([U23]) as [U23],sum([U25]) as [U25],sum([U34-PL1]) as [U34-PL1],sum([U34-PL2]) as [U34-PL2],sum([U34-COMN]) as [U34-COMN],sum([U78]) as [U78]
+from
+(
+select Area,[STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND [STATUS] like 'on%hold%'
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+group by Area,[STATUS]
+--*********************************************************
+UNION ALL
+select Area,'Index Not Signed' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND (([STATUS] not like 'on%hold%') or ([status] is null))
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+and HCS_Folder_Ready is null
+and Submitted_to_Precom is null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Ready With HCS' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND (([STATUS] not like 'on%hold%') or ([status] is null))
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+and HCS_Folder_Ready is not null
+and Submitted_to_Precom is null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Precomm Workfront' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND (([STATUS] not like 'on%hold%') or ([status] is null))
+and TR_Loop_Folder_QC_Release is not null and L_Done is null
+and HCS_Folder_Ready is not null
+and Submitted_to_Precom is not null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Submitt For HCS Certificate' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND L_Done is not null
+and Submitted_For_Certificate is not null
+and L_FinalApproval is null
+group by Area
+--*********************************************************
+UNION ALL
+select Area,'Submitting For HCS Certificate Pending' as [STATUS]
+,count(loopname) as Loops
+FROM tblInsLoop 
+where active=1
+AND L_Done is not null
+and Submitted_For_Certificate is null
+and L_FinalApproval is null
+group by Area
+--*********************************************************
+) vStepsP
+pivot
+(
+sum(Loops) for area in ([U01],[U02],[U03],[U04],[U05],[U06],[U11],[U12],[U13],[U14],[U21],[U22],[U23],[U25],[U34-PL1],[U34-PL2],[U34-COMN],[U78]) 
+) as p

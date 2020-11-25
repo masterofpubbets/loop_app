@@ -1,0 +1,7 @@
+SELECT 'RFI Ready in HCS' as Remark,[Unit],[Loop Name],[Type],[Folder Preparation],tblInsLoop.[Subsystem],tblInsLoop.[Subcontractor]
+FROM [tblILDFB] with (nolock)
+inner join tblInsLoop
+on [tblILDFB].[Loop Name]=tblInsLoop.LoopName
+where [HCS. Completed]=1
+and tblInsLoop.HCS_Folder_Ready is null
+order by unit

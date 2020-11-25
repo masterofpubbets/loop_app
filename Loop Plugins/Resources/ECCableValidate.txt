@@ -1,0 +1,22 @@
+SELECT 
+[TBL_ID]
+,[tblEleCableList].Area
+,[EC_ID] as Tag
+,[EC_Type] as [Type]
+,[EC_Description] as [Description]
+,[EC_Length] as [Eng. Length]
+,[EC_From] as [From]
+,[EC_To] as [To]
+,vCblParProductionTotal_Vendor.Pro_Date
+,vCblParProductionTotal_Vendor.Percentage
+,[Pulled_con] as [Pulled Confirm]
+,[EC_Plan_Connected_Date_From] as [Connected From Date]
+,[EC_Plan_Connected_Date_From_con] as [Connect From Confirm]
+,[EC_Plan_Connected_Date_To] as [Connected To Date]
+,[EC_Plan_Connected_Date_To_con] as [Connect To Confirm]
+,[EC_Megger] as [Test Date]
+,[EC_Megger_con] as [Test Confirm]
+,[Active]
+FROM [tblEleCableList]
+left join vCblParProductionTotal_Vendor on [tblEleCableList].EC_ID = vCblParProductionTotal_Vendor.Tag
+order by [tblEleCableList].Area,[EC_ID]

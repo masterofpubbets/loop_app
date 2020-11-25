@@ -1,0 +1,8 @@
+SELECT 'RFI Ready in HCS Without Index' as Remark,Area as [Unit],[LoopName] as [Loop Name],tblInsLoop.[Subsystem],tblInsLoop.[Subcontractor]
+,tblInsLoop.TR_Loop_Folder_QC_Release as [Workfront Release Date]
+FROM tblInsLoop
+where TR_Loop_Folder_QC_Release IS NOT NULL
+and tblInsLoop.Active=1
+and tblInsLoop.STATUS is null
+and tblInsLoop.HCS_Folder_Ready is null
+order by Area

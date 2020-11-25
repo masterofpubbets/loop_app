@@ -1,0 +1,15 @@
+update v
+set HCS_Folder_Ready=[SignedByTR]
+FROM
+(
+SELECT 
+HCS10031_PLANNING.[dbo].[getProjectTasks('10031')].[Group]
+,TREICAKNPC..tblinsloop.LoopName
+,TREICAKNPC..tblinsloop.HCS_Folder_Ready
+,convert(date,HCS10031_PLANNING.[dbo].[getProjectTasks('10031')].[SignedByTR]) as [SignedByTR]
+FROM HCS10031_PLANNING.[dbo].[getProjectTasks('10031')] with (nolock)
+inner join TREICAKNPC..tblinsloop with (nolock)
+on HCS10031_PLANNING.[dbo].[getProjectTasks('10031')].[Group] collate Modern_Spanish_CI_AS =TREICAKNPC..tblinsloop.LoopName
+where HCS10031_PLANNING.[dbo].[getProjectTasks('10031')].Docname='10031-PACKAGE-INS-01'
+and HCS10031_PLANNING.[dbo].[getProjectTasks('10031')].SignedByTR is not null
+) as v

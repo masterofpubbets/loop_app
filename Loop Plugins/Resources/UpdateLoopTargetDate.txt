@@ -1,0 +1,11 @@
+UPDATE V
+SET [Planning_FINISH_Date]=TargetDate
+FROM
+(
+SELECT [TBL_ID]
+      ,[LoopName],[Planning_FINISH_Date],[tblInsLoop].Subsystem
+   ,HCS.SubSystem AS [HCS SUBSYSTEM],HCS.TargetDate
+  FROM [TREICAKNPC].[dbo].[tblInsLoop]
+  INNER JOIN [HCS10031_PLANNING].[dbo].[getProjectSubsystems('10031')] AS HCS
+  ON [tblInsLoop].Subsystem=HCS.SubSystem COLLATE Latin1_General_100_CI_AS
+  ) AS V

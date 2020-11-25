@@ -1,0 +1,21 @@
+declare @result as nvarchar(max)
+set @result = '
+
+SELECT [PCSXXX].[dbo].[ActivityBudget].[Actid]
+      ,[PCSXXX].[dbo].[ActivityBudget].[ResID]
+      ,[PCSXXX].[dbo].[ActivityBudget].[BaseLine] -- Filter by the current baseline
+      ,[PCSXXX].[dbo].[ActivityBudget].[Budget] -- Qty
+      ,[PCSXXX].[dbo].[ActivityBudget].[Active]
+,[BDResDistribAct].* 
+  FROM [PCSXXX].[dbo].[ActivityBudget]
+  inner join [PCSXXX].[dbo].[BDResDistribAct]
+  on [PCSXXX].[dbo].[ActivityBudget].actid= [PCSXXX].[dbo].[BDResDistribAct].actid
+  and [PCSXXX].[dbo].[ActivityBudget].resid= [PCSXXX].[dbo].[BDResDistribAct].resid
+
+ INNER JOIN [EICAxxx].[dbo].tblActIDS
+  on [PCSXXX].[dbo].[ActivityBudget].[Actid]=[EICAxxx].[dbo].tblActIDS.Actid
+
+  where [PCSXXX].[dbo].[ActivityBudget].[BaseLine]=  ''Late MCAN Jul 2019''
+
+  '  
+execute(@result)
