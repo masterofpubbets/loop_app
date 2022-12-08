@@ -39,4 +39,17 @@
         If fld.SelectedPath = "" Then Exit Sub
         lblFolder.Text = fld.SelectedPath
     End Sub
+
+    Private Sub SimpleButton5_Click(sender As Object, e As EventArgs) Handles SimpleButton5.Click
+        Try
+            fld.SelectedPath = ""
+            fld.ShowDialog()
+            If fld.SelectedPath = "" Then Exit Sub
+            IO.File.Copy(Application.StartupPath & "\BlankDB\ILDDB.ilddb", fld.SelectedPath & "\ILDDB.ilddb", True)
+            lblDB.Text = fld.SelectedPath
+            lblNewDB.Text = fld.SelectedPath
+        Catch ex As Exception
+            lblDB.Text = ""
+        End Try
+    End Sub
 End Class

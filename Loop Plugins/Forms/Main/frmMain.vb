@@ -319,4 +319,13 @@
         Dim frm As New frmUpdateLoopDone() With {.MdiParent = Me}
         frm.Show()
     End Sub
+
+    Private Sub BarButtonItem46_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem46.ItemClick
+        If DB.DBStatus = ConnectionState.Closed Then
+            MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
+            Exit Sub
+        End If
+        Dim frm As New frmUploadHCSData() With {.MdiParent = Me}
+        frm.Show()
+    End Sub
 End Class

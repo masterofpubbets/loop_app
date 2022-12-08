@@ -51,19 +51,20 @@ Partial Class frmItemProduction
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 2
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1184, 82)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1188, 101)
         '
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Set Production"
-        Me.BarButtonItem1.Glyph = CType(resources.GetObject("BarButtonItem1.Glyph"), System.Drawing.Image)
         Me.BarButtonItem1.Id = 1
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
         Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -83,7 +84,8 @@ Partial Class frmItemProduction
         '
         Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 82)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 101)
+        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -94,8 +96,9 @@ Partial Class frmItemProduction
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.GroupBox2)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1184, 580)
-        Me.SplitContainer1.SplitterDistance = 97
+        Me.SplitContainer1.Size = New System.Drawing.Size(1188, 593)
+        Me.SplitContainer1.SplitterDistance = 98
+        Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 1
         '
         'GroupBox1
@@ -107,8 +110,10 @@ Partial Class frmItemProduction
         Me.GroupBox1.Controls.Add(Me.SimpleButton1)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(1182, 95)
+        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox1.Size = New System.Drawing.Size(1186, 96)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Find Item"
@@ -116,49 +121,50 @@ Partial Class frmItemProduction
         'lblDis
         '
         Me.lblDis.AutoSize = True
-        Me.lblDis.ForeColor = System.Drawing.Color.Red
-        Me.lblDis.Location = New System.Drawing.Point(248, 57)
+        Me.lblDis.ForeColor = System.Drawing.Color.DimGray
+        Me.lblDis.Location = New System.Drawing.Point(289, 70)
         Me.lblDis.Name = "lblDis"
-        Me.lblDis.Size = New System.Drawing.Size(66, 13)
+        Me.lblDis.Size = New System.Drawing.Size(83, 17)
         Me.lblDis.TabIndex = 6
         Me.lblDis.Text = "No Discipline"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.ForeColor = System.Drawing.Color.Red
-        Me.Label2.Location = New System.Drawing.Point(185, 57)
+        Me.Label2.ForeColor = System.Drawing.Color.DimGray
+        Me.Label2.Location = New System.Drawing.Point(216, 70)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(57, 13)
+        Me.Label2.Size = New System.Drawing.Size(71, 17)
         Me.Label2.TabIndex = 5
         Me.Label2.Text = "Discipline: "
         '
         'lblItem
         '
         Me.lblItem.AutoSize = True
-        Me.lblItem.ForeColor = System.Drawing.Color.Red
-        Me.lblItem.Location = New System.Drawing.Point(248, 31)
+        Me.lblItem.ForeColor = System.Drawing.Color.DimGray
+        Me.lblItem.Location = New System.Drawing.Point(289, 38)
         Me.lblItem.Name = "lblItem"
-        Me.lblItem.Size = New System.Drawing.Size(78, 13)
+        Me.lblItem.Size = New System.Drawing.Size(100, 17)
         Me.lblItem.TabIndex = 4
         Me.lblItem.Text = "No Item Found"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.ForeColor = System.Drawing.Color.Red
-        Me.Label1.Location = New System.Drawing.Point(185, 31)
+        Me.Label1.ForeColor = System.Drawing.Color.DimGray
+        Me.Label1.Location = New System.Drawing.Point(216, 38)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(36, 13)
+        Me.Label1.Size = New System.Drawing.Size(45, 17)
         Me.Label1.TabIndex = 3
         Me.Label1.Text = "Item: "
         '
         'SimpleButton1
         '
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(11, 20)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(13, 25)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(168, 64)
+        Me.SimpleButton1.Size = New System.Drawing.Size(196, 62)
         Me.SimpleButton1.TabIndex = 0
         Me.SimpleButton1.Text = "Find Item By Discipline"
         '
@@ -167,8 +173,10 @@ Partial Class frmItemProduction
         Me.GroupBox2.Controls.Add(Me.grd)
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox2.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(1182, 477)
+        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox2.Size = New System.Drawing.Size(1186, 488)
         Me.GroupBox2.TabIndex = 0
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Production"
@@ -176,28 +184,31 @@ Partial Class frmItemProduction
         'grd
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.grd.Location = New System.Drawing.Point(3, 17)
+        Me.grd.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.grd.Location = New System.Drawing.Point(3, 20)
         Me.grd.MainView = Me.GridView1
+        Me.grd.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grd.MenuManager = Me.RibbonControl1
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1176, 457)
+        Me.grd.Size = New System.Drawing.Size(1180, 464)
         Me.grd.TabIndex = 0
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
         'GridView1
         '
+        Me.GridView1.DetailHeight = 431
         Me.GridView1.GridControl = Me.grd
         Me.GridView1.Name = "GridView1"
         Me.GridView1.OptionsBehavior.Editable = False
         '
         'frmItemProduction
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1184, 662)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1188, 694)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmItemProduction.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmItemProduction"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

@@ -79,10 +79,11 @@ Partial Class frmAddLoopProgress
         Me.DockPanel1.Controls.Add(Me.DockPanel1_Container)
         Me.DockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom
         Me.DockPanel1.ID = New System.Guid("c4c4360b-713b-4db0-8267-47bd65fbc381")
-        Me.DockPanel1.Location = New System.Drawing.Point(0, 632)
+        Me.DockPanel1.Location = New System.Drawing.Point(0, 577)
+        Me.DockPanel1.Margin = New System.Windows.Forms.Padding(4)
         Me.DockPanel1.Name = "DockPanel1"
-        Me.DockPanel1.OriginalSize = New System.Drawing.Size(200, 84)
-        Me.DockPanel1.Size = New System.Drawing.Size(1076, 84)
+        Me.DockPanel1.OriginalSize = New System.Drawing.Size(200, 76)
+        Me.DockPanel1.Size = New System.Drawing.Size(1534, 76)
         Me.DockPanel1.Text = "Menu"
         '
         'DockPanel1_Container
@@ -91,49 +92,54 @@ Partial Class frmAddLoopProgress
         Me.DockPanel1_Container.Controls.Add(Me.pBar)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton2)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton1)
-        Me.DockPanel1_Container.Location = New System.Drawing.Point(4, 26)
+        Me.DockPanel1_Container.Location = New System.Drawing.Point(4, 58)
+        Me.DockPanel1_Container.Margin = New System.Windows.Forms.Padding(4)
         Me.DockPanel1_Container.Name = "DockPanel1_Container"
-        Me.DockPanel1_Container.Size = New System.Drawing.Size(1068, 54)
+        Me.DockPanel1_Container.Size = New System.Drawing.Size(1526, 14)
         Me.DockPanel1_Container.TabIndex = 0
         '
         'ckOverride
         '
         Me.ckOverride.AutoSize = True
-        Me.ckOverride.Location = New System.Drawing.Point(584, 15)
+        Me.ckOverride.Location = New System.Drawing.Point(779, 18)
+        Me.ckOverride.Margin = New System.Windows.Forms.Padding(4)
         Me.ckOverride.Name = "ckOverride"
-        Me.ckOverride.Size = New System.Drawing.Size(142, 17)
+        Me.ckOverride.Size = New System.Drawing.Size(185, 21)
         Me.ckOverride.TabIndex = 7
         Me.ckOverride.Text = "Overwrite Existing Loops"
         Me.ckOverride.UseVisualStyleBackColor = True
         '
         'pBar
         '
-        Me.pBar.Location = New System.Drawing.Point(31, 13)
+        Me.pBar.Location = New System.Drawing.Point(41, 16)
+        Me.pBar.Margin = New System.Windows.Forms.Padding(4)
         Me.pBar.Name = "pBar"
         Me.pBar.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Office2003
         Me.pBar.Properties.ShowTitle = True
         Me.pBar.Properties.StartColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.pBar.Size = New System.Drawing.Size(547, 19)
+        Me.pBar.Size = New System.Drawing.Size(729, 23)
         Me.pBar.TabIndex = 6
         Me.pBar.Visible = False
         '
         'SimpleButton2
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SimpleButton2.Image = CType(resources.GetObject("SimpleButton2.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(922, 3)
+        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton2.Location = New System.Drawing.Point(1687, -36)
+        Me.SimpleButton2.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(138, 43)
+        Me.SimpleButton2.Size = New System.Drawing.Size(184, 53)
         Me.SimpleButton2.TabIndex = 5
         Me.SimpleButton2.Text = "Add Loops"
         '
         'SimpleButton1
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(778, 3)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(1495, -36)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(138, 43)
+        Me.SimpleButton1.Size = New System.Drawing.Size(184, 53)
         Me.SimpleButton1.TabIndex = 4
         Me.SimpleButton1.Text = "Back"
         '
@@ -147,7 +153,7 @@ Partial Class frmAddLoopProgress
         Me.DockPanel2.Location = New System.Drawing.Point(0, 0)
         Me.DockPanel2.Name = "DockPanel2"
         Me.DockPanel2.OriginalSize = New System.Drawing.Size(200, 200)
-        Me.DockPanel2.Size = New System.Drawing.Size(1070, 604)
+        Me.DockPanel2.Size = New System.Drawing.Size(1528, 539)
         Me.DockPanel2.Text = "New Loops"
         '
         'DockPanel2_Container
@@ -155,7 +161,7 @@ Partial Class frmAddLoopProgress
         Me.DockPanel2_Container.Controls.Add(Me.GridControl2)
         Me.DockPanel2_Container.Location = New System.Drawing.Point(0, 0)
         Me.DockPanel2_Container.Name = "DockPanel2_Container"
-        Me.DockPanel2_Container.Size = New System.Drawing.Size(1070, 604)
+        Me.DockPanel2_Container.Size = New System.Drawing.Size(1528, 539)
         Me.DockPanel2_Container.TabIndex = 0
         '
         'GridControl2
@@ -164,7 +170,7 @@ Partial Class frmAddLoopProgress
         Me.GridControl2.Location = New System.Drawing.Point(0, 0)
         Me.GridControl2.MainView = Me.GridView3
         Me.GridControl2.Name = "GridControl2"
-        Me.GridControl2.Size = New System.Drawing.Size(1070, 604)
+        Me.GridControl2.Size = New System.Drawing.Size(1528, 539)
         Me.GridControl2.TabIndex = 8
         Me.GridControl2.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView3})
         '
@@ -210,17 +216,16 @@ Partial Class frmAddLoopProgress
         '
         Me.TabbedView1.DocumentGroups.AddRange(New DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup() {Me.DocumentGroup1})
         Me.TabbedView1.Documents.AddRange(New DevExpress.XtraBars.Docking2010.Views.BaseDocument() {Me.Document1})
-        Me.TabbedView1.RootContainer.Element = Nothing
         DockingContainer1.Element = Me.DocumentGroup1
         Me.TabbedView1.RootContainer.Nodes.AddRange(New DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer() {DockingContainer1})
         '
         'frmAddLoopProgress
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1076, 716)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1534, 653)
         Me.Controls.Add(Me.DockPanel1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmAddLoopProgress"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "frmAddLoopProgress"

@@ -53,36 +53,37 @@ Partial Class frmWarRoom
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.pBar, Me.BarButtonItem4, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.pBar2})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.pBar, Me.BarButtonItem4, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.pBar2, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 12
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemProgressBar1, Me.RepositoryItemProgressBar2})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(961, 82)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 112)
         '
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Refresh"
-        Me.BarButtonItem1.Glyph = CType(resources.GetObject("BarButtonItem1.Glyph"), System.Drawing.Image)
         Me.BarButtonItem1.Id = 1
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
         Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem2
         '
         Me.BarButtonItem2.Caption = "Download Template"
-        Me.BarButtonItem2.Glyph = CType(resources.GetObject("BarButtonItem2.Glyph"), System.Drawing.Image)
         Me.BarButtonItem2.Id = 3
+        Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.Name = "BarButtonItem2"
         Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem3
         '
         Me.BarButtonItem3.Caption = "Upload Meeting Report"
-        Me.BarButtonItem3.Glyph = CType(resources.GetObject("BarButtonItem3.Glyph"), System.Drawing.Image)
         Me.BarButtonItem3.Id = 4
+        Me.BarButtonItem3.ImageOptions.Image = CType(resources.GetObject("BarButtonItem3.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem3.Name = "BarButtonItem3"
         Me.BarButtonItem3.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -101,32 +102,32 @@ Partial Class frmWarRoom
         'BarButtonItem4
         '
         Me.BarButtonItem4.Caption = "Save Changes"
-        Me.BarButtonItem4.Glyph = CType(resources.GetObject("BarButtonItem4.Glyph"), System.Drawing.Image)
         Me.BarButtonItem4.Id = 6
+        Me.BarButtonItem4.ImageOptions.Image = CType(resources.GetObject("BarButtonItem4.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem4.Name = "BarButtonItem4"
         Me.BarButtonItem4.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem5
         '
         Me.BarButtonItem5.Caption = "Delete All"
-        Me.BarButtonItem5.Glyph = CType(resources.GetObject("BarButtonItem5.Glyph"), System.Drawing.Image)
         Me.BarButtonItem5.Id = 7
+        Me.BarButtonItem5.ImageOptions.Image = CType(resources.GetObject("BarButtonItem5.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem5.Name = "BarButtonItem5"
         Me.BarButtonItem5.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem6
         '
         Me.BarButtonItem6.Caption = "Export To Excel"
-        Me.BarButtonItem6.Glyph = CType(resources.GetObject("BarButtonItem6.Glyph"), System.Drawing.Image)
         Me.BarButtonItem6.Id = 8
+        Me.BarButtonItem6.ImageOptions.Image = CType(resources.GetObject("BarButtonItem6.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem6.Name = "BarButtonItem6"
         Me.BarButtonItem6.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem7
         '
         Me.BarButtonItem7.Caption = "Update Folder Status"
-        Me.BarButtonItem7.Glyph = CType(resources.GetObject("BarButtonItem7.Glyph"), System.Drawing.Image)
         Me.BarButtonItem7.Id = 9
+        Me.BarButtonItem7.ImageOptions.Image = CType(resources.GetObject("BarButtonItem7.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem7.Name = "BarButtonItem7"
         Me.BarButtonItem7.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -176,11 +177,13 @@ Partial Class frmWarRoom
         'GRD
         '
         Me.GRD.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.GRD.Location = New System.Drawing.Point(0, 82)
+        Me.GRD.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GRD.Location = New System.Drawing.Point(0, 112)
         Me.GRD.MainView = Me.GridView2
+        Me.GRD.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GRD.MenuManager = Me.RibbonControl1
         Me.GRD.Name = "GRD"
-        Me.GRD.Size = New System.Drawing.Size(961, 613)
+        Me.GRD.Size = New System.Drawing.Size(1198, 587)
         Me.GRD.TabIndex = 7
         Me.GRD.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView2})
         '
@@ -190,6 +193,7 @@ Partial Class frmWarRoom
         Me.GridView2.Appearance.GroupFooter.Options.UseForeColor = True
         Me.GridView2.AppearancePrint.Preview.ForeColor = System.Drawing.Color.Black
         Me.GridView2.AppearancePrint.Preview.Options.UseForeColor = True
+        Me.GridView2.DetailHeight = 431
         Me.GridView2.GridControl = Me.GRD
         Me.GridView2.Name = "GridView2"
         Me.GridView2.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.[True]
@@ -227,12 +231,12 @@ Partial Class frmWarRoom
         '
         'frmWarRoom
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(961, 695)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.GRD)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmWarRoom.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmWarRoom"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

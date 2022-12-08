@@ -108,8 +108,7 @@
     End Sub
 
     Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick
-        Dim frm As New frmExportILDpdf
-        frm.MdiParent = frmMain
+        Dim frm As New frmExportILDpdf() With {.MdiParent = frmMain}
         frm.Show()
     End Sub
 End Class

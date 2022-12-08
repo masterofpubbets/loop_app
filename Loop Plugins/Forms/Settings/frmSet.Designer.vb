@@ -31,15 +31,18 @@ Partial Class frmSet
         Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton4 = New DevExpress.XtraEditors.SimpleButton()
         Me.fld = New System.Windows.Forms.FolderBrowserDialog()
+        Me.SimpleButton5 = New DevExpress.XtraEditors.SimpleButton()
+        Me.lblNewDB = New DevExpress.XtraEditors.LabelControl()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SimpleButton1
         '
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(30, 116)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(35, 143)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(139, 56)
+        Me.SimpleButton1.Size = New System.Drawing.Size(162, 69)
         Me.SimpleButton1.TabIndex = 1
         Me.SimpleButton1.Text = "Select ILD DB"
         '
@@ -48,9 +51,10 @@ Partial Class frmSet
         Me.lblDB.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblDB.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.lblDB.Location = New System.Drawing.Point(175, 117)
+        Me.lblDB.Location = New System.Drawing.Point(204, 144)
+        Me.lblDB.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.lblDB.Name = "lblDB"
-        Me.lblDB.Size = New System.Drawing.Size(528, 53)
+        Me.lblDB.Size = New System.Drawing.Size(616, 65)
         Me.lblDB.TabIndex = 2
         '
         'lblFolder
@@ -58,53 +62,82 @@ Partial Class frmSet
         Me.lblFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblFolder.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.lblFolder.Location = New System.Drawing.Point(178, 211)
+        Me.lblFolder.Location = New System.Drawing.Point(205, 299)
+        Me.lblFolder.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.lblFolder.Name = "lblFolder"
-        Me.lblFolder.Size = New System.Drawing.Size(528, 53)
+        Me.lblFolder.Size = New System.Drawing.Size(616, 65)
         Me.lblFolder.TabIndex = 4
         '
         'SimpleButton2
         '
-        Me.SimpleButton2.Image = CType(resources.GetObject("SimpleButton2.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(33, 210)
+        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton2.Location = New System.Drawing.Point(35, 297)
+        Me.SimpleButton2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(139, 56)
+        Me.SimpleButton2.Size = New System.Drawing.Size(162, 69)
         Me.SimpleButton2.TabIndex = 3
         Me.SimpleButton2.Text = "Select ILD Folders"
         '
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(739, 52)
+        Me.RibbonControl1.Size = New System.Drawing.Size(862, 75)
         '
         'SimpleButton3
         '
-        Me.SimpleButton3.Image = CType(resources.GetObject("SimpleButton3.Image"), System.Drawing.Image)
-        Me.SimpleButton3.Location = New System.Drawing.Point(588, 408)
+        Me.SimpleButton3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton3.Location = New System.Drawing.Point(686, 428)
+        Me.SimpleButton3.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton3.Name = "SimpleButton3"
-        Me.SimpleButton3.Size = New System.Drawing.Size(139, 56)
+        Me.SimpleButton3.Size = New System.Drawing.Size(162, 69)
         Me.SimpleButton3.TabIndex = 6
         Me.SimpleButton3.Text = "Save"
         '
         'SimpleButton4
         '
-        Me.SimpleButton4.Image = CType(resources.GetObject("SimpleButton4.Image"), System.Drawing.Image)
-        Me.SimpleButton4.Location = New System.Drawing.Point(443, 408)
+        Me.SimpleButton4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SimpleButton4.ImageOptions.Image = CType(resources.GetObject("SimpleButton4.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton4.Location = New System.Drawing.Point(517, 428)
+        Me.SimpleButton4.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton4.Name = "SimpleButton4"
-        Me.SimpleButton4.Size = New System.Drawing.Size(139, 56)
+        Me.SimpleButton4.Size = New System.Drawing.Size(162, 69)
         Me.SimpleButton4.TabIndex = 7
         Me.SimpleButton4.Text = "Cancel"
         '
+        'SimpleButton5
+        '
+        Me.SimpleButton5.ImageOptions.Image = CType(resources.GetObject("SimpleButton5.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton5.Location = New System.Drawing.Point(35, 220)
+        Me.SimpleButton5.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.SimpleButton5.Name = "SimpleButton5"
+        Me.SimpleButton5.Size = New System.Drawing.Size(162, 69)
+        Me.SimpleButton5.TabIndex = 9
+        Me.SimpleButton5.Text = "Create New ILD DB"
+        '
+        'lblNewDB
+        '
+        Me.lblNewDB.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblNewDB.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.lblNewDB.Location = New System.Drawing.Point(205, 222)
+        Me.lblNewDB.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.lblNewDB.Name = "lblNewDB"
+        Me.lblNewDB.Size = New System.Drawing.Size(616, 65)
+        Me.lblNewDB.TabIndex = 10
+        '
         'frmSet
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(739, 476)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(862, 513)
+        Me.Controls.Add(Me.lblNewDB)
+        Me.Controls.Add(Me.SimpleButton5)
         Me.Controls.Add(Me.SimpleButton4)
         Me.Controls.Add(Me.SimpleButton3)
         Me.Controls.Add(Me.lblFolder)
@@ -112,7 +145,8 @@ Partial Class frmSet
         Me.Controls.Add(Me.lblDB)
         Me.Controls.Add(Me.SimpleButton1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmSet.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmSet"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -130,4 +164,6 @@ Partial Class frmSet
     Friend WithEvents SimpleButton3 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents SimpleButton4 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents fld As FolderBrowserDialog
+    Friend WithEvents SimpleButton5 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents lblNewDB As DevExpress.XtraEditors.LabelControl
 End Class

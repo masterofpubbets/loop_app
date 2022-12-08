@@ -57,7 +57,7 @@ Partial Class frmPdf
         Me.PdfFormDataBarPageGroup1 = New DevExpress.XtraPdfViewer.Bars.PdfFormDataBarPageGroup()
         Me.p = New DevExpress.XtraPdfViewer.PdfViewer()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
-        Me.PdfBarController1 = New DevExpress.XtraPdfViewer.Bars.PdfBarController()
+        Me.PdfBarController1 = New DevExpress.XtraPdfViewer.Bars.PdfBarController(Me.components)
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PdfBarController1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -65,13 +65,14 @@ Partial Class frmPdf
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.PdfFileSaveAsBarItem1, Me.PdfFilePrintBarItem1, Me.PdfPreviousPageBarItem1, Me.PdfNextPageBarItem1, Me.PdfFindTextBarItem1, Me.PdfZoomOutBarItem1, Me.PdfZoomInBarItem1, Me.PdfExactZoomListBarSubItem1, Me.PdfZoom10CheckItem1, Me.PdfZoom25CheckItem1, Me.PdfZoom50CheckItem1, Me.PdfZoom75CheckItem1, Me.PdfZoom100CheckItem1, Me.PdfZoom125CheckItem1, Me.PdfZoom150CheckItem1, Me.PdfZoom200CheckItem1, Me.PdfZoom400CheckItem1, Me.PdfZoom500CheckItem1, Me.PdfSetActualSizeZoomModeCheckItem1, Me.PdfSetPageLevelZoomModeCheckItem1, Me.PdfSetFitWidthZoomModeCheckItem1, Me.PdfSetFitVisibleZoomModeCheckItem1, Me.PdfExportFormDataBarItem1, Me.PdfImportFormDataBarItem1})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.PdfFileSaveAsBarItem1, Me.PdfFilePrintBarItem1, Me.PdfPreviousPageBarItem1, Me.PdfNextPageBarItem1, Me.PdfFindTextBarItem1, Me.PdfZoomOutBarItem1, Me.PdfZoomInBarItem1, Me.PdfExactZoomListBarSubItem1, Me.PdfZoom10CheckItem1, Me.PdfZoom25CheckItem1, Me.PdfZoom50CheckItem1, Me.PdfZoom75CheckItem1, Me.PdfZoom100CheckItem1, Me.PdfZoom125CheckItem1, Me.PdfZoom150CheckItem1, Me.PdfZoom200CheckItem1, Me.PdfZoom400CheckItem1, Me.PdfZoom500CheckItem1, Me.PdfSetActualSizeZoomModeCheckItem1, Me.PdfSetPageLevelZoomModeCheckItem1, Me.PdfSetFitWidthZoomModeCheckItem1, Me.PdfSetFitVisibleZoomModeCheckItem1, Me.PdfExportFormDataBarItem1, Me.PdfImportFormDataBarItem1, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 28
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.PdfRibbonPage1, Me.PdfFormDataRibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1184, 82)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 112)
         '
         'PdfFileSaveAsBarItem1
         '
@@ -205,12 +206,14 @@ Partial Class frmPdf
         '
         'PdfFileRibbonPageGroup1
         '
+        Me.PdfFileRibbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.[False]
         Me.PdfFileRibbonPageGroup1.ItemLinks.Add(Me.PdfFileSaveAsBarItem1)
         Me.PdfFileRibbonPageGroup1.ItemLinks.Add(Me.PdfFilePrintBarItem1)
         Me.PdfFileRibbonPageGroup1.Name = "PdfFileRibbonPageGroup1"
         '
         'PdfNavigationRibbonPageGroup1
         '
+        Me.PdfNavigationRibbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.[False]
         Me.PdfNavigationRibbonPageGroup1.ItemLinks.Add(Me.PdfPreviousPageBarItem1)
         Me.PdfNavigationRibbonPageGroup1.ItemLinks.Add(Me.PdfNextPageBarItem1)
         Me.PdfNavigationRibbonPageGroup1.ItemLinks.Add(Me.PdfFindTextBarItem1)
@@ -218,6 +221,7 @@ Partial Class frmPdf
         '
         'PdfZoomRibbonPageGroup1
         '
+        Me.PdfZoomRibbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.[False]
         Me.PdfZoomRibbonPageGroup1.ItemLinks.Add(Me.PdfZoomOutBarItem1)
         Me.PdfZoomRibbonPageGroup1.ItemLinks.Add(Me.PdfZoomInBarItem1)
         Me.PdfZoomRibbonPageGroup1.ItemLinks.Add(Me.PdfExactZoomListBarSubItem1)
@@ -230,6 +234,7 @@ Partial Class frmPdf
         '
         'PdfFormDataBarPageGroup1
         '
+        Me.PdfFormDataBarPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.[False]
         Me.PdfFormDataBarPageGroup1.ItemLinks.Add(Me.PdfExportFormDataBarItem1)
         Me.PdfFormDataBarPageGroup1.ItemLinks.Add(Me.PdfImportFormDataBarItem1)
         Me.PdfFormDataBarPageGroup1.Name = "PdfFormDataBarPageGroup1"
@@ -237,9 +242,10 @@ Partial Class frmPdf
         'p
         '
         Me.p.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.p.Location = New System.Drawing.Point(0, 82)
+        Me.p.Location = New System.Drawing.Point(0, 112)
+        Me.p.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.p.Name = "p"
-        Me.p.Size = New System.Drawing.Size(1184, 610)
+        Me.p.Size = New System.Drawing.Size(1198, 587)
         Me.p.TabIndex = 1
         '
         'opnFle
@@ -277,12 +283,12 @@ Partial Class frmPdf
         '
         'frmPdf
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1184, 692)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.p)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmPdf.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmPdf"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

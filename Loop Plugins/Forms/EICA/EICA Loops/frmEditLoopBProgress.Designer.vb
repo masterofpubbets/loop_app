@@ -72,12 +72,13 @@ Partial Class frmEditLoopBProgress
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1076, 49)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 75)
         '
         'DockManager1
         '
@@ -90,10 +91,11 @@ Partial Class frmEditLoopBProgress
         Me.DockPanel1.Controls.Add(Me.DockPanel1_Container)
         Me.DockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom
         Me.DockPanel1.ID = New System.Guid("40f7e7ea-f483-49d0-9535-a30d9f75deb9")
-        Me.DockPanel1.Location = New System.Drawing.Point(0, 623)
+        Me.DockPanel1.Location = New System.Drawing.Point(0, 606)
+        Me.DockPanel1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.DockPanel1.Name = "DockPanel1"
         Me.DockPanel1.OriginalSize = New System.Drawing.Size(200, 93)
-        Me.DockPanel1.Size = New System.Drawing.Size(1076, 93)
+        Me.DockPanel1.Size = New System.Drawing.Size(1198, 93)
         Me.DockPanel1.Text = "Menu"
         '
         'DockPanel1_Container
@@ -101,39 +103,43 @@ Partial Class frmEditLoopBProgress
         Me.DockPanel1_Container.Controls.Add(Me.pBar)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton2)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton1)
-        Me.DockPanel1_Container.Location = New System.Drawing.Point(4, 24)
+        Me.DockPanel1_Container.Location = New System.Drawing.Point(4, 58)
+        Me.DockPanel1_Container.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.DockPanel1_Container.Name = "DockPanel1_Container"
-        Me.DockPanel1_Container.Size = New System.Drawing.Size(1068, 65)
+        Me.DockPanel1_Container.Size = New System.Drawing.Size(1190, 31)
         Me.DockPanel1_Container.TabIndex = 0
         '
         'pBar
         '
-        Me.pBar.Location = New System.Drawing.Point(26, 27)
+        Me.pBar.Location = New System.Drawing.Point(30, 33)
+        Me.pBar.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.pBar.Name = "pBar"
         Me.pBar.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Office2003
         Me.pBar.Properties.ShowTitle = True
         Me.pBar.Properties.StartColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.pBar.Size = New System.Drawing.Size(711, 19)
+        Me.pBar.Size = New System.Drawing.Size(829, 23)
         Me.pBar.TabIndex = 9
         Me.pBar.Visible = False
         '
         'SimpleButton2
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SimpleButton2.Image = CType(resources.GetObject("SimpleButton2.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(922, 14)
+        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton2.Location = New System.Drawing.Point(1198, -17)
+        Me.SimpleButton2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(138, 43)
+        Me.SimpleButton2.Size = New System.Drawing.Size(161, 53)
         Me.SimpleButton2.TabIndex = 8
         Me.SimpleButton2.Text = "Update Loops"
         '
         'SimpleButton1
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(778, 14)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(1030, -17)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(138, 43)
+        Me.SimpleButton1.Size = New System.Drawing.Size(161, 53)
         Me.SimpleButton1.TabIndex = 7
         Me.SimpleButton1.Text = "Back"
         '
@@ -151,17 +157,20 @@ Partial Class frmEditLoopBProgress
         '
         Me.DockPanel2_Container.Controls.Add(Me.GridControl2)
         Me.DockPanel2_Container.Location = New System.Drawing.Point(0, 0)
+        Me.DockPanel2_Container.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.DockPanel2_Container.Name = "DockPanel2_Container"
-        Me.DockPanel2_Container.Size = New System.Drawing.Size(1070, 546)
+        Me.DockPanel2_Container.Size = New System.Drawing.Size(1192, 493)
         Me.DockPanel2_Container.TabIndex = 0
         '
         'GridControl2
         '
         Me.GridControl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.GridControl2.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GridControl2.Location = New System.Drawing.Point(0, 0)
         Me.GridControl2.MainView = Me.GridView3
+        Me.GridControl2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GridControl2.Name = "GridControl2"
-        Me.GridControl2.Size = New System.Drawing.Size(1070, 546)
+        Me.GridControl2.Size = New System.Drawing.Size(1192, 493)
         Me.GridControl2.TabIndex = 9
         Me.GridControl2.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView3})
         '
@@ -171,6 +180,7 @@ Partial Class frmEditLoopBProgress
         Me.GridView3.Appearance.GroupFooter.Options.UseForeColor = True
         Me.GridView3.AppearancePrint.Preview.ForeColor = System.Drawing.Color.Black
         Me.GridView3.AppearancePrint.Preview.Options.UseForeColor = True
+        Me.GridView3.DetailHeight = 431
         Me.GridView3.GridControl = Me.GridControl2
         Me.GridView3.Name = "GridView3"
         Me.GridView3.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.[True]
@@ -207,18 +217,17 @@ Partial Class frmEditLoopBProgress
         '
         Me.TabbedView1.DocumentGroups.AddRange(New DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup() {Me.DocumentGroup1})
         Me.TabbedView1.Documents.AddRange(New DevExpress.XtraBars.Docking2010.Views.BaseDocument() {Me.Document1})
-        Me.TabbedView1.RootContainer.Element = Nothing
         DockingContainer1.Element = Me.DocumentGroup1
         Me.TabbedView1.RootContainer.Nodes.AddRange(New DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer() {DockingContainer1})
         '
         'frmEditLoopBProgress
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1076, 716)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.DockPanel1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmEditLoopBProgress.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmEditLoopBProgress"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

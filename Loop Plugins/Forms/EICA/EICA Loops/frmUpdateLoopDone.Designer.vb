@@ -50,27 +50,28 @@ Partial Class frmUpdateLoopDone
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.BarButtonItem2})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 3
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1178, 82)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 112)
         '
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Add To Loop Done"
-        Me.BarButtonItem1.Glyph = CType(resources.GetObject("BarButtonItem1.Glyph"), System.Drawing.Image)
         Me.BarButtonItem1.Id = 1
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
         Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem2
         '
         Me.BarButtonItem2.Caption = "Refresh"
-        Me.BarButtonItem2.Glyph = CType(resources.GetObject("BarButtonItem2.Glyph"), System.Drawing.Image)
         Me.BarButtonItem2.Id = 2
+        Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.Name = "BarButtonItem2"
         Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -91,7 +92,8 @@ Partial Class frmUpdateLoopDone
         '
         Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 82)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 112)
+        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
         'SplitContainer1.Panel1
@@ -102,17 +104,20 @@ Partial Class frmUpdateLoopDone
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.lstLoop)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ToolStrip1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1178, 577)
-        Me.SplitContainer1.SplitterDistance = 836
+        Me.SplitContainer1.Size = New System.Drawing.Size(1198, 587)
+        Me.SplitContainer1.SplitterDistance = 850
+        Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 1
         '
         'grd
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grd.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grd.Location = New System.Drawing.Point(0, 0)
         Me.grd.MainView = Me.gvLoop
+        Me.grd.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(834, 575)
+        Me.grd.Size = New System.Drawing.Size(848, 585)
         Me.grd.TabIndex = 4
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvLoop})
         '
@@ -130,6 +135,7 @@ Partial Class frmUpdateLoopDone
         Me.gvLoop.Appearance.SelectedRow.ForeColor = System.Drawing.Color.White
         Me.gvLoop.Appearance.SelectedRow.Options.UseBackColor = True
         Me.gvLoop.Appearance.SelectedRow.Options.UseForeColor = True
+        Me.gvLoop.DetailHeight = 431
         Me.gvLoop.GridControl = Me.grd
         Me.gvLoop.Name = "gvLoop"
         Me.gvLoop.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -145,40 +151,45 @@ Partial Class frmUpdateLoopDone
         '
         Me.lstLoop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lstLoop.FormattingEnabled = True
-        Me.lstLoop.Location = New System.Drawing.Point(0, 25)
+        Me.lstLoop.ItemHeight = 16
+        Me.lstLoop.Location = New System.Drawing.Point(0, 27)
+        Me.lstLoop.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.lstLoop.Name = "lstLoop"
         Me.lstLoop.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.lstLoop.Size = New System.Drawing.Size(336, 550)
+        Me.lstLoop.Size = New System.Drawing.Size(341, 558)
         Me.lstLoop.TabIndex = 1
         '
         'ToolStrip1
         '
+        Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1, Me.ToolStripSeparator1, Me.ToolStripButton2, Me.ToolStripButton3})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(336, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(341, 27)
         Me.ToolStrip1.TabIndex = 0
         Me.ToolStrip1.Text = "ToolStrip1"
         '
         'ToolStripButton1
         '
+        Me.ToolStripButton1.ForeColor = System.Drawing.Color.Black
         Me.ToolStripButton1.Image = Global.Loop_Plugins.My.Resources.Resources.save
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(120, 22)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(152, 24)
         Me.ToolStripButton1.Text = "Set As Loop Done"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 27)
         '
         'ToolStripButton2
         '
+        Me.ToolStripButton2.ForeColor = System.Drawing.Color.Black
         Me.ToolStripButton2.Image = Global.Loop_Plugins.My.Resources.Resources.DeleteRed
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(60, 22)
+        Me.ToolStripButton2.Size = New System.Drawing.Size(77, 24)
         Me.ToolStripButton2.Text = "Delete"
         '
         'ToolStripButton3
@@ -186,17 +197,17 @@ Partial Class frmUpdateLoopDone
         Me.ToolStripButton3.Image = Global.Loop_Plugins.My.Resources.Resources.delete2
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(75, 22)
+        Me.ToolStripButton3.Size = New System.Drawing.Size(97, 24)
         Me.ToolStripButton3.Text = "Delete all"
         '
         'frmUpdateLoopDone
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1178, 659)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmUpdateLoopDone.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmUpdateLoopDone"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

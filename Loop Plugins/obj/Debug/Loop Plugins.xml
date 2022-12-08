@@ -49,6 +49,141 @@ AND [ms_3]=Percentage
 ) AS V.
 </summary>
 </member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreateElement">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectElements(&apos;10031&apos;)](
+	[ProjectCode] [nvarchar](255) NULL,
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[Module] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[Group] [nvarchar](255) NULL,
+	[Item] [nvarchar](255) NULL,
+	[ElementType] [nvarchar](255) NULL,
+	[ElementCode] [nvarchar](255) NULL,
+	[Name] [nvarchar](255) NULL,
+	[Discipline] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Class] [nvarchar](2 [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreateGroups">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectGroups(&apos;10031&apos;)](
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[Module] [nvarchar](255) NULL,
+	[GroupID] [nvarchar](255) NULL,
+	[GroupName] [nvarchar](255) NULL,
+	[Revision] [nvarchar](255) NULL,
+	[Discipline] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Class] [nvarchar](255) NULL,
+	[Folder] [bit] NOT NULL,
+	[Subcontractor] [nvarchar](255) NULL,
+	[Weight] [float] NULL,
+	[ [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreateItems">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectItems(&apos;10031&apos;)](
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[Module] [nvarchar](255) NULL,
+	[Group] [nvarchar](255) NULL,
+	[ItemCode] [nvarchar](255) NULL,
+	[ItemName] [nvarchar](255) NULL,
+	[OldItem] [nvarchar](255) NULL,
+	[Revision] [nvarchar](255) NULL,
+	[Discipline] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Class] [nvarchar](255) NULL,
+	[Subcontractor] [nvarchar](2 [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreatePunch">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectPunchs(&apos;10031&apos;)](
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[Module] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[Group] [nvarchar](255) NULL,
+	[Item] [nvarchar](255) NULL,
+	[ElementType] [nvarchar](255) NULL,
+	[ElementCode] [nvarchar](255) NULL,
+	[Name] [nvarchar](255) NULL,
+	[Discipline] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Class] [nvarchar](255) NULL,
+	[Subcontractor] [nvarchar](2 [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreateSubsystem">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectSubsystems(&apos;10031&apos;)](
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[SubSystemName] [nvarchar](255) NULL,
+	[Description] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Priority] [float] NULL,
+	[Weight] [float] NULL,
+	[HH] [float] NULL,
+	[Remarks] [nvarchar](255) NULL,
+	[Subcontractor] [nvarchar](255) NULL,
+	[TargetDate] [nvarchar](255) NULL,
+	[PlanningDate] [nvarchar](255) NUL [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreateSystems">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectSystems(&apos;10031&apos;)](
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SystemName] [nvarchar](255) NULL,
+	[Description] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Priority] [float] NULL,
+	[Weight] [float] NULL,
+	[HH] [float] NULL,
+	[Remarks] [nvarchar](255) NULL,
+	[Subcontractor] [nvarchar](255) NULL,
+	[TargetDate] [nvarchar](255) NULL,
+	[PlanningDate] [nvarchar](255) NULL,
+	[RFCN] [nvarchar](255) NULL,
+	[RFCN_ [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.CreateTask">
+<summary>
+  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectTasks(&apos;10031&apos;)](
+	[ProjectCode] [nvarchar](255) NULL,
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[Module] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[Group] [nvarchar](255) NULL,
+	[Item] [nvarchar](255) NULL,
+	[ElementType] [nvarchar](255) NULL,
+	[ElementCode] [nvarchar](255) NULL,
+	[Name] [nvarchar](255) NULL,
+	[Discipline] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Class] [nvarchar](255) [rest of string was truncated]&quot;;.
+</summary>
+</member>
 <member name="P:Loop_Plugins.My.Resources.Resources.delete2">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -95,11 +230,10 @@ and TR_Loop_Folder_QC_Release is not null and L_Done is n [rest of string was tr
 ,vCblParProductionTotal_Vendor.Pro_Date
 ,vCblParProductionTotal_Vendor.Percentage
 ,[Pulled_con] as [Pulled Confirm]
-,[EC_Cable_Gland_From] as [Gland From Date]
-,[EC_Cable_Gland_From_con] as [Gland From Confirm]
-,[EC_Cable_Gland_To] as [Gland To Date]
-,[EC_Cable_Gland_To_con] as [Gland To Confirm]
-,[EC_Plan_Connect [rest of string was truncated]&quot;;.
+,[EC_Plan_Connected_Date_From] as [Connected From Date]
+,[EC_Plan_Connected_Date_From_con] as [Connect From Confirm]
+,[EC_Plan_Connected_Date_To] as [Connected To Date]
+,[EC_Plan_Connected_Date_To_con [rest of string was truncated]&quot;;.
 </summary>
 </member>
 <member name="P:Loop_Plugins.My.Resources.Resources.EcPro">
@@ -211,6 +345,18 @@ order by Area,TAG.
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:Loop_Plugins.My.Resources.Resources.FixColumnsData">
+<summary>
+  Looks up a localized string similar to update [getProjectPunchs(&apos;10031&apos;)] set [SignedByTR]=replace([SignedByTR],&apos;&apos;&apos;&apos;,&apos;&apos;)
+update [getProjectPunchs(&apos;10031&apos;)] set [SignedBySubcon]=replace([SignedBySubcon],&apos;&apos;&apos;&apos;,&apos;&apos;)
+update [getProjectPunchs(&apos;10031&apos;)] set [SignedByClient]=replace([SignedByClient],&apos;&apos;&apos;&apos;,&apos;&apos;)
+
+update [getProjectSubsystems(&apos;10031&apos;)] set [Data3]=replace([Data3],&apos;&apos;&apos;&apos;,&apos;&apos;)
+update [getProjectSubsystems(&apos;10031&apos;)] set [Data4]=replace([Data4],&apos;&apos;&apos;&apos;,&apos;&apos;)
+update [getProjectSubsystems(&apos;10031&apos;)] set [Data5]=replace([Data5],&apos;&apos;&apos;&apos;,&apos;&apos;)
+update [getPro [rest of string was truncated]&quot;;.
+</summary>
+</member>
 <member name="P:Loop_Plugins.My.Resources.Resources.FolderSignedInHCS">
 <summary>
   Looks up a localized string similar to SELECT &apos;Folder Signed in HCS&apos; as [Status]
@@ -250,10 +396,10 @@ FROM [tblInsLoop].
 ,vCblParProductionTotal_Vendor.Pro_Date
 ,vCblParProductionTotal_Vendor.Percentage
 ,[Pulled_con] as [Pulled Confirm]
-,[IC_Cable_Gland_From] as [Gland From Date]
-,[IC_Cable_Gland_From_con] as [Gland From Confirm]
-,[IC_Cable_Gland_To] as [Gland To Date]
-,[IC_Cable_Gland_To_con] as [Gland To Con [rest of string was truncated]&quot;;.
+,[IC_Plan_Connected_Date_From] as [Connected From Date]
+,[IC_Plan_Connected_Date_From_con] as [Connect From Confirm]
+,[IC_Plan_Connected_Date_To] as [Connected To Date]
+,[IC_Pl [rest of string was truncated]&quot;;.
 </summary>
 </member>
 <member name="P:Loop_Plugins.My.Resources.Resources.IcPro">
@@ -402,6 +548,11 @@ LEFT JOIN
 SELECT TBLILD.Item,TBLILD.Loop_N [rest of string was truncated]&quot;;.
 </summary>
 </member>
+<member name="P:Loop_Plugins.My.Resources.Resources.loop32">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:Loop_Plugins.My.Resources.Resources.LoopBasicInfo">
 <summary>
   Looks up a localized string similar to SELECT 
@@ -499,9 +650,11 @@ order by area.
 </member>
 <member name="P:Loop_Plugins.My.Resources.Resources.LoopsCons">
 <summary>
-  Looks up a localized string similar to SELECT [tbl_id] as ID,[loop_constraint] as [Constraint],[Department],[issued_date] as [Issued Date],[action_by] as [Action By]
+  Looks up a localized string similar to SELECT [tbl_id] as ID,[tblConstraints].cons_name as [Constraint],tblDepartments.dep_name as [Department],[issued_date] as [Issued Date],[action_by] as [Action By]
 ,[forecast_released_date] as [Forecast Date],[released_date] as [Released Date],[Remarks]
-FROM [tblLoopConstraint].
+FROM [tblLoopConstraint]
+inner join tblDepartments on [tblLoopConstraint].dep_id = tblDepartments.dep_id
+inner join [tblConstraints] on [tblLoopConstraint].cons_id = [tblConstraints].cons_id.
 </summary>
 </member>
 <member name="P:Loop_Plugins.My.Resources.Resources.LoopsSteps">
@@ -632,6 +785,23 @@ Subsystem NVARCHAR (50)
 <member name="P:Loop_Plugins.My.Resources.Resources.save">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:Loop_Plugins.My.Resources.Resources.TruncateHCSs">
+<summary>
+  Looks up a localized string similar to TRUNCATE TABLE [HCS].ProjectElements
+TRUNCATE TABLE [HCS].ProjectGroups
+TRUNCATE TABLE [HCS].ProjectItems
+TRUNCATE TABLE [HCS].ProjectPunchs
+TRUNCATE TABLE [HCS].ProjectSubsystems
+TRUNCATE TABLE [HCS].ProjectSystems
+TRUNCATE TABLE [HCS].ProjectTasks
+
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedByTR] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedBySubcon] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedByClient] NVARCHAR(100)
+
+ALTER TABLE [HCS]. [rest of string was truncated]&quot;;.
 </summary>
 </member>
 <member name="P:Loop_Plugins.My.Resources.Resources.UpdateDeactivatedLoopInHCS">

@@ -41,109 +41,116 @@ Partial Class frmEICALogin
         '
         Me.PictureBox1.BackColor = System.Drawing.Color.Transparent
         Me.PictureBox1.Image = Global.Loop_Plugins.My.Resources.Resources.backgroundTrans
-        Me.PictureBox1.Location = New System.Drawing.Point(12, 161)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.PictureBox1.Location = New System.Drawing.Point(16, 198)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(228, 96)
+        Me.PictureBox1.Size = New System.Drawing.Size(304, 118)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 13
-        Me.PictureBox1.TabStop = false
+        Me.PictureBox1.TabStop = False
         '
         'Label3
         '
-        Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(20, 118)
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(27, 145)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(56, 13)
+        Me.Label3.Size = New System.Drawing.Size(73, 17)
         Me.Label3.TabIndex = 26
         Me.Label3.Text = "Password:"
         '
         'Label4
         '
-        Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(20, 84)
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(27, 103)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(32, 13)
+        Me.Label4.Size = New System.Drawing.Size(42, 17)
         Me.Label4.TabIndex = 25
         Me.Label4.Text = "User:"
         '
         'txtPass
         '
         Me.txtPass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtPass.Location = New System.Drawing.Point(90, 116)
+        Me.txtPass.Location = New System.Drawing.Point(120, 143)
+        Me.txtPass.Margin = New System.Windows.Forms.Padding(4)
         Me.txtPass.Name = "txtPass"
         Me.txtPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(46)
-        Me.txtPass.Size = New System.Drawing.Size(392, 20)
+        Me.txtPass.Size = New System.Drawing.Size(522, 22)
         Me.txtPass.TabIndex = 24
         '
         'txtUser
         '
         Me.txtUser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtUser.Location = New System.Drawing.Point(90, 82)
+        Me.txtUser.Location = New System.Drawing.Point(120, 101)
+        Me.txtUser.Margin = New System.Windows.Forms.Padding(4)
         Me.txtUser.Name = "txtUser"
-        Me.txtUser.Size = New System.Drawing.Size(392, 20)
+        Me.txtUser.Size = New System.Drawing.Size(522, 22)
         Me.txtUser.TabIndex = 23
         '
         'Label2
         '
-        Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(20, 48)
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(27, 59)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(56, 13)
+        Me.Label2.Size = New System.Drawing.Size(73, 17)
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Database:"
         '
         'Label1
         '
-        Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(20, 14)
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(27, 17)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(41, 13)
+        Me.Label1.Size = New System.Drawing.Size(54, 17)
         Me.Label1.TabIndex = 21
         Me.Label1.Text = "Server:"
         '
         'txtDB
         '
         Me.txtDB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtDB.Location = New System.Drawing.Point(90, 46)
+        Me.txtDB.Location = New System.Drawing.Point(120, 57)
+        Me.txtDB.Margin = New System.Windows.Forms.Padding(4)
         Me.txtDB.Name = "txtDB"
-        Me.txtDB.Size = New System.Drawing.Size(392, 20)
+        Me.txtDB.Size = New System.Drawing.Size(522, 22)
         Me.txtDB.TabIndex = 20
-        Me.txtDB.Text = "TREICAKNPC"
         '
         'txtConn
         '
         Me.txtConn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtConn.Location = New System.Drawing.Point(90, 12)
+        Me.txtConn.Location = New System.Drawing.Point(120, 15)
+        Me.txtConn.Margin = New System.Windows.Forms.Padding(4)
         Me.txtConn.Name = "txtConn"
-        Me.txtConn.Size = New System.Drawing.Size(392, 20)
+        Me.txtConn.Size = New System.Drawing.Size(522, 22)
         Me.txtConn.TabIndex = 19
-        Me.txtConn.Text = "TR-SQL-ZOR\TRAPP"
         '
         'Cancel
         '
         Me.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Cancel.Location = New System.Drawing.Point(264, 201)
+        Me.Cancel.Location = New System.Drawing.Point(352, 247)
+        Me.Cancel.Margin = New System.Windows.Forms.Padding(4)
         Me.Cancel.Name = "Cancel"
-        Me.Cancel.Size = New System.Drawing.Size(139, 56)
+        Me.Cancel.Size = New System.Drawing.Size(185, 69)
         Me.Cancel.TabIndex = 18
         Me.Cancel.Text = "Cancel"
         '
         'OK
         '
-        Me.OK.Location = New System.Drawing.Point(409, 201)
+        Me.OK.Location = New System.Drawing.Point(545, 247)
+        Me.OK.Margin = New System.Windows.Forms.Padding(4)
         Me.OK.Name = "OK"
-        Me.OK.Size = New System.Drawing.Size(139, 56)
+        Me.OK.Size = New System.Drawing.Size(185, 69)
         Me.OK.TabIndex = 17
         Me.OK.Text = "Login"
         '
         'frmEICALogin
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(223,Byte),Integer), CType(CType(224,Byte),Integer), CType(CType(229,Byte),Integer))
-        Me.ClientSize = New System.Drawing.Size(574, 278)
-        Me.ControlBox = false
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(223, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(765, 342)
+        Me.ControlBox = False
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.txtPass)
@@ -156,7 +163,8 @@ Partial Class frmEICALogin
         Me.Controls.Add(Me.OK)
         Me.Controls.Add(Me.PictureBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
-        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmEICALogin"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "EICA Login"

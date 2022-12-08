@@ -1,0 +1,29 @@
+TRUNCATE TABLE [HCS].ProjectElements
+TRUNCATE TABLE [HCS].ProjectGroups
+TRUNCATE TABLE [HCS].ProjectItems
+TRUNCATE TABLE [HCS].ProjectPunchs
+TRUNCATE TABLE [HCS].ProjectSubsystems
+TRUNCATE TABLE [HCS].ProjectSystems
+TRUNCATE TABLE [HCS].ProjectTasks
+
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedByTR] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedBySubcon] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedByClient] NVARCHAR(100)
+
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [Data3] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [Data4] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [Data5] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [Data6] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [Data7] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [Data8] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [TargetDate] NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectSubsystems] ALTER column [PlanningDate] NVARCHAR(100)
+
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column SignedByClient NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column SignedBySubcon NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectPunchs] ALTER column SignedByTR NVARCHAR(100)
+
+ALTER TABLE [HCS].[ProjectTasks] ALTER column SignedByClient NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectTasks] ALTER column SignedBySubcon NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectTasks] ALTER column SignedByTR NVARCHAR(100)
+ALTER TABLE [HCS].[ProjectTasks] ALTER column Printdate NVARCHAR(100)

@@ -1,0 +1,67 @@
+update [HCS].[ProjectPunchs] set [SignedByTR]=replace([SignedByTR],'''','')
+update [HCS].[ProjectPunchs] set [SignedBySubcon]=replace([SignedBySubcon],'''','')
+update [HCS].[ProjectPunchs] set [SignedByClient]=replace([SignedByClient],'''','')
+
+update [HCS].[ProjectSubsystems] set [Data3]=replace([Data3],'''','')
+update [HCS].[ProjectSubsystems] set [Data4]=replace([Data4],'''','')
+update [HCS].[ProjectSubsystems] set [Data5]=replace([Data5],'''','')
+update [HCS].[ProjectSubsystems] set [Data6]=replace([Data6],'''','')
+update [HCS].[ProjectSubsystems] set [Data7]=replace([Data7],'''','')
+update [HCS].[ProjectSubsystems] set [Data7]=replace([Data7],'-','/')
+update [HCS].[ProjectSubsystems] set [Data8]=replace([Data8],'''','')
+update [HCS].[ProjectSubsystems] set [TargetDate]=replace([TargetDate],'''','')
+update [HCS].[ProjectSubsystems] set [PlanningDate]=replace([PlanningDate],'''','')
+
+update [HCS].[ProjectPunchs] set SignedByClient=replace(SignedByClient,'''','')
+update [HCS].[ProjectPunchs] set SignedBySubcon=replace(SignedBySubcon,'''','')
+update [HCS].[ProjectPunchs] set SignedByTR=replace(SignedByTR,'''','')
+
+update [HCS].[ProjectTasks] set SignedByClient=replace(SignedByClient,'''','')
+update [HCS].[ProjectTasks] set SignedBySubcon=replace(SignedBySubcon,'''','')
+update [HCS].[ProjectTasks] set SignedByTR=replace(SignedByTR,'''','')
+update [HCS].[ProjectTasks] set PrintDate=replace(PrintDate,'''','')
+
+update [HCS].[ProjectPunchs] set [SignedByTR]=null where [SignedByTR]=''
+update [HCS].[ProjectPunchs] set [SignedBySubcon]=null where [SignedBySubcon]=''
+update [HCS].[ProjectPunchs] set [SignedByClient]=null where [SignedByClient]=''
+
+update [HCS].[ProjectSubsystems] set [Data3]=null where [Data3]=''
+update [HCS].[ProjectSubsystems] set [Data4]=null where [Data4]=''
+update [HCS].[ProjectSubsystems] set [Data5]=null where [Data5]=''
+update [HCS].[ProjectSubsystems] set [Data6]=null where [Data6]=''
+update [HCS].[ProjectSubsystems] set [Data7]=null where [Data7]=''
+update [HCS].[ProjectSubsystems] set [Data8]=null where [Data8]=''
+update [HCS].[ProjectSubsystems] set [TargetDate]=null where [TargetDate]=''
+update [HCS].[ProjectSubsystems] set [PlanningDate]=null where [PlanningDate]=''
+
+update [HCS].[ProjectPunchs] set SignedByClient=null where SignedByClient=''
+update [HCS].[ProjectPunchs] set SignedBySubcon=null where SignedBySubcon=''
+update [HCS].[ProjectPunchs] set SignedByTR=null where SignedByTR=''
+
+update [HCS].[ProjectTasks] set SignedByClient=null where SignedByClient=''
+update [HCS].[ProjectTasks] set SignedBySubcon=null where SignedBySubcon=''
+update [HCS].[ProjectTasks] set SignedByTR=null where SignedByTR=''
+update [HCS].[ProjectTasks] set PrintDate=null where PrintDate=''
+
+
+alter table [HCS].[ProjectPunchs] alter column [SignedByTR] date
+alter table [HCS].[ProjectPunchs] alter column [SignedBySubcon] date
+alter table [HCS].[ProjectPunchs] alter column [SignedByClient] date
+
+alter table [HCS].[ProjectSubsystems] alter column [Data3] date
+alter table [HCS].[ProjectSubsystems] alter column [Data4] date
+alter table [HCS].[ProjectSubsystems] alter column [Data5] date
+alter table [HCS].[ProjectSubsystems] alter column [Data6] date
+alter table [HCS].[ProjectSubsystems] alter column [Data7] date
+alter table [HCS].[ProjectSubsystems] alter column [Data8] date
+alter table [HCS].[ProjectSubsystems] alter column [TargetDate] date
+alter table [HCS].[ProjectSubsystems] alter column [PlanningDate] date
+
+alter table [HCS].[ProjectPunchs] alter column SignedByClient date
+alter table [HCS].[ProjectPunchs] alter column SignedBySubcon date
+alter table [HCS].[ProjectPunchs] alter column SignedByTR date
+
+alter table [HCS].[ProjectTasks] alter column SignedByClient date
+alter table [HCS].[ProjectTasks] alter column SignedBySubcon date
+alter table [HCS].[ProjectTasks] alter column SignedByTR date
+alter table [HCS].[ProjectTasks] alter column Printdate date

@@ -1,0 +1,658 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{346CF222-DF71-4648-8195-C83C312CDE1E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Loop_Plugins.My.MyApplication</StartupObject>
+    <RootNamespace>Loop_Plugins</RootNamespace>
+    <AssemblyName>Loop Plugins</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>Loop Plugins.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Loop Plugins.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Life_Cycle_Loop.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.BonusSkins.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Charts.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v16.1.UI, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Docs.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Pdf.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Pdf.v16.1.Drawing, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.RichEdit.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Sparkline.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Spreadsheet.v16.1.Core, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v16.1.UI, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraBars.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v16.1.UI, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v16.1.Wizard, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraEditors.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraGrid.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraNavBar.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraPdfViewer.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraRichEdit.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraSpreadsheet.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v16.1, Version=16.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Classes\Engineering.vb" />
+    <Compile Include="Classes\ExtractILD.vb" />
+    <Compile Include="Classes\LoopProcess.vb" />
+    <Compile Include="Classes\Production.vb" />
+    <Compile Include="Classes\Tooles.vb" />
+    <Compile Include="Forms\EICA\Constraints\frmAddConsEntry.Designer.vb">
+      <DependentUpon>frmAddConsEntry.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmAddConsEntry.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmDefaultCons.Designer.vb">
+      <DependentUpon>frmDefaultCons.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmDefaultCons.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoadCons.Designer.vb">
+      <DependentUpon>frmLoadCons.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoadCons.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoopConstraints2.Designer.vb">
+      <DependentUpon>frmLoopConstraints2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoopConstraints2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmAddEICALoop.Designer.vb">
+      <DependentUpon>frmAddEICALoop.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmAddEICALoop.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmAddLoopProgress.Designer.vb">
+      <DependentUpon>frmAddLoopProgress.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmAddLoopProgress.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.Designer.vb">
+      <DependentUpon>frmEditLoopBProgress.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.Designer.vb">
+      <DependentUpon>frmUpdateLoopDone.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmCopyILD.Designer.vb">
+      <DependentUpon>frmCopyILD.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmCopyILD.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmEICALogin.Designer.vb">
+      <DependentUpon>frmEICALogin.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmEICALogin.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmEICALoopMap.Designer.vb">
+      <DependentUpon>frmEICALoopMap.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmEICALoopMap.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmHCSEICALoopStatus.Designer.vb">
+      <DependentUpon>frmHCSEICALoopStatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmHCSEICALoopStatus.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmInsLoop.Designer.vb">
+      <DependentUpon>frmInsLoop.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmInsLoop.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmLoopCard.Designer.vb">
+      <DependentUpon>frmLoopCard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmLoopCard.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoopConstraint.Designer.vb">
+      <DependentUpon>frmLoopConstraint.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoopConstraint.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoopStatus.Designer.vb">
+      <DependentUpon>frmLoopStatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Constraints\frmLoopStatus.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmLoopTaskDispatch.Designer.vb">
+      <DependentUpon>frmLoopTaskDispatch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmLoopTaskDispatch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmLoopWorkfront.Designer.vb">
+      <DependentUpon>frmLoopWorkfront.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmLoopWorkfront.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmPendingItemsNotInHCS.Designer.vb">
+      <DependentUpon>frmPendingItemsNotInHCS.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmPendingItemsNotInHCS.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmPenItems.Designer.vb">
+      <DependentUpon>frmPenItems.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmPenItems.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmPrecommWF.Designer.vb">
+      <DependentUpon>frmPrecommWF.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmPrecommWF.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\frmRFINoIndex.Designer.vb">
+      <DependentUpon>frmRFINoIndex.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\frmRFINoIndex.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmFindItemByDiscipline.Designer.vb">
+      <DependentUpon>frmFindItemByDiscipline.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmFindItemByDiscipline.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmItemProduction.Designer.vb">
+      <DependentUpon>frmItemProduction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmItemProduction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmProReport.Designer.vb">
+      <DependentUpon>frmProReport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmProReport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmSelectDate.Designer.vb">
+      <DependentUpon>frmSelectDate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmSelectDate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmSelectStep.Designer.vb">
+      <DependentUpon>frmSelectStep.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmSelectStep.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmUpdateFolderSteps.Designer.vb">
+      <DependentUpon>frmUpdateFolderSteps.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmUpdateFolderSteps.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmValidateSubPro.Designer.vb">
+      <DependentUpon>frmValidateSubPro.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Production\frmValidateSubPro.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Summaries\frmFolderStatus.Designer.vb">
+      <DependentUpon>frmFolderStatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Summaries\frmFolderStatus.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\Summaries\frmLoopStepStatus.Designer.vb">
+      <DependentUpon>frmLoopStepStatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\Summaries\frmLoopStepStatus.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmAddLoop.Designer.vb">
+      <DependentUpon>frmAddLoop.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmAddLoop.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExportILDpdf.Designer.vb">
+      <DependentUpon>frmExportILDpdf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExportILDpdf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExtractILD.Designer.vb">
+      <DependentUpon>frmExtractILD.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExtractILD.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExtractILD2.Designer.vb">
+      <DependentUpon>frmExtractILD2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExtractILD2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmFindKeyword.Designer.vb">
+      <DependentUpon>frmFindKeyword.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmFindKeyword.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmILDManage.Designer.vb">
+      <DependentUpon>frmILDManage.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmILDManage.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmPdf.Designer.vb">
+      <DependentUpon>frmPdf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmPdf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmRecentlyLoop.Designer.vb">
+      <DependentUpon>frmRecentlyLoop.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmRecentlyLoop.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Logs\frmSysLogs.Designer.vb">
+      <DependentUpon>frmSysLogs.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Logs\frmSysLogs.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\frmMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Main\frmMain.Designer.vb">
+      <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Map\frmNativeLoopMap.Designer.vb">
+      <DependentUpon>frmNativeLoopMap.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Map\frmNativeLoopMap.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Others\frmExcute.Designer.vb">
+      <DependentUpon>frmExcute.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Others\frmExcute.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\frmSet.Designer.vb">
+      <DependentUpon>frmSet.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\frmSet.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WarRoom\frmWarRoom.Designer.vb">
+      <DependentUpon>frmWarRoom.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WarRoom\frmWarRoom.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modules\mMain.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\EICA\Constraints\frmAddConsEntry.resx">
+      <DependentUpon>frmAddConsEntry.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Constraints\frmDefaultCons.resx">
+      <DependentUpon>frmDefaultCons.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoadCons.resx">
+      <DependentUpon>frmLoadCons.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopConstraints2.resx">
+      <DependentUpon>frmLoopConstraints2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmAddEICALoop.resx">
+      <DependentUpon>frmAddEICALoop.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmAddLoopProgress.resx">
+      <DependentUpon>frmAddLoopProgress.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.resx">
+      <DependentUpon>frmEditLoopBProgress.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.resx">
+      <DependentUpon>frmUpdateLoopDone.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmCopyILD.resx">
+      <DependentUpon>frmCopyILD.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmEICALogin.resx">
+      <DependentUpon>frmEICALogin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmEICALoopMap.resx">
+      <DependentUpon>frmEICALoopMap.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmHCSEICALoopStatus.resx">
+      <DependentUpon>frmHCSEICALoopStatus.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmInsLoop.resx">
+      <DependentUpon>frmInsLoop.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmLoopCard.resx">
+      <DependentUpon>frmLoopCard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopConstraint.resx">
+      <DependentUpon>frmLoopConstraint.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopStatus.resx">
+      <DependentUpon>frmLoopStatus.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmLoopTaskDispatch.resx">
+      <DependentUpon>frmLoopTaskDispatch.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmLoopWorkfront.resx">
+      <DependentUpon>frmLoopWorkfront.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmPendingItemsNotInHCS.resx">
+      <DependentUpon>frmPendingItemsNotInHCS.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmPenItems.resx">
+      <DependentUpon>frmPenItems.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmPrecommWF.resx">
+      <DependentUpon>frmPrecommWF.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\frmRFINoIndex.resx">
+      <DependentUpon>frmRFINoIndex.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmFindItemByDiscipline.resx">
+      <DependentUpon>frmFindItemByDiscipline.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmItemProduction.resx">
+      <DependentUpon>frmItemProduction.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmProReport.resx">
+      <DependentUpon>frmProReport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmSelectDate.resx">
+      <DependentUpon>frmSelectDate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmSelectStep.resx">
+      <DependentUpon>frmSelectStep.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmUpdateFolderSteps.resx">
+      <DependentUpon>frmUpdateFolderSteps.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Production\frmValidateSubPro.resx">
+      <DependentUpon>frmValidateSubPro.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Summaries\frmFolderStatus.resx">
+      <DependentUpon>frmFolderStatus.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\Summaries\frmLoopStepStatus.resx">
+      <DependentUpon>frmLoopStepStatus.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmAddLoop.resx">
+      <DependentUpon>frmAddLoop.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmExportILDpdf.resx">
+      <DependentUpon>frmExportILDpdf.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmExtractILD.resx">
+      <DependentUpon>frmExtractILD.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmExtractILD2.resx">
+      <DependentUpon>frmExtractILD2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmFindKeyword.resx">
+      <DependentUpon>frmFindKeyword.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmILDManage.resx">
+      <DependentUpon>frmILDManage.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmPdf.resx">
+      <DependentUpon>frmPdf.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmRecentlyLoop.resx">
+      <DependentUpon>frmRecentlyLoop.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Logs\frmSysLogs.resx">
+      <DependentUpon>frmSysLogs.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Main\frmMain.resx">
+      <DependentUpon>frmMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Map\frmNativeLoopMap.resx">
+      <DependentUpon>frmNativeLoopMap.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Others\frmExcute.resx">
+      <DependentUpon>frmExcute.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Settings\frmSet.resx">
+      <DependentUpon>frmSet.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WarRoom\frmWarRoom.resx">
+      <DependentUpon>frmWarRoom.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Life_Cycle_Loop.ico" />
+    <None Include="Resources\LoopsCons.txt" />
+    <None Include="Resources\delete2.png" />
+    <None Include="Resources\DeleteRed.png" />
+    <None Include="Resources\LoopBasicInfo.txt" />
+    <None Include="Resources\Logs.txt" />
+    <None Include="Resources\save.png" />
+    <None Include="Resources\InsValidate.txt" />
+    <None Include="Resources\IJBValidate.txt" />
+    <None Include="Resources\EJBValidate.txt" />
+    <None Include="Resources\IEqValidate.txt" />
+    <None Include="Resources\EEqValidate.txt" />
+    <None Include="Resources\ECCableValidate.txt" />
+    <None Include="Resources\ECCableValidate - Copy.txt" />
+    <None Include="Resources\ICCableValidate.txt" />
+    <None Include="Resources\eicaicon32.png" />
+    <None Include="Resources\eicaicon.png" />
+    <None Include="Resources\InsPro.txt" />
+    <None Include="Resources\IJBPro.txt" />
+    <None Include="Resources\EJBPro.txt" />
+    <None Include="Resources\IEQPro.txt" />
+    <None Include="Resources\EEQPro.txt" />
+    <None Include="Resources\IcPro.txt" />
+    <None Include="Resources\EcPro.txt" />
+    <None Include="Resources\CleanProTable.txt" />
+    <None Include="Resources\UpdateEICA.txt" />
+    <None Include="Resources\OldPlanningForecast.txt" />
+    <None Include="Resources\PCSDone.txt" />
+    <None Include="Resources\backgroundTrans1.png" />
+    <None Include="Resources\e.ico" />
+    <None Include="Resources\ILDWithFile.txt" />
+    <None Include="Resources\UpdateLoopDescription.txt" />
+    <None Include="Resources\UpdateLoopTargetDate.txt" />
+    <None Include="Resources\PendingItemsNotInHCS.txt" />
+    <None Include="Resources\LoopRemainigDays.txt" />
+    <None Include="Resources\UpdateLoopInfoFromHCS.txt" />
+    <None Include="Resources\UpdateSubmitForCert.txt" />
+    <None Include="Resources\Adobe Acrobat Reader 5.png" />
+    <None Include="Resources\EXCEL97.png" />
+    <None Include="Resources\LoopCalculationSummary.txt" />
+    <None Include="Resources\UpdateDeactivatedLoopInHCS.txt" />
+    <None Include="Resources\LoopHCSEICA.txt" />
+    <None Include="Resources\FolderStatus.txt" />
+    <None Include="Resources\DiffQCPrecomm.txt" />
+    <None Include="Resources\UpdateIndexDone.txt" />
+    <None Include="Resources\FolderSignedInHCS.txt" />
+    <None Include="Resources\LoopsSteps.txt" />
+    <None Include="Resources\PendingLoopItems.txt" />
+    <None Include="Resources\LoopWorkfront.txt" />
+    <None Include="Resources\LoopConsFinishedNoRFI.txt" />
+    <None Include="Resources\LoopJobCard.txt" />
+    <None Include="Resources\EICALoopMap.txt" />
+    <None Include="Resources\backgroundTrans.png" />
+    <None Include="Resources\Loop Map.txt" />
+    <None Include="Resources\ValidiateILD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

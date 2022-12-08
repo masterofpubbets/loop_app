@@ -54,20 +54,21 @@ Partial Class frmLoopTaskDispatch
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.cmbUnit, Me.BarButtonItem2, Me.BarButtonItem3})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.cmbUnit, Me.BarButtonItem2, Me.BarButtonItem3, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 5
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemComboBox1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1184, 82)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 112)
         '
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Generate Patch"
-        Me.BarButtonItem1.Glyph = CType(resources.GetObject("BarButtonItem1.Glyph"), System.Drawing.Image)
         Me.BarButtonItem1.Id = 1
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
         Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -88,16 +89,16 @@ Partial Class frmLoopTaskDispatch
         'BarButtonItem2
         '
         Me.BarButtonItem2.Caption = "Export To Excel Dispacting Tasks"
-        Me.BarButtonItem2.Glyph = CType(resources.GetObject("BarButtonItem2.Glyph"), System.Drawing.Image)
         Me.BarButtonItem2.Id = 3
+        Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.Name = "BarButtonItem2"
         Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem3
         '
         Me.BarButtonItem3.Caption = "Export Pending Days"
-        Me.BarButtonItem3.Glyph = CType(resources.GetObject("BarButtonItem3.Glyph"), System.Drawing.Image)
         Me.BarButtonItem3.Id = 4
+        Me.BarButtonItem3.ImageOptions.Image = CType(resources.GetObject("BarButtonItem3.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem3.Name = "BarButtonItem3"
         Me.BarButtonItem3.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -129,7 +130,8 @@ Partial Class frmLoopTaskDispatch
         '
         Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 82)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 112)
+        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
         'SplitContainer1.Panel1
@@ -139,18 +141,21 @@ Partial Class frmLoopTaskDispatch
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.GRD)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1184, 580)
-        Me.SplitContainer1.SplitterDistance = 394
+        Me.SplitContainer1.Size = New System.Drawing.Size(1198, 587)
+        Me.SplitContainer1.SplitterDistance = 398
+        Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 7
         '
         'grdRem
         '
         Me.grdRem.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdRem.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdRem.Location = New System.Drawing.Point(0, 0)
         Me.grdRem.MainView = Me.GridView1
+        Me.grdRem.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdRem.MenuManager = Me.RibbonControl1
         Me.grdRem.Name = "grdRem"
-        Me.grdRem.Size = New System.Drawing.Size(392, 578)
+        Me.grdRem.Size = New System.Drawing.Size(396, 585)
         Me.grdRem.TabIndex = 7
         Me.grdRem.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView1})
         '
@@ -160,6 +165,7 @@ Partial Class frmLoopTaskDispatch
         Me.GridView1.Appearance.GroupFooter.Options.UseForeColor = True
         Me.GridView1.AppearancePrint.Preview.ForeColor = System.Drawing.Color.Black
         Me.GridView1.AppearancePrint.Preview.Options.UseForeColor = True
+        Me.GridView1.DetailHeight = 431
         Me.GridView1.GridControl = Me.grdRem
         Me.GridView1.Name = "GridView1"
         Me.GridView1.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.[True]
@@ -188,11 +194,13 @@ Partial Class frmLoopTaskDispatch
         'GRD
         '
         Me.GRD.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.GRD.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GRD.Location = New System.Drawing.Point(0, 0)
         Me.GRD.MainView = Me.GridView2
+        Me.GRD.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GRD.MenuManager = Me.RibbonControl1
         Me.GRD.Name = "GRD"
-        Me.GRD.Size = New System.Drawing.Size(784, 578)
+        Me.GRD.Size = New System.Drawing.Size(793, 585)
         Me.GRD.TabIndex = 6
         Me.GRD.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView2})
         '
@@ -202,6 +210,7 @@ Partial Class frmLoopTaskDispatch
         Me.GridView2.Appearance.GroupFooter.Options.UseForeColor = True
         Me.GridView2.AppearancePrint.Preview.ForeColor = System.Drawing.Color.Black
         Me.GridView2.AppearancePrint.Preview.Options.UseForeColor = True
+        Me.GridView2.DetailHeight = 431
         Me.GridView2.GridControl = Me.GRD
         Me.GridView2.Name = "GridView2"
         Me.GridView2.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.[True]
@@ -229,12 +238,12 @@ Partial Class frmLoopTaskDispatch
         '
         'frmLoopTaskDispatch
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1184, 662)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmLoopTaskDispatch.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmLoopTaskDispatch"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

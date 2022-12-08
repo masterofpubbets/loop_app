@@ -1,0 +1,20 @@
+CREATE TABLE [dbo].[getProjectElements('10031')](
+	[ProjectCode] [nvarchar](255) NULL,
+	[Area] [nvarchar](255) NULL,
+	[Unit] [nvarchar](255) NULL,
+	[Module] [nvarchar](255) NULL,
+	[System] [nvarchar](255) NULL,
+	[SubSystem] [nvarchar](255) NULL,
+	[Group] [nvarchar](255) NULL,
+	[Item] [nvarchar](255) NULL,
+	[ElementType] [nvarchar](255) NULL,
+	[ElementCode] [nvarchar](255) NULL,
+	[Name] [nvarchar](255) NULL,
+	[Discipline] [nvarchar](255) NULL,
+	[Type] [nvarchar](255) NULL,
+	[Class] [nvarchar](255) NULL,
+	[Subcontractor] [nvarchar](255) NULL,
+	[Weight] [float] NULL,
+	[HH] [float] NULL,
+	[Remarks] [nvarchar](255) NULL
+) ON [PRIMARY]

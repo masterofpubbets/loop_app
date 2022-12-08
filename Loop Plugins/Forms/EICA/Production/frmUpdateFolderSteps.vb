@@ -1,5 +1,7 @@
 ﻿Imports DevExpress.Spreadsheet
 Imports DevExpress.Spreadsheet.Export
+Imports DevExpress.XtraCharts
+
 Public Class frmUpdateFolderSteps
     Private DtSteps As New DataTable
     Private UpdateDate As Date = Now
