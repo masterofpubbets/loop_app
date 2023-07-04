@@ -106,9 +106,8 @@
         Dim frm As New frmSelectStep(_itemType)
         frm.ShowDialog(Me)
 
-        If frm.colSteps.Count<1
-            frm=Nothing
-            Exit Sub 
+        If frm.colSteps.Count<1 Then
+            Exit Sub
         End If
 
         Dim p As New Production
@@ -116,7 +115,6 @@
         If GridView1.RowCount = 0 Then
             If lblItem.Text = "No Item Found" Then
                 MsgBox("Please select an item first", MsgBoxStyle.Exclamation, Me.Text)
-                frm = Nothing
                 Exit Sub
             Else
                 'item not in eica

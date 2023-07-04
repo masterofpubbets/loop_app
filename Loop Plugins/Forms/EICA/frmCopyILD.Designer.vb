@@ -34,56 +34,60 @@ Partial Class frmCopyILD
         '
         'SimpleButton1
         '
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(252, 100)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(294, 123)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(192, 56)
+        Me.SimpleButton1.Size = New System.Drawing.Size(224, 69)
         Me.SimpleButton1.TabIndex = 8
         Me.SimpleButton1.Text = "Clear EICA ILDs"
         '
         'RibbonControl1
         '
-        Me.RibbonControl1.ApplicationIcon = Global.Loop_Plugins.My.Resources.Resources.backgroundTrans
+        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.Loop_App.My.Resources.Resources.backgroundTrans
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(688, 30)
+        Me.RibbonControl1.Size = New System.Drawing.Size(803, 45)
         '
         'SimpleButton2
         '
-        Me.SimpleButton2.Image = CType(resources.GetObject("SimpleButton2.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(450, 100)
+        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton2.Location = New System.Drawing.Point(525, 123)
+        Me.SimpleButton2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(192, 56)
+        Me.SimpleButton2.Size = New System.Drawing.Size(224, 69)
         Me.SimpleButton2.TabIndex = 10
         Me.SimpleButton2.Text = "CLose"
         '
         'SimpleButton3
         '
-        Me.SimpleButton3.Image = CType(resources.GetObject("SimpleButton3.Image"), System.Drawing.Image)
-        Me.SimpleButton3.Location = New System.Drawing.Point(54, 100)
+        Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton3.Location = New System.Drawing.Point(63, 123)
+        Me.SimpleButton3.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SimpleButton3.Name = "SimpleButton3"
-        Me.SimpleButton3.Size = New System.Drawing.Size(192, 56)
+        Me.SimpleButton3.Size = New System.Drawing.Size(224, 69)
         Me.SimpleButton3.TabIndex = 11
         Me.SimpleButton3.Text = "Start Copy"
         '
         'mBar
         '
         Me.mBar.EditValue = 0
-        Me.mBar.Location = New System.Drawing.Point(54, 58)
+        Me.mBar.Location = New System.Drawing.Point(63, 71)
+        Me.mBar.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.mBar.MenuManager = Me.RibbonControl1
         Me.mBar.Name = "mBar"
-        Me.mBar.Size = New System.Drawing.Size(588, 20)
+        Me.mBar.Size = New System.Drawing.Size(686, 25)
         Me.mBar.TabIndex = 12
         Me.mBar.Visible = False
         '
         'frmCopyILD
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(688, 200)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(803, 246)
         Me.ControlBox = False
         Me.Controls.Add(Me.mBar)
         Me.Controls.Add(Me.SimpleButton3)
@@ -91,7 +95,8 @@ Partial Class frmCopyILD
         Me.Controls.Add(Me.SimpleButton1)
         Me.Controls.Add(Me.RibbonControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmCopyILD.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmCopyILD"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

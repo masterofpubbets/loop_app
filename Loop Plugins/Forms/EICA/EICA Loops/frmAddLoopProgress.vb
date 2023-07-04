@@ -1,5 +1,6 @@
 ﻿Public Class frmAddLoopProgress
     Private Eng As New Engineering
+    Public isAdded As Boolean = False
 
     Private Sub Errhandling(ByVal e As String)
         MsgBox(e, MsgBoxStyle.Critical, Me.Text)
@@ -13,11 +14,11 @@
         AddHandler DB.ExportProgress, AddressOf progressview
     End Sub
 
-    Private Sub SimpleButton1_Click(sender As Object, e As EventArgs) Handles SimpleButton1.Click
+    Private Sub SimpleButton1_Click(sender As Object, e As EventArgs)
         Me.Close()
     End Sub
 
-    Private Sub SimpleButton2_Click(sender As Object, e As EventArgs) Handles SimpleButton2.Click
+    Private Sub SimpleButton2_Click(sender As Object, e As EventArgs)
         Try
             Dim msgR As MsgBoxResult = MsgBox("Do You Want To Add Loaded Loops to EICA", MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub

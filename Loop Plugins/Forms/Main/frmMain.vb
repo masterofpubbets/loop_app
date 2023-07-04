@@ -1,42 +1,129 @@
-﻿Public Class frmMain
+﻿Imports DevExpress.XtraBars.ToastNotifications
 
-    Private Sub OnConnected()
-        lblCOn.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
-        lblDis.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
+Public Class frmMain
+
+
+    Private Sub HandleDataReadError()
+        ToastNotificationsManager.ShowNotification(ToastNotificationsManager.Notifications(0).ID)
     End Sub
-    Private Sub OnDisConnected()
-        lblCOn.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
-        lblDis.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+    Private Sub HandleDataConnectionError()
+        ToastNotificationsManager.ShowNotification(ToastNotificationsManager.Notifications(1).ID)
     End Sub
-    Private Sub OnEICAConnected()
-        lblEICACon.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+    Private Sub HandleILDConnectionError()
+        ToastNotificationsManager.ShowNotification(ToastNotificationsManager.Notifications(2).ID)
     End Sub
-    Private Sub OnEICADisConnected()
-        lblEICACon.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
+    Private Sub HandleDataExecuteError(ByVal er As String)
+        Dim img As Image = Image.FromFile(Application.StartupPath & "\res\Error.png")
+        Dim note As New ToastNotification("DataExecuteError", img, "Data Error", er, "", ToastNotificationTemplate.ImageAndText02)
+        ToastNotificationsManager.Notifications.Add(note)
+        ToastNotificationsManager.ShowNotification("DataExecuteError")
+        ToastNotificationsManager.Notifications.Remove(note)
+    End Sub
+    Private Sub HandleReadFileError(ByVal er As String)
+        Try
+            Dim img As Image = Image.FromFile(Application.StartupPath & "\res\Error.png")
+            Dim note As New ToastNotification("DataExecuteError", img, "Data Error", er, "", ToastNotificationTemplate.ImageAndText02)
+            ToastNotificationsManager.Notifications.Add(note)
+            ToastNotificationsManager.ShowNotification("DataExecuteError")
+            ToastNotificationsManager.Notifications.Remove(note)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
-    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
-        AddHandler AccDB.Connnected, AddressOf OnConnected
-        AddHandler AccDB.Disconnected, AddressOf OnDisConnected
-        AddHandler DB.Connnected, AddressOf OnEICAConnected
-        AddHandler DB.Disconnected, AddressOf OnEICADisConnected
-        ILDDBFolder = GetSetting("TR", "EIKA", "ILDDBFolder", "")
-        SharedFolder = GetSetting("TR", "EIKA", "SharedFolder", "")
-        If ((ILDDBFolder = "") Or (SharedFolder = "")) Then
-            Dim msgr As MsgBoxResult = MsgBox("Please Select Folder Settings First", MsgBoxStyle.OkCancel, Me.Text)
-            If msgr = MsgBoxResult.Cancel Then
-                Me.Close()
-                End
-            End If
-            Dim frm As New frmSet
+    Private Sub CheckAuth()
+        rpHandover.Visible = False
+        rpAdmin.Visible = False
+        rpEng.Visible = False
+        rpQC.Visible = False
+        rpPrecom.Visible = False
+        rpPlanning.Visible = False
+        rpPC.Visible = False
+        lblUserName.Caption = Users.userFullName
+
+        If Users.userType = "" Then
+            rpAdmin.Visible = True
+            Exit Sub
+        End If
+        If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
+            rpAdmin.Visible = True
+            rpHandover.Visible = True
+            rpEng.Visible = True
+            rpConstruction.Visible = True
+            rpQC.Visible = True
+            rpPrecom.Visible = True
+            rpPlanning.Visible = True
+            rpPC.Visible = True
+            barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            barbtnHandoverIndex.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            Exit Sub
+        End If
+        If InStr(Users.userType, "handover", CompareMethod.Text) > 0 Then
+            rpHandover.Visible = True
+            barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            barbtnHandoverIndex.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            Exit Sub
+        End If
+        If InStr(Users.userType, "qc", CompareMethod.Text) > 0 Then
+            rpQC.Visible = True
+            barbtnHandoverIndex.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            Exit Sub
+        End If
+        If InStr(Users.userType, "precomm", CompareMethod.Text) > 0 Then
+            rpPrecom.Visible = True
+            Exit Sub
+        End If
+        If InStr(Users.userType, "planning", CompareMethod.Text) > 0 Then
+            rpPlanning.Visible = True
+            Exit Sub
+        End If
+        If InStr(Users.userType, "production", CompareMethod.Text) > 0 Then
+            rpPC.Visible = True
+            Exit Sub
+        End If
+
+    End Sub
+
+    Public Sub HandleUserChanged()
+        CheckAuth()
+    End Sub
+    Public Sub OnConnected()
+
+    End Sub
+    Public Sub OnDisConnected()
+        'lblEICACon.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
+        lblDBName.Caption = "DB: None"
+        lblServer.Caption = "Server: None"
+    End Sub
+    Public Sub OnEICAConnected()
+        'lblEICACon.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+        lblDBName.Caption = "DB: " & DBName
+        lblServer.Caption = "Server: " & DBPath
+    End Sub
+    Public Sub OnEICADisConnected()
+        'lblEICACon.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
+        lblDBName.Caption = "DB: None"
+        lblServer.Caption = "Server: None"
+    End Sub
+    Private Sub checkProjectUUID()
+        Users.ProUUID = GetSetting("TR", "LoopApp", "ProjectUUID", "")
+        If Users.ProUUID = "" Then
+            Dim frm As New frmSelectProject
             frm.ShowDialog(Me)
         End If
-        DBConnect()
+        If DB.ExcutResult("select uuid from tblProject where uuid ='" & GetSetting("TR", "LoopApp", "ProjectUUID", "") & "'") = "" Then
+            Dim frm As New frmSelectProject
+            frm.ShowDialog(Me)
+        End If
     End Sub
-
-    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
-        frmExtractILD2.MdiParent = Me
-        frmExtractILD2.Show()
+    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        AddHandler PublicErrors.DataReadError, AddressOf HandleDataReadError
+        AddHandler PublicErrors.ILDDBConnectionError, AddressOf HandleILDConnectionError
+        AddHandler PublicErrors.DataConnectionError, AddressOf HandleDataConnectionError
+        AddHandler PublicErrors.DataExecuteError, AddressOf HandleDataExecuteError
+        AddHandler PublicErrors.ReadFileError, AddressOf HandleReadFileError
+        frmEICALogin.Hide()
+        checkProjectUUID()
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
@@ -44,12 +131,12 @@
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) 
+    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         Dim frm As New frmPdf() With {.MdiParent = Me}
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
+    Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         Dim frm As New frmEICALogin
         frm.Show()
     End Sub
@@ -74,10 +161,6 @@
     End Sub
 
     Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem9.ItemClick
-        If DB.DBStatus = ConnectionState.Closed Then
-            MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
-            Exit Sub
-        End If
         Dim frm As New frmEICALoopMap() With {.MdiParent = Me}
         frm.Show()
     End Sub
@@ -93,15 +176,6 @@
 
     Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem11.ItemClick
         Dim frm As New frmAddLoop() With {.MdiParent = Me}
-        frm.Show()
-    End Sub
-
-    Private Sub BarButtonItem15_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem15.ItemClick
-        If DB.DBStatus = ConnectionState.Closed Then
-            MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
-            Exit Sub
-        End If
-        Dim frm As New frmInsLoop() With {.MdiParent = Me}
         frm.Show()
     End Sub
 
@@ -150,7 +224,7 @@
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem23_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem23.ItemClick
+    Private Sub BarButtonItem23_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles barbtnHandoverIndex.ItemClick
         If DB.DBStatus = ConnectionState.Closed Then
             MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
             Exit Sub
@@ -160,7 +234,7 @@
         MsgBox("Loops Progress Validated in EICA", MsgBoxStyle.Information, Me.Text)
     End Sub
 
-    Private Sub BarButtonItem26_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem26.ItemClick
+    Private Sub BarButtonItem26_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         If DB.DBStatus = ConnectionState.Closed Then
             MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
             Exit Sub
@@ -179,10 +253,6 @@
     End Sub
 
     Private Sub BarButtonItem27_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem27.ItemClick
-        If DB.DBStatus = ConnectionState.Closed Then
-            MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
-            Exit Sub
-        End If
         Dim frm As New frmLoopConstraints2() With {.MdiParent = Me}
         frm.Show()
     End Sub
@@ -209,22 +279,12 @@
         Dim frm As New frmSet() With {.MdiParent = Me}
         frm.Show()
     End Sub
-
-    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem12.ItemClick
-        Dim frm As New frmEICALogin
-        frm.Show()
-    End Sub
-
-    Private Sub BarButtonItem25_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem25.ItemClick
+    Private Sub BarButtonItem25_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         Dim frm As New frmEICALogin
         frm.Show()
     End Sub
 
     Private Sub BarButtonItem24_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem24.ItemClick
-        If DB.DBStatus = ConnectionState.Closed Then
-            MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
-            Exit Sub
-        End If
         frmCopyILD.MdiParent = Me
         frmCopyILD.Show()
     End Sub
@@ -238,31 +298,16 @@
             MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
             Exit Sub
         End If
-        Dim frm As New frmAddEICALoop
+        Dim frm As New frmEICALoopManagement
         frm.MdiParent = Me
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem30_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) 
+    Private Sub BarButtonItem30_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         If DB.DBStatus = ConnectionState.Closed Then
             MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
             Exit Sub
         End If
-    End Sub
-
-    Private Sub BarButtonItem38_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem38.ItemClick
-        ILDDBFolder = GetSetting("TR", "EIKA", "ILDDBFolder", "")
-        SharedFolder = GetSetting("TR", "EIKA", "SharedFolder", "")
-        If ((ILDDBFolder = "") Or (SharedFolder = "")) Then
-            Dim msgr As MsgBoxResult = MsgBox("Please Select Folder Settings First", MsgBoxStyle.OkCancel, Me.Text)
-            If msgr = MsgBoxResult.Cancel Then
-                Me.Close()
-                End
-            End If
-            Dim frm As New frmSet
-            frm.ShowDialog(Me)
-        End If
-        DBConnect()
     End Sub
 
     Private Sub BarButtonItem39_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem39.ItemClick
@@ -274,7 +319,7 @@
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem40_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem40.ItemClick
+    Private Sub BarButtonItem40_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         If DB.DBStatus = ConnectionState.Closed Then
             MsgBox("EICA Is Offline" & vbCrLf & "You Have To Connect to EICA First", vbExclamation, Me.Text)
             Exit Sub
@@ -292,12 +337,12 @@
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem42_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem42.ItemClick
+    Private Sub BarButtonItem42_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         Dim frm As New frmEICALogin
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem45_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem45.ItemClick
+    Private Sub BarButtonItem45_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         Dim frm As New frmEICALogin
         frm.Show()
     End Sub
@@ -317,6 +362,123 @@
             Exit Sub
         End If
         Dim frm As New frmUpdateLoopDone() With {.MdiParent = Me}
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem46_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles barBtnHandoverData.ItemClick
+        Dim frm As New frmUploadHCSData() With {.MdiParent = Me}
+        frm.Show()
+    End Sub
+    Private Sub BarButtonItem25_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem25.ItemClick
+        Dim frm As New frmUsers With {
+            .MdiParent = Me
+        }
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem38_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem38.ItemClick
+        Dim frm As New frmHCSSetSteps With {
+            .MdiParent = Me
+        }
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem42_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem42.ItemClick
+        Dim frm As New frmSelectProject
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem45_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
+        Dim frm As New frmHCSSetSteps With {
+            .MdiParent = Me
+        }
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem47_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
+        Dim frm As New frmHCSSetSteps With {
+           .MdiParent = Me
+       }
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem23_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem23.ItemClick
+        Dim frm As New frmLighting
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem26_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem26.ItemClick
+        Dim frm As New frmTrays
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem46_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem46.ItemClick
+        Dim frm As New frmCables
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem48_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem48.ItemClick
+        Dim frm As New frmEquipment
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem49_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem49.ItemClick
+        Dim frm As New frmInstruments
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem40_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem40.ItemClick
+        Dim frm As New frmResetPass
+        frm.ShowDialog(Me)
+    End Sub
+
+    Private Sub BarButtonItem45_ItemClick_2(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem45.ItemClick
+        Dim frm As New frmReports(Reports.ReportTypes.EICADAILYTRACKINGELEResources)
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem47_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem47.ItemClick
+        Dim frm As New frmReports(Reports.ReportTypes.EICADAILYTRACKINGINSResources)
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem50_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem50.ItemClick
+        Dim frm As New frmActivities
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem51_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem51.ItemClick
+        Dim frm As New frmCables(True)
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem52_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem52.ItemClick
+        frmExtractILD2.MdiParent = Me
+        frmExtractILD2.Show()
+    End Sub
+
+    Private Sub BarButtonItem53_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem53.ItemClick
+        frmExtractILD3.MdiParent = Me
+        frmExtractILD3.Show()
+    End Sub
+
+    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        Dim frm As New frmEICALoopManagement
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem5_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
+        Dim frm As New frmSelectRFIPath
         frm.Show()
     End Sub
 End Class

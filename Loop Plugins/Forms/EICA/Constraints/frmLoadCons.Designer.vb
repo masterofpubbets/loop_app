@@ -86,10 +86,11 @@ Partial Class frmLoadCons
         Me.DockPanel1.Controls.Add(Me.DockPanel1_Container)
         Me.DockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom
         Me.DockPanel1.ID = New System.Guid("63257cfb-87c6-4014-8488-b4f10814b668")
-        Me.DockPanel1.Location = New System.Drawing.Point(0, 550)
+        Me.DockPanel1.Location = New System.Drawing.Point(0, 658)
+        Me.DockPanel1.Margin = New System.Windows.Forms.Padding(4)
         Me.DockPanel1.Name = "DockPanel1"
         Me.DockPanel1.OriginalSize = New System.Drawing.Size(200, 82)
-        Me.DockPanel1.Size = New System.Drawing.Size(892, 82)
+        Me.DockPanel1.Size = New System.Drawing.Size(1182, 82)
         Me.DockPanel1.Text = "Menu"
         '
         'DockPanel1_Container
@@ -97,39 +98,43 @@ Partial Class frmLoadCons
         Me.DockPanel1_Container.Controls.Add(Me.pBar)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton2)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton1)
-        Me.DockPanel1_Container.Location = New System.Drawing.Point(4, 24)
+        Me.DockPanel1_Container.Location = New System.Drawing.Point(3, 47)
+        Me.DockPanel1_Container.Margin = New System.Windows.Forms.Padding(4)
         Me.DockPanel1_Container.Name = "DockPanel1_Container"
-        Me.DockPanel1_Container.Size = New System.Drawing.Size(884, 54)
+        Me.DockPanel1_Container.Size = New System.Drawing.Size(1176, 32)
         Me.DockPanel1_Container.TabIndex = 0
         '
         'pBar
         '
-        Me.pBar.Location = New System.Drawing.Point(8, 17)
+        Me.pBar.Location = New System.Drawing.Point(11, 21)
+        Me.pBar.Margin = New System.Windows.Forms.Padding(4)
         Me.pBar.Name = "pBar"
         Me.pBar.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Office2003
         Me.pBar.Properties.ShowTitle = True
         Me.pBar.Properties.StartColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.pBar.Size = New System.Drawing.Size(569, 19)
+        Me.pBar.Size = New System.Drawing.Size(759, 23)
         Me.pBar.TabIndex = 3
         Me.pBar.Visible = False
         '
         'SimpleButton2
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SimpleButton2.Image = CType(resources.GetObject("SimpleButton2.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(738, 6)
+        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton2.Location = New System.Drawing.Point(1276, -15)
+        Me.SimpleButton2.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(138, 43)
+        Me.SimpleButton2.Size = New System.Drawing.Size(184, 53)
         Me.SimpleButton2.TabIndex = 2
         Me.SimpleButton2.Text = "Update Constraints"
         '
         'SimpleButton1
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(594, 6)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(889, -21)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(138, 43)
+        Me.SimpleButton1.Size = New System.Drawing.Size(184, 53)
         Me.SimpleButton1.TabIndex = 0
         Me.SimpleButton1.Text = "Back"
         '
@@ -143,7 +148,7 @@ Partial Class frmLoadCons
         Me.DockPanel3.Location = New System.Drawing.Point(0, 0)
         Me.DockPanel3.Name = "DockPanel3"
         Me.DockPanel3.OriginalSize = New System.Drawing.Size(200, 200)
-        Me.DockPanel3.Size = New System.Drawing.Size(886, 522)
+        Me.DockPanel3.Size = New System.Drawing.Size(1176, 626)
         Me.DockPanel3.Text = "Constraints"
         '
         'DockPanel3_Container
@@ -151,7 +156,7 @@ Partial Class frmLoadCons
         Me.DockPanel3_Container.Controls.Add(Me.GridControl2)
         Me.DockPanel3_Container.Location = New System.Drawing.Point(0, 0)
         Me.DockPanel3_Container.Name = "DockPanel3_Container"
-        Me.DockPanel3_Container.Size = New System.Drawing.Size(886, 522)
+        Me.DockPanel3_Container.Size = New System.Drawing.Size(1176, 626)
         Me.DockPanel3_Container.TabIndex = 0
         '
         'GridControl2
@@ -160,7 +165,7 @@ Partial Class frmLoadCons
         Me.GridControl2.Location = New System.Drawing.Point(0, 0)
         Me.GridControl2.MainView = Me.GridView3
         Me.GridControl2.Name = "GridControl2"
-        Me.GridControl2.Size = New System.Drawing.Size(886, 522)
+        Me.GridControl2.Size = New System.Drawing.Size(1176, 626)
         Me.GridControl2.TabIndex = 7
         Me.GridControl2.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView3})
         '
@@ -206,7 +211,6 @@ Partial Class frmLoadCons
         '
         Me.TabbedView1.DocumentGroups.AddRange(New DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup() {Me.DocumentGroup1})
         Me.TabbedView1.Documents.AddRange(New DevExpress.XtraBars.Docking2010.Views.BaseDocument() {Me.Document1})
-        Me.TabbedView1.RootContainer.Element = Nothing
         DockingContainer1.Element = Me.DocumentGroup1
         Me.TabbedView1.RootContainer.Nodes.AddRange(New DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer() {DockingContainer1})
         '
@@ -296,13 +300,13 @@ Partial Class frmLoadCons
         '
         'frmLoadCons
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(892, 632)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1182, 740)
         Me.ControlBox = False
         Me.Controls.Add(Me.DockPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmLoadCons"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "frmLoadCons"

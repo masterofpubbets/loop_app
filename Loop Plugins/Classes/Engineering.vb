@@ -3249,27 +3249,6 @@
         DB.ExcuteNoneResult(Sql)
     End Sub
 
-    Public Sub DownloadsDgns()
-        Try
-            Dim lst As New ListBox
-            DB.Fill(lst, "select area from area where dgn is not null order by area")
-            Dim bf() As Byte
-            Dim x As Integer = 0
-            Dim ost As System.IO.FileStream
-
-            For x = 0 To lst.Items.Count - 1
-                DB.GetImageByte(bf, String.Format("select dgn from area where area ='{0}'", lst.Items.Item(x).ToString))
-                ost = New System.IO.FileStream(String.Format("{0}\tmp\hach\{1} {2}.dgn", Application.StartupPath, x, lst.Items.Item(x)), IO.FileMode.Create)
-                ost.Write(bf, 0, bf.Length)
-                ost.Close()
-                Application.DoEvents()
-            Next
-            RaiseEvent DGNDownloaded()
-        Catch ex As Exception
-            RaiseEvent Err(ex.Message)
-        End Try
-    End Sub
-
     Public Function CheckUploadingForProjectUnit(ByRef DT As DataTable) As String
         Dim tmp As String = ""
         For inx As Integer = 0 To DT.Columns.Count - 1

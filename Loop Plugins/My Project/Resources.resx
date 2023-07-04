@@ -118,110 +118,41 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="EcPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EcPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="EICALoopMap" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EICALoopMap.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="eicaicon32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\eicaicon32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LoopRemainigDays" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoopRemainigDays.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="IEQPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IEQPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="EJBValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EJBValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="eicaicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\eicaicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="IJBPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IJBPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="EXCEL97" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EXCEL97.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LoopWorkfront" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoopWorkfront.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="EEqValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EEqValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="InsPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\InsPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="DiffQCPrecomm" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DiffQCPrecomm.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="LoopHCSEICA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoopHCSEICA.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="IcPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IcPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="PendingLoopItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PendingLoopItems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="UpdateEICA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\UpdateEICA.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="ECCableValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ECCableValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="FolderStatus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FolderStatus.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="IJBValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IJBValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="UpdateIndexDone" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\UpdateIndexDone.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="backgroundTrans" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\backgroundTrans1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="FolderSignedInHCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FolderSignedInHCS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="UpdateLoopTargetDate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\UpdateLoopTargetDate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="PendingItemsNotInHCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PendingItemsNotInHCS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="LoopsSteps" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoopsSteps.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="IEqValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IEqValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="UpdateLoopInfoFromHCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UpdateLoopInfoFromHCS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="Logs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Logs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EICALoopMap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EICALoopMap.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="save" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="loop32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\loop32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UpdateDeactivatedLoopInHCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpdateDeactivatedLoopInHCS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="delete2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="eicaicon32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eicaicon32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LoopJobCard" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LoopJobCard.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="EEQPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EEQPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="LoopConsFinishedNoRFI" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoopConsFinishedNoRFI.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="InsValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\InsValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="DeleteRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DeleteRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LoopBasicInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoopBasicInfo.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="PCSDone" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PCSDone.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="LoopRemainigDays" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoopRemainigDays.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="LoopCalculationSummary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LoopCalculationSummary.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -229,46 +160,166 @@
   <data name="ICCableValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ICCableValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="ILDWithFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ILDWithFile.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="InsValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\InsValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="LoopsSteps" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoopsSteps.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="EJBValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EJBValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="UpdateEICA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpdateEICA.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="PendingLoopItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PendingLoopItems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="IcPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IcPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="AdobeAcrobatReader5" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Adobe Acrobat Reader 5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="UpdateLoopDescription" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\UpdateLoopDescription.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="save" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CleanProTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CleanProTable.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="UpdateDeactivatedLoopInHCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\UpdateDeactivatedLoopInHCS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="EJBPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EJBPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="ValidiateILD" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ValidiateILD.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="OldPlanningForecast" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\OldPlanningForecast.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Logs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Logs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="CreatePunch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreatePunch.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="UpdateSubmitForCert" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UpdateSubmitForCert.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="Loop_Map" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Loop Map.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="CleanProTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CleanProTable.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="delete2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="PCSDone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PCSDone.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="EEQPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EEQPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="backgroundTrans" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\backgroundTrans1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="eccables02" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eccables02.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EcPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EcPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="LoopConsFinishedNoRFI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoopConsFinishedNoRFI.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="LoopWorkfront" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoopWorkfront.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="UpdateLoopTargetDate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpdateLoopTargetDate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="InsPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\InsPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="TruncateHCSs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TruncateHCSs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="LoopBasicInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoopBasicInfo.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="trays32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\trays32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CreateTask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateTask.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="fixture32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fixture32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OldPlanningForecast" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\OldPlanningForecast.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="DeleteRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EJBPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EJBPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="CreateItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateItems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="DiffQCPrecomm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DiffQCPrecomm.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="CreateGroups" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateGroups.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="CreateSubsystem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateSubsystem.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ValidiateILD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ValidiateILD.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="FolderSignedInHCS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderSignedInHCS.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="equipment32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\equipment32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UpdateIndexDone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpdateIndexDone.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="LoopsCons" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LoopsCons.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="EEqValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EEqValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="EXCEL97" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EXCEL97.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FixColumnsData" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FixColumnsData.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ECCableValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ECCableValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="fixtures64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fixtures64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IJBPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IJBPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="ILDWithFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ILDWithFile.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="FolderStatus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderStatus.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="eicaicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eicaicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loop_Map" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Loop Map.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="IJBValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IJBValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="IEqValidate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IEqValidate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="UpdateLoopDescription" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpdateLoopDescription.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="LoopHCSEICA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoopHCSEICA.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="CreateSystems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateSystems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="IEQPro" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IEQPro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="CreateElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateElement.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="logo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

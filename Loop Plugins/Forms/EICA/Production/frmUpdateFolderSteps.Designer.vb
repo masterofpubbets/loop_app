@@ -44,7 +44,7 @@ Partial Class frmUpdateFolderSteps
         'RibbonPage1
         '
         Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
-        Me.RibbonPage1.Image = CType(resources.GetObject("RibbonPage1.Image"), System.Drawing.Image)
+        Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
         Me.RibbonPage1.Text = "Folder Steps"
         '
@@ -57,47 +57,49 @@ Partial Class frmUpdateFolderSteps
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Update"
-        Me.BarButtonItem1.Glyph = CType(resources.GetObject("BarButtonItem1.Glyph"), System.Drawing.Image)
         Me.BarButtonItem1.Id = 1
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
         Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.lblErr, Me.lblNoErr})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.lblErr, Me.lblNoErr})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 4
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.PageHeaderItemLinks.Add(Me.lblErr)
         Me.RibbonControl1.PageHeaderItemLinks.Add(Me.lblNoErr)
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1127, 101)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 125)
         '
         'lblErr
         '
         Me.lblErr.Caption = "Error"
-        Me.lblErr.Glyph = CType(resources.GetObject("lblErr.Glyph"), System.Drawing.Image)
         Me.lblErr.Id = 2
+        Me.lblErr.ImageOptions.Image = CType(resources.GetObject("lblErr.ImageOptions.Image"), System.Drawing.Image)
         Me.lblErr.Name = "lblErr"
+        Me.lblErr.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
         Me.lblErr.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        Me.lblErr.TextAlignment = System.Drawing.StringAlignment.Near
         Me.lblErr.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
         '
         'lblNoErr
         '
         Me.lblNoErr.Caption = "No Error"
-        Me.lblNoErr.Glyph = CType(resources.GetObject("lblNoErr.Glyph"), System.Drawing.Image)
         Me.lblNoErr.Id = 3
+        Me.lblNoErr.ImageOptions.Image = CType(resources.GetObject("lblNoErr.ImageOptions.Image"), System.Drawing.Image)
         Me.lblNoErr.Name = "lblNoErr"
+        Me.lblNoErr.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
         Me.lblNoErr.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        Me.lblNoErr.TextAlignment = System.Drawing.StringAlignment.Near
         '
         'SplitContainer1
         '
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 101)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 125)
+        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
         'SplitContainer1.Panel1
@@ -107,14 +109,16 @@ Partial Class frmUpdateFolderSteps
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.tre)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1127, 656)
-        Me.SplitContainer1.SplitterDistance = 745
+        Me.SplitContainer1.Size = New System.Drawing.Size(1198, 574)
+        Me.SplitContainer1.SplitterDistance = 791
+        Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 3
         '
         'sc
         '
         Me.sc.Dock = System.Windows.Forms.DockStyle.Fill
         Me.sc.Location = New System.Drawing.Point(0, 0)
+        Me.sc.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.sc.MenuManager = Me.RibbonControl1
         Me.sc.Name = "sc"
         Me.sc.Options.Behavior.Worksheet.Delete = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
@@ -124,7 +128,7 @@ Partial Class frmUpdateFolderSteps
         Me.sc.Options.Behavior.Worksheet.TabColor = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
         Me.sc.Options.Behavior.Worksheet.Unhide = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
         Me.sc.Options.Culture = New System.Globalization.CultureInfo("en-US")
-        Me.sc.Size = New System.Drawing.Size(745, 656)
+        Me.sc.Size = New System.Drawing.Size(791, 574)
         Me.sc.TabIndex = 2
         Me.sc.Text = "SpreadsheetControl1"
         '
@@ -136,9 +140,10 @@ Partial Class frmUpdateFolderSteps
         Me.tre.ImageIndex = 0
         Me.tre.ImageList = Me.ImageList1
         Me.tre.Location = New System.Drawing.Point(0, 0)
+        Me.tre.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.tre.Name = "tre"
         Me.tre.SelectedImageIndex = 0
-        Me.tre.Size = New System.Drawing.Size(378, 656)
+        Me.tre.Size = New System.Drawing.Size(402, 574)
         Me.tre.TabIndex = 1
         '
         'ImageList1
@@ -166,12 +171,12 @@ Partial Class frmUpdateFolderSteps
         '
         'frmUpdateFolderSteps
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1127, 757)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmUpdateFolderSteps.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmUpdateFolderSteps"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

@@ -37,6 +37,7 @@ Namespace EAMS
             Public Event ExportProgress(ByVal inx As Integer)
             Public Event ExportingComplete()
             Public Event ProgressCount(ByVal c As Integer)
+            Private pe As New PublicErrors
 
 
 #Region "Structure"
@@ -65,12 +66,17 @@ Namespace EAMS
                 Return DT.Columns(0).DataType.FullName.ToString
             End Function
             Public Function ReturnDataTable(ByVal sql As String, Optional Timeout As Integer = 0) As DataTable
-                Dim DA As New SqlClient.SqlDataAdapter(sql, DB)
-                Dim DT As New DataTable
-                DA.SelectCommand.CommandTimeout = Timeout
-                DA.Fill(DT)
-                DA.Dispose()
-                Return DT
+                Try
+                    Dim DA As New SqlClient.SqlDataAdapter(sql, DB)
+                    Dim DT As New DataTable
+                    DA.SelectCommand.CommandTimeout = Timeout
+                    DA.Fill(DT)
+                    DA.Dispose()
+                    Return DT
+                Catch ex As Exception
+                    pe.RaiseDataReadError()
+                End Try
+                Return Nothing
             End Function
             Public Function ReturnDataAdapter(ByVal sql As String) As SqlDataAdapter
                 Dim cmd As New SqlClient.SqlCommand(sql, DB)
@@ -333,6 +339,7 @@ Namespace EAMS
                         Return ""
                     End If
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err(ex.Message)
                     ErrorLog(ex.Message)
                 End Try
@@ -354,6 +361,7 @@ Namespace EAMS
                         Return ""
                     End If
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     ErrorLog(ex.Message)
                     RaiseEvent err(ex.Message)
                 End Try
@@ -467,7 +475,7 @@ Namespace EAMS
                     RaiseEvent err(_Exception.Message)
                     Return Nothing
                 End Try
-
+                If IsDBNull(_SqlRetVal) Then Return Nothing
                 ' convert object to image
                 Try
                     Dim _ImageData(-1) As Byte
@@ -475,7 +483,7 @@ Namespace EAMS
                     Dim _MemoryStream As New System.IO.MemoryStream(_ImageData)
                     _Image = System.Drawing.Image.FromStream(_MemoryStream)
                 Catch _Exception As Exception
-                    Console.WriteLine(_Exception.Message)
+                    pe.RaiseDataExecuteError(_Exception.Message)
                     Return Nothing
                 End Try
                 Return _Image
@@ -498,6 +506,7 @@ Namespace EAMS
                     cmd.Parameters.Add(prm)
                     cmd.ExecuteNonQuery()
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err(ex.Message)
                 End Try
 
@@ -519,6 +528,7 @@ Namespace EAMS
                     'Dim _ImageData(-1) As Byte
                     _ImageData = CType(_SqlRetVal, Byte())
                 Catch _Exception As Exception
+                    pe.RaiseDataExecuteError(_Exception.Message)
                 End Try
             End Sub
             Public Overloads Sub SaveImage(ByRef bytBLOBData() As [Byte], ByVal TableName As String, ByVal FieldName As String, ByVal FieldKey As String, ByVal KeyString As String)
@@ -529,6 +539,7 @@ Namespace EAMS
                     cmd.Parameters.Add(prm)
                     cmd.ExecuteNonQuery()
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err(ex.Message)
                 End Try
 
@@ -551,6 +562,7 @@ Namespace EAMS
                     cmd.Parameters.Add(prm)
                     cmd.ExecuteNonQuery()
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err(ex.Message)
                 End Try
 
@@ -665,6 +677,7 @@ Namespace EAMS
                         bulkCopy.BatchSize = 1000
                         bulkCopy.WriteToServer(DT)
                     Catch ex As Exception
+                        pe.RaiseDataExecuteError(ex.Message)
                         MsgBox(ex.Message)
                     End Try
                 End Using
@@ -708,6 +721,7 @@ Namespace EAMS
                     Loop
                     RaiseEvent Connnected()
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err(ex.Message)
                     'frmMain.Disconnected = True
                     RaiseEvent Disconnected()
@@ -729,6 +743,7 @@ Namespace EAMS
                     DB.Open()
                     RaiseEvent ConnnectedTOMaster()
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err(ex.Message)
                 End Try
             End Sub
@@ -790,7 +805,7 @@ Namespace EAMS
                     SQLServerCmd.CommandText = "insert into _sys_log (qry,user_name) values ('" & Replace(q, "'", "", , , CompareMethod.Binary) & "','" & My.User.Name & "')"
                     SQLServerCmd.ExecuteNonQuery()
                 Catch ex As Exception
-
+                    pe.RaiseDataExecuteError(ex.Message)
                 End Try
             End Sub
             Public Sub ExcuteNoneResultFromFile(ByVal Path As String, Optional ByVal Timeout As Integer = 0)
@@ -814,6 +829,7 @@ Namespace EAMS
                         SQLServerCmd.ExecuteNonQuery() 'Rslt
                     End If
                 Catch ex As Exception
+                    pe.RaiseDataExecuteError(ex.Message)
                     ErrorLog(Path)
                     RaiseEvent err("Excuted Failed")
                     RaiseEvent err(ex.Message)
@@ -835,6 +851,7 @@ Namespace EAMS
                     'End If
                 Catch ex As Exception
                     ErrorLog(Query)
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err("Excuted Failed")
                     RaiseEvent err(ex.Message)
                 End Try
@@ -1107,6 +1124,7 @@ Namespace EAMS
             Public Event Disconnected()
             Public Event err(ByVal errName As String)
             Public Event ExportingComplete()
+            Private pe As New PublicErrors
 
 #Region "Structure"
             Public Structure st_ExcelRange
@@ -1223,12 +1241,17 @@ Namespace EAMS
                 Next
             End Sub
             Public Function ReturnDataTable(ByVal sql As String) As DataTable
-                Dim DA As New OleDb.OleDbDataAdapter(sql, DB)
-                Dim DT As New DataTable
-                DA.SelectCommand.CommandTimeout = 0
-                DA.Fill(DT)
-                DA.Dispose()
-                Return DT
+                Try
+                    Dim DA As New OleDb.OleDbDataAdapter(sql, DB)
+                    Dim DT As New DataTable
+                    DA.SelectCommand.CommandTimeout = 0
+                    DA.Fill(DT)
+                    DA.Dispose()
+                    Return DT
+                Catch ex As Exception
+                    pe.RaiseDataReadError()
+                End Try
+                Return Nothing
             End Function
             Public Overloads Function ExcutResult(ByVal SQL As String, Optional ByRef RowEffected As Integer = 0) As String
                 Dim temp As String = ""
@@ -1245,7 +1268,7 @@ Namespace EAMS
                     End If
                 Catch ex As Exception
                     RaiseEvent err(ex.Message)
-
+                    pe.RaiseDataExecuteError(ex.Message)
                 End Try
                 Return temp
             End Function
@@ -1258,6 +1281,7 @@ Namespace EAMS
                     Return AccessCmd.ExecuteNonQuery() 'Rslt
                 Catch ex As Exception
                     'ErrorLog(Query)
+                    pe.RaiseDataExecuteError(ex.Message)
                     RaiseEvent err("Excuted Failed")
                     RaiseEvent err(ex.Message)
                 End Try
@@ -1280,7 +1304,7 @@ Namespace EAMS
                     Loop
                     RaiseEvent Connnected()
                 Catch ex As Exception
-                    RaiseEvent err(ex.Message)
+                    RaiseEvent err("Acc Loc DB: " & ex.Message)
                     RaiseEvent Disconnected()
                 End Try
             End Sub
@@ -10983,7 +11007,7 @@ KeyFound:
                     'cmd.SelectCommand.CommandTimeout = 9999999
                     cn.Open()
                     Dim da As New OleDb.OleDbDataAdapter(Q, cn)
-                    da.SelectCommand.CommandTimeout = 999999
+                    da.SelectCommand.CommandTimeout = 0
                     da.Fill(dt)
                     'cmd.Fill(ds)
                     cn.Close()

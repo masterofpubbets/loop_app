@@ -1,6 +1,6 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmSelectDate
-    Inherits System.Windows.Forms.Form
+    Inherits DevExpress.XtraBars.Ribbon.RibbonForm
 
     'Form overrides dispose to clean up the component list.
     <System.Diagnostics.DebuggerNonUserCode()> _
@@ -25,39 +25,35 @@ Partial Class frmSelectDate
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSelectDate))
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
         Me.dte = New DevExpress.XtraEditors.DateEdit()
-        Me.LabelControl1 = New DevExpress.XtraEditors.LabelControl()
         Me.lblDate = New DevExpress.XtraEditors.LabelControl()
+        Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         CType(Me.dte.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dte.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SimpleButton1
         '
-        Me.SimpleButton1.Image = CType(resources.GetObject("SimpleButton1.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(441, 314)
+        Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(505, 203)
+        Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(164, 57)
+        Me.SimpleButton1.Size = New System.Drawing.Size(219, 70)
         Me.SimpleButton1.TabIndex = 0
-        Me.SimpleButton1.Text = "Select Date"
+        Me.SimpleButton1.Text = "Save Date"
         '
         'dte
         '
         Me.dte.EditValue = Nothing
-        Me.dte.Location = New System.Drawing.Point(93, 35)
+        Me.dte.Location = New System.Drawing.Point(25, 100)
+        Me.dte.Margin = New System.Windows.Forms.Padding(4)
         Me.dte.Name = "dte"
         Me.dte.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.dte.Properties.CalendarTimeProperties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.dte.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
-        Me.dte.Size = New System.Drawing.Size(342, 18)
+        Me.dte.Size = New System.Drawing.Size(456, 22)
         Me.dte.TabIndex = 2
-        '
-        'LabelControl1
-        '
-        Me.LabelControl1.Location = New System.Drawing.Point(28, 38)
-        Me.LabelControl1.Name = "LabelControl1"
-        Me.LabelControl1.Size = New System.Drawing.Size(59, 13)
-        Me.LabelControl1.TabIndex = 3
-        Me.LabelControl1.Text = "Select Date:"
         '
         'lblDate
         '
@@ -67,29 +63,41 @@ Partial Class frmSelectDate
         Me.lblDate.LineColor = System.Drawing.Color.Blue
         Me.lblDate.LineLocation = DevExpress.XtraEditors.LineLocation.Top
         Me.lblDate.LineVisible = True
-        Me.lblDate.Location = New System.Drawing.Point(93, 61)
+        Me.lblDate.Location = New System.Drawing.Point(25, 130)
+        Me.lblDate.Margin = New System.Windows.Forms.Padding(4)
         Me.lblDate.Name = "lblDate"
-        Me.lblDate.Size = New System.Drawing.Size(342, 42)
+        Me.lblDate.Size = New System.Drawing.Size(456, 52)
         Me.lblDate.TabIndex = 4
         Me.lblDate.Text = "Select Date:"
         '
+        'RibbonControl1
+        '
+        Me.RibbonControl1.ExpandCollapseItem.Id = 0
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem})
+        Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.MaxItemId = 1
+        Me.RibbonControl1.Name = "RibbonControl1"
+        Me.RibbonControl1.Size = New System.Drawing.Size(740, 75)
+        '
         'frmSelectDate
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(617, 383)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(740, 298)
         Me.ControlBox = False
         Me.Controls.Add(Me.lblDate)
-        Me.Controls.Add(Me.LabelControl1)
         Me.Controls.Add(Me.dte)
         Me.Controls.Add(Me.SimpleButton1)
+        Me.Controls.Add(Me.RibbonControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmSelectDate.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmSelectDate"
+        Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = " "
         CType(Me.dte.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dte.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -97,6 +105,6 @@ Partial Class frmSelectDate
 
     Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents dte As DevExpress.XtraEditors.DateEdit
-    Friend WithEvents LabelControl1 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents lblDate As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents RibbonControl1 As DevExpress.XtraBars.Ribbon.RibbonControl
 End Class

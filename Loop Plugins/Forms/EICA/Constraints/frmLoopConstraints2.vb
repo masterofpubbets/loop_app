@@ -1,10 +1,74 @@
-﻿Public Class frmLoopConstraints2
+﻿Imports DevExpress.XtraGrid.Columns
+Imports DevExpress.XtraGrid.Views.Base
 
-    Private Sub GetLoop()
-        GRD.DataSource = DB.ReturnDataTable("SELECT tbl_id as ID,Area,[LoopName],[L_Type] as [Type],[L_Description] as [Description],[Subsystem],[Subcontractor],[Active] FROM [tblInsLoop] order by Area,[LoopName]")
+Public Class frmLoopConstraints2
+    Private loops As New LoopsSteps
+    Public _filter As String = ""
+    Public _filterColumn As String = ""
+    Private colWidth As Collection
+    Private focusedRowHandler As Integer = -1
+    Private grdView As New GridViews
+
+    Private Sub CheckAuth()
+
     End Sub
-    Private Sub GetData_Loop(ByVal LoopID As Integer)
-        grdCons.DataSource = DB.ReturnDataTable(String.Format("{0} where loop_id={1}", My.Resources.LoopsCons, LoopID))
+    Private Sub formatColumnsWidth()
+        Try
+            If IsNothing(colWidth) Then
+                For inx As Integer = 1 To gv.Columns.Count
+                    gv.Columns.Item(inx - 1).Width = 100
+                Next
+            Else
+                gv.FocusedRowHandle = focusedRowHandler
+                For inx As Integer = 1 To gv.Columns.Count
+                    gv.Columns.Item(inx - 1).Width = colWidth.Item(inx)
+                Next
+            End If
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+    Private Sub saveColumnsWidth()
+        Try
+            If gv.RowCount <> 0 Then
+                focusedRowHandler = gv.FocusedRowHandle
+
+                If IsNothing(colWidth) Then
+                    colWidth = New Collection
+                    For inx As Integer = 0 To gv.Columns.Count - 1
+                        colWidth.Add(gv.Columns.Item(inx).Width)
+                    Next
+                Else
+                    colWidth.Clear()
+                    For inx As Integer = 0 To gv.Columns.Count - 1
+                        colWidth.Add(gv.Columns.Item(inx).Width)
+                    Next
+                End If
+            End If
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+    Private Sub GetLoop()
+        saveColumnsWidth()
+        grd.DataSource = loops.getLoopsConstraints
+        formatColumnsWidth()
+
+        gv.OptionsSelection.MultiSelect = True
+
+        gv.Columns("Issued By Mail").Visible = False
+        gv.Columns("Issued To Mail").Visible = False
+        gv.Columns("Loop Description").Visible = False
+        gv.Columns("LoopID").Visible = False
+        gv.Columns("ID").Visible = False
+
+
+        If _filter <> "" Then
+            gv.Columns(_filterColumn).FilterInfo = New ColumnFilterInfo(_filter)
+        End If
+        gv.BestFitColumns(True)
     End Sub
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
@@ -12,116 +76,182 @@
     End Sub
 
     Private Sub frmLoopConstraints2_Load(sender As Object, e As EventArgs) Handles Me.Load
+        CheckAuth()
         GetLoop()
     End Sub
 
-    Private Sub GridView2_Click(sender As Object, e As EventArgs) Handles GridView2.Click
-        For Each row_handle As Integer In GridView2.GetSelectedRows
-            GetData_Loop(GridView2.GetDataRow(row_handle).Item("ID"))
-        Next
-    End Sub
-
-    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
-        If GridView2.RowCount = 0 Then Exit Sub
-        Dim col As New Collection
-        For Each row_handle As Integer In GridView2.GetSelectedRows
-            col.Add(GridView2.GetDataRow(row_handle).Item("LoopName"))
-        Next
-        Dim frm As New frmAddConsEntry() With {.LoopIDs = col}
-        frm.ShowDialog(Me)
-        frm = Nothing
-    End Sub
-
-    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-        If gvLoopCons.RowCount = 0 Then Exit Sub
-        Dim msgR As MsgBoxResult = MsgBox("Do You Want to Close Selected Constraint?", MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        For Each row_handle As Integer In gvLoopCons.GetSelectedRows
-            DB.ExcuteNoneResult("exec sp_CloseLoopConstraint null," & gvLoopCons.GetDataRow(row_handle).Item("ID"))
-        Next
-        Dim row_handle2 As Integer = GridView2.GetSelectedRows(0)
-        GetData_Loop(GridView2.GetDataRow(row_handle2).Item("ID"))
-    End Sub
-
-    Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
-        If GridView2.RowCount = 0 Then Exit Sub
-        Dim msgR As MsgBoxResult = MsgBox("Do You Want to Close All Constraints for All Selected Loops?", MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        For Each row_handle As Integer In GridView2.GetSelectedRows
-            DB.ExcuteNoneResult(String.Format("exec sp_CloseLoopConstraint {0},null", GridView2.GetDataRow(row_handle).Item("ID")))
-        Next
-        MsgBox("Loops Constrains Have Been CLosed", MsgBoxStyle.Information, Me.Text)
-    End Sub
-
-    Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
-        Try
-            sveFle.FileName = ""
-            sveFle.ShowDialog()
-            If sveFle.FileName = "" Then Exit Sub
-            DB.ExportDataHeaderToExcel(sveFle.FileName, "SELECT '' AS LoopName,'' as [Constraint],'' as Department,'' as ActionBy,'' as ForecastDate,'' as Remarks", SheetName)
-            MsgBox("Template File has been downloaded", MsgBoxStyle.OkOnly, Me.Text)
-            Process.Start(sveFle.FileName)
-        Catch ex As Exception
-            MsgBox(ex.Message, MsgBoxStyle.Critical, Me.Text)
-        End Try
-    End Sub
-
     Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        Try
-            opnFle.FileName = ""
-            opnFle.ShowDialog()
-            If opnFle.FileName = "" Then
-                Exit Sub
-            End If
-            Dim ex As New EAMS.MSOffice.Excel, dt As New DataTable
-            dt = ex.GetSheetData(opnFle.FileName.ToString, SheetName, "[LoopName] is not null and [Constraint] is not null and Department is not null and [ActionBy] is not null and [ForecastDate] is not null")
-            If dt.Rows.Count = 0 Then
-                MsgBox("No Constraints To Upload", MsgBoxStyle.Exclamation, Me.Text)
-                Exit Sub
-            End If
-            Dim frm As New frmLoadCons
-            frm.GridControl2.DataSource = dt
-            frm.Text = opnFle.FileName
-            frm.ShowDialog(Me)
-            frm = Nothing
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
-        Try
-            sveFle.FileName = ""
-            sveFle.ShowDialog()
-            If sveFle.FileName = "" Then Exit Sub
-            DB.ExportDataHeaderToExcel(sveFle.FileName, "SELECT '' AS LoopName", SheetName)
-            MsgBox("Template File has been downloaded", MsgBoxStyle.OkOnly, Me.Text)
-            Process.Start(sveFle.FileName)
-        Catch ex As Exception
-            MsgBox(ex.Message, MsgBoxStyle.Critical, Me.Text)
-        End Try
+        Dim frm As New frmFilter
+        frm.Text = "Loops Filter"
+        For inx As Integer = 0 To gv.Columns.Count - 1
+            frm.cmbSearchIn.Items.Add(gv.Columns.Item(inx).FieldName)
+        Next
+        frm.ShowDialog(Me)
+        If Not frm.isCancel Then
+            Dim _filter As String = ""
+            For inx As Integer = 1 To frm.searchValues.Count
+                If inx <> 1 Then
+                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                Else
+                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                End If
+            Next
+            gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
+        End If
     End Sub
 
     Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
         Try
-            opnFle.FileName = ""
-            opnFle.ShowDialog()
-            If opnFle.FileName = "" Then
-                Exit Sub
-            End If
-            Dim ex As New EAMS.MSOffice.Excel, dt As New DataTable
-            dt = ex.GetSheetData(opnFle.FileName.ToString, SheetName, "[LoopName] is not null")
-            If dt.Rows.Count = 0 Then
-                MsgBox("No Constraints To Upload", MsgBoxStyle.Exclamation, Me.Text)
-                Exit Sub
-            End If
-            Dim frm As New frmLoadCons() With {.LoadType = frmLoadCons.en_LoadType.ClearConstraint}
-            frm.GridControl2.DataSource = dt
-            frm.Text = opnFle.FileName
-            frm.ShowDialog(Me)
-            frm = Nothing
+            sveFle.FileName = ""
+            sveFle.Filter = "XLSX Files|*.xlsx"
+            sveFle.ShowDialog()
+            If sveFle.FileName = "" Then Exit Sub
+            grd.ExportToXlsx(sveFle.FileName)
+            Process.Start(sveFle.FileName)
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
+        grdView.CopySelectedItems(gv, "Loop Name")
+    End Sub
+
+    Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
+        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Close Blockage For Selected Folders?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        Dim result As String = ""
+        For Each row_handle As Integer In gv.GetSelectedRows
+            ''close blockage here
+            If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
+                If loops.closeBlockage(gv.GetDataRow(row_handle).Item("ID")) Then
+                End If
+            ElseIf Users.userType = "admin" Then
+                If loops.closeBlockage(gv.GetDataRow(row_handle).Item("ID")) Then
+                End If
+            Else
+                result &= "Only the responsible or the admin can close the blockage for this loop: " & gv.GetDataRow(row_handle).Item("Loop Name") & vbCrLf
+            End If
+
+        Next
+        If result <> "" Then
+            Dim frmErr As New frmResults
+            frmErr.txt.Text = result
+            frmErr.ShowDialog(Me)
+        End If
+        msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        GetLoop()
+    End Sub
+
+    Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
+        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Re-assign Blockage To Another User?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        Dim frm As New frmSelectUser
+        frm.ShowDialog(Me)
+        Dim result As String = ""
+        If frm.selectedUserName <> "" Then
+            Dim desc As String = ""
+            For Each row_handle As Integer In gv.GetSelectedRows
+                If IsDBNull(gv.GetDataRow(row_handle).Item("Loop Description")) Then
+                    desc = ""
+                Else
+                    desc = gv.GetDataRow(row_handle).Item("Loop Description")
+                End If
+                ''add blockage here
+                If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
+                    If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
+                    End If
+                ElseIf Users.userType = "admin" Then
+                    If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
+                    End If
+                Else
+                    result &= "Only the responsible or the admin can reassign responsible for this loop: " & gv.GetDataRow(row_handle).Item("Loop Name") & vbCrLf
+                End If
+
+            Next
+
+            loops.SendNotificationsMail(LoopsAPI.MailTypes.FolderBlockage)
+
+            If result <> "" Then
+                Dim frmErr As New frmResults
+                frmErr.txt.Text = result
+                frmErr.ShowDialog(Me)
+            End If
+
+            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
+            If msgR = MsgBoxResult.No Then Exit Sub
+            GetLoop()
+        End If
+    End Sub
+
+    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
+        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Add Comment For Selected Folders?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        Dim frmComment As New frmAddComment
+        frmComment.ShowDialog(Me)
+        If frmComment.Comment = "" Then Exit Sub
+        Dim result As String = ""
+        For Each row_handle As Integer In gv.GetSelectedRows
+            ''close blockage here
+            If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
+                If loops.addComment(gv.GetDataRow(row_handle).Item("ID"), frmComment.Comment) Then
+                End If
+            ElseIf Users.userType = "admin" Then
+                If loops.addComment(gv.GetDataRow(row_handle).Item("ID"), frmComment.Comment) Then
+                End If
+            Else
+                result &= "Only the responsible or the admin can add comment for this loop: " & gv.GetDataRow(row_handle).Item("Loop Name") & vbCrLf
+            End If
+
+        Next
+        If result <> "" Then
+            Dim frmErr As New frmResults
+            frmErr.txt.Text = result
+            frmErr.ShowDialog(Me)
+        End If
+        msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        GetLoop()
+    End Sub
+
+    Private Sub gv_CustomDrawCell(sender As Object, e As RowCellCustomDrawEventArgs) Handles gv.CustomDrawCell
+        If e.Column.FieldName = "LoopPriority" Then
+            If Not IsDBNull(e.CellValue) Then
+                If e.CellValue < 20 Then
+                    e.Cache.FillEllipse(Convert.ToSingle(e.Bounds.X + e.Bounds.Height / 2), e.Bounds.Y + 3, e.Bounds.Height - 5, e.Bounds.Height - 5, Color.Red)
+                    'e.Cache.FillRectangle(Color.Salmon, e.Bounds)
+                    e.Appearance.DrawString(e.Cache, e.DisplayText, e.Bounds)
+                    e.Handled = True
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub BarButtonItem8_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem8.ItemClick
+        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To remove Comment For Selected Folders?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        Dim result As String = ""
+        For Each row_handle As Integer In gv.GetSelectedRows
+            ''close blockage here
+            If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
+                If loops.removeComment(gv.GetDataRow(row_handle).Item("ID")) Then
+                End If
+            ElseIf Users.userType = "admin" Then
+                If loops.removeComment(gv.GetDataRow(row_handle).Item("ID")) Then
+                End If
+            Else
+                result &= "Only the responsible or the admin can remove comment for this loop: " & gv.GetDataRow(row_handle).Item("Loop Name") & vbCrLf
+            End If
+
+        Next
+        If result <> "" Then
+            Dim frmErr As New frmResults
+            frmErr.txt.Text = result
+            frmErr.ShowDialog(Me)
+        End If
+        msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
+        If msgR = MsgBoxResult.No Then Exit Sub
+        GetLoop()
     End Sub
 End Class

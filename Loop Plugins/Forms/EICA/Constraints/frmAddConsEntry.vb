@@ -1,25 +1,30 @@
 ﻿Public Class frmAddConsEntry
-    Public LoopIDs As New Collection
+    Public selectedUserId As Integer = -1
+    Public selectedUserName As String = ""
+    Public selectedUserMail As String = ""
+    Public catName As String = ""
+    Public description As String = ""
+    Public isSelected As Boolean = False
 
-    Private Sub GetDep()
-        DB.Fill(cmbDep, "select dep_name From tbldepartments order By dep_id")
-        cmbDep.SelectedIndex = 0
-        cmbCons.SelectedIndex = 0
+    Private Sub GetConsCategories()
+        cmbConsCat.Items.Clear()
+        DB.Fill(cmbConsCat, "SELECT DISTINCT catName FROM LOOPS.tblConsCategory ORDER BY catName")
+        If cmbConsCat.Items.Count > 0 Then cmbConsCat.SelectedIndex = 0
     End Sub
-    Private Function Validate() As Boolean
-        If cmbCons.SelectedIndex = -1 Then
-            MsgBox("Please Select Constraint", MsgBoxStyle.Exclamation, "Loop Constriant")
-            cmbCons.Focus()
+    Private Function IsValidate() As Boolean
+        If cmbConsCat.SelectedIndex = -1 Then
+            MsgBox("Please Select Category", MsgBoxStyle.Exclamation, "Loop Constriant")
+            cmbConsCat.Focus()
             Return False
         End If
-        If cmbDep.SelectedIndex = -1 Then
-            MsgBox("PLease Selec Department", MsgBoxStyle.Exclamation, "Loop Constriant")
-            cmbDep.Focus()
+        If lblActionBy.Text = "---" Then
+            MsgBox("Please Select Action By", MsgBoxStyle.Exclamation, "Loop Constriant")
+            SimpleButton3.Focus()
             Return False
         End If
-        If Trim(txtActionBy.Text) = "" Then
-            MsgBox("Action By Cannot Be Empty", MsgBoxStyle.Exclamation, "Loop Constriant")
-            txtActionBy.Focus()
+        If Trim(txtDescription.Text) = "" Then
+            MsgBox("Description cannot be empty", MsgBoxStyle.Exclamation, "Loop Constriant")
+            txtDescription.Focus()
             Return False
         End If
         Return True
@@ -28,20 +33,27 @@
         Me.Close()
     End Sub
 
-    Private Sub frmAddConsEntry_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        GetDep()
-    End Sub
-
     Private Sub SimpleButton2_Click(sender As Object, e As EventArgs) Handles SimpleButton2.Click
-        If Validate() Then
-            For inx As Integer = 1 To LoopIDs.Count
-                If txtRemarks.Text = "" Then
-                    DB.ExcuteNoneResult(String.Format("exec sp_AddLoopConstraint '{0}','{1}','{2}','{3}','{4}',null", LoopIDs.Item(inx), cmbCons.SelectedItem.ToString, cmbDep.SelectedItem.ToString, txtActionBy.Text, Format(dteForecast.Value, "MM/dd/yyyy")))
-                Else
-                    DB.ExcuteNoneResult(String.Format("exec sp_AddLoopConstraint '{0}','{1}','{2}','{3}','{4}','{5}'", LoopIDs.Item(inx), cmbCons.SelectedItem.ToString, cmbDep.SelectedItem.ToString, txtActionBy.Text, Format(dteForecast.Value, "MM/dd/yyyy"), txtRemarks.Text))
-                End If
-            Next
+        If IsValidate() Then
+            catName = cmbConsCat.SelectedItem.ToString
+            description = txtDescription.Text
+            isSelected = True
             Me.Close()
         End If
+    End Sub
+
+    Private Sub SimpleButton3_Click(sender As Object, e As EventArgs) Handles SimpleButton3.Click
+        Dim frm As New frmSelectUser
+        frm.ShowDialog(Me)
+        If frm.selectedUserName <> "" Then
+            lblActionBy.Text = frm.selectedUserName
+            selectedUserId = frm.selectedUserId
+            selectedUserName = frm.selectedUserName
+            selectedUserMail = frm.selectedUsermail
+        End If
+    End Sub
+
+    Private Sub frmAddConsEntry_Load(sender As Object, e As EventArgs) Handles Me.Load
+        GetConsCategories()
     End Sub
 End Class

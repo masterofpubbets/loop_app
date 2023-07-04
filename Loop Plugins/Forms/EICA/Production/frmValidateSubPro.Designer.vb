@@ -104,33 +104,38 @@ Partial Class frmValidateSubPro
         Me.NavigationPane1.Controls.Add(Me.NavigationPage7)
         Me.NavigationPane1.Controls.Add(Me.NavigationPage8)
         Me.NavigationPane1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.NavigationPane1.Location = New System.Drawing.Point(0, 79)
+        Me.NavigationPane1.Location = New System.Drawing.Point(0, 112)
+        Me.NavigationPane1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPane1.Name = "NavigationPane1"
         Me.NavigationPane1.Pages.AddRange(New DevExpress.XtraBars.Navigation.NavigationPageBase() {Me.NavigationPage1, Me.NavigationPage2, Me.NavigationPage3, Me.NavigationPage4, Me.NavigationPage5, Me.NavigationPage6, Me.NavigationPage7, Me.NavigationPage8})
-        Me.NavigationPane1.RegularSize = New System.Drawing.Size(1172, 607)
+        Me.NavigationPane1.RegularSize = New System.Drawing.Size(1198, 587)
         Me.NavigationPane1.SelectedPage = Me.NavigationPage2
-        Me.NavigationPane1.Size = New System.Drawing.Size(1172, 607)
+        Me.NavigationPane1.Size = New System.Drawing.Size(1198, 587)
         Me.NavigationPane1.TabIndex = 0
         '
         'NavigationPage1
         '
         Me.NavigationPage1.Caption = "Electrical Cables"
         Me.NavigationPage1.Controls.Add(Me.grdEC)
+        Me.NavigationPage1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage1.Name = "NavigationPage1"
-        Me.NavigationPage1.Size = New System.Drawing.Size(1028, 545)
+        Me.NavigationPage1.Size = New System.Drawing.Size(1199, 671)
         '
         'grdEC
         '
         Me.grdEC.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdEC.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdEC.Location = New System.Drawing.Point(0, 0)
         Me.grdEC.MainView = Me.gvEC
+        Me.grdEC.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdEC.Name = "grdEC"
-        Me.grdEC.Size = New System.Drawing.Size(1028, 545)
+        Me.grdEC.Size = New System.Drawing.Size(1199, 671)
         Me.grdEC.TabIndex = 2
         Me.grdEC.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvEC})
         '
         'gvEC
         '
+        Me.gvEC.DetailHeight = 431
         Me.gvEC.GridControl = Me.grdEC
         Me.gvEC.Name = "gvEC"
         Me.gvEC.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -146,21 +151,25 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage2.Caption = "Electrical Equipment"
         Me.NavigationPage2.Controls.Add(Me.grdEEq)
+        Me.NavigationPage2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage2.Name = "NavigationPage2"
-        Me.NavigationPage2.Size = New System.Drawing.Size(1032, 547)
+        Me.NavigationPage2.Size = New System.Drawing.Size(1005, 497)
         '
         'grdEEq
         '
         Me.grdEEq.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdEEq.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdEEq.Location = New System.Drawing.Point(0, 0)
         Me.grdEEq.MainView = Me.gvEEq
+        Me.grdEEq.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdEEq.Name = "grdEEq"
-        Me.grdEEq.Size = New System.Drawing.Size(1032, 547)
+        Me.grdEEq.Size = New System.Drawing.Size(1005, 497)
         Me.grdEEq.TabIndex = 3
         Me.grdEEq.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvEEq})
         '
         'gvEEq
         '
+        Me.gvEEq.DetailHeight = 431
         Me.gvEEq.GridControl = Me.grdEEq
         Me.gvEEq.Name = "gvEEq"
         Me.gvEEq.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -176,21 +185,25 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage3.Caption = "Electrical JB"
         Me.NavigationPage3.Controls.Add(Me.grdEJB)
+        Me.NavigationPage3.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage3.Name = "NavigationPage3"
-        Me.NavigationPage3.Size = New System.Drawing.Size(1172, 604)
+        Me.NavigationPage3.Size = New System.Drawing.Size(1367, 743)
         '
         'grdEJB
         '
         Me.grdEJB.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdEJB.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdEJB.Location = New System.Drawing.Point(0, 0)
         Me.grdEJB.MainView = Me.gvEJB
+        Me.grdEJB.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdEJB.Name = "grdEJB"
-        Me.grdEJB.Size = New System.Drawing.Size(1172, 604)
+        Me.grdEJB.Size = New System.Drawing.Size(1367, 743)
         Me.grdEJB.TabIndex = 4
         Me.grdEJB.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvEJB})
         '
         'gvEJB
         '
+        Me.gvEJB.DetailHeight = 431
         Me.gvEJB.GridControl = Me.grdEJB
         Me.gvEJB.Name = "gvEJB"
         Me.gvEJB.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -206,21 +219,25 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage4.Caption = "Instrument Cables"
         Me.NavigationPage4.Controls.Add(Me.grdInsCable)
+        Me.NavigationPage4.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage4.Name = "NavigationPage4"
-        Me.NavigationPage4.Size = New System.Drawing.Size(1172, 604)
+        Me.NavigationPage4.Size = New System.Drawing.Size(1367, 743)
         '
         'grdInsCable
         '
         Me.grdInsCable.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdInsCable.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdInsCable.Location = New System.Drawing.Point(0, 0)
         Me.grdInsCable.MainView = Me.gvIC
+        Me.grdInsCable.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdInsCable.Name = "grdInsCable"
-        Me.grdInsCable.Size = New System.Drawing.Size(1172, 604)
+        Me.grdInsCable.Size = New System.Drawing.Size(1367, 743)
         Me.grdInsCable.TabIndex = 1
         Me.grdInsCable.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvIC})
         '
         'gvIC
         '
+        Me.gvIC.DetailHeight = 431
         Me.gvIC.GridControl = Me.grdInsCable
         Me.gvIC.Name = "gvIC"
         Me.gvIC.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -236,21 +253,25 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage5.Caption = "Instrument JB"
         Me.NavigationPage5.Controls.Add(Me.grdIJB)
+        Me.NavigationPage5.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage5.Name = "NavigationPage5"
-        Me.NavigationPage5.Size = New System.Drawing.Size(1172, 604)
+        Me.NavigationPage5.Size = New System.Drawing.Size(1367, 743)
         '
         'grdIJB
         '
         Me.grdIJB.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdIJB.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdIJB.Location = New System.Drawing.Point(0, 0)
         Me.grdIJB.MainView = Me.gvIJB
+        Me.grdIJB.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdIJB.Name = "grdIJB"
-        Me.grdIJB.Size = New System.Drawing.Size(1172, 604)
+        Me.grdIJB.Size = New System.Drawing.Size(1367, 743)
         Me.grdIJB.TabIndex = 4
         Me.grdIJB.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvIJB})
         '
         'gvIJB
         '
+        Me.gvIJB.DetailHeight = 431
         Me.gvIJB.GridControl = Me.grdIJB
         Me.gvIJB.Name = "gvIJB"
         Me.gvIJB.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -266,21 +287,25 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage6.Caption = "Instrument Equipment"
         Me.NavigationPage6.Controls.Add(Me.grdIEq)
+        Me.NavigationPage6.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage6.Name = "NavigationPage6"
-        Me.NavigationPage6.Size = New System.Drawing.Size(1172, 604)
+        Me.NavigationPage6.Size = New System.Drawing.Size(1367, 743)
         '
         'grdIEq
         '
         Me.grdIEq.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdIEq.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdIEq.Location = New System.Drawing.Point(0, 0)
         Me.grdIEq.MainView = Me.gvIEq
+        Me.grdIEq.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdIEq.Name = "grdIEq"
-        Me.grdIEq.Size = New System.Drawing.Size(1172, 604)
+        Me.grdIEq.Size = New System.Drawing.Size(1367, 743)
         Me.grdIEq.TabIndex = 4
         Me.grdIEq.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvIEq})
         '
         'gvIEq
         '
+        Me.gvIEq.DetailHeight = 431
         Me.gvIEq.GridControl = Me.grdIEq
         Me.gvIEq.Name = "gvIEq"
         Me.gvIEq.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -296,21 +321,25 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage7.Caption = "Instruments"
         Me.NavigationPage7.Controls.Add(Me.grdIns)
+        Me.NavigationPage7.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage7.Name = "NavigationPage7"
-        Me.NavigationPage7.Size = New System.Drawing.Size(1028, 545)
+        Me.NavigationPage7.Size = New System.Drawing.Size(1199, 671)
         '
         'grdIns
         '
         Me.grdIns.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdIns.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdIns.Location = New System.Drawing.Point(0, 0)
         Me.grdIns.MainView = Me.gvIns
+        Me.grdIns.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdIns.Name = "grdIns"
-        Me.grdIns.Size = New System.Drawing.Size(1028, 545)
+        Me.grdIns.Size = New System.Drawing.Size(1199, 671)
         Me.grdIns.TabIndex = 4
         Me.grdIns.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvIns})
         '
         'gvIns
         '
+        Me.gvIns.DetailHeight = 431
         Me.gvIns.GridControl = Me.grdIns
         Me.gvIns.Name = "gvIns"
         Me.gvIns.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -326,14 +355,16 @@ Partial Class frmValidateSubPro
         '
         Me.NavigationPage8.Caption = "Filter By Loops"
         Me.NavigationPage8.Controls.Add(Me.SplitContainer1)
+        Me.NavigationPage8.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.NavigationPage8.Name = "NavigationPage8"
-        Me.NavigationPage8.Size = New System.Drawing.Size(1028, 545)
+        Me.NavigationPage8.Size = New System.Drawing.Size(1199, 671)
         '
         'SplitContainer1
         '
         Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -345,22 +376,26 @@ Partial Class frmValidateSubPro
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.grdItem)
         Me.SplitContainer1.Panel2.Controls.Add(Me.ToolStrip1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1028, 545)
-        Me.SplitContainer1.SplitterDistance = 342
+        Me.SplitContainer1.Size = New System.Drawing.Size(1199, 671)
+        Me.SplitContainer1.SplitterDistance = 421
+        Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 0
         '
         'grdLoop
         '
         Me.grdLoop.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.grdLoop.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdLoop.Location = New System.Drawing.Point(0, 0)
         Me.grdLoop.MainView = Me.gvLoop
+        Me.grdLoop.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdLoop.Name = "grdLoop"
-        Me.grdLoop.Size = New System.Drawing.Size(1026, 340)
+        Me.grdLoop.Size = New System.Drawing.Size(1197, 419)
         Me.grdLoop.TabIndex = 5
         Me.grdLoop.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvLoop})
         '
         'gvLoop
         '
+        Me.gvLoop.DetailHeight = 431
         Me.gvLoop.GridControl = Me.grdLoop
         Me.gvLoop.Name = "gvLoop"
         Me.gvLoop.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -376,15 +411,18 @@ Partial Class frmValidateSubPro
         'grdItem
         '
         Me.grdItem.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.grdItem.Location = New System.Drawing.Point(0, 25)
+        Me.grdItem.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.grdItem.Location = New System.Drawing.Point(0, 27)
         Me.grdItem.MainView = Me.gvItem
+        Me.grdItem.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grdItem.Name = "grdItem"
-        Me.grdItem.Size = New System.Drawing.Size(1026, 172)
+        Me.grdItem.Size = New System.Drawing.Size(1197, 216)
         Me.grdItem.TabIndex = 5
         Me.grdItem.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvItem})
         '
         'gvItem
         '
+        Me.gvItem.DetailHeight = 431
         Me.gvItem.GridControl = Me.grdItem
         Me.gvItem.Name = "gvItem"
         Me.gvItem.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[False]
@@ -394,37 +432,39 @@ Partial Class frmValidateSubPro
         '
         'ToolStrip1
         '
+        Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1026, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1197, 27)
         Me.ToolStrip1.TabIndex = 0
         Me.ToolStrip1.Text = "ToolStrip1"
         '
         'ToolStripButton1
         '
-        Me.ToolStripButton1.Image = Global.Loop_Plugins.My.Resources.Resources.save
+        Me.ToolStripButton1.Image = Global.Loop_App.My.Resources.Resources.save
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(65, 22)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(82, 24)
         Me.ToolStripButton1.Text = "Update"
         '
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
+        Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 2
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1172, 79)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 112)
         '
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Save Changes"
-        Me.BarButtonItem1.Glyph = CType(resources.GetObject("BarButtonItem1.Glyph"), System.Drawing.Image)
         Me.BarButtonItem1.Id = 1
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
         Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -442,12 +482,12 @@ Partial Class frmValidateSubPro
         '
         'frmValidateSubPro
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1172, 686)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.NavigationPane1)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Icon = CType(resources.GetObject("frmValidateSubPro.IconOptions.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmValidateSubPro"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  A strongly-typed resource class, for looking up localized strings, etc.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
      Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
@@ -39,7 +39,7 @@ Namespace My.Resources
         Friend ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
             Get
                 If Object.ReferenceEquals(resourceMan, Nothing) Then
-                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("Loop_Plugins.Resources", GetType(Resources).Assembly)
+                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("Loop_App.Resources", GetType(Resources).Assembly)
                     resourceMan = temp
                 End If
                 Return resourceMan
@@ -102,6 +102,169 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectElements(&apos;10031&apos;)](
+        '''	[ProjectCode] [nvarchar](255) NULL,
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[Module] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SubSystem] [nvarchar](255) NULL,
+        '''	[Group] [nvarchar](255) NULL,
+        '''	[Item] [nvarchar](255) NULL,
+        '''	[ElementType] [nvarchar](255) NULL,
+        '''	[ElementCode] [nvarchar](255) NULL,
+        '''	[Name] [nvarchar](255) NULL,
+        '''	[Discipline] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Class] [nvarchar](2 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreateElement() As String
+            Get
+                Return ResourceManager.GetString("CreateElement", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectGroups(&apos;10031&apos;)](
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SubSystem] [nvarchar](255) NULL,
+        '''	[Module] [nvarchar](255) NULL,
+        '''	[GroupID] [nvarchar](255) NULL,
+        '''	[GroupName] [nvarchar](255) NULL,
+        '''	[Revision] [nvarchar](255) NULL,
+        '''	[Discipline] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Class] [nvarchar](255) NULL,
+        '''	[Folder] [bit] NOT NULL,
+        '''	[Subcontractor] [nvarchar](255) NULL,
+        '''	[Weight] [float] NULL,
+        '''	[ [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreateGroups() As String
+            Get
+                Return ResourceManager.GetString("CreateGroups", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectItems(&apos;10031&apos;)](
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SubSystem] [nvarchar](255) NULL,
+        '''	[Module] [nvarchar](255) NULL,
+        '''	[Group] [nvarchar](255) NULL,
+        '''	[ItemCode] [nvarchar](255) NULL,
+        '''	[ItemName] [nvarchar](255) NULL,
+        '''	[OldItem] [nvarchar](255) NULL,
+        '''	[Revision] [nvarchar](255) NULL,
+        '''	[Discipline] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Class] [nvarchar](255) NULL,
+        '''	[Subcontractor] [nvarchar](2 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreateItems() As String
+            Get
+                Return ResourceManager.GetString("CreateItems", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectPunchs(&apos;10031&apos;)](
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[Module] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SubSystem] [nvarchar](255) NULL,
+        '''	[Group] [nvarchar](255) NULL,
+        '''	[Item] [nvarchar](255) NULL,
+        '''	[ElementType] [nvarchar](255) NULL,
+        '''	[ElementCode] [nvarchar](255) NULL,
+        '''	[Name] [nvarchar](255) NULL,
+        '''	[Discipline] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Class] [nvarchar](255) NULL,
+        '''	[Subcontractor] [nvarchar](2 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreatePunch() As String
+            Get
+                Return ResourceManager.GetString("CreatePunch", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectSubsystems(&apos;10031&apos;)](
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SubSystem] [nvarchar](255) NULL,
+        '''	[SubSystemName] [nvarchar](255) NULL,
+        '''	[Description] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Priority] [float] NULL,
+        '''	[Weight] [float] NULL,
+        '''	[HH] [float] NULL,
+        '''	[Remarks] [nvarchar](255) NULL,
+        '''	[Subcontractor] [nvarchar](255) NULL,
+        '''	[TargetDate] [nvarchar](255) NULL,
+        '''	[PlanningDate] [nvarchar](255) NUL [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreateSubsystem() As String
+            Get
+                Return ResourceManager.GetString("CreateSubsystem", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectSystems(&apos;10031&apos;)](
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SystemName] [nvarchar](255) NULL,
+        '''	[Description] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Priority] [float] NULL,
+        '''	[Weight] [float] NULL,
+        '''	[HH] [float] NULL,
+        '''	[Remarks] [nvarchar](255) NULL,
+        '''	[Subcontractor] [nvarchar](255) NULL,
+        '''	[TargetDate] [nvarchar](255) NULL,
+        '''	[PlanningDate] [nvarchar](255) NULL,
+        '''	[RFCN] [nvarchar](255) NULL,
+        '''	[RFCN_ [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreateSystems() As String
+            Get
+                Return ResourceManager.GetString("CreateSystems", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to CREATE TABLE [dbo].[getProjectTasks(&apos;10031&apos;)](
+        '''	[ProjectCode] [nvarchar](255) NULL,
+        '''	[Area] [nvarchar](255) NULL,
+        '''	[Unit] [nvarchar](255) NULL,
+        '''	[Module] [nvarchar](255) NULL,
+        '''	[System] [nvarchar](255) NULL,
+        '''	[SubSystem] [nvarchar](255) NULL,
+        '''	[Group] [nvarchar](255) NULL,
+        '''	[Item] [nvarchar](255) NULL,
+        '''	[ElementType] [nvarchar](255) NULL,
+        '''	[ElementCode] [nvarchar](255) NULL,
+        '''	[Name] [nvarchar](255) NULL,
+        '''	[Discipline] [nvarchar](255) NULL,
+        '''	[Type] [nvarchar](255) NULL,
+        '''	[Class] [nvarchar](255) [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CreateTask() As String
+            Get
+                Return ResourceManager.GetString("CreateTask", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property delete2() As System.Drawing.Bitmap
@@ -148,6 +311,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property eccables02() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("eccables02", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to SELECT 
         '''[TBL_ID]
         ''',[tblEleCableList].Area
@@ -160,11 +333,10 @@ Namespace My.Resources
         ''',vCblParProductionTotal_Vendor.Pro_Date
         ''',vCblParProductionTotal_Vendor.Percentage
         ''',[Pulled_con] as [Pulled Confirm]
-        ''',[EC_Cable_Gland_From] as [Gland From Date]
-        ''',[EC_Cable_Gland_From_con] as [Gland From Confirm]
-        ''',[EC_Cable_Gland_To] as [Gland To Date]
-        ''',[EC_Cable_Gland_To_con] as [Gland To Confirm]
-        ''',[EC_Plan_Connect [rest of string was truncated]&quot;;.
+        ''',[EC_Plan_Connected_Date_From] as [Connected From Date]
+        ''',[EC_Plan_Connected_Date_From_con] as [Connect From Confirm]
+        ''',[EC_Plan_Connected_Date_To] as [Connected To Date]
+        ''',[EC_Plan_Connected_Date_To_con [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property ECCableValidate() As String
             Get
@@ -313,9 +485,55 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property equipment32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("equipment32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property EXCEL97() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("EXCEL97", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to update [HCS].[ProjectPunchs] set [SignedByTR]=replace([SignedByTR],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectPunchs] set [SignedBySubcon]=replace([SignedBySubcon],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectPunchs] set [SignedByClient]=replace([SignedByClient],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''
+        '''update [HCS].[ProjectSubsystems] set [Data3]=replace([Data3],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectSubsystems] set [Data4]=replace([Data4],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectSubsystems] set [Data5]=replace([Data5],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectSubsystems] set [Data6]=repla [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property FixColumnsData() As String
+            Get
+                Return ResourceManager.GetString("FixColumnsData", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property fixture32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("fixture32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property fixtures64() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("fixtures64", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -366,10 +584,10 @@ Namespace My.Resources
         ''',vCblParProductionTotal_Vendor.Pro_Date
         ''',vCblParProductionTotal_Vendor.Percentage
         ''',[Pulled_con] as [Pulled Confirm]
-        ''',[IC_Cable_Gland_From] as [Gland From Date]
-        ''',[IC_Cable_Gland_From_con] as [Gland From Confirm]
-        ''',[IC_Cable_Gland_To] as [Gland To Date]
-        ''',[IC_Cable_Gland_To_con] as [Gland To Con [rest of string was truncated]&quot;;.
+        ''',[IC_Plan_Connected_Date_From] as [Connected From Date]
+        ''',[IC_Plan_Connected_Date_From_con] as [Connect From Confirm]
+        ''',[IC_Plan_Connected_Date_To] as [Connected To Date]
+        ''',[IC_Pl [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property ICCableValidate() As String
             Get
@@ -524,6 +742,26 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property logo1() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo1", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to select
         '''vLog.Discipline,vLog.Tag,vLog.Step_Name as [Action],vLog.uname as [User Name]
         ''',vLog.udate as [Date]
@@ -560,6 +798,16 @@ Namespace My.Resources
         Friend ReadOnly Property Loop_Map() As String
             Get
                 Return ResourceManager.GetString("Loop_Map", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property loop32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("loop32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -683,9 +931,11 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to SELECT [tbl_id] as ID,[loop_constraint] as [Constraint],[Department],[issued_date] as [Issued Date],[action_by] as [Action By]
+        '''  Looks up a localized string similar to SELECT [tbl_id] as ID,[tblConstraints].cons_name as [Constraint],tblDepartments.dep_name as [Department],[issued_date] as [Issued Date],[action_by] as [Action By]
         ''',[forecast_released_date] as [Forecast Date],[released_date] as [Released Date],[Remarks]
-        '''FROM [tblLoopConstraint].
+        '''FROM [tblLoopConstraint]
+        '''inner join tblDepartments on [tblLoopConstraint].dep_id = tblDepartments.dep_id
+        '''inner join [tblConstraints] on [tblLoopConstraint].cons_id = [tblConstraints].cons_id.
         '''</summary>
         Friend ReadOnly Property LoopsCons() As String
             Get
@@ -849,6 +1099,37 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("save", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property trays32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("trays32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to TRUNCATE TABLE [HCS].ProjectElements
+        '''TRUNCATE TABLE [HCS].ProjectGroups
+        '''TRUNCATE TABLE [HCS].ProjectItems
+        '''TRUNCATE TABLE [HCS].ProjectPunchs
+        '''TRUNCATE TABLE [HCS].ProjectSubsystems
+        '''TRUNCATE TABLE [HCS].ProjectSystems
+        '''TRUNCATE TABLE [HCS].ProjectTasks
+        '''
+        '''ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedByTR] NVARCHAR(100)
+        '''ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedBySubcon] NVARCHAR(100)
+        '''ALTER TABLE [HCS].[ProjectPunchs] ALTER column [SignedByClient] NVARCHAR(100)
+        '''
+        '''ALTER TABLE [HCS]. [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property TruncateHCSs() As String
+            Get
+                Return ResourceManager.GetString("TruncateHCSs", resourceCulture)
             End Get
         End Property
         
