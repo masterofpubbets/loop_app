@@ -25,19 +25,14 @@ Partial Class frmMain
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
-        Me.lblDis = New DevExpress.XtraBars.BarStaticItem()
-        Me.lblCOn = New DevExpress.XtraBars.BarStaticItem()
-        Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
+        Me.lblUserName = New DevExpress.XtraBars.BarStaticItem()
         Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
-        Me.lblEICACon = New DevExpress.XtraBars.BarStaticItem()
-        Me.BarButtonItem5 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem7 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem3 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem9 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem10 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem11 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem14 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem15 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem16 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem17 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem18 = New DevExpress.XtraBars.BarButtonItem()
@@ -45,15 +40,12 @@ Partial Class frmMain
         Me.BarButtonItem20 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem21 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem22 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem23 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem25 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem26 = New DevExpress.XtraBars.BarButtonItem()
+        Me.barbtnHandoverIndex = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem13 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem27 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem28 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem29 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem6 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem12 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem24 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem4 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem30 = New DevExpress.XtraBars.BarButtonItem()
@@ -64,80 +56,93 @@ Partial Class frmMain
         Me.BarButtonItem35 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem36 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem37 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem38 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem39 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem40 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem41 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem42 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem43 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem44 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem45 = New DevExpress.XtraBars.BarButtonItem()
+        Me.barBtnHandoverData = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem25 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem38 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem42 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem23 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem26 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem46 = New DevExpress.XtraBars.BarButtonItem()
-        Me.RibbonPage6 = New DevExpress.XtraBars.Ribbon.RibbonPage()
-        Me.RibbonPageGroup11 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPageGroup14 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.BarButtonItem48 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem49 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem40 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem45 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem47 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem50 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem51 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarSubItem1 = New DevExpress.XtraBars.BarSubItem()
+        Me.BarButtonItem52 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem53 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
+        Me.lblDBName = New DevExpress.XtraBars.BarStaticItem()
+        Me.lblServer = New DevExpress.XtraBars.BarStaticItem()
+        Me.BarButtonItem5 = New DevExpress.XtraBars.BarButtonItem()
+        Me.rpHome = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup17 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup13 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpAdmin = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup1 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage7 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.rpEng = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup11 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup12 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpPlanning = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup14 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpHandover = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup16 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpConstruction = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup15 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpQC = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup8 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage4 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.rpPrecom = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup10 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.rpPC = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPageGroup7 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage5 = New DevExpress.XtraBars.Ribbon.RibbonPage()
-        Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup18 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup19 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup20 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup5 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpBlockage = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup3 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPageGroup12 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPageGroup13 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage3 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup9 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.DefaultLookAndFeel1 = New DevExpress.LookAndFeel.DefaultLookAndFeel(Me.components)
         Me.BarButtonItem8 = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPageGroup6 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.ToastNotificationsManager = New DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager(Me.components)
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ToastNotificationsManager, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl1
         '
-        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.Loop_Plugins.My.Resources.Resources.loop32
+        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.Loop_App.My.Resources.Resources.logo
+        Me.RibbonControl1.CaptionBarItemLinks.Add(Me.lblUserName)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.lblDis, Me.lblCOn, Me.BarButtonItem1, Me.BarButtonItem2, Me.lblEICACon, Me.BarButtonItem5, Me.BarButtonItem7, Me.BarButtonItem3, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem25, Me.BarButtonItem26, Me.BarButtonItem13, Me.BarButtonItem27, Me.BarButtonItem28, Me.BarButtonItem29, Me.BarButtonItem6, Me.BarButtonItem12, Me.BarButtonItem24, Me.BarButtonItem4, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarButtonItem39, Me.BarButtonItem40, Me.BarButtonItem41, Me.BarButtonItem42, Me.BarButtonItem43, Me.BarButtonItem44, Me.BarButtonItem45, Me.BarButtonItem46})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblUserName, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem2, Me.BarButtonItem7, Me.BarButtonItem3, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.BarButtonItem14, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem22, Me.barbtnHandoverIndex, Me.BarButtonItem13, Me.BarButtonItem27, Me.BarButtonItem28, Me.BarButtonItem29, Me.BarButtonItem6, Me.BarButtonItem24, Me.BarButtonItem4, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem39, Me.BarButtonItem41, Me.BarButtonItem43, Me.BarButtonItem44, Me.barBtnHandoverData, Me.BarButtonItem25, Me.BarButtonItem38, Me.BarButtonItem42, Me.BarButtonItem23, Me.BarButtonItem26, Me.BarButtonItem46, Me.BarButtonItem48, Me.BarButtonItem49, Me.BarButtonItem40, Me.BarButtonItem45, Me.BarButtonItem47, Me.BarButtonItem50, Me.BarButtonItem51, Me.BarSubItem1, Me.BarButtonItem52, Me.BarButtonItem53, Me.BarButtonItem1, Me.lblDBName, Me.lblServer, Me.BarButtonItem5})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.RibbonControl1.MaxItemId = 62
+        Me.RibbonControl1.MaxItemId = 92
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.PageHeaderItemLinks.Add(Me.lblDis)
-        Me.RibbonControl1.PageHeaderItemLinks.Add(Me.lblCOn)
-        Me.RibbonControl1.PageHeaderItemLinks.Add(Me.lblEICACon)
-        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage6, Me.RibbonPage1, Me.RibbonPage7, Me.RibbonPage4, Me.RibbonPage2, Me.RibbonPage5, Me.RibbonPage3})
-        Me.RibbonControl1.Size = New System.Drawing.Size(1332, 193)
+        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpHome, Me.rpAdmin, Me.rpEng, Me.rpPlanning, Me.rpHandover, Me.rpConstruction, Me.rpQC, Me.rpPrecom, Me.rpPC, Me.RibbonPage1, Me.rpBlockage, Me.RibbonPage2})
+        Me.RibbonControl1.QuickToolbarItemLinks.Add(Me.lblDBName)
+        Me.RibbonControl1.QuickToolbarItemLinks.Add(Me.lblServer)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1617, 173)
         '
-        'lblDis
+        'lblUserName
         '
-        Me.lblDis.Caption = "Disconnected"
-        Me.lblDis.Id = 3
-        Me.lblDis.ImageOptions.Image = CType(resources.GetObject("lblDis.ImageOptions.Image"), System.Drawing.Image)
-        Me.lblDis.Name = "lblDis"
-        Me.lblDis.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
-        '
-        'lblCOn
-        '
-        Me.lblCOn.Caption = "Connected"
-        Me.lblCOn.Id = 4
-        Me.lblCOn.ImageOptions.Image = CType(resources.GetObject("lblCOn.ImageOptions.Image"), System.Drawing.Image)
-        Me.lblCOn.Name = "lblCOn"
-        Me.lblCOn.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
-        Me.lblCOn.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
-        '
-        'BarButtonItem1
-        '
-        Me.BarButtonItem1.Caption = "Extract I.L.D"
-        Me.BarButtonItem1.Id = 5
-        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem1.Name = "BarButtonItem1"
-        Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.lblUserName.Caption = "nouser"
+        Me.lblUserName.Id = 68
+        Me.lblUserName.ImageOptions.Image = CType(resources.GetObject("lblUserName.ImageOptions.Image"), System.Drawing.Image)
+        Me.lblUserName.ImageOptions.LargeImage = CType(resources.GetObject("lblUserName.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.lblUserName.Name = "lblUserName"
+        Me.lblUserName.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
         '
         'BarButtonItem2
         '
@@ -146,23 +151,6 @@ Partial Class frmMain
         Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.Name = "BarButtonItem2"
         Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'lblEICACon
-        '
-        Me.lblEICACon.Caption = "EICA Online"
-        Me.lblEICACon.Id = 10
-        Me.lblEICACon.ImageOptions.Image = CType(resources.GetObject("lblEICACon.ImageOptions.Image"), System.Drawing.Image)
-        Me.lblEICACon.Name = "lblEICACon"
-        Me.lblEICACon.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
-        Me.lblEICACon.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
-        '
-        'BarButtonItem5
-        '
-        Me.BarButtonItem5.Caption = "EICA Connect"
-        Me.BarButtonItem5.Id = 11
-        Me.BarButtonItem5.ImageOptions.Image = CType(resources.GetObject("BarButtonItem5.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem5.Name = "BarButtonItem5"
-        Me.BarButtonItem5.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem7
         '
@@ -211,14 +199,6 @@ Partial Class frmMain
         Me.BarButtonItem14.ImageOptions.Image = CType(resources.GetObject("BarButtonItem14.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem14.Name = "BarButtonItem14"
         Me.BarButtonItem14.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem15
-        '
-        Me.BarButtonItem15.Caption = "Show Ins Loop Table"
-        Me.BarButtonItem15.Id = 21
-        Me.BarButtonItem15.ImageOptions.Image = CType(resources.GetObject("BarButtonItem15.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem15.Name = "BarButtonItem15"
-        Me.BarButtonItem15.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem16
         '
@@ -276,29 +256,14 @@ Partial Class frmMain
         Me.BarButtonItem22.Name = "BarButtonItem22"
         Me.BarButtonItem22.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'BarButtonItem23
+        'barbtnHandoverIndex
         '
-        Me.BarButtonItem23.Caption = "Update Loop Index Signed From HCS"
-        Me.BarButtonItem23.Id = 29
-        Me.BarButtonItem23.ImageOptions.Image = CType(resources.GetObject("BarButtonItem23.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem23.Name = "BarButtonItem23"
-        Me.BarButtonItem23.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem25
-        '
-        Me.BarButtonItem25.Caption = "EICA Connect"
-        Me.BarButtonItem25.Id = 31
-        Me.BarButtonItem25.ImageOptions.Image = CType(resources.GetObject("BarButtonItem25.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem25.Name = "BarButtonItem25"
-        Me.BarButtonItem25.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem26
-        '
-        Me.BarButtonItem26.Caption = "Folder Status"
-        Me.BarButtonItem26.Id = 34
-        Me.BarButtonItem26.ImageOptions.Image = CType(resources.GetObject("BarButtonItem26.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem26.Name = "BarButtonItem26"
-        Me.BarButtonItem26.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.barbtnHandoverIndex.Caption = "Update Loop Index Signed From HCS"
+        Me.barbtnHandoverIndex.Id = 29
+        Me.barbtnHandoverIndex.ImageOptions.Image = CType(resources.GetObject("barbtnHandoverIndex.ImageOptions.Image"), System.Drawing.Image)
+        Me.barbtnHandoverIndex.Name = "barbtnHandoverIndex"
+        Me.barbtnHandoverIndex.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.barbtnHandoverIndex.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
         '
         'BarButtonItem13
         '
@@ -310,9 +275,10 @@ Partial Class frmMain
         '
         'BarButtonItem27
         '
-        Me.BarButtonItem27.Caption = "Update Loop Status and Constraints"
+        Me.BarButtonItem27.Caption = "Folders Blockage"
         Me.BarButtonItem27.Id = 36
         Me.BarButtonItem27.ImageOptions.Image = CType(resources.GetObject("BarButtonItem27.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem27.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem27.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem27.Name = "BarButtonItem27"
         Me.BarButtonItem27.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
@@ -340,14 +306,6 @@ Partial Class frmMain
         Me.BarButtonItem6.Name = "BarButtonItem6"
         Me.BarButtonItem6.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'BarButtonItem12
-        '
-        Me.BarButtonItem12.Caption = "Connect To EICA"
-        Me.BarButtonItem12.Id = 40
-        Me.BarButtonItem12.ImageOptions.Image = CType(resources.GetObject("BarButtonItem12.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem12.Name = "BarButtonItem12"
-        Me.BarButtonItem12.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
         'BarButtonItem24
         '
         Me.BarButtonItem24.Caption = "Copy ILD Items To EICA"
@@ -358,9 +316,10 @@ Partial Class frmMain
         '
         'BarButtonItem4
         '
-        Me.BarButtonItem4.Caption = "EICA Loops Management"
+        Me.BarButtonItem4.Caption = "Loops Planning"
         Me.BarButtonItem4.Id = 42
         Me.BarButtonItem4.ImageOptions.Image = CType(resources.GetObject("BarButtonItem4.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem4.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem4.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem4.Name = "BarButtonItem4"
         Me.BarButtonItem4.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large
         '
@@ -419,14 +378,6 @@ Partial Class frmMain
         Me.BarButtonItem37.Id = 52
         Me.BarButtonItem37.Name = "BarButtonItem37"
         '
-        'BarButtonItem38
-        '
-        Me.BarButtonItem38.Caption = "Connect"
-        Me.BarButtonItem38.Id = 53
-        Me.BarButtonItem38.ImageOptions.Image = CType(resources.GetObject("BarButtonItem38.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem38.Name = "BarButtonItem38"
-        Me.BarButtonItem38.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
         'BarButtonItem39
         '
         Me.BarButtonItem39.Caption = "Update Loops Steps"
@@ -435,29 +386,13 @@ Partial Class frmMain
         Me.BarButtonItem39.Name = "BarButtonItem39"
         Me.BarButtonItem39.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'BarButtonItem40
-        '
-        Me.BarButtonItem40.Caption = "Update Items Production"
-        Me.BarButtonItem40.Id = 55
-        Me.BarButtonItem40.ImageOptions.Image = CType(resources.GetObject("BarButtonItem40.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem40.Name = "BarButtonItem40"
-        Me.BarButtonItem40.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
         'BarButtonItem41
         '
-        Me.BarButtonItem41.Caption = "Validate Subcontractor's Production"
+        Me.BarButtonItem41.Caption = "Validate EICA Production"
         Me.BarButtonItem41.Id = 56
         Me.BarButtonItem41.ImageOptions.Image = CType(resources.GetObject("BarButtonItem41.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem41.Name = "BarButtonItem41"
         Me.BarButtonItem41.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem42
-        '
-        Me.BarButtonItem42.Caption = "Connect To EICA"
-        Me.BarButtonItem42.Id = 57
-        Me.BarButtonItem42.ImageOptions.Image = CType(resources.GetObject("BarButtonItem42.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem42.Name = "BarButtonItem42"
-        Me.BarButtonItem42.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem43
         '
@@ -475,101 +410,332 @@ Partial Class frmMain
         Me.BarButtonItem44.Name = "BarButtonItem44"
         Me.BarButtonItem44.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'BarButtonItem45
+        'barBtnHandoverData
         '
-        Me.BarButtonItem45.Caption = "EICA Connect"
-        Me.BarButtonItem45.Id = 60
-        Me.BarButtonItem45.ImageOptions.Image = CType(resources.GetObject("BarButtonItem45.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem45.Name = "BarButtonItem45"
-        Me.BarButtonItem45.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.barBtnHandoverData.Caption = "Upload HCS Data"
+        Me.barBtnHandoverData.Id = 61
+        Me.barBtnHandoverData.ImageOptions.Image = CType(resources.GetObject("barBtnHandoverData.ImageOptions.Image"), System.Drawing.Image)
+        Me.barBtnHandoverData.ImageOptions.LargeImage = CType(resources.GetObject("barBtnHandoverData.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.barBtnHandoverData.Name = "barBtnHandoverData"
+        Me.barBtnHandoverData.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        '
+        'BarButtonItem25
+        '
+        Me.BarButtonItem25.Caption = "Users Management"
+        Me.BarButtonItem25.Id = 63
+        Me.BarButtonItem25.ImageOptions.Image = CType(resources.GetObject("BarButtonItem25.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem25.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem25.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem25.Name = "BarButtonItem25"
+        Me.BarButtonItem25.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem38
+        '
+        Me.BarButtonItem38.Caption = "Loop Folders"
+        Me.BarButtonItem38.Id = 64
+        Me.BarButtonItem38.ImageOptions.Image = CType(resources.GetObject("BarButtonItem38.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem38.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem38.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem38.Name = "BarButtonItem38"
+        Me.BarButtonItem38.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem42
+        '
+        Me.BarButtonItem42.Caption = "Select Project"
+        Me.BarButtonItem42.Id = 65
+        Me.BarButtonItem42.ImageOptions.Image = CType(resources.GetObject("BarButtonItem42.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem42.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem42.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem42.Name = "BarButtonItem42"
+        Me.BarButtonItem42.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem23
+        '
+        Me.BarButtonItem23.Caption = "Lighting"
+        Me.BarButtonItem23.Id = 69
+        Me.BarButtonItem23.ImageOptions.Image = Global.Loop_App.My.Resources.Resources.fixtures64
+        Me.BarButtonItem23.Name = "BarButtonItem23"
+        Me.BarButtonItem23.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem26
+        '
+        Me.BarButtonItem26.Caption = "Trays"
+        Me.BarButtonItem26.Id = 70
+        Me.BarButtonItem26.ImageOptions.Image = Global.Loop_App.My.Resources.Resources.trays32
+        Me.BarButtonItem26.Name = "BarButtonItem26"
+        Me.BarButtonItem26.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem46
         '
-        Me.BarButtonItem46.Caption = "Upload HCS Data"
-        Me.BarButtonItem46.Id = 61
-        Me.BarButtonItem46.ImageOptions.Image = CType(resources.GetObject("BarButtonItem46.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem46.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem46.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem46.Caption = "Cables"
+        Me.BarButtonItem46.Id = 71
+        Me.BarButtonItem46.ImageOptions.Image = Global.Loop_App.My.Resources.Resources.eccables02
         Me.BarButtonItem46.Name = "BarButtonItem46"
         Me.BarButtonItem46.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'RibbonPage6
+        'BarButtonItem48
         '
-        Me.RibbonPage6.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup11, Me.RibbonPageGroup14})
-        Me.RibbonPage6.ImageOptions.Image = CType(resources.GetObject("RibbonPage6.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage6.Name = "RibbonPage6"
-        Me.RibbonPage6.Text = "Home"
+        Me.BarButtonItem48.Caption = "Equipment"
+        Me.BarButtonItem48.Id = 72
+        Me.BarButtonItem48.ImageOptions.Image = Global.Loop_App.My.Resources.Resources.equipment32
+        Me.BarButtonItem48.Name = "BarButtonItem48"
+        Me.BarButtonItem48.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'RibbonPageGroup11
+        'BarButtonItem49
         '
-        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem1)
-        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem2)
-        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem11)
-        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem24)
-        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem4)
-        Me.RibbonPageGroup11.Name = "RibbonPageGroup11"
-        Me.RibbonPageGroup11.Text = "Loops and ILDs"
+        Me.BarButtonItem49.Caption = "Instruments"
+        Me.BarButtonItem49.Id = 73
+        Me.BarButtonItem49.ImageOptions.Image = CType(resources.GetObject("BarButtonItem49.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem49.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem49.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem49.Name = "BarButtonItem49"
+        Me.BarButtonItem49.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'RibbonPageGroup14
+        'BarButtonItem40
         '
-        Me.RibbonPageGroup14.ItemLinks.Add(Me.BarButtonItem46)
-        Me.RibbonPageGroup14.Name = "RibbonPageGroup14"
-        Me.RibbonPageGroup14.Text = "HCS Data"
+        Me.BarButtonItem40.Caption = "Reset Password"
+        Me.BarButtonItem40.Id = 76
+        Me.BarButtonItem40.ImageOptions.Image = CType(resources.GetObject("BarButtonItem40.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem40.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem40.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem40.Name = "BarButtonItem40"
+        Me.BarButtonItem40.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'RibbonPage1
+        'BarButtonItem45
         '
-        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
-        Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage1.Name = "RibbonPage1"
-        Me.RibbonPage1.Text = "Setup"
+        Me.BarButtonItem45.Caption = "Electrical Daily Tracking Resources"
+        Me.BarButtonItem45.Id = 77
+        Me.BarButtonItem45.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem45.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem45.Name = "BarButtonItem45"
+        Me.BarButtonItem45.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem47
+        '
+        Me.BarButtonItem47.Caption = "Instrumentation Daily Tracking Resources"
+        Me.BarButtonItem47.Id = 78
+        Me.BarButtonItem47.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem47.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem47.Name = "BarButtonItem47"
+        Me.BarButtonItem47.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem50
+        '
+        Me.BarButtonItem50.Caption = "Activities"
+        Me.BarButtonItem50.Id = 79
+        Me.BarButtonItem50.ImageOptions.Image = CType(resources.GetObject("BarButtonItem50.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem50.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem50.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem50.Name = "BarButtonItem50"
+        Me.BarButtonItem50.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem51
+        '
+        Me.BarButtonItem51.Caption = "Cables Full Info"
+        Me.BarButtonItem51.Id = 80
+        Me.BarButtonItem51.ImageOptions.Image = Global.Loop_App.My.Resources.Resources.eccables02
+        Me.BarButtonItem51.Name = "BarButtonItem51"
+        Me.BarButtonItem51.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarSubItem1
+        '
+        Me.BarSubItem1.Caption = "Extract ILD"
+        Me.BarSubItem1.Id = 81
+        Me.BarSubItem1.ImageOptions.Image = CType(resources.GetObject("BarSubItem1.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarSubItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem1.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarSubItem1.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem52), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem53)})
+        Me.BarSubItem1.Name = "BarSubItem1"
+        Me.BarSubItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem52
+        '
+        Me.BarButtonItem52.Caption = "From PDF"
+        Me.BarButtonItem52.Id = 82
+        Me.BarButtonItem52.ImageOptions.Image = CType(resources.GetObject("BarButtonItem52.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem52.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem52.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem52.Name = "BarButtonItem52"
+        '
+        'BarButtonItem53
+        '
+        Me.BarButtonItem53.Caption = "From Plain Text"
+        Me.BarButtonItem53.Id = 83
+        Me.BarButtonItem53.ImageOptions.Image = CType(resources.GetObject("BarButtonItem53.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem53.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem53.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem53.Name = "BarButtonItem53"
+        '
+        'BarButtonItem1
+        '
+        Me.BarButtonItem1.Caption = "Loops Management"
+        Me.BarButtonItem1.Id = 85
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem1.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem1.Name = "BarButtonItem1"
+        Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'lblDBName
+        '
+        Me.lblDBName.Caption = "DB: ?"
+        Me.lblDBName.Id = 89
+        Me.lblDBName.ImageOptions.Image = CType(resources.GetObject("lblDBName.ImageOptions.Image"), System.Drawing.Image)
+        Me.lblDBName.ImageOptions.LargeImage = CType(resources.GetObject("lblDBName.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.lblDBName.Name = "lblDBName"
+        Me.lblDBName.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
+        '
+        'lblServer
+        '
+        Me.lblServer.Caption = "Server: ?"
+        Me.lblServer.Id = 90
+        Me.lblServer.ImageOptions.Image = CType(resources.GetObject("lblServer.ImageOptions.Image"), System.Drawing.Image)
+        Me.lblServer.ImageOptions.LargeImage = CType(resources.GetObject("lblServer.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.lblServer.Name = "lblServer"
+        Me.lblServer.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
+        '
+        'BarButtonItem5
+        '
+        Me.BarButtonItem5.Caption = "RFI Path"
+        Me.BarButtonItem5.Id = 91
+        Me.BarButtonItem5.ImageOptions.Image = CType(resources.GetObject("BarButtonItem5.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem5.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem5.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem5.Name = "BarButtonItem5"
+        Me.BarButtonItem5.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'rpHome
+        '
+        Me.rpHome.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup17, Me.RibbonPageGroup4, Me.RibbonPageGroup13})
+        Me.rpHome.ImageOptions.Image = CType(resources.GetObject("rpHome.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpHome.Name = "rpHome"
+        Me.rpHome.Text = "Home"
+        '
+        'RibbonPageGroup17
+        '
+        Me.RibbonPageGroup17.ItemLinks.Add(Me.BarButtonItem6)
+        Me.RibbonPageGroup17.ItemLinks.Add(Me.BarButtonItem42)
+        Me.RibbonPageGroup17.ItemLinks.Add(Me.BarButtonItem40)
+        Me.RibbonPageGroup17.Name = "RibbonPageGroup17"
+        Me.RibbonPageGroup17.Text = "Settings"
+        '
+        'RibbonPageGroup4
+        '
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem19)
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem20)
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem21)
+        Me.RibbonPageGroup4.Name = "RibbonPageGroup4"
+        Me.RibbonPageGroup4.Text = "View Options"
+        '
+        'RibbonPageGroup13
+        '
+        Me.RibbonPageGroup13.ItemLinks.Add(Me.BarButtonItem5)
+        Me.RibbonPageGroup13.Name = "RibbonPageGroup13"
+        Me.RibbonPageGroup13.Text = "File Settings"
+        '
+        'rpAdmin
+        '
+        Me.rpAdmin.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
+        Me.rpAdmin.ImageOptions.Image = CType(resources.GetObject("rpAdmin.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpAdmin.Name = "rpAdmin"
+        Me.rpAdmin.Text = "Admin"
         '
         'RibbonPageGroup1
         '
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem6)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem38)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem12)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem25)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem44)
         Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
         Me.RibbonPageGroup1.Text = "ILD Setup"
         '
-        'RibbonPage7
+        'rpEng
         '
-        Me.RibbonPage7.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup8})
-        Me.RibbonPage7.ImageOptions.Image = Global.Loop_Plugins.My.Resources.Resources.eicaicon32
-        Me.RibbonPage7.Name = "RibbonPage7"
-        Me.RibbonPage7.Text = "Production"
+        Me.rpEng.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup11, Me.RibbonPageGroup12})
+        Me.rpEng.ImageOptions.Image = CType(resources.GetObject("rpEng.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpEng.Name = "rpEng"
+        Me.rpEng.Text = "Engineering"
+        '
+        'RibbonPageGroup11
+        '
+        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarSubItem1)
+        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem2)
+        Me.RibbonPageGroup11.ItemLinks.Add(Me.BarButtonItem11)
+        Me.RibbonPageGroup11.Name = "RibbonPageGroup11"
+        Me.RibbonPageGroup11.Text = "Loops and ILDs"
+        '
+        'RibbonPageGroup12
+        '
+        Me.RibbonPageGroup12.ItemLinks.Add(Me.BarButtonItem24)
+        Me.RibbonPageGroup12.Name = "RibbonPageGroup12"
+        Me.RibbonPageGroup12.Text = "EICA"
+        '
+        'rpPlanning
+        '
+        Me.rpPlanning.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup14})
+        Me.rpPlanning.ImageOptions.Image = CType(resources.GetObject("rpPlanning.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpPlanning.Name = "rpPlanning"
+        Me.rpPlanning.Text = "Planning"
+        '
+        'RibbonPageGroup14
+        '
+        Me.RibbonPageGroup14.ItemLinks.Add(Me.BarButtonItem50)
+        Me.RibbonPageGroup14.ItemLinks.Add(Me.BarButtonItem4)
+        Me.RibbonPageGroup14.Name = "RibbonPageGroup14"
+        Me.RibbonPageGroup14.Text = "Planning"
+        '
+        'rpHandover
+        '
+        Me.rpHandover.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup16})
+        Me.rpHandover.ImageOptions.Image = CType(resources.GetObject("rpHandover.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpHandover.Name = "rpHandover"
+        Me.rpHandover.Text = "Handover"
+        '
+        'RibbonPageGroup16
+        '
+        Me.RibbonPageGroup16.ItemLinks.Add(Me.barBtnHandoverData)
+        Me.RibbonPageGroup16.ItemLinks.Add(Me.barbtnHandoverIndex)
+        Me.RibbonPageGroup16.Name = "RibbonPageGroup16"
+        Me.RibbonPageGroup16.Text = "Handover Options"
+        '
+        'rpConstruction
+        '
+        Me.rpConstruction.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup15})
+        Me.rpConstruction.ImageOptions.Image = CType(resources.GetObject("rpConstruction.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpConstruction.Name = "rpConstruction"
+        Me.rpConstruction.Text = "Construction"
+        '
+        'RibbonPageGroup15
+        '
+        Me.RibbonPageGroup15.ItemLinks.Add(Me.BarButtonItem23)
+        Me.RibbonPageGroup15.ItemLinks.Add(Me.BarButtonItem26)
+        Me.RibbonPageGroup15.ItemLinks.Add(Me.BarButtonItem46)
+        Me.RibbonPageGroup15.ItemLinks.Add(Me.BarButtonItem51)
+        Me.RibbonPageGroup15.ItemLinks.Add(Me.BarButtonItem48)
+        Me.RibbonPageGroup15.ItemLinks.Add(Me.BarButtonItem49)
+        Me.RibbonPageGroup15.Name = "RibbonPageGroup15"
+        Me.RibbonPageGroup15.Text = "EICA Items"
+        '
+        'rpQC
+        '
+        Me.rpQC.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup8})
+        Me.rpQC.ImageOptions.Image = CType(resources.GetObject("rpQC.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpQC.Name = "rpQC"
+        Me.rpQC.Text = "QC"
         '
         'RibbonPageGroup8
         '
-        Me.RibbonPageGroup8.ItemLinks.Add(Me.BarButtonItem42)
-        Me.RibbonPageGroup8.ItemLinks.Add(Me.BarButtonItem40)
         Me.RibbonPageGroup8.ItemLinks.Add(Me.BarButtonItem41)
         Me.RibbonPageGroup8.Name = "RibbonPageGroup8"
-        Me.RibbonPageGroup8.Text = "Items Production"
+        Me.RibbonPageGroup8.Text = "QC Options"
         '
-        'RibbonPage4
+        'rpPrecom
         '
-        Me.RibbonPage4.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup10})
-        Me.RibbonPage4.ImageOptions.Image = CType(resources.GetObject("RibbonPage4.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage4.Name = "RibbonPage4"
-        Me.RibbonPage4.Text = "Constraints"
+        Me.rpPrecom.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup10})
+        Me.rpPrecom.ImageOptions.Image = CType(resources.GetObject("rpPrecom.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpPrecom.Name = "rpPrecom"
+        Me.rpPrecom.Text = "Pre Commissioning"
         '
         'RibbonPageGroup10
         '
-        Me.RibbonPageGroup10.ItemLinks.Add(Me.BarButtonItem25)
-        Me.RibbonPageGroup10.ItemLinks.Add(Me.BarButtonItem27)
         Me.RibbonPageGroup10.Name = "RibbonPageGroup10"
-        Me.RibbonPageGroup10.Text = "Status Management"
+        Me.RibbonPageGroup10.Text = "PreComm Options"
         '
-        'RibbonPage2
+        'rpPC
         '
-        Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup2, Me.RibbonPageGroup7})
-        Me.RibbonPage2.ImageOptions.Image = CType(resources.GetObject("RibbonPage2.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage2.Name = "RibbonPage2"
-        Me.RibbonPage2.Text = "Steps"
+        Me.rpPC.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup2, Me.RibbonPageGroup7, Me.RibbonPageGroup18, Me.RibbonPageGroup19, Me.RibbonPageGroup20})
+        Me.rpPC.ImageOptions.Image = CType(resources.GetObject("rpPC.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpPC.Name = "rpPC"
+        Me.rpPC.Text = "Production Control"
         '
         'RibbonPageGroup2
         '
-        Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem5)
-        Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem23)
         Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem39)
         Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem43)
         Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem3)
@@ -578,74 +744,79 @@ Partial Class frmMain
         '
         'RibbonPageGroup7
         '
-        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem15)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem1)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem16)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem29)
         Me.RibbonPageGroup7.Name = "RibbonPageGroup7"
         Me.RibbonPageGroup7.Text = "EICA Loop Operations"
         '
-        'RibbonPage5
+        'RibbonPageGroup18
         '
-        Me.RibbonPage5.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4, Me.RibbonPageGroup5, Me.RibbonPageGroup3, Me.RibbonPageGroup12, Me.RibbonPageGroup13})
-        Me.RibbonPage5.ImageOptions.Image = CType(resources.GetObject("RibbonPage5.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage5.Name = "RibbonPage5"
-        Me.RibbonPage5.Text = "Reports"
+        Me.RibbonPageGroup18.ItemLinks.Add(Me.BarButtonItem28)
+        Me.RibbonPageGroup18.ItemLinks.Add(Me.BarButtonItem22)
+        Me.RibbonPageGroup18.ItemLinks.Add(Me.BarButtonItem18)
+        Me.RibbonPageGroup18.Name = "RibbonPageGroup18"
+        Me.RibbonPageGroup18.Text = "Work Front"
         '
-        'RibbonPageGroup4
+        'RibbonPageGroup19
         '
-        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem45)
-        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem28)
-        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem22)
-        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem18)
-        Me.RibbonPageGroup4.Name = "RibbonPageGroup4"
-        Me.RibbonPageGroup4.Text = "Workfront"
+        Me.RibbonPageGroup19.ItemLinks.Add(Me.BarButtonItem13)
+        Me.RibbonPageGroup19.ItemLinks.Add(Me.BarButtonItem7)
+        Me.RibbonPageGroup19.ItemLinks.Add(Me.BarButtonItem10)
+        Me.RibbonPageGroup19.Name = "RibbonPageGroup19"
+        Me.RibbonPageGroup19.Text = "Loop Map"
+        '
+        'RibbonPageGroup20
+        '
+        Me.RibbonPageGroup20.ItemLinks.Add(Me.BarButtonItem17)
+        Me.RibbonPageGroup20.Name = "RibbonPageGroup20"
+        Me.RibbonPageGroup20.Text = "Summary"
+        '
+        'RibbonPage1
+        '
+        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup5})
+        Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
+        Me.RibbonPage1.Name = "RibbonPage1"
+        Me.RibbonPage1.Text = "Loop Folders"
         '
         'RibbonPageGroup5
         '
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem13)
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem7)
+        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem38)
         Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem9)
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem10)
         Me.RibbonPageGroup5.Name = "RibbonPageGroup5"
-        Me.RibbonPageGroup5.Text = "Loop Map"
+        Me.RibbonPageGroup5.Text = "Folders Tools"
+        '
+        'rpBlockage
+        '
+        Me.rpBlockage.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup3})
+        Me.rpBlockage.ImageOptions.Image = CType(resources.GetObject("rpBlockage.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpBlockage.Name = "rpBlockage"
+        Me.rpBlockage.Text = "Blockages"
         '
         'RibbonPageGroup3
         '
-        Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem26)
+        Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem27)
         Me.RibbonPageGroup3.Name = "RibbonPageGroup3"
-        Me.RibbonPageGroup3.Text = "Status And Locations"
+        Me.RibbonPageGroup3.Text = "Loop Folders Blockage"
         '
-        'RibbonPageGroup12
+        'RibbonPage2
         '
-        Me.RibbonPageGroup12.ItemLinks.Add(Me.BarButtonItem17)
-        Me.RibbonPageGroup12.Name = "RibbonPageGroup12"
-        Me.RibbonPageGroup12.Text = "Summary"
-        '
-        'RibbonPageGroup13
-        '
-        Me.RibbonPageGroup13.ItemLinks.Add(Me.BarButtonItem44)
-        Me.RibbonPageGroup13.Name = "RibbonPageGroup13"
-        Me.RibbonPageGroup13.Text = "Logs"
-        '
-        'RibbonPage3
-        '
-        Me.RibbonPage3.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup9})
-        Me.RibbonPage3.ImageOptions.Image = CType(resources.GetObject("RibbonPage3.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage3.Name = "RibbonPage3"
-        Me.RibbonPage3.Text = "View"
+        Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup9})
+        Me.RibbonPage2.ImageOptions.Image = CType(resources.GetObject("RibbonPage2.ImageOptions.Image"), System.Drawing.Image)
+        Me.RibbonPage2.Name = "RibbonPage2"
+        Me.RibbonPage2.Text = "Reports"
         '
         'RibbonPageGroup9
         '
-        Me.RibbonPageGroup9.ItemLinks.Add(Me.BarButtonItem19)
-        Me.RibbonPageGroup9.ItemLinks.Add(Me.BarButtonItem20)
-        Me.RibbonPageGroup9.ItemLinks.Add(Me.BarButtonItem21)
+        Me.RibbonPageGroup9.ItemLinks.Add(Me.BarButtonItem45)
+        Me.RibbonPageGroup9.ItemLinks.Add(Me.BarButtonItem47)
         Me.RibbonPageGroup9.Name = "RibbonPageGroup9"
-        Me.RibbonPageGroup9.Text = "Windows"
+        Me.RibbonPageGroup9.Text = "Construction"
         '
         'DefaultLookAndFeel1
         '
         Me.DefaultLookAndFeel1.EnableBonusSkins = True
-        Me.DefaultLookAndFeel1.LookAndFeel.SkinName = "Foggy"
+        Me.DefaultLookAndFeel1.LookAndFeel.SkinName = "Office 2019 White"
         '
         'BarButtonItem8
         '
@@ -661,38 +832,40 @@ Partial Class frmMain
         Me.RibbonPageGroup6.Name = "RibbonPageGroup6"
         Me.RibbonPageGroup6.Text = "EICA Ins Loop Table"
         '
+        'ToastNotificationsManager
+        '
+        Me.ToastNotificationsManager.ApplicationId = "348f4ab6-b3b7-4bfe-9443-1b4d899ca8e5"
+        Me.ToastNotificationsManager.Notifications.AddRange(New DevExpress.XtraBars.ToastNotifications.IToastNotificationProperties() {New DevExpress.XtraBars.ToastNotifications.ToastNotification("11fc4824-ff7a-41bd-8fcd-e4cdd2858c28", CType(resources.GetObject("ToastNotificationsManager.Notifications"), System.Drawing.Image), "Data Read Error", "There is a problem while trying to get the data from EICA", "There is a problem while trying to get the data from EICA", DevExpress.XtraBars.ToastNotifications.ToastNotificationTemplate.ImageAndText01), New DevExpress.XtraBars.ToastNotifications.ToastNotification("cffd1ebd-bfd0-4a1b-aea6-faf1fd0c4ea6", CType(resources.GetObject("ToastNotificationsManager.Notifications1"), System.Drawing.Image), "Pellentesque lacinia tellus eget volutpat", "Lost Connection to EICA", "Lost Connection to EICA", DevExpress.XtraBars.ToastNotifications.ToastNotificationTemplate.ImageAndText01), New DevExpress.XtraBars.ToastNotifications.ToastNotification("887400b9-082f-4381-b0f1-30f2027467ca", CType(resources.GetObject("ToastNotificationsManager.Notifications2"), System.Drawing.Image), "Pellentesque lacinia tellus eget volutpat", "Cannot Access ILD DB File", "Cannot Access ILD DB File", DevExpress.XtraBars.ToastNotifications.ToastNotificationTemplate.ImageAndText01)})
+        '
         'frmMain
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1332, 694)
+        Me.ClientSize = New System.Drawing.Size(1617, 699)
         Me.Controls.Add(Me.RibbonControl1)
+        Me.FormBorderEffect = DevExpress.XtraEditors.FormBorderEffect.Shadow
         Me.IconOptions.Icon = CType(resources.GetObject("frmMain.IconOptions.Icon"), System.Drawing.Icon)
-        Me.IconOptions.Image = Global.Loop_Plugins.My.Resources.Resources.loop32
+        Me.IconOptions.Image = Global.Loop_App.My.Resources.Resources.logo
         Me.IsMdiContainer = True
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmMain"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Loops 2.0"
+        Me.Text = "Loop App Version 5.3"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
-        CType(Me.RibbonControl1,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ResumeLayout(false)
-        Me.PerformLayout
+        CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ToastNotificationsManager, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
 
-End Sub
+    End Sub
 
     Friend WithEvents RibbonControl1 As DevExpress.XtraBars.Ribbon.RibbonControl
-    Friend WithEvents RibbonPage1 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents rpAdmin As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents DefaultLookAndFeel1 As DevExpress.LookAndFeel.DefaultLookAndFeel
-    Friend WithEvents lblDis As DevExpress.XtraBars.BarStaticItem
-    Friend WithEvents lblCOn As DevExpress.XtraBars.BarStaticItem
-    Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents rpPC As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup2 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents lblEICACon As DevExpress.XtraBars.BarStaticItem
-    Friend WithEvents BarButtonItem5 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem7 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem8 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem3 As DevExpress.XtraBars.BarButtonItem
@@ -700,7 +873,6 @@ End Sub
     Friend WithEvents BarButtonItem10 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem11 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem14 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem15 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents RibbonPageGroup7 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents RibbonPageGroup6 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem16 As DevExpress.XtraBars.BarButtonItem
@@ -709,27 +881,17 @@ End Sub
     Friend WithEvents BarButtonItem19 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem20 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem21 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage3 As DevExpress.XtraBars.Ribbon.RibbonPage
-    Friend WithEvents RibbonPageGroup9 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem22 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem23 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem25 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage4 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents barbtnHandoverIndex As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rpPrecom As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup10 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents BarButtonItem26 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem13 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem27 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem28 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem29 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage5 As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents BarButtonItem6 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem12 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem24 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem4 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPageGroup4 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents RibbonPageGroup5 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents RibbonPageGroup3 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents RibbonPageGroup12 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem30 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem31 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem32 As DevExpress.XtraBars.BarButtonItem
@@ -738,19 +900,55 @@ End Sub
     Friend WithEvents BarButtonItem35 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem36 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem37 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem38 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem39 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem40 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage7 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents rpQC As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup8 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem41 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem42 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem43 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem44 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPageGroup13 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents BarButtonItem45 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage6 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents rpEng As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup11 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents BarButtonItem46 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents barBtnHandoverData As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rpConstruction As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup15 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents rpHandover As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup16 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents rpPlanning As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup14 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem25 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rpHome As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup17 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem38 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem42 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPageGroup18 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents RibbonPageGroup19 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents RibbonPageGroup20 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents rpBlockage As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup3 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents lblUserName As DevExpress.XtraBars.BarStaticItem
+    Friend WithEvents RibbonPageGroup4 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem23 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem26 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem46 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem48 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem49 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPage1 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup5 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem40 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup9 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem45 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem47 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem50 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem51 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarSubItem1 As DevExpress.XtraBars.BarSubItem
+    Friend WithEvents BarButtonItem52 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem53 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPageGroup12 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents ToastNotificationsManager As DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager
+    Friend WithEvents lblDBName As DevExpress.XtraBars.BarStaticItem
+    Friend WithEvents lblServer As DevExpress.XtraBars.BarStaticItem
+    Friend WithEvents BarButtonItem5 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPageGroup13 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
 End Class

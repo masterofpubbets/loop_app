@@ -54,7 +54,7 @@ Partial Class frmLoopConstraint
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.pBar, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.bPar, Me.RibbonControl1.SearchEditItem})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.pBar, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.bPar})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 10
@@ -62,7 +62,7 @@ Partial Class frmLoopConstraint
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemProgressBar1, Me.RepositoryItemProgressBar2})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 112)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 93)
         '
         'BarButtonItem1
         '
@@ -186,12 +186,12 @@ Partial Class frmLoopConstraint
         '
         Me.GRD.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GRD.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.GRD.Location = New System.Drawing.Point(0, 112)
+        Me.GRD.Location = New System.Drawing.Point(0, 93)
         Me.GRD.MainView = Me.GridView2
         Me.GRD.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GRD.MenuManager = Me.RibbonControl1
         Me.GRD.Name = "GRD"
-        Me.GRD.Size = New System.Drawing.Size(1198, 587)
+        Me.GRD.Size = New System.Drawing.Size(1198, 606)
         Me.GRD.TabIndex = 6
         Me.GRD.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView2})
         '

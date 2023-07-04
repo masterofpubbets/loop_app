@@ -98,10 +98,10 @@ Partial Class frmLoadCons
         Me.DockPanel1_Container.Controls.Add(Me.pBar)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton2)
         Me.DockPanel1_Container.Controls.Add(Me.SimpleButton1)
-        Me.DockPanel1_Container.Location = New System.Drawing.Point(4, 58)
+        Me.DockPanel1_Container.Location = New System.Drawing.Point(3, 47)
         Me.DockPanel1_Container.Margin = New System.Windows.Forms.Padding(4)
         Me.DockPanel1_Container.Name = "DockPanel1_Container"
-        Me.DockPanel1_Container.Size = New System.Drawing.Size(1174, 20)
+        Me.DockPanel1_Container.Size = New System.Drawing.Size(1176, 32)
         Me.DockPanel1_Container.TabIndex = 0
         '
         'pBar
@@ -120,7 +120,7 @@ Partial Class frmLoadCons
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(1274, -27)
+        Me.SimpleButton2.Location = New System.Drawing.Point(1276, -15)
         Me.SimpleButton2.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton2.Name = "SimpleButton2"
         Me.SimpleButton2.Size = New System.Drawing.Size(184, 53)
@@ -131,7 +131,7 @@ Partial Class frmLoadCons
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(887, -33)
+        Me.SimpleButton1.Location = New System.Drawing.Point(889, -21)
         Me.SimpleButton1.Margin = New System.Windows.Forms.Padding(4)
         Me.SimpleButton1.Name = "SimpleButton1"
         Me.SimpleButton1.Size = New System.Drawing.Size(184, 53)
@@ -148,7 +148,7 @@ Partial Class frmLoadCons
         Me.DockPanel3.Location = New System.Drawing.Point(0, 0)
         Me.DockPanel3.Name = "DockPanel3"
         Me.DockPanel3.OriginalSize = New System.Drawing.Size(200, 200)
-        Me.DockPanel3.Size = New System.Drawing.Size(1176, 620)
+        Me.DockPanel3.Size = New System.Drawing.Size(1176, 626)
         Me.DockPanel3.Text = "Constraints"
         '
         'DockPanel3_Container
@@ -156,7 +156,7 @@ Partial Class frmLoadCons
         Me.DockPanel3_Container.Controls.Add(Me.GridControl2)
         Me.DockPanel3_Container.Location = New System.Drawing.Point(0, 0)
         Me.DockPanel3_Container.Name = "DockPanel3_Container"
-        Me.DockPanel3_Container.Size = New System.Drawing.Size(1176, 620)
+        Me.DockPanel3_Container.Size = New System.Drawing.Size(1176, 626)
         Me.DockPanel3_Container.TabIndex = 0
         '
         'GridControl2
@@ -165,7 +165,7 @@ Partial Class frmLoadCons
         Me.GridControl2.Location = New System.Drawing.Point(0, 0)
         Me.GridControl2.MainView = Me.GridView3
         Me.GridControl2.Name = "GridControl2"
-        Me.GridControl2.Size = New System.Drawing.Size(1176, 620)
+        Me.GridControl2.Size = New System.Drawing.Size(1176, 626)
         Me.GridControl2.TabIndex = 7
         Me.GridControl2.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridView3})
         '

@@ -172,7 +172,7 @@ Partial Class frmUpdateLoopDone
         'ToolStripButton1
         '
         Me.ToolStripButton1.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton1.Image = Global.Loop_Plugins.My.Resources.Resources.save
+        Me.ToolStripButton1.Image = Global.Loop_App.My.Resources.Resources.save
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(152, 24)
@@ -186,7 +186,7 @@ Partial Class frmUpdateLoopDone
         'ToolStripButton2
         '
         Me.ToolStripButton2.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton2.Image = Global.Loop_Plugins.My.Resources.Resources.DeleteRed
+        Me.ToolStripButton2.Image = Global.Loop_App.My.Resources.Resources.DeleteRed
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(77, 24)
@@ -194,7 +194,7 @@ Partial Class frmUpdateLoopDone
         '
         'ToolStripButton3
         '
-        Me.ToolStripButton3.Image = Global.Loop_Plugins.My.Resources.Resources.delete2
+        Me.ToolStripButton3.Image = Global.Loop_App.My.Resources.Resources.delete2
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
         Me.ToolStripButton3.Size = New System.Drawing.Size(97, 24)

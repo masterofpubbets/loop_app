@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.Loop_Plugins.frmMain
+            Me.MainForm = Global.Loop_App.frmEICALogin
         End Sub
     End Class
 End Namespace

@@ -1,250 +1,255 @@
 update tblild
-set Loop_Name=REPLACE(loop_name,' ','')
+
+set Loop_Name=REPLACE(loop_name, ' ','')
+
 GO
+
 UPDATE [tblILD]
-set [Item_Type]='Ins Cable-Single Pair'
-where [tbl_id] in
-(
-SELECT 
-max([tbl_id]) as ID
-FROM
-(
-SELECT 
-ROW_NUMBER() OVER(ORDER BY [Item] ASC) AS RowNo
-,[Loop_Name],[Item_Type],[tbl_id],[Item],IC_Type
-FROM
-(
-Select vILD.[tbl_id],[Loop_Name],[Item],[Item_Type],vILD.IC_Type
-from 
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],tblInsCableList.IC_Type
-from tblILD
-inner join tblInsCableList
-on [tblILD].[Item]=tblInsCableList.IC_ID
-where [tblILD].Item_Type is null
-and tblInsCableList.ic_type in ('single pair','fiberoptics','tele-comm','F&G')
-) as vILD
-) as vILDINSC01
-) as vILDINSC
-group by [Item],IC_Type
-)
+
+set [Item_Type]='IC: '+ IC_Type
+
+FROM(
+
+   SELECT tblILD.tbl_id, tblILD.Item_Type, v.IC_Type
+
+   FROM tblILDWITH (NOLOCK)
+
+   INNERJOIN(
+
+       SELECT
+
+        max([tbl_id])as ID,
+
+        IC_Type
+
+       FROM
+
+       (
+
+       SELECT
+
+        ROW_NUMBER()OVER(ORDERBY [Item]ASC)AS RowNo
+
+       ,[Loop_Name],[Item_Type],[tbl_id],[Item],IC_Type
+
+       FROM
+
+       (
+
+       Select vILD.[tbl_id],[Loop_Name],[Item],[Item_Type],vILD.IC_Type
+
+       from
+
+        (
+
+       Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],tblInsCableList.IC_Type
+
+       from tblILD
+
+       innerjoin tblInsCableList
+
+       on [tblILD].[Item]=tblInsCableList.IC_ID
+
+       where [tblILD]. Item_Typeisnull
+
+       )as vILD
+
+       )as vILDINSC01
+
+       )as vILDINSC
+
+       groupby [Item],IC_Type
+
+   )AS V
+
+   ON v. ID= tbl_id
+
+)AS UpdateV
+
 GO
-UPDATE [tblILD]
-set [Item_Type]='Ins Cable-Multi Pair'
-where [tbl_id] in
-(
-SELECT 
-max([tbl_id]) as ID
---,[Item],IC_Type
-FROM
-(
-SELECT 
-ROW_NUMBER() OVER(ORDER BY [Item] ASC) AS RowNo
-,[Loop_Name],[Item_Type],[tbl_id],[Item],IC_Type
-FROM
-(
-Select vILD.[tbl_id],[Loop_Name],[Item],[Item_Type],vILD.IC_Type
-from 
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],tblInsCableList.IC_Type
-from tblILD
-inner join tblInsCableList
-on [tblILD].[Item]=tblInsCableList.IC_ID
-where [tblILD].Item_Type is null
-and tblInsCableList.ic_type in ('multi pair')
-) as vILD
-) as vILDINSC01
-) as vILDINSC
-group by [Item],IC_Type
-)
-GO
-UPDATE [tblILD]
-set [Item_Type]='Ins Cable-Vendor'
-where [tbl_id] in
-(
-SELECT 
-max([tbl_id]) as ID
---,[Item],IC_Type
-FROM
-(
-SELECT 
-ROW_NUMBER() OVER(ORDER BY [Item] ASC) AS RowNo
-,[Loop_Name],[Item_Type],[tbl_id],[Item],IC_Type
-FROM
-(
-Select vILD.[tbl_id],[Loop_Name],[Item],[Item_Type],vILD.IC_Type
-from 
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],tblInsCableList.IC_Type
-from tblILD
-inner join tblInsCableList
-on [tblILD].[Item]=tblInsCableList.IC_ID
-where [tblILD].Item_Type is null
-and tblInsCableList.ic_type in ('vendor')
-) as vILD
-) as vILDINSC01
-) as vILDINSC
-group by [Item],IC_Type
-)
-GO
+
 UPDATE v
-set [Item_Type]='Electrical Equipment'
+
+set [Item_Type]= 'EQ: ' + [Type]
+
 FROM
+
 (
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
+Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
+
+tblElectricalEquipment.[Type]
+
 from tblILD
-inner join tblElectricalEquipment
+
+innerjoin tblElectricalEquipment
+
 on [tblILD].[Item]=tblElectricalEquipment.tag
-where [tblILD].Item_Type is null
-) as V
+
+where [tblILD]. Item_Typeisnull
+
+)as V
+
 GO
+
 UPDATE v
-set [Item_Type]='Panel-Cabinet'
+
+set [Item_Type]= 'IQ: ' + [Type]
+
 FROM
+
 (
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
+Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
+
+tblInsEquipment.[Type]
+
 from tblILD
-inner join tblInsEquipment
+
+innerjoin tblInsEquipment
+
 on [tblILD].[Item]=tblInsEquipment.tag
-where [tblILD].Item_Type is null
-) as V
+
+where [tblILD]. Item_Typeisnull
+
+)as V
+
 GO
+
 UPDATE v
-set [Item_Type]='Ins Cable-Single Pair'
+
+set [Item_Type]= 'EC: ' + EC_Type
+
 FROM
+
 (
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
+Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
+
+tblEleCableList.EC_Type
+
 from tblILD
-inner join tblEleCableList
+
+innerjoin tblEleCableList
+
 on [tblILD].[Item]=tblEleCableList.EC_ID
-where [tblILD].Item_Type is null
-and tblEleCableList.EC_Type='Ins Powersupply'
-) as V
+
+where [tblILD]. Item_Typeisnull
+
+and tblEleCableList.EC_Type= 'Ins Powersupply'
+
+)as V
+
 GO
+
 UPDATE v
-set [Item_Type]='Junctionbox'
+
+set [Item_Type]= 'Ins JB'
+
 FROM
+
 (
+
 Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
 from tblILD
-inner join JunctionBox
+
+innerjoin JunctionBox
+
 on [tblILD].[Item]=JunctionBox.JunctionBox
-where [tblILD].Item_Type is null
-) as V
+
+where [tblILD]. Item_Typeisnull
+
+)as V
+
 GO
+
 UPDATE v
-set [Item_Type]='Electrical Equipment'
+
+set [Item_Type]= 'Ele JB'
+
 FROM
+
 (
+
 Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
 from tblILD
-inner join tblEleJunctionBox
+
+innerjoin tblEleJunctionBox
+
 on [tblILD].[Item]=tblEleJunctionBox.tag
-where [tblILD].Item_Type is null
-) as V
+
+where [tblILD]. Item_Typeisnull
+
+)as V
+
 GO
+
 UPDATE v
-set [Item_Type]='Electrical Equipment'
+
+set [Item_Type]='Motor'
+
 FROM
+
 (
+
 Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
 from tblILD
-inner join tblMotor
+
+innerjoin tblMotor
+
 on [tblILD].[Item]=tblMotor.tag
-where [tblILD].Item_Type is null
-) as V
+
+where [tblILD]. Item_Typeisnull
+
+)as V
+
 GO
+
 UPDATE v
-set [Item_Type]='Instrument'
+
+set [Item_Type]= 'INS: ' + Furnished_By+' '+ [Ins Type]
+
 FROM
+
 (
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+
+Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
+
+CASEWHEN Furnished_ByISNULLTHEN'TR'ELSE Furnished_ByENDAS Furnished_By,
+
+CASEWHEN tblInstruments. InstrumentISNULLTHEN'Accessory'ELSE tblInstruments. InstrumentENDAS [Ins Type]
+
 from tblILD
-inner join tblInstruments
+
+innerjoin tblInstruments
+
 on [tblILD].[Item]=tblInstruments.Instrument_Tag
-where [tblILD].Item_Type is null
+
+where [tblILD]. Item_Typeisnull
+
 and instrument='instrument'
-and ((Furnished_By is null) or (Furnished_By='vendor loose'))
-) as V
+
+)as V
+
 GO
-UPDATE v
-set [Item_Type]='Instrument-Vendor'
-FROM
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-from tblILD
-inner join tblInstruments
-on [tblILD].[Item]=tblInstruments.Instrument_Tag
-where [tblILD].Item_Type is null
-and Furnished_By='vendor'
-) as V
-GO
-UPDATE v
-set [Item_Type]='Instrument-Accessory'
-FROM
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-from tblILD
-inner join tblInstruments
-on [tblILD].[Item]=tblInstruments.Instrument_Tag
-where [tblILD].Item_Type is null
-and instrument is null
-and ((Furnished_By is null) or (Furnished_By='vendor loose'))
-) as V
-GO
-UPDATE v
-set [Item_Type]='Software'
-FROM
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-from tblILD
-inner join tblInstruments
-on [tblILD].[Item]=tblInstruments.Instrument_Tag
-where [tblILD].Item_Type is null
-and instrument ='soft'
-) as V
-GO
-UPDATE v
-set [Item_Type]='Ins Cable-Single Pair'
-FROM
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-from tblILD
-inner join tblInsCableList
-on [tblILD].[Item]=tblInsCableList.ic_id
-where [tblILD].Item_Type is null
-and tblInsCableList.ic_type in ('single pair','fiberoptics','tele-comm','F&G')
-) as V
-GO
-UPDATE v
-set [Item_Type]='Ins Cable-Multi Pair'
-FROM
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-from tblILD
-inner join tblInsCableList
-on [tblILD].[Item]=tblInsCableList.ic_id
-where [tblILD].Item_Type is null
-and tblInsCableList.ic_type in ('multi pair')
-) as V
-GO
-UPDATE v
-set [Item_Type]='Ins Cable-Vendor'
-FROM
-(
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-from tblILD
-inner join tblInsCableList
-on [tblILD].[Item]=tblInsCableList.ic_id
-where [tblILD].Item_Type is null
-and tblInsCableList.ic_type in ('vendor')
-) as V
-go
-Delete FROM tblILD WHERE item not LIKE '%[0-9]%'
-Delete FROM tblild WHERE Item_Type is null and item like '%Controller%'
-Delete FROM tblild WHERE Item_Type is null and item like '%DETECTOR%'
-Delete FROM tblild WHERE Item_Type is null and item like '-%'
-Delete FROM tblild WHERE Item_Type is null and item like 'sum%'
-Delete FROM tblild WHERE Item = Loop_Name
-Delete FROM tblild WHERE ITEM LIKE Loop_Name + '-%' and Item_Type is null
-Delete FROM tblild WHERE ITEM LIKE '[+]%' and Item_Type is null
+
+ 
+
+DeleteFROM tblILDWHERE itemnotLIKE'%[0-9]%'
+
+DeleteFROM tblildWHERE Item_Typeisnulland itemlike'%Controller%'
+
+DeleteFROM tblildWHERE Item_Typeisnulland itemlike'%DETECTOR%'
+
+DeleteFROM tblildWHERE Item_Typeisnulland itemlike'-%'
+
+DeleteFROM tblildWHERE Item_Typeisnulland itemlike'sum%'
+
+DeleteFROM tblildWHERE Item= Loop_Name
+
+DeleteFROM tblildWHERE ITEMLIKE Loop_Name+'-%'and Item_Typeisnull
+
+DeleteFROM tblildWHERE ITEMLIKE'[+]%'and Item_Typeisnull

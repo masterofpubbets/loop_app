@@ -1,4 +1,5 @@
 ﻿Imports DevExpress.Pdf
+Imports DevExpress.XtraSpreadsheet.Model.NumberFormatting
 
 Public Class ExtractILD
     Public Event ItemIndex(ByVal inx As Integer)
@@ -25,6 +26,14 @@ Public Class ExtractILD
         AccDB.ExcuteNoneResult("Delete From tblild Where ITEM Like '%[+]%'")
         AccDB.ExcuteNoneResult("update TBLILD set loop_name=replace(loop_name,' ','')")
         AccDB.ExcuteNoneResult("update TBLILD set loop_name=replace(loop_name,'ild','')")
+        AccDB.ExcuteNoneResult("Delete From tblILD Where item Like '[0-9]/[0-9]/[0-9]'")
+        AccDB.ExcuteNoneResult("Delete From tblILD Where item Like '[0-9][0-9]/[0-9][0-9]/[0-9][0-9]'")
+        AccDB.ExcuteNoneResult("Delete From tblILD Where item Like '[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]'")
+        AccDB.ExcuteNoneResult("Delete From tblILD Where item Like '[0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]'")
+        AccDB.ExcuteNoneResult("Delete From tblILD Where item Like '[0-9][0-9]/[0-9]/[0-9][0-9][0-9][0-9]'")
+        AccDB.ExcuteNoneResult("Delete From tblILD Where item Like '[0-9]/[0-9]/[0-9][0-9][0-9]'")
+        AccDB.ExcuteNoneResult("Delete From tblild Where LEN(item) < 6")
+        AccDB.ExcuteNoneResult("Delete From tblild Where item LIKE '%.%'")
     End Sub
     Public Sub DeleteILDPDF(ByVal PDFPath As String, ByVal StartPage As Integer, ByVal EndPage As Integer, ByVal _loopname As String)
         Using source As New PdfDocumentProcessor()
@@ -60,6 +69,11 @@ Public Class ExtractILD
                 Next
             End Using
         End Using
+        CleanILDTable()
+        RaiseEvent ExtractingFinished()
+    End Sub
+    Public Sub ExtractILDNativeText(ByVal filePath As String, loopIdent As String, ByVal sheetEnd As String, disIdent1 As String, disIdent2 As String, disIdent3 As String)
+        ExtractTextFile(filePath, loopIdent, sheetEnd, disIdent1, disIdent2, disIdent3)
         CleanILDTable()
         RaiseEvent ExtractingFinished()
     End Sub
@@ -153,7 +167,7 @@ Public Class ExtractILD
 
         Return False
     End Function
-    Private Sub ExtractPages(ByVal _Sep As String, ByVal _loopname As String, ByVal FilePath As String, ByVal FileName As String, Optional _2ndLoopHeader As String = "")
+    Private Sub ExtractPages(ByVal _Sep As String, ByVal _loopname As String, ByVal FilePath As String, ByVal FileName As String, Optional _2ndLoopHeader As String = "", Optional overwrite As Boolean = False)
         Try
             Dim outputDir As String = Application.StartupPath & "\_LoopBin"
             Const TracholdCharacterToRead = 7
@@ -169,6 +183,7 @@ Public Class ExtractILD
             Dim fiArr As IO.FileInfo() = di.GetFiles()
             Dim f As String = ""
             Dim ExtraInfo As String = ""
+            Dim ExtraInfoFag As Boolean = False
 
             If Not PreFile(FilePath, Application.StartupPath & "\tmp\_tmpILD.tmp", _loopname) Then
                 Exit Sub
@@ -185,7 +200,8 @@ Public Class ExtractILD
 
                 If _2ndLoopHeader <> "" Then
                     If InStr(t, _2ndLoopHeader, CompareMethod.Text) > 0 Then
-                        ExtraInfo = Replace(t, _2ndLoopHeader, "",,, CompareMethod.Text)
+                        ExtraInfoFag = True
+
                     End If
                 End If
 
@@ -195,26 +211,39 @@ Public Class ExtractILD
                         If Len(t) < TracholdCharacterToRead Then
                         Else
 
+
                             If InStr(t, "tag:", CompareMethod.Text) = 0 Then
                                 If InStr(t, "IX", CompareMethod.Text) <> 0 Then
                                     w.WriteLine(st.RemoveMiddleSpace(t))
                                 Else
-                                    temp = Split(t, " ")
-                                    If temp.Length = 1 Then
-                                        w.WriteLine(t)
+
+                                    'get the Extra Info
+                                    If (ExtraInfoFag AndAlso (InStr(t, _2ndLoopHeader, CompareMethod.Text) = 0)) Then
+                                        ExtraInfo = t
+                                        ExtraInfoFag = False
                                     Else
-                                        For iny = 0 To temp.Length - 1
-                                            If Trim(st.RemoveMiddleSpace(temp(iny))) <> "" Then
-                                                If Len(temp(iny)) > TracholdCharacterToRead Then
-                                                    w.WriteLine(st.RemoveMiddleSpace(temp(iny)))
+                                        temp = Split(t, " ")
+                                        If temp.Length = 1 Then
+                                            w.WriteLine(t)
+                                        Else
+                                            For iny = 0 To temp.Length - 1
+                                                If Trim(st.RemoveMiddleSpace(temp(iny))) <> "" Then
+                                                    If Len(temp(iny)) > TracholdCharacterToRead Then
+                                                        w.WriteLine(st.RemoveMiddleSpace(temp(iny)))
+                                                    End If
                                                 End If
-                                            End If
-                                        Next
+                                            Next
+                                        End If
                                     End If
+
+
+                                    '----------------
+
                                 End If
                             Else
                                 w.WriteLine(GetInsTag(t))
                             End If
+
 
                         End If
                         '-----------------------
@@ -260,6 +289,205 @@ Public Class ExtractILD
             RaiseEvent Err(ex.Message)
         End Try
     End Sub
+    Private Overloads Sub ExtractTextFile(ByVal FilePath As String, loopIdent As String, ByVal sheetEnd As String, disIdent1 As String, disIdent2 As String, disIdent3 As String)
+        Try
+            Const TracholdCharacterToRead = 4
+            Dim LoopName As String = ""
+            Dim hasLoopName As Boolean = False, hasDes1 As Boolean = False, hasDes2 As Boolean = False, hasDes3 As Boolean = False
+            Dim donotAdd As Boolean = False
+
+            Dim tmp As String = ""
+            Dim desc1 As String = "", desc2 As String = "", desc3 As String = ""
+
+            Dim itemsCol As New Collection
+            Dim fileName As String = ""
+            Dim t() As String = Split(FilePath, "\",, CompareMethod.Text)
+            t = Split(t(UBound(t)), ".",, CompareMethod.Text)
+            fileName = t(0)
+
+            Dim obj As New System.IO.StreamReader(FilePath)
+            Do While obj.Peek() <> -1
+                tmp = obj.ReadLine()
+
+                If Len(tmp) > TracholdCharacterToRead Then
+
+                    If InStr(tmp, sheetEnd, CompareMethod.Text) > 0 Then
+                        'save to local db
+                        SavetoLocal(LoopName, itemsCol, desc1, desc2, desc3, fileName)
+                        RaiseEvent LoopFinished(LoopName)
+                        'clean
+                        desc1 = ""
+                        desc2 = ""
+                        desc3 = ""
+                        LoopName = ""
+                        itemsCol = New Collection
+                        donotAdd = False
+                        Application.DoEvents()
+                        GoTo nl
+                        '------
+                    End If
+
+                    If hasLoopName Then
+                        If Trim(tmp) <> "" Then
+                            hasLoopName = False
+                            LoopName = FixLoopName(tmp)
+                        Else
+                            GoTo nl
+                        End If
+                    End If
+
+                    If hasDes1 Then
+                        hasDes1 = False
+                        desc1 = tmp
+                        donotAdd = False
+                    End If
+
+                    If hasDes2 Then
+                        hasDes2 = False
+                        desc2 = tmp
+                        donotAdd = False
+                    End If
+
+                    If hasDes3 Then
+                        hasDes3 = False
+                        desc3 = tmp
+                        donotAdd = False
+                    End If
+
+                    If InStr(tmp, loopIdent, CompareMethod.Text) > 0 Then
+                        If Not CheckLoopName(loopIdent, tmp, LoopName) Then
+                            hasLoopName = True
+                            donotAdd = True
+                        Else
+                            GoTo nl
+                        End If
+                    End If
+
+                    If (disIdent1 <> "") AndAlso InStr(tmp, disIdent1, CompareMethod.Text) > 0 Then
+                        If Not CheckDescription(disIdent1, tmp, desc1) Then
+                            hasDes1 = True
+                            donotAdd = True
+                        Else
+                            GoTo nl
+                        End If
+                    End If
+
+                    If (disIdent2 <> "") AndAlso InStr(tmp, disIdent2, CompareMethod.Text) > 0 Then
+                        If Not CheckDescription(disIdent2, tmp, desc2) Then
+                            hasDes2 = True
+                            donotAdd = True
+                        Else
+                            GoTo nl
+                        End If
+                    End If
+
+                    If (disIdent3 <> "") AndAlso InStr(tmp, disIdent3, CompareMethod.Text) > 0 Then
+                        If Not CheckDescription(disIdent3, tmp, desc3) Then
+                            hasDes3 = True
+                            donotAdd = True
+                        Else
+                            GoTo nl
+                        End If
+                    End If
+
+                    If Not donotAdd Then
+                        If InStr(tmp, "tag", CompareMethod.Text) > 0 Then
+                            AddInstrumentTag(tmp, itemsCol)
+                        Else
+                            AddItemTag(tmp, itemsCol)
+                        End If
+                    End If
+
+                End If
+
+nl:
+
+            Loop
+            obj.Close()
+        Catch ex As Exception
+            RaiseEvent Err(ex.Message)
+        End Try
+
+    End Sub
+
+    Private Function CheckDescription(ByRef descIdentity As String, ByRef line As String, ByRef desc As String) As Boolean
+        Dim tmp() As String = Split(line, descIdentity,, CompareMethod.Text)
+        If UBound(tmp) > 0 Then
+            If Len(Trim(tmp(1))) > 0 Then
+                desc = tmp(1)
+                Return True
+            End If
+        End If
+        Return False
+    End Function
+    Private Function CheckLoopName(ByRef loopIdentity As String, ByRef line As String, ByRef loopName As String) As Boolean
+        Dim tmp() As String = Split(line, loopIdentity,, CompareMethod.Text)
+        If UBound(tmp) > 0 Then
+            If Len(Trim(tmp(1))) > 4 Then
+                loopName = tmp(1)
+                Return True
+            End If
+        End If
+        Return False
+    End Function
+    Private Function FixLoopName(ByVal loopName As String) As String
+        Try
+            Dim tmp() As String = Split(Trim(loopName), " ",, CompareMethod.Text)
+            Return tmp(0)
+        Catch ex As Exception
+
+        End Try
+        Return ""
+    End Function
+    Private Function AddItemTag(ByVal item As String, ByRef col As Collection) As Boolean
+        Try
+            If item = "" Then Return ""
+            Dim tmp() As String
+            tmp = Split(item, " ",, CompareMethod.Text)
+            For inx As Integer = 0 To UBound(tmp)
+                If Not ItemExistsCol(col, tmp(inx)) Then col.Add(tmp(inx))
+            Next
+            Return True
+        Catch ex As Exception
+
+        End Try
+        Return False
+    End Function
+    Private Function AddInstrumentTag(ByVal item As String, ByRef col As Collection) As Boolean
+        Try
+            item = Replace(Replace(item, "tag", "",,, CompareMethod.Text), ":", "",,, CompareMethod.Text)
+            item = RTrim(LTrim(item))
+            Dim tmp() As String
+            tmp = Split(item, " ",, CompareMethod.Text)
+            item = tmp(0) & tmp(1)
+            For inx As Integer = 0 To UBound(tmp)
+                If Not ItemExistsCol(col, item) Then col.Add(item)
+            Next
+            Return True
+        Catch ex As Exception
+
+        End Try
+        Return False
+    End Function
+
+    Private Function ItemExistsCol(ByRef col As Collection, ByRef item As String) As Boolean
+        If IsNothing(col) Then Return False
+        For inx As Integer = 1 To col.Count
+            If item = col.Item(inx) Then Return True
+        Next
+        Return False
+    End Function
+    Private Function SavetoLocal(ByVal loopName As String, ByRef itemsCol As Collection, ByVal desc1 As String, ByVal desc2 As String, ByVal desc3 As String, ByVal FileName As String) As Boolean
+        Try
+            For inx As Integer = 1 To itemsCol.Count
+                AccDB.ExcuteNoneResult(String.Format("insert into tblILD ([Loop_Name],[Item],LoopDescription,LoopDescription2,LoopDescription3,FileName,Updated_Date) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", loopName, itemsCol.Item(inx), desc1, desc2, desc3, FileName, Now))
+            Next
+
+        Catch ex As Exception
+
+        End Try
+        Return False
+    End Function
     Private Sub ExtractPagesAndRemoveFromDB(ByVal _Sep As String, ByVal _loopname As String, ByVal FilePath As String, ByVal FileName As String)
         Try
             Dim outputDir As String = Application.StartupPath & "\_LoopBin"
@@ -404,7 +632,7 @@ cls:
             DB.Close()
             DB.Connect()
             Dim DT As New DataTable
-            DT = AccDB.ReturnDataTable("SELECT distinct [Loop_Name],[Item],[Segment],LoopDescription FROM [tblILD]")
+            DT = AccDB.ReturnDataTable("SELECT distinct [Loop_Name],[Item],[Segment],LoopDescription,LoopDescription2,LoopDescription3 FROM [tblILD]")
             Using bcp As New SqlClient.SqlBulkCopy(DB.DBConnection)
                 bcp.DestinationTableName = "tblILD"
                 bcp.BatchSize = 10000
@@ -412,7 +640,9 @@ cls:
                 bcp.ColumnMappings.Add("Loop_Name", "Loop_Name")
                 bcp.ColumnMappings.Add("Item", "Item")
                 bcp.ColumnMappings.Add("Segment", "Segment")
-                bcp.ColumnMappings.Add("LoopDescription", "Loop_Type")
+                bcp.ColumnMappings.Add("LoopDescription", "Description1")
+                bcp.ColumnMappings.Add("LoopDescription2", "Description2")
+                bcp.ColumnMappings.Add("LoopDescription3", "Description3")
                 bcp.WriteToServer(DT)
             End Using
             RaiseEvent CopyToEICAFinished()

@@ -19,49 +19,42 @@
     Public _LoopConsReleasedQCBacklog As Integer = 0
     Public UserName As String = ""
     Public Password As String = ""
-    Public ILDDBFolder As String = ""
+    Public ILDDBFile As String = ""
     Public SharedFolder As String = ""
+    Private pe As New PublicErrors
+    Public RFIPath As String = ""
+
+    Public Const LoopWeblink As String = "https://loopfolder-web.web.app/loopfolder/"
 
 
     Public Sub LoadSettings()
-        DB.DataBaseLocation = GetSetting("TR", "EIKA", "DBLoc", "TR-SQL-ZOR\TRAPP")
-        DB.DataBaseName = GetSetting("TR", "EIKA", "DBName", "TREICAKNPC")
-        PCADBName = GetSetting("TR", "EIKA", "PCADBName", "")
-        _PCAUpdate = Val(GetSetting("TR", "EIKA", "_PCAUpdate", 0))
-        _ValUp = Val(GetSetting("TR", "EIKA", "_ValUp", 0))
-        _AutoCutoff = Val(GetSetting("TR", "EIKA", "_AutoCutoff", 0))
-        _UpdateSlaveDevise = Val(GetSetting("TR", "EIKA", "_UpdateSlaveDevise", 0))
-        _UpdateLoopConsFinished = Val(GetSetting("TR", "EIKA", "_UpdateLoopConsFinished", 0))
-        _UpdateInsEqPCA = Val(GetSetting("TR", "EIKA", "_UpdateInsEqPCA", 0))
-        _SetInsFinal = Val(GetSetting("TR", "EIKA", "_SetInsFinal", 0))
-        _WeekEndDay = Val(GetSetting("TR", "EIKA", "_WeekEndDay", 5))
-        ' _TimeInte = Val(GetSetting("TR", "EIKA", "_TimeInte", 20))
-        _TimeEna = Val(GetSetting("TR", "EIKA", "_TimeEna", -1))
         _LoopConsReleasedQCBacklog = Val(GetSetting("TR", "EIKA", "LoopConsReleasedQCBacklog", 0))
+        DBPath = GetSetting("TR", "EIKA", "DBLoc", "")
+        DBName = GetSetting("TR", "EIKA", "DBName", "")
         UserName = GetSetting("TR", "EIKA", "U", "")
-        Password = GetSetting("TR", "EIKA", "P", "")
-        ILDDBFolder = GetSetting("TR", "EIKA", "ILDDBFolder", "")
+        ILDDBFile = GetSetting("TR", "EIKA", "ILDDBFile", "")
         SharedFolder = GetSetting("TR", "EIKA", "SharedFolder", "")
+        RFIPath = GetSetting("TR", "EIKA", "RFIPath", "")
     End Sub
 
     Public Sub EICADBConnect()
-        LoadSettings()
         Try
-            If UserName <> "" Then
-                DB.UserName = UserName
-                DB.Pass = Password
-            End If
+            DB.DataBaseLocation = DBPath
+            DB.DataBaseName = DBName
             DB.Connect()
         Catch ex As Exception
-            MsgBox(String.Format("Database Connection Failed{0}{1}", vbCrLf, ex.Message))
+            pe.RaiseDataConnectionError()
         End Try
     End Sub
     Public Sub DBConnect()
-        LoadSettings()
         Try
-            If FileIO.FileSystem.FileExists(ILDDBFolder & "\ILDDB.ilddb") Then
-                AccDB.DataBaseLocation = ILDDBFolder & "\ILDDB.ilddb"
+            If FileIO.FileSystem.FileExists(ILDDBFile) Then
+                AccDB.DataBaseLocation = ILDDBFile
                 AccDB.Connect()
+                EICADBConnect()
+            Else
+                'error for not showing the ilf db
+                pe.RaiseILDDBConnectionError()
             End If
         Catch ex As Exception
             MsgBox(String.Format("Database Connection Failed{0}{1}", vbCrLf, ex.Message))

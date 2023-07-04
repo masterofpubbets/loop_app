@@ -72,13 +72,13 @@ Partial Class frmExtractILD2
         Me.lblOp = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
-        Me.txt2Header = New Loop_Plugins.EAMS.Graphical.TextBoxFocusColor()
+        Me.txt2Header = New Loop_App.EAMS.Graphical.TextBoxFocusColor()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtReadTo = New Loop_Plugins.EAMS.Graphical.TextBoxFocusColor()
+        Me.txtReadTo = New Loop_App.EAMS.Graphical.TextBoxFocusColor()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.txtReadFrom = New Loop_Plugins.EAMS.Graphical.TextBoxFocusColor()
+        Me.txtReadFrom = New Loop_App.EAMS.Graphical.TextBoxFocusColor()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.txtLoopName = New Loop_Plugins.EAMS.Graphical.TextBoxFocusColor()
+        Me.txtLoopName = New Loop_App.EAMS.Graphical.TextBoxFocusColor()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblTotal = New System.Windows.Forms.Label()
@@ -118,7 +118,7 @@ Partial Class frmExtractILD2
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.PdfRibbonPage1, Me.PdfFormDataRibbonPage1})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemComboBox1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1188, 101)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1178, 93)
         '
         'PdfFileSaveAsBarItem1
         '
@@ -373,7 +373,7 @@ Partial Class frmExtractILD2
         '
         Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 101)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 93)
         Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
@@ -387,8 +387,8 @@ Partial Class frmExtractILD2
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.p)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1188, 593)
-        Me.SplitContainer1.SplitterDistance = 331
+        Me.SplitContainer1.Size = New System.Drawing.Size(1178, 596)
+        Me.SplitContainer1.SplitterDistance = 328
         Me.SplitContainer1.SplitterWidth = 5
         Me.SplitContainer1.TabIndex = 1
         '
@@ -401,7 +401,7 @@ Partial Class frmExtractILD2
         Me.lblCount.Location = New System.Drawing.Point(21, 524)
         Me.lblCount.Margin = New System.Windows.Forms.Padding(1, 0, 1, 0)
         Me.lblCount.Name = "lblCount"
-        Me.lblCount.Size = New System.Drawing.Size(266, 60)
+        Me.lblCount.Size = New System.Drawing.Size(263, 60)
         Me.lblCount.TabIndex = 91
         Me.lblCount.Text = "00"
         Me.lblCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -416,7 +416,7 @@ Partial Class frmExtractILD2
         Me.lblOp.Location = New System.Drawing.Point(24, 470)
         Me.lblOp.Margin = New System.Windows.Forms.Padding(1, 0, 1, 0)
         Me.lblOp.Name = "lblOp"
-        Me.lblOp.Size = New System.Drawing.Size(262, 47)
+        Me.lblOp.Size = New System.Drawing.Size(259, 47)
         Me.lblOp.TabIndex = 90
         Me.lblOp.Text = "Proccessing ILD"
         Me.lblOp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -439,7 +439,7 @@ Partial Class frmExtractILD2
         Me.Panel2.Location = New System.Drawing.Point(14, 222)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(298, 240)
+        Me.Panel2.Size = New System.Drawing.Size(295, 240)
         Me.Panel2.TabIndex = 9
         '
         'SimpleButton2
@@ -462,7 +462,7 @@ Partial Class frmExtractILD2
         Me.txt2Header.Location = New System.Drawing.Point(157, 156)
         Me.txt2Header.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.txt2Header.Name = "txt2Header"
-        Me.txt2Header.Size = New System.Drawing.Size(114, 23)
+        Me.txt2Header.Size = New System.Drawing.Size(111, 21)
         Me.txt2Header.TabIndex = 16
         '
         'Label4
@@ -484,7 +484,7 @@ Partial Class frmExtractILD2
         Me.txtReadTo.Location = New System.Drawing.Point(157, 111)
         Me.txtReadTo.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.txtReadTo.Name = "txtReadTo"
-        Me.txtReadTo.Size = New System.Drawing.Size(94, 23)
+        Me.txtReadTo.Size = New System.Drawing.Size(94, 21)
         Me.txtReadTo.TabIndex = 14
         Me.txtReadTo.Text = "1"
         '
@@ -507,7 +507,7 @@ Partial Class frmExtractILD2
         Me.txtReadFrom.Location = New System.Drawing.Point(157, 62)
         Me.txtReadFrom.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.txtReadFrom.Name = "txtReadFrom"
-        Me.txtReadFrom.Size = New System.Drawing.Size(94, 23)
+        Me.txtReadFrom.Size = New System.Drawing.Size(94, 21)
         Me.txtReadFrom.TabIndex = 12
         Me.txtReadFrom.Text = "1"
         '
@@ -532,7 +532,7 @@ Partial Class frmExtractILD2
         Me.txtLoopName.Location = New System.Drawing.Point(157, 12)
         Me.txtLoopName.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.txtLoopName.Name = "txtLoopName"
-        Me.txtLoopName.Size = New System.Drawing.Size(114, 23)
+        Me.txtLoopName.Size = New System.Drawing.Size(111, 21)
         Me.txtLoopName.TabIndex = 10
         '
         'Label3
@@ -558,7 +558,7 @@ Partial Class frmExtractILD2
         Me.Panel1.Location = New System.Drawing.Point(14, 21)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(298, 196)
+        Me.Panel1.Size = New System.Drawing.Size(295, 196)
         Me.Panel1.TabIndex = 0
         '
         'lblTotal
@@ -592,7 +592,7 @@ Partial Class frmExtractILD2
         Me.lblSPath.Location = New System.Drawing.Point(12, 79)
         Me.lblSPath.Margin = New System.Windows.Forms.Padding(1, 0, 1, 0)
         Me.lblSPath.Name = "lblSPath"
-        Me.lblSPath.Size = New System.Drawing.Size(266, 41)
+        Me.lblSPath.Size = New System.Drawing.Size(263, 41)
         Me.lblSPath.TabIndex = 8
         Me.lblSPath.Text = "..."
         '
@@ -613,7 +613,7 @@ Partial Class frmExtractILD2
         Me.p.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.p.MenuManager = Me.BarManager1
         Me.p.Name = "p"
-        Me.p.Size = New System.Drawing.Size(850, 591)
+        Me.p.Size = New System.Drawing.Size(843, 594)
         Me.p.TabIndex = 2
         '
         'BarManager1
@@ -632,16 +632,16 @@ Partial Class frmExtractILD2
         Me.barDockControlTop.Location = New System.Drawing.Point(0, 0)
         Me.barDockControlTop.Manager = Me.BarManager1
         Me.barDockControlTop.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.barDockControlTop.Size = New System.Drawing.Size(1188, 0)
+        Me.barDockControlTop.Size = New System.Drawing.Size(1178, 0)
         '
         'barDockControlBottom
         '
         Me.barDockControlBottom.CausesValidation = False
         Me.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.barDockControlBottom.Location = New System.Drawing.Point(0, 694)
+        Me.barDockControlBottom.Location = New System.Drawing.Point(0, 689)
         Me.barDockControlBottom.Manager = Me.BarManager1
         Me.barDockControlBottom.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.barDockControlBottom.Size = New System.Drawing.Size(1188, 0)
+        Me.barDockControlBottom.Size = New System.Drawing.Size(1178, 0)
         '
         'barDockControlLeft
         '
@@ -650,16 +650,16 @@ Partial Class frmExtractILD2
         Me.barDockControlLeft.Location = New System.Drawing.Point(0, 0)
         Me.barDockControlLeft.Manager = Me.BarManager1
         Me.barDockControlLeft.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.barDockControlLeft.Size = New System.Drawing.Size(0, 694)
+        Me.barDockControlLeft.Size = New System.Drawing.Size(0, 689)
         '
         'barDockControlRight
         '
         Me.barDockControlRight.CausesValidation = False
         Me.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right
-        Me.barDockControlRight.Location = New System.Drawing.Point(1188, 0)
+        Me.barDockControlRight.Location = New System.Drawing.Point(1178, 0)
         Me.barDockControlRight.Manager = Me.BarManager1
         Me.barDockControlRight.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.barDockControlRight.Size = New System.Drawing.Size(0, 694)
+        Me.barDockControlRight.Size = New System.Drawing.Size(0, 689)
         '
         'opnFle
         '
@@ -701,7 +701,7 @@ Partial Class frmExtractILD2
         'frmExtractILD2
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1188, 694)
+        Me.ClientSize = New System.Drawing.Size(1178, 689)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.RibbonControl1)
         Me.Controls.Add(Me.barDockControlLeft)

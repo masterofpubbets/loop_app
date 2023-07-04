@@ -109,7 +109,7 @@ Partial Class frmUploadHCSData
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemTrackBar1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1188, 102)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 125)
         '
         'BarButtonItem1
         '
@@ -158,6 +158,7 @@ Partial Class frmUploadHCSData
         'RibbonPage1
         '
         Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
+        Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
         Me.RibbonPage1.Text = "HCS Restoring"
         '
@@ -176,7 +177,7 @@ Partial Class frmUploadHCSData
         '
         Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 102)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 125)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
         'SplitContainer1.Panel1
@@ -189,8 +190,8 @@ Partial Class frmUploadHCSData
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label9)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblTables)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1188, 467)
-        Me.SplitContainer1.SplitterDistance = 814
+        Me.SplitContainer1.Size = New System.Drawing.Size(1198, 574)
+        Me.SplitContainer1.SplitterDistance = 820
         Me.SplitContainer1.TabIndex = 1
         '
         'np
@@ -210,9 +211,9 @@ Partial Class frmUploadHCSData
         Me.np.Name = "np"
         Me.np.PageProperties.ShowMode = DevExpress.XtraBars.Navigation.ItemShowMode.ImageAndText
         Me.np.Pages.AddRange(New DevExpress.XtraBars.Navigation.NavigationPageBase() {Me.npElements, Me.npGroups, Me.npItems, Me.npPunchs, Me.npSystems, Me.npSubsystems, Me.npTasks})
-        Me.np.RegularSize = New System.Drawing.Size(812, 465)
+        Me.np.RegularSize = New System.Drawing.Size(818, 572)
         Me.np.SelectedPage = Me.npGroups
-        Me.np.Size = New System.Drawing.Size(812, 465)
+        Me.np.Size = New System.Drawing.Size(818, 572)
         Me.np.TabIndex = 2
         '
         'npElements
@@ -286,7 +287,7 @@ Partial Class frmUploadHCSData
         Me.npGroups.ImageOptions.Image = CType(resources.GetObject("npGroups.ImageOptions.Image"), System.Drawing.Image)
         Me.npGroups.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.npGroups.Name = "npGroups"
-        Me.npGroups.Size = New System.Drawing.Size(674, 395)
+        Me.npGroups.Size = New System.Drawing.Size(649, 482)
         '
         'txtGroupSheet
         '
@@ -643,7 +644,7 @@ Partial Class frmUploadHCSData
         Me.lblProcessStatus.ForeColor = System.Drawing.Color.Black
         Me.lblProcessStatus.Location = New System.Drawing.Point(50, 302)
         Me.lblProcessStatus.Name = "lblProcessStatus"
-        Me.lblProcessStatus.Size = New System.Drawing.Size(287, 143)
+        Me.lblProcessStatus.Size = New System.Drawing.Size(291, 250)
         Me.lblProcessStatus.TabIndex = 11
         '
         'Label9
@@ -663,7 +664,7 @@ Partial Class frmUploadHCSData
         Me.lblTables.ForeColor = System.Drawing.Color.Black
         Me.lblTables.Location = New System.Drawing.Point(50, 47)
         Me.lblTables.Name = "lblTables"
-        Me.lblTables.Size = New System.Drawing.Size(287, 177)
+        Me.lblTables.Size = New System.Drawing.Size(291, 177)
         Me.lblTables.TabIndex = 9
         '
         'Label1
@@ -679,7 +680,7 @@ Partial Class frmUploadHCSData
         'frmUploadHCSData
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1188, 569)
+        Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.RibbonControl1)
         Me.IconOptions.LargeImage = CType(resources.GetObject("frmUploadHCSData.IconOptions.LargeImage"), System.Drawing.Image)

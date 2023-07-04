@@ -1,4 +1,5 @@
 ﻿Public Class frmSelectDate
+    Public isSelect As Boolean = False
 
     Private Sub SimpleButton1_Click(sender As Object, e As EventArgs) Handles SimpleButton1.Click
         Me.Close()

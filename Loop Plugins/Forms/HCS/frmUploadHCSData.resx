@@ -207,6 +207,17 @@
         RK5CYII=
 </value>
   </data>
+  <data name="RibbonPage1.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAEnRFWHRUaXRsZQBFeHBvcnQ7
+        RmlsZTtOlMS2AAAA7UlEQVRYR+2SOw6DMBBEOR9HyTloKaLUnIGSKl2u4SpSDpEUzk5kS44ZEhuZJR9G
+        egIP9voVVNbaVaGlJrTUhJaa0BI0TWMzOQu1gLMj2B2AlkAOySM92N+27a3rulqW8ayndQgtwRwBYwyV
+        UBNAmISqABJLqAsgTuIKiVUEEC8h30Y/poeWYI7ACy6yhd5DS4CDpeJm0XtoCTaBTaCkgAu9h5YgV6Df
+        n+xh1z9A/HtI1B9lWU4gGDy59s+g/xOBqV6ynMBUon3LCKQi+UGBlHyPQCpIcYFcPkYgB5yjw+YgA4f4
+        gjcMOEeH6WGrO0lO9/MwiFQiAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="opnFle.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

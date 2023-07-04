@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  A strongly-typed resource class, for looking up localized strings, etc.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
      Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
@@ -39,7 +39,7 @@ Namespace My.Resources
         Friend ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
             Get
                 If Object.ReferenceEquals(resourceMan, Nothing) Then
-                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("Loop_Plugins.Resources", GetType(Resources).Assembly)
+                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("Loop_App.Resources", GetType(Resources).Assembly)
                     resourceMan = temp
                 End If
                 Return resourceMan
@@ -311,6 +311,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property eccables02() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("eccables02", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to SELECT 
         '''[TBL_ID]
         ''',[tblEleCableList].Area
@@ -475,6 +485,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property equipment32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("equipment32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property EXCEL97() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("EXCEL97", resourceCulture)
@@ -483,18 +503,38 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to update [getProjectPunchs(&apos;10031&apos;)] set [SignedByTR]=replace([SignedByTR],&apos;&apos;&apos;&apos;,&apos;&apos;)
-        '''update [getProjectPunchs(&apos;10031&apos;)] set [SignedBySubcon]=replace([SignedBySubcon],&apos;&apos;&apos;&apos;,&apos;&apos;)
-        '''update [getProjectPunchs(&apos;10031&apos;)] set [SignedByClient]=replace([SignedByClient],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''  Looks up a localized string similar to update [HCS].[ProjectPunchs] set [SignedByTR]=replace([SignedByTR],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectPunchs] set [SignedBySubcon]=replace([SignedBySubcon],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectPunchs] set [SignedByClient]=replace([SignedByClient],&apos;&apos;&apos;&apos;,&apos;&apos;)
         '''
-        '''update [getProjectSubsystems(&apos;10031&apos;)] set [Data3]=replace([Data3],&apos;&apos;&apos;&apos;,&apos;&apos;)
-        '''update [getProjectSubsystems(&apos;10031&apos;)] set [Data4]=replace([Data4],&apos;&apos;&apos;&apos;,&apos;&apos;)
-        '''update [getProjectSubsystems(&apos;10031&apos;)] set [Data5]=replace([Data5],&apos;&apos;&apos;&apos;,&apos;&apos;)
-        '''update [getPro [rest of string was truncated]&quot;;.
+        '''update [HCS].[ProjectSubsystems] set [Data3]=replace([Data3],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectSubsystems] set [Data4]=replace([Data4],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectSubsystems] set [Data5]=replace([Data5],&apos;&apos;&apos;&apos;,&apos;&apos;)
+        '''update [HCS].[ProjectSubsystems] set [Data6]=repla [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property FixColumnsData() As String
             Get
                 Return ResourceManager.GetString("FixColumnsData", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property fixture32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("fixture32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property fixtures64() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("fixtures64", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -698,6 +738,26 @@ Namespace My.Resources
         Friend ReadOnly Property InsValidate() As String
             Get
                 Return ResourceManager.GetString("InsValidate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property logo1() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo1", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -1038,6 +1098,16 @@ Namespace My.Resources
         Friend ReadOnly Property save() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("save", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property trays32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("trays32", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

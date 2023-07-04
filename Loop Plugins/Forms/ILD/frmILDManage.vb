@@ -3,6 +3,7 @@
     Private Builder As OleDb.OleDbCommandBuilder
     Dim cmd As New OleDb.OleDbCommand("select * from tblILD", AccDB.Connection)
     Dim DA As New OleDb.OleDbDataAdapter(cmd)
+    Private fs As New FileSystem
 
     Private Sub GetData()
         DT = New DataTable
@@ -56,16 +57,6 @@
         Next
     End Sub
 
-    Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
-        Dim cmd2 As String = "", FileName As String = ""
-        Dim InkScapePath As String = String.Format("{0}{1}\Libs\App\Inkscape\inkscape.exe{2}", Chr(34), Application.StartupPath, Chr(34))
-        If GridView2.GetSelectedRows.Count = 0 Then Exit Sub
-        Dim selectedRowHandles As Int32() = GridView2.GetSelectedRows
-        FileName = String.Format("{0}\Loops\{1}.pdf", Application.StartupPath, AccDB.ExcutResult("select filename from tblild where tblid =" & GridView2.GetDataRow(selectedRowHandles(0)).Item("tblid")))
-        cmd2 = String.Format(" -f {0}{1}{0} ", Chr(34), FileName, "=", Chr(34))
-        Shell(InkScapePath & cmd2, AppWinStyle.MaximizedFocus, True)
-    End Sub
-
     Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
         Try
             Dim msg As MsgBoxResult = MsgBox("Are You Sure You Want To Delete Selected Row", MsgBoxStyle.YesNo, Me.Text)
@@ -78,10 +69,22 @@
 
     Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
         Try
-            Dim selectedRowHandles As Int32() = GridView2.GetSelectedRows
-            If IO.File.Exists(String.Format("{0}\{1}.pdf", SharedFolder, GridView2.GetDataRow(selectedRowHandles(0)).Item("FileName"))) Then
-                Dim frm As New frmPdf() With {.PDFPath = String.Format("{0}\{1}.pdf", SharedFolder, GridView2.GetDataRow(selectedRowHandles(0)).Item("FileName"))}
-                frm.Text &= " " & GridView2.GetDataRow(selectedRowHandles(0)).Item("FileName")
+            Dim pdfs As List(Of String)
+            Dim pdfsFName As New List(Of String)
+
+            Dim row_handle As Integer = GridView2.GetSelectedRows(0)
+            If row_handle < 0 Then Exit Sub
+            pdfs = fs.FindFile(GridView2.GetDataRow(row_handle).Item("Loop_Name") & "*", SharedFolder, pdfsFName)
+            If IsNothing(pdfs) Then
+                MsgBox("No PDF associated to this Loop!", MsgBoxStyle.Exclamation, Me.Text)
+                Exit Sub
+            End If
+            If pdfs.Count = 0 Then
+                MsgBox("No PDF associated to this Loop!", MsgBoxStyle.Exclamation, Me.Text)
+                Exit Sub
+            End If
+            If IO.File.Exists(pdfs.Item(0)) Then
+                Dim frm As New frmPdf() With {.PDFPath = pdfs.Item(0), .Text = GridView2.GetDataRow(row_handle).Item("Loop_Name")}
                 frm.Show()
             End If
         Catch ex As Exception

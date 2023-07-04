@@ -6,12 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{346CF222-DF71-4648-8195-C83C312CDE1E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Loop_Plugins.My.MyApplication</StartupObject>
-    <RootNamespace>Loop_Plugins</RootNamespace>
-    <AssemblyName>Loop Plugins</AssemblyName>
+    <StartupObject>Loop_App.My.MyApplication</StartupObject>
+    <RootNamespace>Loop_App</RootNamespace>
+    <AssemblyName>Loop App</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -28,6 +28,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -36,7 +37,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Loop Plugins.xml</DocumentationFile>
+    <DocumentationFile>Loop App.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -47,7 +48,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Loop Plugins.xml</DocumentationFile>
+    <DocumentationFile>Loop App.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -63,49 +64,67 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Life_Cycle_Loop.ico</ApplicationIcon>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.BonusSkins.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Charts.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Data.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.DataAccess.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.DataAccess.v20.1.UI, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Docs.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Office.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Pdf.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Pdf.v20.1.Drawing, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.RichEdit.v20.1.Export, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Printing.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.RichEdit.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Sparkline.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Spreadsheet.v20.1.Core, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Data.Desktop.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Utils.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Utils.v20.1.UI, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraBars.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraCharts.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraCharts.v20.1.UI, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraCharts.v20.1.Wizard, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraEditors.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraGrid.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraLayout.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraNavBar.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraPdfViewer.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraPrinting.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Images.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraRichEdit.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraSpreadsheet.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraTreeList.v20.1, Version=20.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.BonusSkins.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Charts.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Dialogs.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Drawing.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v22.2.UI, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataVisualization.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.TreeMap.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraDialogs.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeMap.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Docs.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Pdf.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Pdf.v22.2.Drawing, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.RichEdit.v22.2.Export, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.RichEdit.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Sparkline.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Spreadsheet.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.Desktop.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v22.2.UI, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraBars.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v22.2.UI, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v22.2.Wizard, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraGrid.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraNavBar.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraPdfViewer.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Images.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraRichEdit.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraSpreadsheet.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Schema.3.0.14\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.3.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.3\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -115,6 +134,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -131,12 +151,79 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Classes\Activities.vb" />
+    <Compile Include="Classes\Area.vb" />
+    <Compile Include="Classes\Cables.vb" />
+    <Compile Include="Classes\Construction.vb" />
+    <Compile Include="Classes\CutoffDate.vb" />
     <Compile Include="Classes\Engineering.vb" />
+    <Compile Include="Classes\Equipment.vb" />
     <Compile Include="Classes\ExtractILD.vb" />
+    <Compile Include="Classes\FileSystem.vb" />
+    <Compile Include="Classes\GridViews.vb" />
     <Compile Include="Classes\HCS.vb" />
+    <Compile Include="Classes\HTTPService.vb" />
+    <Compile Include="Classes\Instruments.vb" />
+    <Compile Include="Classes\Lighting.vb" />
     <Compile Include="Classes\LoopProcess.vb" />
+    <Compile Include="Classes\LoopsAPI.vb" />
+    <Compile Include="Classes\LoopsSteps.vb" />
     <Compile Include="Classes\Production.vb" />
+    <Compile Include="Classes\PublicErrors.vb" />
+    <Compile Include="Classes\QC.vb" />
+    <Compile Include="Classes\QRCode.vb" />
+    <Compile Include="Classes\Reports.vb" />
     <Compile Include="Classes\Tooles.vb" />
+    <Compile Include="Classes\Trays.vb" />
+    <Compile Include="Classes\Users.vb" />
+    <Compile Include="Forms\Common\frmEditText.Designer.vb">
+      <DependentUpon>frmEditText.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\frmEditText.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Common\frmSelectRFIPath.Designer.vb">
+      <DependentUpon>frmSelectRFIPath.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\frmSelectRFIPath.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmAddComment.Designer.vb">
+      <DependentUpon>frmAddComment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmAddComment.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmFilter.Designer.vb">
+      <DependentUpon>frmFilter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmFilter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmQRCodeViewer.Designer.vb">
+      <DependentUpon>frmQRCodeViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmQRCodeViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmResults.Designer.vb">
+      <DependentUpon>frmResults.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmResults.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmSelectDateConstraint.Designer.vb">
+      <DependentUpon>frmSelectDateConstraint.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmSelectDateConstraint.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmSelectProject.Designer.vb">
+      <DependentUpon>frmSelectProject.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Compenents\frmSelectProject.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\EICA\Constraints\frmAddConsEntry.Designer.vb">
       <DependentUpon>frmAddConsEntry.vb</DependentUpon>
     </Compile>
@@ -161,10 +248,40 @@
     <Compile Include="Forms\EICA\Constraints\frmLoopConstraints2.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmAddEICALoop.Designer.vb">
-      <DependentUpon>frmAddEICALoop.vb</DependentUpon>
+    <Compile Include="Forms\Construction\frmCables.Designer.vb">
+      <DependentUpon>frmCables.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmAddEICALoop.vb">
+    <Compile Include="Forms\Construction\frmCables.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Construction\frmEquipment.Designer.vb">
+      <DependentUpon>frmEquipment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Construction\frmEquipment.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Construction\frmInstruments.Designer.vb">
+      <DependentUpon>frmInstruments.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Construction\frmInstruments.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Construction\frmLighting.Designer.vb">
+      <DependentUpon>frmLighting.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Construction\frmLighting.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Construction\frmTrays.Designer.vb">
+      <DependentUpon>frmTrays.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Construction\frmTrays.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmEICALoopManagement.Designer.vb">
+      <DependentUpon>frmEICALoopManagement.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmEICALoopManagement.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\EICA\EICA Loops\frmAddLoopProgress.Designer.vb">
@@ -179,6 +296,12 @@
     <Compile Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmNewLoopProgress.Designer.vb">
+      <DependentUpon>frmNewLoopProgress.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EICA\EICA Loops\frmNewLoopProgress.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.Designer.vb">
       <DependentUpon>frmUpdateLoopDone.vb</DependentUpon>
     </Compile>
@@ -191,10 +314,10 @@
     <Compile Include="Forms\EICA\frmCopyILD.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\frmEICALogin.Designer.vb">
+    <Compile Include="Forms\Login\frmEICALogin.Designer.vb">
       <DependentUpon>frmEICALogin.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\frmEICALogin.vb">
+    <Compile Include="Forms\Login\frmEICALogin.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\EICA\frmEICALoopMap.Designer.vb">
@@ -207,12 +330,6 @@
       <DependentUpon>frmHCSEICALoopStatus.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\EICA\frmHCSEICALoopStatus.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\EICA\frmInsLoop.Designer.vb">
-      <DependentUpon>frmInsLoop.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\EICA\frmInsLoop.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\EICA\frmLoopCard.Designer.vb">
@@ -323,6 +440,12 @@
     <Compile Include="Forms\EICA\Summaries\frmLoopStepStatus.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\HCS\frmHCSSetSteps.Designer.vb">
+      <DependentUpon>frmHCSSetSteps.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HCS\frmHCSSetSteps.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\HCS\frmUploadHCSData.Designer.vb">
       <DependentUpon>frmUploadHCSData.vb</DependentUpon>
     </Compile>
@@ -351,6 +474,12 @@
       <DependentUpon>frmExtractILD2.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\ILD\frmExtractILD2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExtractILD3.Designer.vb">
+      <DependentUpon>frmExtractILD3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ILD\frmExtractILD3.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ILD\frmFindKeyword.Designer.vb">
@@ -402,10 +531,76 @@
     <Compile Include="Forms\Others\frmExcute.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Planning\frmActivities.Designer.vb">
+      <DependentUpon>frmActivities.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Planning\frmActivities.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Planning\frmAddActivity.Designer.vb">
+      <DependentUpon>frmAddActivity.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Planning\frmAddActivity.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Planning\frmSelectActId.Designer.vb">
+      <DependentUpon>frmSelectActId.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Planning\frmSelectActId.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Planning\frmUpdateActWithPCS.Designer.vb">
+      <DependentUpon>frmUpdateActWithPCS.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Planning\frmUpdateActWithPCS.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QC\frmSetQCReleased.Designer.vb">
+      <DependentUpon>frmSetQCReleased.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\QC\frmSetQCReleased.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Reports\frmReports.Designer.vb">
+      <DependentUpon>frmReports.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Reports\frmReports.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Settings\frmSet.Designer.vb">
       <DependentUpon>frmSet.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings\frmSet.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Users\frmAddUser.Designer.vb">
+      <DependentUpon>frmAddUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Users\frmAddUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Users\frmEditUser.Designer.vb">
+      <DependentUpon>frmEditUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Users\frmEditUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Users\frmResetPass.Designer.vb">
+      <DependentUpon>frmResetPass.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Users\frmResetPass.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Users\frmSelectUser.Designer.vb">
+      <DependentUpon>frmSelectUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Users\frmSelectUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Users\frmUsers.Designer.vb">
+      <DependentUpon>frmUsers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Users\frmUsers.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\WarRoom\frmWarRoom.Designer.vb">
@@ -419,6 +614,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -432,6 +628,30 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Common\frmEditText.resx">
+      <DependentUpon>frmEditText.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\frmSelectRFIPath.resx">
+      <DependentUpon>frmSelectRFIPath.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compenents\frmAddComment.resx">
+      <DependentUpon>frmAddComment.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compenents\frmFilter.resx">
+      <DependentUpon>frmFilter.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compenents\frmQRCodeViewer.resx">
+      <DependentUpon>frmQRCodeViewer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compenents\frmResults.resx">
+      <DependentUpon>frmResults.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compenents\frmSelectDateConstraint.resx">
+      <DependentUpon>frmSelectDateConstraint.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compenents\frmSelectProject.resx">
+      <DependentUpon>frmSelectProject.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\Constraints\frmAddConsEntry.resx">
       <DependentUpon>frmAddConsEntry.vb</DependentUpon>
     </EmbeddedResource>
@@ -444,8 +664,23 @@
     <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopConstraints2.resx">
       <DependentUpon>frmLoopConstraints2.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmAddEICALoop.resx">
-      <DependentUpon>frmAddEICALoop.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\Construction\frmCables.resx">
+      <DependentUpon>frmCables.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Construction\frmEquipment.resx">
+      <DependentUpon>frmEquipment.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Construction\frmInstruments.resx">
+      <DependentUpon>frmInstruments.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Construction\frmLighting.resx">
+      <DependentUpon>frmLighting.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Construction\frmTrays.resx">
+      <DependentUpon>frmTrays.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmEICALoopManagement.resx">
+      <DependentUpon>frmEICALoopManagement.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\EICA Loops\frmAddLoopProgress.resx">
       <DependentUpon>frmAddLoopProgress.vb</DependentUpon>
@@ -453,13 +688,16 @@
     <EmbeddedResource Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.resx">
       <DependentUpon>frmEditLoopBProgress.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmNewLoopProgress.resx">
+      <DependentUpon>frmNewLoopProgress.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.resx">
       <DependentUpon>frmUpdateLoopDone.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\frmCopyILD.resx">
       <DependentUpon>frmCopyILD.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\frmEICALogin.resx">
+    <EmbeddedResource Include="Forms\Login\frmEICALogin.resx">
       <DependentUpon>frmEICALogin.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\frmEICALoopMap.resx">
@@ -467,9 +705,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\frmHCSEICALoopStatus.resx">
       <DependentUpon>frmHCSEICALoopStatus.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\frmInsLoop.resx">
-      <DependentUpon>frmInsLoop.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\frmLoopCard.resx">
       <DependentUpon>frmLoopCard.vb</DependentUpon>
@@ -525,6 +760,9 @@
     <EmbeddedResource Include="Forms\EICA\Summaries\frmLoopStepStatus.resx">
       <DependentUpon>frmLoopStepStatus.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HCS\frmHCSSetSteps.resx">
+      <DependentUpon>frmHCSSetSteps.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\HCS\frmUploadHCSData.resx">
       <DependentUpon>frmUploadHCSData.vb</DependentUpon>
     </EmbeddedResource>
@@ -539,6 +777,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ILD\frmExtractILD2.resx">
       <DependentUpon>frmExtractILD2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ILD\frmExtractILD3.resx">
+      <DependentUpon>frmExtractILD3.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ILD\frmFindKeyword.resx">
       <DependentUpon>frmFindKeyword.vb</DependentUpon>
@@ -564,8 +805,41 @@
     <EmbeddedResource Include="Forms\Others\frmExcute.resx">
       <DependentUpon>frmExcute.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Planning\frmActivities.resx">
+      <DependentUpon>frmActivities.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Planning\frmAddActivity.resx">
+      <DependentUpon>frmAddActivity.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Planning\frmSelectActId.resx">
+      <DependentUpon>frmSelectActId.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Planning\frmUpdateActWithPCS.resx">
+      <DependentUpon>frmUpdateActWithPCS.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QC\frmSetQCReleased.resx">
+      <DependentUpon>frmSetQCReleased.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Reports\frmReports.resx">
+      <DependentUpon>frmReports.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\frmSet.resx">
       <DependentUpon>frmSet.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Users\frmAddUser.resx">
+      <DependentUpon>frmAddUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Users\frmEditUser.resx">
+      <DependentUpon>frmEditUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Users\frmResetPass.resx">
+      <DependentUpon>frmResetPass.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Users\frmSelectUser.resx">
+      <DependentUpon>frmSelectUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Users\frmUsers.resx">
+      <DependentUpon>frmUsers.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WarRoom\frmWarRoom.resx">
       <DependentUpon>frmWarRoom.vb</DependentUpon>
@@ -593,6 +867,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Life_Cycle_Loop.ico" />
+    <Content Include="logo.ico" />
+    <None Include="Resources\logo1.png" />
+    <None Include="Resources\logo.png" />
+    <None Include="Resources\equipment32.png" />
+    <None Include="Resources\eccables02.png" />
+    <None Include="Resources\trays32.png" />
+    <None Include="Resources\fixtures64.png" />
+    <None Include="Resources\fixture32.png" />
+    <None Include="packages.config" />
     <None Include="Resources\TruncateHCSs.txt" />
     <None Include="Resources\FixColumnsData.txt" />
     <None Include="Resources\CreateTask.txt" />
@@ -670,6 +953,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

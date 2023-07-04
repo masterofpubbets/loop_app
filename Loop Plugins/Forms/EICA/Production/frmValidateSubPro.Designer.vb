@@ -442,7 +442,7 @@ Partial Class frmValidateSubPro
         '
         'ToolStripButton1
         '
-        Me.ToolStripButton1.Image = Global.Loop_Plugins.My.Resources.Resources.save
+        Me.ToolStripButton1.Image = Global.Loop_App.My.Resources.Resources.save
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(82, 24)

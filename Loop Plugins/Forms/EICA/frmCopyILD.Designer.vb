@@ -44,7 +44,7 @@ Partial Class frmCopyILD
         '
         'RibbonControl1
         '
-        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.Loop_Plugins.My.Resources.Resources.backgroundTrans
+        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.Loop_App.My.Resources.Resources.backgroundTrans
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
         Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)

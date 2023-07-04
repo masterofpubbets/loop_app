@@ -33,6 +33,7 @@ Partial Class frmSet
         Me.fld = New System.Windows.Forms.FolderBrowserDialog()
         Me.SimpleButton5 = New DevExpress.XtraEditors.SimpleButton()
         Me.lblNewDB = New DevExpress.XtraEditors.LabelControl()
+        Me.opnFile = New System.Windows.Forms.OpenFileDialog()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -87,7 +88,7 @@ Partial Class frmSet
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(862, 75)
+        Me.RibbonControl1.Size = New System.Drawing.Size(862, 62)
         '
         'SimpleButton3
         '
@@ -132,6 +133,10 @@ Partial Class frmSet
         Me.lblNewDB.Size = New System.Drawing.Size(616, 65)
         Me.lblNewDB.TabIndex = 10
         '
+        'opnFile
+        '
+        Me.opnFile.Filter = "ILD DB|*.ilddb"
+        '
         'frmSet
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -166,4 +171,5 @@ Partial Class frmSet
     Friend WithEvents fld As FolderBrowserDialog
     Friend WithEvents SimpleButton5 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents lblNewDB As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents opnFile As OpenFileDialog
 End Class
