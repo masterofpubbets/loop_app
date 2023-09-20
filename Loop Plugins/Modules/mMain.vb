@@ -43,7 +43,7 @@
             DB.DataBaseName = DBName
             DB.Connect()
         Catch ex As Exception
-            pe.RaiseDataConnectionError()
+            pe.RaiseDataConnectionError(ex.Message)
         End Try
     End Sub
     Public Sub DBConnect()
@@ -54,10 +54,10 @@
                 EICADBConnect()
             Else
                 'error for not showing the ilf db
-                pe.RaiseILDDBConnectionError()
+                pe.RaiseReadFileError("Internal DB Not Found.")
             End If
         Catch ex As Exception
-            MsgBox(String.Format("Database Connection Failed{0}{1}", vbCrLf, ex.Message))
+            pe.RaiseReadFileError(ex.Message)
         End Try
     End Sub
 End Module

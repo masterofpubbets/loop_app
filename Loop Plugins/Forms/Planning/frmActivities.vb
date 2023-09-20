@@ -218,6 +218,9 @@ Public Class frmActivities
         frm.txtWPS.Text = wps
         frm.dteEndDate.Value = EndDate
         frm.dteStartDate.Value = StartDate
+        frm.txtActName.Text = ActName
+        frm.txtActId.Text = ActId
+        frm.EICAArea = EICA_Area
 
         frm.chkKeyQnty.Checked = gv.GetDataRow(row_handle).Item("KeyQnty")
         frm.ShowDialog(Me)

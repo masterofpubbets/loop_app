@@ -1,5 +1,6 @@
 ﻿Public Class Activities
     Inherits Construction
+    Private pe As New PublicErrors
 
     Public Enum Discipline
         EleCable = 1
@@ -27,6 +28,16 @@
         GlandFrom = 8
         GlandTo = 9
     End Enum
+
+    Public Function CreateGlandingActivities() As Boolean
+        Try
+            DB.ExcuteNoneResult("EXEC PLANNING.CreateGlandingActs")
+            Return True
+        Catch ex As Exception
+            pe.RaiseDataExecuteError(ex.Message)
+        End Try
+        Return False
+    End Function
     Public Function UpdateP6Scope(ByVal PCSDBName As String, ByVal BaseLine As String) As Boolean
         Try
             Dim temp As String
@@ -56,8 +67,7 @@
             DB.ExcuteNoneResult("UPDATE tblActIDS SET Family = LTRIM(Family)")
             DB.ExcuteNoneResult("UPDATE tblActIDS SET Family = RTRIM(Family)")
 
-
-            Return True
+            Return CreateGlandingActivities()
         Catch ex As Exception
             Return False
         End Try
@@ -89,7 +99,19 @@
         End Try
         Return False
     End Function
+    Public Function UpdateTeam(ByVal disc As Discipline, ByVal tag As String, ByVal team As String) As Boolean
+        Try
+            If team <> "" Then
+                DB.ExcuteNoneResult("EXEC PLANNING.ChangeTeam '" & tag & "','" & team & "','" & disc.ToString & "'")
+            Else
+                DB.ExcuteNoneResult("EXEC PLANNING.ChangeTeam '" & tag & "'," & "NULL" & ",'" & disc.ToString & "'")
+            End If
+            Return True
+        Catch ex As Exception
 
+        End Try
+        Return False
+    End Function
     Public Function SetWorkfront(ByVal disc As Discipline, ByVal key As Keys, ByVal tag As String, ByVal wfDate As Date) As Boolean
         Try
             DB.ExcuteNoneResult("EXEC PLANNING.SetWorkfront '" & tag & "','" & Format(wfDate, "MM/dd/yyyy") & "','" & disc.ToString & "','" & key.ToString & "'")
@@ -108,11 +130,19 @@
         End Try
         Return False
     End Function
-    Public Function IsActivityExists(ByVal actId As String) As Boolean
-        If DB.ExcutResult("SELECT ActID FROM tblActIDS WHERE ActID ='" & actId & "'") = "" Then
-            Return False
+    Public Function IsActivityExists(ByVal actId As String, Optional actName As String = "") As Boolean
+        If actName <> "" Then
+            If DB.ExcutResult("SELECT ActID FROM tblActIDS WHERE ActName ='" & actName & "'") = "" Then
+                Return False
+            Else
+                Return True
+            End If
         Else
-            Return True
+            If DB.ExcutResult("SELECT ActID FROM tblActIDS WHERE ActID ='" & actId & "'") = "" Then
+                Return False
+            Else
+                Return True
+            End If
         End If
         Return True
     End Function
@@ -141,6 +171,7 @@
             DB.ExcuteNoneResult("EXEC PLANNING.AddActivity " & sqlData)
             Return True
         Catch ex As Exception
+            pe.RaiseDataExecuteError(ex.Message)
             Return False
         End Try
         Return False

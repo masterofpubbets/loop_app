@@ -1,6 +1,7 @@
 ﻿Public Class frmAddActivity
     Public isAdded As Boolean = False
     Private Act As New Activities
+    Public EICAArea As String = ""
 
     Private Function IsValida() As Boolean
         txtActId.Text = Trim(txtActId.Text)
@@ -35,6 +36,11 @@
             txtActId.Focus()
             Return False
         End If
+        If Act.IsActivityExists(txtActId.Text, txtActName.Text) Then
+            MsgBox("This Activity Name Exists!", MsgBoxStyle.Exclamation, Me.Text)
+            txtActName.Focus()
+            Return False
+        End If
         If cmbEICAArea.SelectedIndex = -1 Then
             MsgBox("Please Select EICA Area!", MsgBoxStyle.Exclamation, Me.Text)
             cmbEICAArea.Focus()
@@ -45,7 +51,7 @@
     End Function
     Private Sub frmAddActivity_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DB.Fill(cmbEICAArea, "SELECT [Area] FROM [Area] ORDER BY [Area]")
-        If cmbEICAArea.Items.Count > 0 Then cmbEICAArea.SelectedIndex = 0
+        If cmbEICAArea.Items.Count > 0 Then cmbEICAArea.SelectedItem = EICAArea
     End Sub
 
     Private Sub frmAddActivity_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged

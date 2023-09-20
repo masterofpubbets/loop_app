@@ -183,4 +183,30 @@
         End Try
         Return False
     End Function
+    Public Function DeleteProduction(ByVal proId As Integer, ByVal discipline As String) As Boolean
+        Try
+            DB.ExcuteNoneResult("EXEC CONSTRUCTION.DeleteCableProduction " & proId & ",'" & discipline & "'")
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+        Return False
+    End Function
+    Public Function OtherCablePercentage(ByVal proId As Integer, ByVal discipline As String, ByVal tag As String) As Double
+        Try
+            Return Val(DB.ExcutResult("SELECT CONSTRUCTION.GetCableTotalPercentageOther ('" & tag & "','" & discipline & "'," & proId & ")"))
+        Catch ex As Exception
+            Return 0
+        End Try
+        Return 0
+    End Function
+    Public Function UpdateCableProduction(ByVal proId As Integer, ByVal discipline As String, ByVal percentage As Double, ByVal mark1From As Integer, ByVal mark1To As Integer, ByVal proDate As Date, ByVal actualDrum As String) As Boolean
+        Try
+            DB.ExcuteNoneResult("EXEC CONSTRUCTION.UpdateCableProduction '" & discipline & "'," & proId & "," & percentage & ",'" & Format(proDate, "MM/dd/yyyy") & "'," & mark1From & "," & mark1To & ",'" & actualDrum & "'")
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+        Return False
+    End Function
 End Class

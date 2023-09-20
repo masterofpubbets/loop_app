@@ -60,7 +60,7 @@
             Dim enc As New EAMS.Coding.EncodeString
             DB.ExcuteNoneResult("EXEC LOOPS.AddLoopUser '" & userName & "','" & fullName & "','" & email & "','" & userType & "','" & enc.Encode(pass) & "','" & department & "','" & job & "','" & userGroup & "','" & trUserName & "'")
             If imgPath <> "" Then
-                DB.SaveImage(imgPath, "LOOPS.tblUsers", "UserPhoto", "userName", userName)
+                DB.SaveBinary(imgPath, "LOOPS.tblUsers", "UserPhoto", "userName", userName)
             End If
             Return True
         Catch ex As Exception

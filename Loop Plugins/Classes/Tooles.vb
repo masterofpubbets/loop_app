@@ -488,7 +488,7 @@ Namespace EAMS
                 End Try
                 Return _Image
             End Function
-            Public Overloads Sub SaveImage(ByVal ImagePath As String, ByVal TableName As String, ByVal FieldName As String, ByVal FieldKey As String, ByVal KeyString As String, Optional ByVal KeyInteger As Integer = -99)
+            Public Overloads Sub SaveBinary(ByVal FilePath As String, ByVal TableName As String, ByVal FieldName As String, ByVal FieldKey As String, ByVal KeyString As String, Optional ByVal KeyInteger As Integer = -99)
                 Try
                     Dim sql As String = ""
                     If KeyInteger = -99 Then
@@ -498,7 +498,7 @@ Namespace EAMS
                     End If
 
                     Dim cmd As New SqlCommand(sql, DB)
-                    Dim fsBLOBFile As New FileStream(ImagePath, FileMode.Open, FileAccess.Read)
+                    Dim fsBLOBFile As New FileStream(FilePath, FileMode.Open, FileAccess.Read)
                     Dim bytBLOBData(fsBLOBFile.Length) As [Byte]
                     fsBLOBFile.Read(bytBLOBData, 0, bytBLOBData.Length)
                     fsBLOBFile.Close()
@@ -531,6 +531,27 @@ Namespace EAMS
                     pe.RaiseDataExecuteError(_Exception.Message)
                 End Try
             End Sub
+            Public Function GetImageByte(ByVal sql As String) As Byte()
+                Dim _SqlRetVal As Object = Nothing
+                Dim _Image As System.Drawing.Image = Nothing
+                Try
+                    Dim _SqlCommand As New System.Data.SqlClient.SqlCommand(sql, DB)
+                    _SqlRetVal = _SqlCommand.ExecuteScalar()
+                    _SqlCommand.Dispose()
+                    _SqlCommand = Nothing
+                Catch _Exception As Exception
+                    RaiseEvent err(_Exception.Message)
+                End Try
+
+                ' convert object to image
+                Try
+                    'Dim _ImageData(-1) As Byte
+                    Return CType(_SqlRetVal, Byte())
+                Catch _Exception As Exception
+                    pe.RaiseDataExecuteError(_Exception.Message)
+                End Try
+                Return Nothing
+            End Function
             Public Overloads Sub SaveImage(ByRef bytBLOBData() As [Byte], ByVal TableName As String, ByVal FieldName As String, ByVal FieldKey As String, ByVal KeyString As String)
                 Try
                     Dim sql As String = "update " & TableName & " set " & FieldName & " = " & "(@BLOBData) where " & FieldKey & " = '" & KeyString & "'"
@@ -1360,7 +1381,7 @@ Namespace EAMS
 
             Public WriteOnly Property SetCompanyLogo() As String
                 Set(ByVal value As String)
-                    DB.SaveImage(value, "app_set", "logo", "app_set_id", "", 1)
+                    DB.SaveBinary(value, "app_set", "logo", "app_set_id", "", 1)
                 End Set
             End Property
 

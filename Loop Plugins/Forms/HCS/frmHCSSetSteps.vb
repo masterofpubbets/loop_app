@@ -121,9 +121,14 @@ Public Class frmHCSSetSteps
         'gridFormatRule.Rule = formatConditionRuleExpression
         'gv.FormatRules.Add(gridFormatRule)
 
-        If _filter <> "" Then
-            gv.Columns(_filterColumn).FilterInfo = New ColumnFilterInfo(_filter)
-        End If
+        Try
+            If _filter <> "" Then
+                gv.Columns(_filterColumn).FilterInfo = New ColumnFilterInfo(_filter)
+            End If
+        Catch ex As Exception
+
+        End Try
+
         gv.BestFitColumns(True)
 
     End Sub

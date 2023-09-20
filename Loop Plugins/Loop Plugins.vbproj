@@ -80,6 +80,9 @@
     <Reference Include="DevExpress.DataVisualization.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.TreeMap.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraDialogs.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraScheduler.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraScheduler.v22.2.Core.Desktop, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraTreeMap.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Docs.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Office.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -160,6 +163,7 @@
     <Compile Include="Classes\Equipment.vb" />
     <Compile Include="Classes\ExtractILD.vb" />
     <Compile Include="Classes\FileSystem.vb" />
+    <Compile Include="Classes\Firebase.vb" />
     <Compile Include="Classes\GridViews.vb" />
     <Compile Include="Classes\HCS.vb" />
     <Compile Include="Classes\HTTPService.vb" />
@@ -173,6 +177,8 @@
     <Compile Include="Classes\QC.vb" />
     <Compile Include="Classes\QRCode.vb" />
     <Compile Include="Classes\Reports.vb" />
+    <Compile Include="Classes\ResourcesMan.vb" />
+    <Compile Include="Classes\ResourcesManItem.vb" />
     <Compile Include="Classes\Tooles.vb" />
     <Compile Include="Classes\Trays.vb" />
     <Compile Include="Classes\Users.vb" />
@@ -224,88 +230,100 @@
     <Compile Include="Forms\Compenents\frmSelectProject.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmAddConsEntry.Designer.vb">
+    <Compile Include="Forms\Construction\Cables\frmCableProduction.Designer.vb">
+      <DependentUpon>frmCableProduction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Construction\Cables\frmCableProduction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Construction\Cables\frmEditCableProduction.Designer.vb">
+      <DependentUpon>frmEditCableProduction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Construction\Cables\frmEditCableProduction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Loops\Constraints\frmAddConsEntry.Designer.vb">
       <DependentUpon>frmAddConsEntry.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmAddConsEntry.vb">
+    <Compile Include="Forms\Loops\Constraints\frmAddConsEntry.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmDefaultCons.Designer.vb">
+    <Compile Include="Forms\Loops\Constraints\frmDefaultCons.Designer.vb">
       <DependentUpon>frmDefaultCons.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmDefaultCons.vb">
+    <Compile Include="Forms\Loops\Constraints\frmDefaultCons.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoadCons.Designer.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoadCons.Designer.vb">
       <DependentUpon>frmLoadCons.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoadCons.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoadCons.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoopConstraints2.Designer.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoopConstraints2.Designer.vb">
       <DependentUpon>frmLoopConstraints2.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoopConstraints2.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoopConstraints2.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Construction\frmCables.Designer.vb">
+    <Compile Include="Forms\Construction\Cables\frmCables.Designer.vb">
       <DependentUpon>frmCables.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Construction\frmCables.vb">
+    <Compile Include="Forms\Construction\Cables\frmCables.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Construction\frmEquipment.Designer.vb">
+    <Compile Include="Forms\Construction\Equipment\frmEquipment.Designer.vb">
       <DependentUpon>frmEquipment.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Construction\frmEquipment.vb">
+    <Compile Include="Forms\Construction\Equipment\frmEquipment.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Construction\frmInstruments.Designer.vb">
+    <Compile Include="Forms\Construction\Instruments\frmInstruments.Designer.vb">
       <DependentUpon>frmInstruments.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Construction\frmInstruments.vb">
+    <Compile Include="Forms\Construction\Instruments\frmInstruments.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Construction\frmLighting.Designer.vb">
+    <Compile Include="Forms\Construction\Lighting\frmLighting.Designer.vb">
       <DependentUpon>frmLighting.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Construction\frmLighting.vb">
+    <Compile Include="Forms\Construction\Lighting\frmLighting.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Construction\frmTrays.Designer.vb">
+    <Compile Include="Forms\Construction\Trays\frmTrays.Designer.vb">
       <DependentUpon>frmTrays.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Construction\frmTrays.vb">
+    <Compile Include="Forms\Construction\Trays\frmTrays.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmEICALoopManagement.Designer.vb">
+    <Compile Include="Forms\Loops\frmEICALoopManagement.Designer.vb">
       <DependentUpon>frmEICALoopManagement.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmEICALoopManagement.vb">
+    <Compile Include="Forms\Loops\frmEICALoopManagement.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmAddLoopProgress.Designer.vb">
+    <Compile Include="Forms\Loops\frmAddLoopProgress.Designer.vb">
       <DependentUpon>frmAddLoopProgress.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmAddLoopProgress.vb">
+    <Compile Include="Forms\Loops\frmAddLoopProgress.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.Designer.vb">
+    <Compile Include="Forms\Loops\frmEditLoopBProgress.Designer.vb">
       <DependentUpon>frmEditLoopBProgress.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.vb">
+    <Compile Include="Forms\Loops\frmEditLoopBProgress.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmNewLoopProgress.Designer.vb">
+    <Compile Include="Forms\Loops\frmNewLoopProgress.Designer.vb">
       <DependentUpon>frmNewLoopProgress.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmNewLoopProgress.vb">
+    <Compile Include="Forms\Loops\frmNewLoopProgress.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.Designer.vb">
+    <Compile Include="Forms\Loops\frmUpdateLoopDone.Designer.vb">
       <DependentUpon>frmUpdateLoopDone.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.vb">
+    <Compile Include="Forms\Loops\frmUpdateLoopDone.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\EICA\frmCopyILD.Designer.vb">
@@ -338,16 +356,16 @@
     <Compile Include="Forms\EICA\frmLoopCard.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoopConstraint.Designer.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoopConstraint.Designer.vb">
       <DependentUpon>frmLoopConstraint.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoopConstraint.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoopConstraint.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoopStatus.Designer.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoopStatus.Designer.vb">
       <DependentUpon>frmLoopStatus.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Constraints\frmLoopStatus.vb">
+    <Compile Include="Forms\Loops\Constraints\frmLoopStatus.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\EICA\frmLoopTaskDispatch.Designer.vb">
@@ -404,10 +422,10 @@
     <Compile Include="Forms\EICA\Production\frmProReport.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EICA\Production\frmSelectDate.Designer.vb">
+    <Compile Include="Forms\Compenents\frmSelectDate.Designer.vb">
       <DependentUpon>frmSelectDate.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EICA\Production\frmSelectDate.vb">
+    <Compile Include="Forms\Compenents\frmSelectDate.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\EICA\Production\frmSelectStep.Designer.vb">
@@ -567,6 +585,30 @@
     <Compile Include="Forms\Reports\frmReports.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\ResourcesMan\frmAddResource.Designer.vb">
+      <DependentUpon>frmAddResource.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmAddResource.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmItemResource.Designer.vb">
+      <DependentUpon>frmItemResource.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmItemResource.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmResources.Designer.vb">
+      <DependentUpon>frmResources.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmResources.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmSelectResource.Designer.vb">
+      <DependentUpon>frmSelectResource.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ResourcesMan\frmSelectResource.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Settings\frmSet.Designer.vb">
       <DependentUpon>frmSet.vb</DependentUpon>
     </Compile>
@@ -652,46 +694,52 @@
     <EmbeddedResource Include="Forms\Compenents\frmSelectProject.resx">
       <DependentUpon>frmSelectProject.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Constraints\frmAddConsEntry.resx">
+    <EmbeddedResource Include="Forms\Construction\Cables\frmCableProduction.resx">
+      <DependentUpon>frmCableProduction.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Construction\Cables\frmEditCableProduction.resx">
+      <DependentUpon>frmEditCableProduction.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Loops\Constraints\frmAddConsEntry.resx">
       <DependentUpon>frmAddConsEntry.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Constraints\frmDefaultCons.resx">
+    <EmbeddedResource Include="Forms\Loops\Constraints\frmDefaultCons.resx">
       <DependentUpon>frmDefaultCons.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoadCons.resx">
+    <EmbeddedResource Include="Forms\Loops\Constraints\frmLoadCons.resx">
       <DependentUpon>frmLoadCons.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopConstraints2.resx">
+    <EmbeddedResource Include="Forms\Loops\Constraints\frmLoopConstraints2.resx">
       <DependentUpon>frmLoopConstraints2.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Construction\frmCables.resx">
+    <EmbeddedResource Include="Forms\Construction\Cables\frmCables.resx">
       <DependentUpon>frmCables.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Construction\frmEquipment.resx">
+    <EmbeddedResource Include="Forms\Construction\Equipment\frmEquipment.resx">
       <DependentUpon>frmEquipment.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Construction\frmInstruments.resx">
+    <EmbeddedResource Include="Forms\Construction\Instruments\frmInstruments.resx">
       <DependentUpon>frmInstruments.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Construction\frmLighting.resx">
+    <EmbeddedResource Include="Forms\Construction\Lighting\frmLighting.resx">
       <DependentUpon>frmLighting.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Construction\frmTrays.resx">
+    <EmbeddedResource Include="Forms\Construction\Trays\frmTrays.resx">
       <DependentUpon>frmTrays.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmEICALoopManagement.resx">
+    <EmbeddedResource Include="Forms\Loops\frmEICALoopManagement.resx">
       <DependentUpon>frmEICALoopManagement.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmAddLoopProgress.resx">
+    <EmbeddedResource Include="Forms\Loops\frmAddLoopProgress.resx">
       <DependentUpon>frmAddLoopProgress.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmEditLoopBProgress.resx">
+    <EmbeddedResource Include="Forms\Loops\frmEditLoopBProgress.resx">
       <DependentUpon>frmEditLoopBProgress.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmNewLoopProgress.resx">
+    <EmbeddedResource Include="Forms\Loops\frmNewLoopProgress.resx">
       <DependentUpon>frmNewLoopProgress.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\EICA Loops\frmUpdateLoopDone.resx">
+    <EmbeddedResource Include="Forms\Loops\frmUpdateLoopDone.resx">
       <DependentUpon>frmUpdateLoopDone.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\frmCopyILD.resx">
@@ -709,10 +757,10 @@
     <EmbeddedResource Include="Forms\EICA\frmLoopCard.resx">
       <DependentUpon>frmLoopCard.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopConstraint.resx">
+    <EmbeddedResource Include="Forms\Loops\Constraints\frmLoopConstraint.resx">
       <DependentUpon>frmLoopConstraint.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Constraints\frmLoopStatus.resx">
+    <EmbeddedResource Include="Forms\Loops\Constraints\frmLoopStatus.resx">
       <DependentUpon>frmLoopStatus.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\frmLoopTaskDispatch.resx">
@@ -742,7 +790,7 @@
     <EmbeddedResource Include="Forms\EICA\Production\frmProReport.resx">
       <DependentUpon>frmProReport.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EICA\Production\frmSelectDate.resx">
+    <EmbeddedResource Include="Forms\Compenents\frmSelectDate.resx">
       <DependentUpon>frmSelectDate.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EICA\Production\frmSelectStep.resx">
@@ -822,6 +870,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Reports\frmReports.resx">
       <DependentUpon>frmReports.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ResourcesMan\frmAddResource.resx">
+      <DependentUpon>frmAddResource.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ResourcesMan\frmItemResource.resx">
+      <DependentUpon>frmItemResource.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ResourcesMan\frmResources.resx">
+      <DependentUpon>frmResources.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ResourcesMan\frmSelectResource.resx">
+      <DependentUpon>frmSelectResource.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings\frmSet.resx">
       <DependentUpon>frmSet.vb</DependentUpon>

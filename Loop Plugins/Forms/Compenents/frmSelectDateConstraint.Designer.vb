@@ -87,7 +87,7 @@ Partial Class frmSelectDateConstraint
         '
         'dte
         '
-        Me.dte.Location = New System.Drawing.Point(117, 156)
+        Me.dte.Location = New System.Drawing.Point(117, 154)
         Me.dte.Name = "dte"
         Me.dte.Size = New System.Drawing.Size(315, 21)
         Me.dte.TabIndex = 12

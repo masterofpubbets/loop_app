@@ -15,4 +15,11 @@
         isUpdated = True
         Me.Close()
     End Sub
+    Private Sub txtValue_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtValue.KeyPress
+        If e.KeyChar = Chr(13) Then
+            newValye = txtValue.Text
+            isUpdated = True
+            Me.Close()
+        End If
+    End Sub
 End Class

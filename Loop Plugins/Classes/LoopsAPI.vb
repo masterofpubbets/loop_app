@@ -1,5 +1,7 @@
 ﻿Public Class LoopsAPI
     Private php As New HTTPService
+    Private fb As New Firebase
+
 
     Public Enum MailTypes
         FolderPrepared = 1
@@ -39,7 +41,7 @@
         Try
             Dim url As String = "https://trprojectssolutions.com/loops/addnewfolder.php?loopname=" & tag & "&loopstatus=" & GetStepName(stepName) & "&prouuid=" & Users.ProUUID & "&area=" & area & "&description=" & Replace(description, "&", "and",,, CompareMethod.Text)
             If php.httpGet(url) = "done" Then
-                Return True
+                Return fb.UpdateLoopFolder(Firebase.FBPropertyType.FOLDER_STATUS, tag, GetStepName(stepName))
             End If
             Return True
         Catch ex As Exception
@@ -85,7 +87,7 @@
         Try
             Dim url As String = "https://trprojectssolutions.com/loops/addblockage.php?loopname=" & loopName & "&area=" & area & "&description=" & Replace(description, "&", "and",,, CompareMethod.Text) & "&blockage=" & blockage & "&issuedto=" & issuedTo & "&issuedtomail=" & issuedToMail & "&issuedby=" & issuedBy & "&issuedbymail=" & issuedByMail & "&loopstatus=" & loopStatus
             If php.httpGet(url) = "done" Then
-                Return True
+                Return (fb.UpdateLoopFolder(Firebase.FBPropertyType.HAS_BLOCKAGE, loopName, "", "Yes"))
             End If
             Return True
         Catch ex As Exception
@@ -118,7 +120,7 @@
                 qrcode = LoopWeblink & dt.Rows(inx).Item("ProUUID") & "/" & dt.Rows(inx).Item("LoopName")
                 Dim qrImgPath As String = qr.GenerateQRCode(qrcode, dt.Rows(inx).Item("LoopName"))
                 'save to db
-                DB.SaveImage(qrImgPath, "tblInsLoop", "qrCode", "LoopName", dt.Rows(inx).Item("LoopName"))
+                DB.SaveBinary(qrImgPath, "tblInsLoop", "qrCode", "LoopName", dt.Rows(inx).Item("LoopName"))
                 'delete
                 If FileIO.FileSystem.FileExists(qrImgPath) Then
                     FileIO.FileSystem.DeleteFile(qrImgPath)

@@ -1,13 +1,22 @@
 ﻿Imports DevExpress.XtraBars.ToastNotifications
 
+
 Public Class frmMain
 
 
     Private Sub HandleDataReadError()
         ToastNotificationsManager.ShowNotification(ToastNotificationsManager.Notifications(0).ID)
     End Sub
-    Private Sub HandleDataConnectionError()
-        ToastNotificationsManager.ShowNotification(ToastNotificationsManager.Notifications(1).ID)
+    Private Sub HandleDataConnectionError(ByVal er As String)
+        Try
+            Dim img As Image = Image.FromFile(Application.StartupPath & "\res\Error.png")
+            Dim note As New ToastNotification("DataConnectionError", img, "Data Error", er, "", ToastNotificationTemplate.ImageAndText02)
+            ToastNotificationsManager.Notifications.Add(note)
+            ToastNotificationsManager.ShowNotification("DataConnectionError")
+            ToastNotificationsManager.Notifications.Remove(note)
+        Catch ex As Exception
+
+        End Try
     End Sub
     Private Sub HandleILDConnectionError()
         ToastNotificationsManager.ShowNotification(ToastNotificationsManager.Notifications(2).ID)
@@ -62,24 +71,19 @@ Public Class frmMain
             rpHandover.Visible = True
             barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             barbtnHandoverIndex.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
-            Exit Sub
         End If
         If InStr(Users.userType, "qc", CompareMethod.Text) > 0 Then
             rpQC.Visible = True
             barbtnHandoverIndex.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
-            Exit Sub
         End If
         If InStr(Users.userType, "precomm", CompareMethod.Text) > 0 Then
             rpPrecom.Visible = True
-            Exit Sub
         End If
         If InStr(Users.userType, "planning", CompareMethod.Text) > 0 Then
             rpPlanning.Visible = True
-            Exit Sub
         End If
         If InStr(Users.userType, "production", CompareMethod.Text) > 0 Then
             rpPC.Visible = True
-            Exit Sub
         End If
 
     End Sub
@@ -122,6 +126,7 @@ Public Class frmMain
         AddHandler PublicErrors.DataConnectionError, AddressOf HandleDataConnectionError
         AddHandler PublicErrors.DataExecuteError, AddressOf HandleDataExecuteError
         AddHandler PublicErrors.ReadFileError, AddressOf HandleReadFileError
+        AddHandler PublicErrors.UnknownError, AddressOf HandleDataConnectionError
         frmEICALogin.Hide()
         checkProjectUUID()
     End Sub
@@ -413,21 +418,8 @@ Public Class frmMain
         frm.MdiParent = Me
         frm.Show()
     End Sub
-
-    Private Sub BarButtonItem46_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem46.ItemClick
-        Dim frm As New frmCables
-        frm.MdiParent = Me
-        frm.Show()
-    End Sub
-
     Private Sub BarButtonItem48_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem48.ItemClick
         Dim frm As New frmEquipment
-        frm.MdiParent = Me
-        frm.Show()
-    End Sub
-
-    Private Sub BarButtonItem49_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem49.ItemClick
-        Dim frm As New frmInstruments
         frm.MdiParent = Me
         frm.Show()
     End Sub
@@ -454,13 +446,6 @@ Public Class frmMain
         frm.MdiParent = Me
         frm.Show()
     End Sub
-
-    Private Sub BarButtonItem51_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem51.ItemClick
-        Dim frm As New frmCables(True)
-        frm.MdiParent = Me
-        frm.Show()
-    End Sub
-
     Private Sub BarButtonItem52_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem52.ItemClick
         frmExtractILD2.MdiParent = Me
         frmExtractILD2.Show()
@@ -479,6 +464,42 @@ Public Class frmMain
 
     Private Sub BarButtonItem5_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
         Dim frm As New frmSelectRFIPath
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem12.ItemClick
+        Dim frm As New frmCables
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem15_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem15.ItemClick
+        Dim frm As New frmCables(True)
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem54_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem54.ItemClick
+        Dim frm As New frmCableProduction
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem46_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem46.ItemClick
+        Dim frm As New frmResources
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem51_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem51.ItemClick
+        Dim frm As New frmInstruments
+        frm.MdiParent = Me
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem55_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem55.ItemClick
+        Dim frm As New frmInstruments(True)
+        frm.MdiParent = Me
         frm.Show()
     End Sub
 End Class

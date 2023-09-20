@@ -9,6 +9,8 @@
         INSTRUMENTS = 5
         ACTIVITIES = 6
         CABLESFULL = 7
+        CABLESPRODUCTION = 8
+        INSTRUMENTSFULL = 9
     End Enum
     Public Overloads Function GetItems(ByVal itemType As ItemsTypes) As DataTable
         Try
@@ -23,10 +25,14 @@
                     Return (DB.ReturnDataTable("EXEC CONSTRUCTION.GetEquipment"))
                 Case ItemsTypes.INSTRUMENTS
                     Return (DB.ReturnDataTable("EXEC CONSTRUCTION.GetInstruments"))
+                Case ItemsTypes.INSTRUMENTSFULL
+                    Return (DB.ReturnDataTable("EXEC CONSTRUCTION.GetInstrumentsFull"))
                 Case ItemsTypes.ACTIVITIES
                     Return (DB.ReturnDataTable("EXEC PLANNING.GetActivities"))
                 Case ItemsTypes.CABLESFULL
                     Return (DB.ReturnDataTable("EXEC CONSTRUCTION.GetCablesFull"))
+                Case ItemsTypes.CABLESPRODUCTION
+                    Return (DB.ReturnDataTable("EXEC CONSTRUCTION.GetCableProduction"))
             End Select
 
         Catch ex As Exception

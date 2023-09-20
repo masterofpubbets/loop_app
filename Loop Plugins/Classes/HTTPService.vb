@@ -1,4 +1,5 @@
 ﻿Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 Imports System.IO
 Imports System.Net
 Imports System.Text
@@ -120,16 +121,17 @@ Public Class HTTPService
 
         Try
             webClient.Headers("content-type") = "application/json"
-            webClient.Headers.Add("Access-Control-Allow-Origin", "*")
-            webClient.Headers.Add("Access-Control-Allow-Headers", "X-API-KEY, x-auth-token, Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Request-Method, PARAM_HEADER")
-            webClient.Headers.Add("Access-Control-Allow-Credentials", "true")
-            webClient.Headers.Add("Access-Control-Expose-Headers", "x-auth-token")
+            webClient.Headers.Add("Accept:application/json")
+            'webClient.Headers.Add("Access-Control-Allow-Origin", "*")
+            'webClient.Headers.Add("Access-Control-Allow-Headers", "X-API-KEY, x-auth-token, Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Request-Method, PARAM_HEADER")
+            'webClient.Headers.Add("Access-Control-Allow-Credentials", "true")
+            'webClient.Headers.Add("Access-Control-Expose-Headers", "x-auth-token")
 
             If token <> "" Then
                 webClient.Headers.Add("x-auth-token", token)
             End If
 
-            reqString = Encoding.Default.GetBytes(JsonConvert.SerializeObject(dictData, Formatting.Indented))
+            reqString = Encoding.Default.GetBytes(JsonConvert.SerializeObject(dictData, Formatting.None))
             resByte = webClient.UploadData(url, "post", reqString)
             resString = Encoding.Default.GetString(resByte)
             result = resString
@@ -139,6 +141,37 @@ Public Class HTTPService
             Return False
         End Try
         Return False
+    End Function
+    Public Overloads Function httpPost(ByRef postdata As JObject, ByRef result As String, ByVal url As String) As Boolean
+        Try
+
+            'postdata contains data which will be posted with the request
+            Dim finalString As String = postdata.ToString
+            Dim httpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
+            httpWebRequest.ContentType = "application/json"
+            httpWebRequest.Method = "POST"
+
+            Using streamWriter = New StreamWriter(httpWebRequest.GetRequestStream())
+                streamWriter.Write(finalString)
+            End Using
+
+            Dim httpResponse = CType(httpWebRequest.GetResponse(), HttpWebResponse)
+
+            Using streamReader = New StreamReader(httpResponse.GetResponseStream())
+                Dim responseText As String = streamReader.ReadToEnd()
+                'responseText contains the response received by the request
+                result = responseText
+            End Using
+
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+        Return False
+    End Function
+
+    Public Function HTTP_POSTT() As Boolean
+        Return True
     End Function
     Public Function GetImageFromURL(ByVal url As String) As Image
         Dim retVal As Image = Nothing
