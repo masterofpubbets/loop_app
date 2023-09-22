@@ -728,7 +728,8 @@ Namespace EAMS
             Public Sub Connect()
                 Dim SqlServerCon As String = ""
                 If Pass = "" Then
-                    SqlServerCon = String.Format("packet size=4096;integrated security=SSPI;data Source={0};initial catalog={1};persist security info=False", Trim(DataBaseLocation), DataBaseName)
+                    'SqlServerCon = String.Format("packet size=4096;integrated security=SSPI;data Source={0};initial catalog={1};persist security info=False", Trim(DataBaseLocation), DataBaseName)
+                    SqlServerCon = "Persist Security Info=False;Trusted_Connection=True;Connection Timeout=0;database=" & Trim(DataBaseName) & ";server=" & Trim(DataBaseLocation) & ";"
                 Else
                     SqlServerCon = String.Format("packet size=4096;User ID={0};Initial Catalog={1};Data Source={2};password={3}", UserName, DataBaseName, Trim(DataBaseLocation), Pass)
                 End If
