@@ -1,4 +1,5 @@
-﻿Imports DevExpress.XtraGrid.Columns
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraGrid.Columns
 Public Class frmReports
     Private rptType As Reports.ReportTypes
     Private rpt As New Reports
@@ -13,6 +14,10 @@ Public Class frmReports
         ' This call is required by the designer.
         InitializeComponent()
         rptType = ReportType
+        Select Case rptType
+            Case Reports.ReportTypes.EICAITRCLOSED
+                barClipboardTag.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+        End Select
         ' Add any initialization after the InitializeComponent() call.
 
     End Sub
@@ -91,5 +96,17 @@ Public Class frmReports
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
+        grd.ShowPrintPreview()
+    End Sub
+
+    Private Sub frmReports_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
+        grdView.CopySelectedItems(gv, "Tag")
     End Sub
 End Class

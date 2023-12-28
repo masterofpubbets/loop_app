@@ -1,4 +1,5 @@
 ﻿Imports DevExpress.XtraGrid.Columns
+Imports DevExpress.XtraSplashScreen
 Public Class frmSelectActId
     Private Acts As New Activities
     Public _filter As String = ""
@@ -8,6 +9,17 @@ Public Class frmSelectActId
     Public ActId As String = ""
     Public Area As String = ""
     Public isSelect As Boolean = False
+    Private grdView As New GridViews
+    Private opnedHandle As IOverlaySplashScreenHandle
+
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
+
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
 
     Private Sub formatColumnsWidth()
         Try
@@ -74,6 +86,13 @@ Public Class frmSelectActId
 
     Private Sub frmSelectActId_Load(sender As Object, e As EventArgs) Handles Me.Load
         GetData()
+        Try
+            If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & "Activities", "")) Then
+                grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & "Activities", ""))
+            End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub SimpleButton3_Click(sender As Object, e As EventArgs) Handles SimpleButton3.Click
@@ -89,6 +108,25 @@ Public Class frmSelectActId
     End Sub
 
     Private Sub SimpleButton1_Click(sender As Object, e As EventArgs) Handles SimpleButton1.Click
+        ShowProgressPanel()
         GetData()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub SimpleButton4_Click(sender As Object, e As EventArgs) Handles SimpleButton4.Click
+        opnFle.FileName = ""
+        opnFle.ShowDialog()
+        Try
+            If opnFle.FileName <> "" Then
+                grdView.ApplyViewLayout(gv, opnFle.FileName)
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub SimpleButton5_Click(sender As Object, e As EventArgs) Handles SimpleButton5.Click
+        grdView.CopySelectedItems(gv, "ActID")
+        Me.Close()
     End Sub
 End Class

@@ -1,4 +1,6 @@
-﻿Public Class frmEditLoopBProgress
+﻿Imports System.ComponentModel
+
+Public Class frmEditLoopBProgress
     Private Eng As New Engineering
 
     Private Sub Errhandling(ByVal e As String)
@@ -38,5 +40,13 @@
             End If
         End Try
 
+    End Sub
+
+    Private Sub DockPanel1_Click(sender As Object, e As EventArgs) Handles DockPanel1.Click
+
+    End Sub
+
+    Private Sub frmEditLoopBProgress_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

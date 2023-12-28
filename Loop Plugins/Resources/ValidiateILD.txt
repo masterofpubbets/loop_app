@@ -4,73 +4,10 @@ set Loop_Name=REPLACE(loop_name, ' ','')
 
 GO
 
-UPDATE [tblILD]
-
-set [Item_Type]='IC: '+ IC_Type
-
-FROM(
-
-   SELECT tblILD.tbl_id, tblILD.Item_Type, v.IC_Type
-
-   FROM tblILDWITH (NOLOCK)
-
-   INNERJOIN(
-
-       SELECT
-
-        max([tbl_id])as ID,
-
-        IC_Type
-
-       FROM
-
-       (
-
-       SELECT
-
-        ROW_NUMBER()OVER(ORDERBY [Item]ASC)AS RowNo
-
-       ,[Loop_Name],[Item_Type],[tbl_id],[Item],IC_Type
-
-       FROM
-
-       (
-
-       Select vILD.[tbl_id],[Loop_Name],[Item],[Item_Type],vILD.IC_Type
-
-       from
-
-        (
-
-       Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],tblInsCableList.IC_Type
-
-       from tblILD
-
-       innerjoin tblInsCableList
-
-       on [tblILD].[Item]=tblInsCableList.IC_ID
-
-       where [tblILD]. Item_Typeisnull
-
-       )as vILD
-
-       )as vILDINSC01
-
-       )as vILDINSC
-
-       groupby [Item],IC_Type
-
-   )AS V
-
-   ON v. ID= tbl_id
-
-)AS UpdateV
-
-GO
-
+--Ins Cable
 UPDATE v
 
-set [Item_Type]= 'EQ: ' + [Type]
+set [Item_Type]= 'IC: ' + IC_Type
 
 FROM
 
@@ -78,43 +15,22 @@ FROM
 
 Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
 
-tblElectricalEquipment.[Type]
+tblInsCableList.IC_Type
 
 from tblILD
 
-innerjoin tblElectricalEquipment
+INNER JOIN tblInsCableList
 
-on [tblILD].[Item]=tblElectricalEquipment.tag
+on [tblILD].[Item]=tblInsCableList.IC_ID
 
-where [tblILD]. Item_Typeisnull
+where [tblILD]. Item_Type IS NULL
+
 
 )as V
 
 GO
 
-UPDATE v
 
-set [Item_Type]= 'IQ: ' + [Type]
-
-FROM
-
-(
-
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
-
-tblInsEquipment.[Type]
-
-from tblILD
-
-innerjoin tblInsEquipment
-
-on [tblILD].[Item]=tblInsEquipment.tag
-
-where [tblILD]. Item_Typeisnull
-
-)as V
-
-GO
 
 UPDATE v
 
@@ -130,62 +46,42 @@ tblEleCableList.EC_Type
 
 from tblILD
 
-innerjoin tblEleCableList
+INNER JOIN tblEleCableList
 
 on [tblILD].[Item]=tblEleCableList.EC_ID
 
-where [tblILD]. Item_Typeisnull
+where [tblILD]. Item_Type IS NULL
 
-and tblEleCableList.EC_Type= 'Ins Powersupply'
 
 )as V
 
 GO
 
+
+--Equipment
 UPDATE v
 
-set [Item_Type]= 'Ins JB'
+set [Item_Type]= Discipline + '-' + [Type] + '-' + (CASE WHEN SubType IS NULL THEN '' ELSE SubType END)
 
 FROM
 
 (
 
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
+Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type], tblEquipment.Discipline, tblEquipment.[Type], tblEquipment.SubType
 
 from tblILD
 
-innerjoin JunctionBox
+INNER JOIN tblEquipment
 
-on [tblILD].[Item]=JunctionBox.JunctionBox
+on [tblILD].[Item]=tblEquipment.Tag
 
-where [tblILD]. Item_Typeisnull
+where [tblILD]. Item_Type IS NULL
 
 )as V
 
 GO
 
-UPDATE v
-
-set [Item_Type]= 'Ele JB'
-
-FROM
-
-(
-
-Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
-
-from tblILD
-
-innerjoin tblEleJunctionBox
-
-on [tblILD].[Item]=tblEleJunctionBox.tag
-
-where [tblILD]. Item_Typeisnull
-
-)as V
-
-GO
-
+--Motor
 UPDATE v
 
 set [Item_Type]='Motor'
@@ -198,16 +94,17 @@ Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type]
 
 from tblILD
 
-innerjoin tblMotor
+INNER JOIN tblMotor
 
 on [tblILD].[Item]=tblMotor.tag
 
-where [tblILD]. Item_Typeisnull
+where [tblILD]. Item_Type IS NULL
 
 )as V
 
 GO
 
+--Instruments
 UPDATE v
 
 set [Item_Type]= 'INS: ' + Furnished_By+' '+ [Ins Type]
@@ -218,38 +115,38 @@ FROM
 
 Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
 
-CASEWHEN Furnished_ByISNULLTHEN'TR'ELSE Furnished_ByENDAS Furnished_By,
+CASE WHEN Furnished_By IS NULL THEN'TR'ELSE Furnished_By END AS Furnished_By,
 
-CASEWHEN tblInstruments. InstrumentISNULLTHEN'Accessory'ELSE tblInstruments. InstrumentENDAS [Ins Type]
+CASE WHEN tblInstruments. Instrument IS NULL THEN 'Accessory'ELSE tblInstruments. Instrument END AS [Ins Type]
 
 from tblILD
 
-innerjoin tblInstruments
+INNER JOIN tblInstruments
 
 on [tblILD].[Item]=tblInstruments.Instrument_Tag
 
-where [tblILD]. Item_Typeisnull
+where [tblILD]. Item_Type IS NULL
 
 and instrument='instrument'
 
-)as V
+) as V
 
 GO
 
  
 
-DeleteFROM tblILDWHERE itemnotLIKE'%[0-9]%'
+Delete FROM tblILD WHERE item not LIKE'%[0-9]%'
 
-DeleteFROM tblildWHERE Item_Typeisnulland itemlike'%Controller%'
+Delete FROM tblild WHERE Item_Type is null and item like '%Controller%'
 
-DeleteFROM tblildWHERE Item_Typeisnulland itemlike'%DETECTOR%'
+Delete FROM tblild WHERE Item_Type IS NULL AND item like '%DETECTOR%'
 
-DeleteFROM tblildWHERE Item_Typeisnulland itemlike'-%'
+Delete FROM tblild WHERE Item_Type IS NULL AND item like '-%'
 
-DeleteFROM tblildWHERE Item_Typeisnulland itemlike'sum%'
+Delete FROM tblild WHERE Item_Type IS NULL AND item like 'sum%'
 
-DeleteFROM tblildWHERE Item= Loop_Name
+Delete FROM tblild WHERE Item= Loop_Name
 
-DeleteFROM tblildWHERE ITEMLIKE Loop_Name+'-%'and Item_Typeisnull
+Delete FROM tblild WHERE ITEM LIKE Loop_Name+'-%'and Item_Type is null
 
-DeleteFROM tblildWHERE ITEMLIKE'[+]%'and Item_Typeisnull
+Delete FROM tblild WHERE ITEM LIKE'[+]%'and Item_Type is null

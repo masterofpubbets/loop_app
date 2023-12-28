@@ -27,15 +27,15 @@ Partial Class frmLoopConstraints2
         Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem4 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem5 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem3 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem6 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarSubItem1 = New DevExpress.XtraBars.BarSubItem()
         Me.BarButtonItem7 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem8 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarSubItem2 = New DevExpress.XtraBars.BarSubItem()
+        Me.BarButtonItem9 = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPageGroup1 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPageGroup5 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
@@ -49,14 +49,15 @@ Partial Class frmLoopConstraints2
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem4, Me.BarButtonItem5, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem6, Me.BarSubItem1, Me.BarButtonItem7, Me.BarButtonItem8})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem4, Me.BarButtonItem5, Me.BarButtonItem3, Me.BarButtonItem6, Me.BarSubItem1, Me.BarButtonItem7, Me.BarButtonItem8, Me.BarSubItem2, Me.BarButtonItem9})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.RibbonControl1.MaxItemId = 17
+        Me.RibbonControl1.MaxItemId = 19
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage2})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 125)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 110)
         '
         'BarButtonItem1
         '
@@ -83,15 +84,6 @@ Partial Class frmLoopConstraints2
         Me.BarButtonItem5.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem5.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem5.Name = "BarButtonItem5"
         Me.BarButtonItem5.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem2
-        '
-        Me.BarButtonItem2.Caption = "Copy Selected Loop"
-        Me.BarButtonItem2.Id = 10
-        Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem2.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem2.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem2.Name = "BarButtonItem2"
-        Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem3
         '
@@ -137,26 +129,39 @@ Partial Class frmLoopConstraints2
         Me.BarButtonItem8.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem8.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem8.Name = "BarButtonItem8"
         '
+        'BarSubItem2
+        '
+        Me.BarSubItem2.Caption = "Clipboard"
+        Me.BarSubItem2.Id = 17
+        Me.BarSubItem2.ImageOptions.Image = CType(resources.GetObject("BarSubItem2.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarSubItem2.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem2.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarSubItem2.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem9)})
+        Me.BarSubItem2.Name = "BarSubItem2"
+        Me.BarSubItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem9
+        '
+        Me.BarButtonItem9.Caption = "Copy Loop Tag"
+        Me.BarButtonItem9.Id = 18
+        Me.BarButtonItem9.ImageOptions.Image = CType(resources.GetObject("BarButtonItem9.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem9.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem9.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem9.Name = "BarButtonItem9"
+        '
         'RibbonPage2
         '
-        Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4, Me.RibbonPageGroup1, Me.RibbonPageGroup5})
+        Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4, Me.RibbonPageGroup5})
         Me.RibbonPage2.ImageOptions.Image = CType(resources.GetObject("RibbonPage2.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage2.Name = "RibbonPage2"
-        Me.RibbonPage2.Text = "Blockages"
+        Me.RibbonPage2.Text = "Home"
         '
         'RibbonPageGroup4
         '
         Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem1)
         Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem4)
         Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem5)
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarSubItem2)
         Me.RibbonPageGroup4.Name = "RibbonPageGroup4"
         Me.RibbonPageGroup4.Text = "File Options"
-        '
-        'RibbonPageGroup1
-        '
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem2)
-        Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
-        Me.RibbonPageGroup1.Text = "Clipboard Options"
         '
         'RibbonPageGroup5
         '
@@ -178,12 +183,12 @@ Partial Class frmLoopConstraints2
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
         Me.grd.EmbeddedNavigator.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.grd.Location = New System.Drawing.Point(0, 125)
+        Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.grd.MenuManager = Me.RibbonControl1
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1198, 574)
+        Me.grd.Size = New System.Drawing.Size(1200, 590)
         Me.grd.TabIndex = 8
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -236,10 +241,11 @@ Partial Class frmLoopConstraints2
         'frmLoopConstraints2
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1198, 699)
+        Me.ClientSize = New System.Drawing.Size(1200, 700)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.IconOptions.Icon = CType(resources.GetObject("frmLoopConstraints2.IconOptions.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Image = CType(resources.GetObject("frmLoopConstraints2.IconOptions.Image"), System.Drawing.Image)
+        Me.IconOptions.LargeImage = CType(resources.GetObject("frmLoopConstraints2.IconOptions.LargeImage"), System.Drawing.Image)
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmLoopConstraints2"
         Me.Ribbon = Me.RibbonControl1
@@ -262,7 +268,6 @@ Partial Class frmLoopConstraints2
     Friend WithEvents gv As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents BarButtonItem4 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem5 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem3 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem6 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarSubItem1 As DevExpress.XtraBars.BarSubItem
@@ -270,6 +275,7 @@ Partial Class frmLoopConstraints2
     Friend WithEvents BarButtonItem8 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup4 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents RibbonPageGroup5 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarSubItem2 As DevExpress.XtraBars.BarSubItem
+    Friend WithEvents BarButtonItem9 As DevExpress.XtraBars.BarButtonItem
 End Class

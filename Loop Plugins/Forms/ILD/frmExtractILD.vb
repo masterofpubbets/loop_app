@@ -1,4 +1,6 @@
-﻿Public Class frmExtractILD
+﻿Imports System.ComponentModel
+
+Public Class frmExtractILD
     Private _Sep As String = "SHEET"
     Private _loopname As String = "Loop Name"
     Dim st As New EAMS.StringFunctions.StringsFunction
@@ -290,5 +292,9 @@
         CheckILDItemsFiles()
         ValidateILDTables()
         MsgBox("Validate Process Has Been Finished", MsgBoxStyle.OkOnly, Me.Text)
+    End Sub
+
+    Private Sub frmExtractILD_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

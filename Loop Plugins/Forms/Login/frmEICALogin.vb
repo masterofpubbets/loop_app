@@ -1,6 +1,32 @@
-﻿Public Class frmEICALogin
+﻿Imports DevExpress.XtraSplashScreen
+Public Class frmEICALogin
     Private user As New Users
+    Private pe As New PublicErrors
+    Private opnedHandle As IOverlaySplashScreenHandle
 
+
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
+
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
+    Private Sub ParseDetailsFile(ByVal content As String)
+        Dim temp() As String = Split(content, vbCrLf,, CompareMethod.Binary)
+        For inx As Integer = 0 To temp.Length - 1
+            If InStr(temp(inx), "server:", CompareMethod.Text) > 0 Then
+                txtConn.Text = Trim(Replace(temp(inx), "server:", "",,, CompareMethod.Text))
+            ElseIf InStr(temp(inx), "database:", CompareMethod.Text) > 0 Then
+                txtDB.Text = Trim(Replace(temp(inx), "database:", "",,, CompareMethod.Text))
+            ElseIf InStr(temp(inx), "user:", CompareMethod.Text) > 0 Then
+                txtUser.Text = Trim(Replace(temp(inx), "user:", "",,, CompareMethod.Text))
+            ElseIf InStr(temp(inx), "pass:", CompareMethod.Text) > 0 Then
+                txtPass.Text = Trim(Replace(temp(inx), "pass:", "",,, CompareMethod.Text))
+            End If
+        Next
+    End Sub
     Public Function checkpassword() As Boolean
         Try
             DBConnect()
@@ -21,6 +47,7 @@
             End Select
 
         Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
             Return False
         End Try
         Return False
@@ -38,37 +65,60 @@
         txtUser.Text = UserName
     End Sub
 
-    Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
-        SharedFolder = GetSetting("TR", "EIKA", "SharedFolder", "")
-        ILDDBFile = GetSetting("TR", "EIKA", "ILDDBFile", "")
-        If ((ILDDBFile = "") Or (SharedFolder = "")) Then
-            Dim msgr As MsgBoxResult = MsgBox("Please Select ILD Folder and DB File Settings First", MsgBoxStyle.OkCancel, Me.Text)
-            If msgr = MsgBoxResult.Cancel Then
-                Me.Close()
-                End
-            End If
-            Dim frm As New frmSet
-            frm.ShowDialog(Me)
-        End If
-        DBPath = txtConn.Text
-        DBName = txtDB.Text
-        UserName = txtUser.Text
-        Password = txtPass.Text
-        If checkpassword() Then
-            frmMain.Show()
-            Me.Hide()
-        Else
-            MsgBox("Wrong user name or password!", MsgBoxStyle.Exclamation, Me.Text)
+    Private Sub txtPass_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPass.KeyPress
+        If e.KeyChar = Chr(13) Then
+            SimpleButton1_Click(sender, e)
         End If
     End Sub
 
-    Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
+    Private Sub SimpleButton1_Click(sender As Object, e As EventArgs) Handles SimpleButton1.Click
+        Try
+            ShowProgressPanel()
+            Application.DoEvents()
+            SharedFolder = GetSetting("TR", "EIKA", "SharedFolder", "")
+            ILDDBFile = GetSetting("TR", "EIKA", "ILDDBFile", "")
+            If ((ILDDBFile = "") Or (SharedFolder = "")) Then
+                Dim msgr As MsgBoxResult = MsgBox("Please Select ILD Folder and DB File Settings First", MsgBoxStyle.OkCancel, Me.Text)
+                If msgr = MsgBoxResult.Cancel Then
+                    Me.Close()
+                    End
+                End If
+                Dim frm As New frmSet
+                frm.ShowDialog(Me)
+            End If
+            DBPath = txtConn.Text
+            DBName = txtDB.Text
+            UserName = txtUser.Text
+            Password = txtPass.Text
+            If checkpassword() Then
+                CloseProgressPanel(opnedHandle)
+                frmMain.Show()
+                Me.Hide()
+            Else
+                MsgBox("Wrong user name or password!", MsgBoxStyle.Exclamation, Me.Text)
+                CloseProgressPanel(opnedHandle)
+            End If
+        Catch ex As Exception
+            MsgBox("Wrong user name or password!", MsgBoxStyle.Exclamation, Me.Text)
+            CloseProgressPanel(opnedHandle)
+        End Try
+
+    End Sub
+
+    Private Sub SimpleButton2_Click(sender As Object, e As EventArgs) Handles SimpleButton2.Click
         Me.Close()
     End Sub
 
-    Private Sub txtPass_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPass.KeyPress
-        If e.KeyChar = Chr(13) Then
-            OK_Click(sender, e)
+    Private Sub SimpleButton3_Click(sender As Object, e As EventArgs) Handles SimpleButton3.Click
+        opnFile.FileName = ""
+        opnFile.ShowDialog()
+        If opnFile.FileName <> "" Then
+            Dim fs As New FileSystem
+            Dim d As String = fs.ReadTextFile(opnFile.FileName)
+            If d <> "" Then
+                ParseDetailsFile(d)
+                txtPass.Focus()
+            End If
         End If
     End Sub
 End Class

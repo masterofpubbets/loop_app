@@ -1,4 +1,6 @@
-﻿Public Class frmLoadCons
+﻿Imports System.ComponentModel
+
+Public Class frmLoadCons
     Public LoadType As en_LoadType = en_LoadType.LoadConstraints
 
     Public Enum en_LoadType
@@ -58,5 +60,9 @@
             End If
         End Try
 
+    End Sub
+
+    Private Sub frmLoadCons_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

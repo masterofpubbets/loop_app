@@ -22,6 +22,7 @@ Partial Class frmInstruments
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim SplashScreenManager As DevExpress.XtraSplashScreen.SplashScreenManager = New DevExpress.XtraSplashScreen.SplashScreenManager(Me, Nothing, True, True)
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInstruments))
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
@@ -73,44 +74,52 @@ Partial Class frmInstruments
         Me.BarButtonItem36 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem37 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem38 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarSubItem12 = New DevExpress.XtraBars.BarSubItem()
+        Me.BarButtonItem39 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem40 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem41 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem42 = New DevExpress.XtraBars.BarButtonItem()
+        Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup7 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
-        Me.RibbonPageGroup1 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpProduction = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpEngineering = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup6 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpPlanning = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup3 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpQC = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpProductionControl = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup5 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPage3 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup1 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.grd = New DevExpress.XtraGrid.GridControl()
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
-        Me.rpEngineering = New DevExpress.XtraBars.Ribbon.RibbonPage()
-        Me.RibbonPageGroup6 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.BarSubItem12 = New DevExpress.XtraBars.BarSubItem()
-        Me.BarButtonItem39 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem40 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem41 = New DevExpress.XtraBars.BarButtonItem()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
+        'SplashScreenManager
+        '
+        SplashScreenManager.ClosingDelay = 500
+        '
         'RibbonControl1
         '
         Me.RibbonControl1.EmptyAreaImageOptions.ImagePadding = New System.Windows.Forms.Padding(26, 24, 26, 24)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem6, Me.BarButtonItem8, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.BarSubItem1, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarSubItem2, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarSubItem3, Me.BarButtonItem12, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarSubItem4, Me.BarButtonItem5, Me.BarSubItem5, Me.BarSubItem6, Me.BarSubItem7, Me.BarButtonItem7, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem25, Me.BarButtonItem26, Me.BarButtonItem28, Me.BarSubItem8, Me.BarButtonItem24, Me.BarButtonItem27, Me.BarButtonItem29, Me.BarSubItem9, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarSubItem10, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarSubItem11, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarSubItem12, Me.BarButtonItem39, Me.BarButtonItem40, Me.BarButtonItem41})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem6, Me.BarButtonItem8, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.BarSubItem1, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarSubItem2, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarSubItem3, Me.BarButtonItem12, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarSubItem4, Me.BarButtonItem5, Me.BarSubItem5, Me.BarSubItem6, Me.BarSubItem7, Me.BarButtonItem7, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem25, Me.BarButtonItem26, Me.BarButtonItem28, Me.BarSubItem8, Me.BarButtonItem24, Me.BarButtonItem27, Me.BarButtonItem29, Me.BarSubItem9, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarSubItem10, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarSubItem11, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarSubItem12, Me.BarButtonItem39, Me.BarButtonItem40, Me.BarButtonItem41, Me.BarButtonItem42})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.RibbonControl1.MaxItemId = 59
+        Me.RibbonControl1.MaxItemId = 60
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
-        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.rpEngineering, Me.rpPlanning, Me.rpQC, Me.rpProductionControl})
+        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage2, Me.RibbonPage1, Me.rpEngineering, Me.rpPlanning, Me.rpQC, Me.rpProductionControl, Me.RibbonPage3})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1334, 108)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(1334, 110)
         '
         'BarButtonItem1
         '
@@ -525,37 +534,94 @@ Partial Class frmInstruments
         Me.BarButtonItem38.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem38.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem38.Name = "BarButtonItem38"
         '
+        'BarSubItem12
+        '
+        Me.BarSubItem12.Caption = "Resources"
+        Me.BarSubItem12.Id = 55
+        Me.BarSubItem12.ImageOptions.Image = CType(resources.GetObject("BarSubItem12.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarSubItem12.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem12.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarSubItem12.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem39), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem40)})
+        Me.BarSubItem12.Name = "BarSubItem12"
+        Me.BarSubItem12.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem39
+        '
+        Me.BarButtonItem39.Caption = "Assign"
+        Me.BarButtonItem39.Id = 56
+        Me.BarButtonItem39.ImageOptions.Image = CType(resources.GetObject("BarButtonItem39.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem39.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem39.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem39.Name = "BarButtonItem39"
+        '
+        'BarButtonItem40
+        '
+        Me.BarButtonItem40.Caption = "Clear"
+        Me.BarButtonItem40.Id = 57
+        Me.BarButtonItem40.ImageOptions.Image = CType(resources.GetObject("BarButtonItem40.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem40.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem40.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem40.Name = "BarButtonItem40"
+        '
+        'BarButtonItem41
+        '
+        Me.BarButtonItem41.Caption = "Show Resources"
+        Me.BarButtonItem41.Id = 58
+        Me.BarButtonItem41.ImageOptions.Image = CType(resources.GetObject("BarButtonItem41.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem41.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem41.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem41.Name = "BarButtonItem41"
+        Me.BarButtonItem41.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem42
+        '
+        Me.BarButtonItem42.Caption = "Print Preview"
+        Me.BarButtonItem42.Id = 59
+        Me.BarButtonItem42.ImageOptions.Image = CType(resources.GetObject("BarButtonItem42.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem42.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem42.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem42.Name = "BarButtonItem42"
+        Me.BarButtonItem42.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'RibbonPage2
+        '
+        Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup7})
+        Me.RibbonPage2.ImageOptions.Image = CType(resources.GetObject("RibbonPage2.ImageOptions.Image"), System.Drawing.Image)
+        Me.RibbonPage2.Name = "RibbonPage2"
+        Me.RibbonPage2.Text = "Home"
+        '
+        'RibbonPageGroup7
+        '
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem1)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem2)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem3)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem4)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarSubItem2)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem41)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem42)
+        Me.RibbonPageGroup7.Name = "RibbonPageGroup7"
+        Me.RibbonPageGroup7.Text = "Instruments Options"
+        '
         'RibbonPage1
         '
-        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1, Me.RibbonPageGroup2, Me.rpProduction})
+        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.rpProduction})
         Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
         Me.RibbonPage1.Text = "Construction"
-        '
-        'RibbonPageGroup1
-        '
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem1)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem2)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem3)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem4)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarSubItem2)
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem41)
-        Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
-        Me.RibbonPageGroup1.Text = "File Option"
-        '
-        'RibbonPageGroup2
-        '
-        Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem10)
-        Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem8)
-        Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem9)
-        Me.RibbonPageGroup2.Name = "RibbonPageGroup2"
-        Me.RibbonPageGroup2.Text = "Layout Options"
         '
         'rpProduction
         '
         Me.rpProduction.ItemLinks.Add(Me.BarSubItem3)
         Me.rpProduction.Name = "rpProduction"
         Me.rpProduction.Text = "Production"
+        '
+        'rpEngineering
+        '
+        Me.rpEngineering.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup6})
+        Me.rpEngineering.ImageOptions.Image = CType(resources.GetObject("rpEngineering.ImageOptions.Image"), System.Drawing.Image)
+        Me.rpEngineering.Name = "rpEngineering"
+        Me.rpEngineering.Text = "Engineering"
+        '
+        'RibbonPageGroup6
+        '
+        Me.RibbonPageGroup6.ItemLinks.Add(Me.BarSubItem12)
+        Me.RibbonPageGroup6.Name = "RibbonPageGroup6"
+        Me.RibbonPageGroup6.Text = "Engineering"
         '
         'rpPlanning
         '
@@ -600,13 +666,28 @@ Partial Class frmInstruments
         Me.RibbonPageGroup5.Name = "RibbonPageGroup5"
         Me.RibbonPageGroup5.Text = "Production Control"
         '
+        'RibbonPage3
+        '
+        Me.RibbonPage3.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
+        Me.RibbonPage3.ImageOptions.Image = CType(resources.GetObject("RibbonPage3.ImageOptions.Image"), System.Drawing.Image)
+        Me.RibbonPage3.Name = "RibbonPage3"
+        Me.RibbonPage3.Text = "View"
+        '
+        'RibbonPageGroup1
+        '
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem10)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem8)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem9)
+        Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
+        Me.RibbonPageGroup1.Text = "Instrument View"
+        '
         'grd
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.grd.Location = New System.Drawing.Point(0, 108)
+        Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1334, 460)
+        Me.grd.Size = New System.Drawing.Size(1334, 458)
         Me.grd.TabIndex = 71
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -633,14 +714,19 @@ Partial Class frmInstruments
         Me.gv.Appearance.SelectedRow.Options.UseBackColor = True
         Me.gv.Appearance.SelectedRow.Options.UseForeColor = True
         Me.gv.GridControl = Me.grd
+        Me.gv.GroupSummary.AddRange(New DevExpress.XtraGrid.GridSummaryItem() {New DevExpress.XtraGrid.GridGroupSummaryItem(DevExpress.Data.SummaryItemType.Count, "", Nothing, "")})
         Me.gv.Name = "gv"
         Me.gv.OptionsBehavior.Editable = False
+        Me.gv.OptionsBehavior.SummariesIgnoreNullValues = True
         Me.gv.OptionsMenu.ShowConditionalFormattingItem = True
         Me.gv.OptionsSelection.MultiSelect = True
         Me.gv.OptionsView.AutoCalcPreviewLineCount = True
         Me.gv.OptionsView.ColumnAutoWidth = False
+        Me.gv.OptionsView.GroupFooterShowMode = DevExpress.XtraGrid.Views.Grid.GroupFooterShowMode.VisibleAlways
         Me.gv.OptionsView.ShowAutoFilterRow = True
         Me.gv.OptionsView.ShowFooter = True
+        Me.gv.OptionsView.ShowGroupedColumns = True
+        Me.gv.OptionsView.ShowGroupPanelColumnsAsSingleRow = True
         '
         'sveFle
         '
@@ -650,54 +736,6 @@ Partial Class frmInstruments
         '
         Me.opnFle.Filter = "View Files|*.xml"
         '
-        'rpEngineering
-        '
-        Me.rpEngineering.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup6})
-        Me.rpEngineering.ImageOptions.Image = CType(resources.GetObject("RibbonPage2.ImageOptions.Image"), System.Drawing.Image)
-        Me.rpEngineering.Name = "rpEngineering"
-        Me.rpEngineering.Text = "Engineering"
-        '
-        'RibbonPageGroup6
-        '
-        Me.RibbonPageGroup6.ItemLinks.Add(Me.BarSubItem12)
-        Me.RibbonPageGroup6.Name = "RibbonPageGroup6"
-        Me.RibbonPageGroup6.Text = "Engineering"
-        '
-        'BarSubItem12
-        '
-        Me.BarSubItem12.Caption = "Resources"
-        Me.BarSubItem12.Id = 55
-        Me.BarSubItem12.ImageOptions.Image = CType(resources.GetObject("BarSubItem12.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarSubItem12.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem12.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarSubItem12.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem39), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem40)})
-        Me.BarSubItem12.Name = "BarSubItem12"
-        Me.BarSubItem12.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem39
-        '
-        Me.BarButtonItem39.Caption = "Assign"
-        Me.BarButtonItem39.Id = 56
-        Me.BarButtonItem39.ImageOptions.Image = CType(resources.GetObject("BarButtonItem39.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem39.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem39.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem39.Name = "BarButtonItem39"
-        '
-        'BarButtonItem40
-        '
-        Me.BarButtonItem40.Caption = "Clear"
-        Me.BarButtonItem40.Id = 57
-        Me.BarButtonItem40.ImageOptions.Image = CType(resources.GetObject("BarButtonItem40.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem40.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem40.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem40.Name = "BarButtonItem40"
-        '
-        'BarButtonItem41
-        '
-        Me.BarButtonItem41.Caption = "Show Resources"
-        Me.BarButtonItem41.Id = 58
-        Me.BarButtonItem41.ImageOptions.Image = CType(resources.GetObject("BarButtonItem41.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem41.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem41.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem41.Name = "BarButtonItem41"
-        Me.BarButtonItem41.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
         'frmInstruments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -705,6 +743,7 @@ Partial Class frmInstruments
         Me.ClientSize = New System.Drawing.Size(1334, 568)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
+        Me.IconOptions.Image = CType(resources.GetObject("frmInstruments.IconOptions.Image"), System.Drawing.Image)
         Me.IconOptions.LargeImage = CType(resources.GetObject("frmInstruments.IconOptions.LargeImage"), System.Drawing.Image)
         Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.Name = "frmInstruments"
@@ -722,12 +761,10 @@ Partial Class frmInstruments
 
     Friend WithEvents RibbonControl1 As DevExpress.XtraBars.Ribbon.RibbonControl
     Friend WithEvents RibbonPage1 As DevExpress.XtraBars.Ribbon.RibbonPage
-    Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem3 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem4 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPageGroup2 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents grd As DevExpress.XtraGrid.GridControl
     Friend WithEvents gv As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents sveFle As SaveFileDialog
@@ -790,4 +827,9 @@ Partial Class frmInstruments
     Friend WithEvents BarButtonItem39 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem40 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem41 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup7 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem42 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPage3 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
 End Class

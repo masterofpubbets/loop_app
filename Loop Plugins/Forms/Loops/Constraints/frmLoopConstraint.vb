@@ -1,4 +1,6 @@
-﻿Public Class frmLoopConstraint
+﻿Imports System.ComponentModel
+
+Public Class frmLoopConstraint
     Private DT As New DataTable
     Private Builder As SqlClient.SqlCommandBuilder
     Private cmd As New SqlClient.SqlCommand("select tblinsloop.TBL_ID AS ID,Area,LoopName,L_remarks AS Responsible,[Status] as [Constraint],Constraints as [Constraint Description],Active from tblinsloop where status is not null", DB.DBConnection)
@@ -103,5 +105,9 @@
         frm.Text = opnFle.FileName
         frm.ShowDialog(Me)
         GetData()
+    End Sub
+
+    Private Sub frmLoopConstraint_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

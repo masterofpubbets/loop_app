@@ -1,4 +1,6 @@
-﻿Public Class frmSysLogs
+﻿Imports System.ComponentModel
+
+Public Class frmSysLogs
 
     Private Sub GetData()
         Dim DT As New DataTable
@@ -24,5 +26,9 @@
 
     Private Sub frmSysLogs_Load(sender As Object, e As EventArgs) Handles Me.Load
         GetData()
+    End Sub
+
+    Private Sub frmSysLogs_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

@@ -30,11 +30,6 @@
             ckcmbUserType.Focus()
             Return False
         End If
-        If Not (ckFolderPrepared.Checked Or ckQCFolderReady.Checked Or ckQCApproved.Checked Or ckSubmittedToPrecomm.Checked Or ckLoopDone.Checked Or ckFolderBlockage.Checked) Then
-            MsgBox("You Have to assign group to the user!", MsgBoxStyle.Exclamation, Me.Text)
-            ckFolderPrepared.Focus()
-            Return False
-        End If
         txtName.Text = Trim(txtName.Text)
         txtUserName.Text = Trim(txtUserName.Text)
         txtEmail.Text = Trim(txtEmail.Text)
@@ -49,9 +44,10 @@
             Dim userGroup As String = ""
             If ckFolderPrepared.Checked Then userGroup &= "FolderPrepared,"
             If ckQCFolderReady.Checked Then userGroup &= "FolderReady,"
-            If ckQCApproved.Checked Then userGroup &= "FolderApproved,"
+            If ckQCReleased.Checked Then userGroup &= "QCReleased,"
             If ckSubmittedToPrecomm.Checked Then userGroup &= "SubmittedToPrecomm,"
             If ckLoopDone.Checked Then userGroup &= "LoopDone,"
+            If ckLoopApproved.Checked Then userGroup &= "FolderApproved,"
             If ckFolderBlockage.Checked Then userGroup &= "FolderBlockage,"
             isAdded = user.EditUser(txtUserName.Text, txtName.Text, ckcmbUserType.EditValue, txtEmail.Text, txtDepartment.Text, txtJob.Text, userGroup, txtTRUserName.Text, pic)
             If isAdded Then

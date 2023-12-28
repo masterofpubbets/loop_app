@@ -1,4 +1,5 @@
-﻿Imports DevExpress.Pdf
+﻿Imports System.ComponentModel
+Imports DevExpress.Pdf
 
 Public Class frmExtractILD3
     Private ILD As New ExtractILD
@@ -68,5 +69,9 @@ Public Class frmExtractILD3
         lblOp.Visible = False
         lblCount.Visible = False
 
+    End Sub
+
+    Private Sub frmExtractILD3_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

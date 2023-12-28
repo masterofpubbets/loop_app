@@ -44,14 +44,14 @@ Partial Class frmCopyILD
         '
         'RibbonControl1
         '
-        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.Loop_App.My.Resources.Resources.backgroundTrans
+        Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.EEICA.My.Resources.Resources.backgroundTrans
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
         Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(803, 45)
+        Me.RibbonControl1.Size = New System.Drawing.Size(803, 62)
         '
         'SimpleButton2
         '

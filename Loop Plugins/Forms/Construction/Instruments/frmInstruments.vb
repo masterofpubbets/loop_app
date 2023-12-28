@@ -1,7 +1,9 @@
-﻿Imports DevExpress.XtraEditors
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid
 Imports DevExpress.XtraGrid.Columns
 Imports DevExpress.XtraGrid.Views.Base
+Imports DevExpress.XtraSplashScreen
 
 Public Class frmInstruments
     Private ins As New Instruments
@@ -13,6 +15,7 @@ Public Class frmInstruments
     Private StandardRulesAdded As Boolean = False
     Private _IsFullView As Boolean = False
     Private docImage As Image = Image.FromFile(Application.StartupPath & "\res\doc12.png")
+    Private opnedHandle As IOverlaySplashScreenHandle
 
     Public Sub New(Optional ByVal isFullView As Boolean = False)
 
@@ -23,6 +26,14 @@ Public Class frmInstruments
         _IsFullView = isFullView
     End Sub
 
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
+
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
     Private Sub CheckAuth()
         rpProduction.Visible = False
         rpQC.Visible = False
@@ -145,7 +156,9 @@ Public Class frmInstruments
     End Sub
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        ShowProgressPanel()
         getData()
+        CloseProgressPanel(opnedHandle)
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
@@ -156,12 +169,14 @@ Public Class frmInstruments
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -690,4 +705,11 @@ Public Class frmInstruments
         End If
     End Sub
 
+    Private Sub BarButtonItem42_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem42.ItemClick
+        grd.ShowPrintPreview()
+    End Sub
+
+    Private Sub frmInstruments_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
 End Class

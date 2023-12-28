@@ -2,6 +2,7 @@
     Public isCancel As Boolean = True
     Public searchField As String = ""
     Public searchValues As New Collection
+    Public Exact As Boolean = True
 
     Private Sub frmPunchFilter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         frmMain.Refresh()
@@ -33,6 +34,13 @@
         Next
         searchField = cmbSearchIn.SelectedItem.ToString
         isCancel = False
+        If tgExact.IsOn Then
+            Exact = False
+        End If
         Me.Close()
+    End Sub
+
+    Private Sub frmFilter_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
+        Me.WindowState = FormWindowState.Normal
     End Sub
 End Class

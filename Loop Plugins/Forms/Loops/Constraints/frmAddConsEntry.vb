@@ -1,4 +1,6 @@
-﻿Public Class frmAddConsEntry
+﻿Imports System.ComponentModel
+
+Public Class frmAddConsEntry
     Public selectedUserId As Integer = -1
     Public selectedUserName As String = ""
     Public selectedUserMail As String = ""
@@ -55,5 +57,9 @@
 
     Private Sub frmAddConsEntry_Load(sender As Object, e As EventArgs) Handles Me.Load
         GetConsCategories()
+    End Sub
+
+    Private Sub frmAddConsEntry_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

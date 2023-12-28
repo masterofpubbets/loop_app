@@ -1,7 +1,10 @@
-﻿Imports DevExpress.XtraGrid.Columns
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraEditors
+Imports DevExpress.XtraGrid
+Imports DevExpress.XtraGrid.Columns
 Imports DevExpress.XtraGrid.Views.Base
 Imports DevExpress.XtraGrid.Views.Grid
-
+Imports DevExpress.XtraSplashScreen
 
 Public Class frmHCSSetSteps
     Private loops As New LoopsSteps
@@ -12,34 +15,662 @@ Public Class frmHCSSetSteps
     Private grdView As New GridViews
     Private fs As New FileSystem
     Private lpAPI As New LoopsAPI
+    Private StandardRulesAdded As Boolean = False
+    Private opnedHandle As IOverlaySplashScreenHandle
+    Private lf As New LoopFolders
+    Private WithEvents cloud As UpdateCloud
+    Private pe As New PublicErrors
+    Private appSet As New AppSettings
 
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
+    Private Sub CloudUpdatedEvent() Handles cloud.CloudUpdated
+        lblInfo.Caption = "Cloud Updated and Mail has been Send."
+        cloud.Cancel()
+    End Sub
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
 
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
+
+    Private Sub GetLoopHCSTasks()
+        Try
+            Dim gNames As New List(Of String)
+            For Each row_handle As Integer In gv.GetSelectedRows
+                gNames.Add(gv.GetDataRow(row_handle).Item("Loop Name"))
+            Next
+            If gNames.Count > 0 Then
+                Dim frm As New frmDataResult("", frmDataResult.en_ResultType.ItemTasks, lf.HCSTasks(gNames))
+                frm.Show()
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopPrinted()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Loop Printed?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("FolderPreparation", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                       gv.GetDataRow(row_handle).Item("Loop Name"),
+                       gv.GetDataRow(row_handle).Item("Area"),
+                       IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                       frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 frm.selectedDate,    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001"    'Return From QC
+                                ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPPRINTED
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPPRINTED
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.FolderPrepared, appSet.LoopMailTo(LoopsAPI.MailTypes.FolderPrepared), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                    End If
+                End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopQCReleased()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as QC Released?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("QCRelease", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 frm.selectedDate,    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001"    'Return From QC
+                                ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPQCRELEASED
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPQCRELEASED
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.QCReleased, appSet.LoopMailTo(LoopsAPI.MailTypes.QCReleased), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopFolderReady()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Ready?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("FolderReady", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 frm.selectedDate,    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001"    'Return From QC
+                            ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERREADY
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERREADY
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.FolderReady, appSet.LoopMailTo(LoopsAPI.MailTypes.FolderReady), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopSubmittedToPrecomm()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Submitted to Precomm?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("SubmittedToPrecom", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 frm.selectedDate,    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001"    'Return From QC
+                            ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERSUBMITTEDTPPRECOMM
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERSUBMITTEDTPPRECOMM
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.SubmittedToPrecomm, appSet.LoopMailTo(LoopsAPI.MailTypes.SubmittedToPrecomm), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopDone()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Loop Done?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("Done", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 frm.selectedDate, 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001"    'Return From QC
+                                ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERDONE
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERDONE
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.LoopDone, appSet.LoopMailTo(LoopsAPI.MailTypes.LoopDone), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopApproved()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Loop Approved?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("FinalApproval", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 frm.selectedDate, 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "",
+                                 ""
+                    ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERAPPROVED
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERAPPROVED
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.FolderApproved, appSet.LoopMailTo(LoopsAPI.MailTypes.FolderApproved), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopSubmitToQC()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Submit to QC?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("SubmitToQC", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 frm.selectedDate, 'Submit to QC
+                                 ""
+                    ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDESUBMITTOQC
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDESUBMITTOQC
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.SubmitToQC, appSet.LoopMailTo(LoopsAPI.MailTypes.SubmitToQC), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateLoopReturnFromQC()
+        Try
+            lblInfo.Caption = "Updating...."
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Return from QC?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDateConstraint
+            Dim loopList As New LoopFolders
+            frm.ShowDialog(Me)
+            If frm.isSelected Then
+                Dim dt As New DataTable
+                dt.TableName = "LoopData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("ReturnFromQC", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                        gv.GetDataRow(row_handle).Item("Area"),
+                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                        frm.selectedDate
+                    )
+                    loopList.Add(New LoopFolder(
+                                 gv.GetDataRow(row_handle).Item("Loop Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 gv.GetDataRow(row_handle).Item("Area"),
+                                 "",
+                                 "1/1/0001", 'Submit to QC
+                                 frm.selectedDate 'Return from QC
+                    ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERRETURNFROMQC
+                If frm.isCleared Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERRETURNFROMQC
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    cloud = New UpdateCloud
+                    cloud.Start(loopList, LoopsAPI.MailTypes.ReturnFromQC, appSet.LoopMailTo(LoopsAPI.MailTypes.ReturnFromQC), "ealy@trsa.es")
+                    lf.CheckIntgerity()
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
     Private Sub CheckAuth()
         rpHandover.Visible = False
         rpQC.Visible = False
         rpPrecom.Visible = False
+        rpSupportTeam.Visible = False
+        rMenuSetFolderApproved.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderPrinted.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderReady.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderReleased.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderDone.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderReturnFromQC.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderSubmitToPrecomm.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderSubmitToSupportTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderSubmitToQC.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
 
         If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
             rpHandover.Visible = True
             rpQC.Visible = True
             rpPrecom.Visible = True
             rpBlockage.Visible = True
-            Exit Sub
+            rMenuSetFolderApproved.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderPrinted.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderReady.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderReleased.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderDone.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderReturnFromQC.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToPrecomm.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToSupportTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToQC.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "handover", CompareMethod.Text) > 0 Then
             rpHandover.Visible = True
             rpBlockage.Visible = True
-            Exit Sub
+            rMenuSetFolderApproved.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "qc", CompareMethod.Text) > 0 Then
             rpQC.Visible = True
             rpBlockage.Visible = True
-            Exit Sub
+            rMenuSetFolderReady.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderReleased.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToSupportTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToQC.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "precomm", CompareMethod.Text) > 0 Then
             rpPrecom.Visible = True
             rpBlockage.Visible = True
-            Exit Sub
+            rMenuSetFolderDone.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToPrecomm.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+        End If
+        If InStr(Users.userType, "support team", CompareMethod.Text) > 0 Then
+            rpSupportTeam.Visible = True
+            rpBlockage.Visible = True
+            rMenuSetFolderPrinted.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderReturnFromQC.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToPrecomm.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToSupportTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderSubmitToQC.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
     End Sub
     Private Sub formatColumnsWidth()
@@ -81,6 +712,28 @@ Public Class frmHCSSetSteps
         End Try
 
     End Sub
+    Private Sub ConditionalFormat()
+        If Not StandardRulesAdded Then
+            'Done Rule
+            Dim gridFormatRule As New GridFormatRule()
+            Dim formatConditionRuleExpression As New FormatConditionRuleExpression()
+            gridFormatRule.ApplyToRow = True
+            formatConditionRuleExpression.PredefinedName = "Green Fill"
+            formatConditionRuleExpression.Expression = "[Done] IS NOT NULL"
+            gridFormatRule.Rule = formatConditionRuleExpression
+            gv.FormatRules.Add(gridFormatRule)
+
+            'Blockage Rule
+            Dim gridFormatRule2 As New GridFormatRule()
+            Dim formatConditionRuleExpression2 As New FormatConditionRuleExpression()
+            gridFormatRule2.ApplyToRow = True
+            formatConditionRuleExpression2.PredefinedName = "Red Fill"
+            formatConditionRuleExpression2.Expression = "[Has Blockage] = 'Yes'"
+            gridFormatRule2.Rule = formatConditionRuleExpression2
+            gv.FormatRules.Add(gridFormatRule2)
+            StandardRulesAdded = True
+        End If
+    End Sub
     Private Sub getData()
         saveColumnsWidth()
         grd.DataSource = loops.getLoopsSteps
@@ -88,38 +741,36 @@ Public Class frmHCSSetSteps
 
         If gv.Columns.Count = 0 Then Exit Sub
 
-        If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
-            gv.Columns("Folder Printed HO").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Final Approval").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("QC Released").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Folder Ready QCC").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Submitted To Precomm").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Done").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-        End If
-        If InStr(Users.userType, "handover", CompareMethod.Text) > 0 Then
-            gv.Columns("Folder Printed HO").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Final Approval").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-        End If
-        If InStr(Users.userType, "qc", CompareMethod.Text) > 0 Then
-            gv.Columns("QC Released").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Folder Ready QCC").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Submitted To Precomm").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-        End If
-        If InStr(Users.userType, "precomm", CompareMethod.Text) > 0 Then
-            gv.Columns("Submitted To Precomm").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-            gv.Columns("Done").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
-        End If
 
+        gv.Columns("QC Released").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
+        gv.Columns("Folder Ready QC").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
 
+        gv.Columns("Done").AppearanceCell.BackColor = Color.FromArgb(87, 204, 153)
+        gv.Columns("Done").AppearanceCell.ForeColor = Color.White
+        gv.Columns("Final Approval").AppearanceCell.BackColor = Color.FromArgb(87, 204, 153)
+        gv.Columns("Final Approval").AppearanceCell.ForeColor = Color.White
+
+        gv.Columns("Submitted To QC").AppearanceCell.BackColor = Color.FromArgb(56, 163, 165)
+        gv.Columns("Submitted To QC").AppearanceCell.ForeColor = Color.White
+
+        gv.Columns("Return From QC").AppearanceCell.BackColor = Color.FromArgb(56, 163, 165)
+        gv.Columns("Return From QC").AppearanceCell.ForeColor = Color.White
+
+        gv.Columns("Submitted To Precomm").AppearanceCell.BackColor = Color.FromArgb(56, 163, 165)
+        gv.Columns("Submitted To Precomm").AppearanceCell.ForeColor = Color.White
+
+        gv.Columns("Folder Printed").AppearanceCell.BackColor = Color.FromArgb(56, 163, 165)
+        gv.Columns("Folder Printed").AppearanceCell.ForeColor = Color.White
+
+        gv.Columns("Cons Complete").AppearanceCell.BackColor = Color.FromArgb(199, 249, 204)
+
+        gv.Columns("ProUUID").Visible = False
+        gv.Columns("Id").Visible = False
+        gv.Columns("Project").Visible = False
 
         gv.OptionsSelection.MultiSelect = True
 
-        'conditional format
-        'Dim gridFormatRule As New GridFormatRule()
-        'Dim formatConditionRuleExpression As New FormatConditionRuleDataBar() With {.PredefinedName = "BlueGradientDataBar"}
-        'gridFormatRule.Column = gv.Columns("LoopPriority")
-        'gridFormatRule.Rule = formatConditionRuleExpression
-        'gv.FormatRules.Add(gridFormatRule)
+        ConditionalFormat()
 
         Try
             If _filter <> "" Then
@@ -133,7 +784,9 @@ Public Class frmHCSSetSteps
 
     End Sub
 
-    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
+    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuFilter.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim frm As New frmFilter
         frm.Text = "Loops Filter"
         For inx As Integer = 0 To gv.Columns.Count - 1
@@ -141,90 +794,53 @@ Public Class frmHCSSetSteps
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
         End If
     End Sub
 
-    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuRefresh.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        ShowProgressPanel()
         getData()
+        CloseProgressPanel(opnedHandle)
     End Sub
 
     Private Sub frmHCSSetSteps_Load(sender As Object, e As EventArgs) Handles Me.Load
         CheckAuth()
         getData()
-    End Sub
-
-    Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
-        grdView.CopySelectedItems(gv, "Loop Name")
-    End Sub
-
-    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        grdView.CopySelectedItems(gv, "Subsystem")
-    End Sub
-
-    Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
-        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Prepared?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        Dim frm As New frmSelectDateConstraint
-        frm.ShowDialog(Me)
-        If frm.isSelected Then
-            Dim desc As String = ""
-            For Each row_handle As Integer In gv.GetSelectedRows
-                If IsDBNull(gv.GetDataRow(row_handle).Item("Description")) Then
-                    desc = ""
-                Else
-                    desc = gv.GetDataRow(row_handle).Item("Description")
-                End If
-                loops.setHCSFolderPrepared(gv.GetDataRow(row_handle).Item("Loop Name"), frm.selectedDate, gv.GetDataRow(row_handle).Item("Area"), desc)
-            Next
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.FolderPrepared)
-            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
-            getData()
-        End If
-    End Sub
-
-    Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
-        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Approved?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        Dim frm As New frmSelectDateConstraint
-        frm.ShowDialog(Me)
-        Dim result As String = ""
-        If frm.isSelected Then
-            Dim desc As String = ""
-            For Each row_handle As Integer In gv.GetSelectedRows
-                If IsDBNull(gv.GetDataRow(row_handle).Item("Description")) Then
-                    desc = ""
-                Else
-                    desc = gv.GetDataRow(row_handle).Item("Description")
-                End If
-                If Not IsDBNull(gv.GetDataRow(row_handle).Item("Done")) Then
-                    loops.setHCSFolderApproved(gv.GetDataRow(row_handle).Item("Loop Name"), frm.selectedDate, gv.GetDataRow(row_handle).Item("Area"), desc)
-                Else
-                    result &= "Cannot Update Loop: " & gv.GetDataRow(row_handle).Item("Loop Name") & " Because It is Not Done" & vbCrLf
-                End If
-            Next
-            If result <> "" Then
-                Dim frmResult As New frmResults
-                frmResults.txt.Text = result
-                frmResults.ShowDialog(Me)
+        Try
+            If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
+                grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
             End If
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.FolderApproved)
-            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
-            getData()
-        End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
-    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
+    Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderPrinted.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopPrinted()
+    End Sub
+
+    Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderApproved.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopApproved()
+    End Sub
+
+    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuExportToExcel.ItemClick
         Try
             sveFle.FileName = ""
             sveFle.Filter = "XLSX Files|*.xlsx"
@@ -237,95 +853,35 @@ Public Class frmHCSSetSteps
         End Try
     End Sub
 
-    Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem11.ItemClick
-        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Released?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        Dim frm As New frmSelectDateConstraint
-        frm.ShowDialog(Me)
-        If frm.isSelected Then
-            Dim desc As String = ""
-            For Each row_handle As Integer In gv.GetSelectedRows
-                If IsDBNull(gv.GetDataRow(row_handle).Item("Description")) Then
-                    desc = ""
-                Else
-                    desc = gv.GetDataRow(row_handle).Item("Description")
-                End If
-                loops.setHCSFolderQCReleased(gv.GetDataRow(row_handle).Item("Loop Name"), frm.selectedDate, gv.GetDataRow(row_handle).Item("Area"), desc)
-            Next
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.QCReleased)
-            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
-            getData()
-        End If
+    Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderReleased.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopQCReleased()
     End Sub
 
-    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem12.ItemClick
-        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Ready?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        Dim frm As New frmSelectDateConstraint
-        frm.ShowDialog(Me)
-        If frm.isSelected Then
-            Dim desc As String = ""
-            For Each row_handle As Integer In gv.GetSelectedRows
-                If IsDBNull(gv.GetDataRow(row_handle).Item("Description")) Then
-                    desc = ""
-                Else
-                    desc = gv.GetDataRow(row_handle).Item("Description")
-                End If
-                loops.setHCSFolderReady(gv.GetDataRow(row_handle).Item("Loop Name"), frm.selectedDate, gv.GetDataRow(row_handle).Item("Area"), desc)
-            Next
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.FolderReady)
-            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
-            getData()
-        End If
+    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderReady.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopFolderReady()
     End Sub
 
-    Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick, BarButtonItem13.ItemClick
-        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Submitted To Pre-Comm?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        Dim frm As New frmSelectDateConstraint
-        frm.ShowDialog(Me)
-        If frm.isSelected Then
-            Dim desc As String = ""
-            For Each row_handle As Integer In gv.GetSelectedRows
-                If IsDBNull(gv.GetDataRow(row_handle).Item("Description")) Then
-                    desc = ""
-                Else
-                    desc = gv.GetDataRow(row_handle).Item("Description")
-                End If
-                loops.setHCSFolderSubmitToPrecomm(gv.GetDataRow(row_handle).Item("Loop Name"), frm.selectedDate, gv.GetDataRow(row_handle).Item("Area"), desc)
-            Next
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.SubmittedToPrecomm)
-            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
-            getData()
-        End If
+    Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderSubmitToSupportTeam.ItemClick, rMenuSetFolderSubmitToPrecomm.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopSubmittedToPrecomm()
     End Sub
 
-    Private Sub BarButtonItem14_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem14.ItemClick
-        Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Loop Done?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
-        If msgR = MsgBoxResult.No Then Exit Sub
-        Dim frm As New frmSelectDateConstraint
-        frm.ShowDialog(Me)
-        If frm.isSelected Then
-            Dim desc As String = ""
-            For Each row_handle As Integer In gv.GetSelectedRows
-                If IsDBNull(gv.GetDataRow(row_handle).Item("Description")) Then
-                    desc = ""
-                Else
-                    desc = gv.GetDataRow(row_handle).Item("Description")
-                End If
-                loops.setHCSFolderDone(gv.GetDataRow(row_handle).Item("Loop Name"), frm.selectedDate, gv.GetDataRow(row_handle).Item("Area"), desc)
-            Next
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.LoopDone)
-            msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
-            getData()
-        End If
+    Private Sub BarButtonItem14_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderDone.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopDone()
     End Sub
 
-    Private Sub BarButtonItem15_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem15.ItemClick
+    Private Sub BarButtonItem15_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuAddBlockage.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Add Blockage To Selected Folders?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmAddConsEntry
@@ -347,7 +903,6 @@ Public Class frmHCSSetSteps
             msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
-
         End If
     End Sub
 
@@ -381,7 +936,9 @@ Public Class frmHCSSetSteps
         Next
     End Sub
 
-    Private Sub BarButtonItem17_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem17.ItemClick
+    Private Sub BarButtonItem17_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuShowBlockage.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim inx As Integer = 0
         Dim filter As String = ""
         For Each row_handle As Integer In gv.GetSelectedRows
@@ -403,7 +960,9 @@ Public Class frmHCSSetSteps
         Me.MdiParent = Nothing
     End Sub
 
-    Private Sub BarButtonItem19_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem19.ItemClick
+    Private Sub BarButtonItem19_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuOpenILD.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Try
             Dim pdfs As List(Of String)
             Dim pdfsFName As New List(Of String)
@@ -426,5 +985,79 @@ Public Class frmHCSSetSteps
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub BarButtonItem20_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuCopyLoop.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        grdView.CopySelectedItems(gv, "Loop Name")
+    End Sub
+
+    Private Sub BarButtonItem21_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
+        grdView.CopySelectedItems(gv, "Subsystem")
+    End Sub
+
+    Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
+        sveFle.Filter = "Views File|*.xml"
+        sveFle.FileName = ""
+        sveFle.ShowDialog()
+        If sveFle.FileName <> "" Then
+            If grdView.SaveViewLayout(gv, sveFle.FileName) Then
+                MsgBox("View Has Been Saved", MsgBoxStyle.Information, Me.Text)
+                SaveSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, sveFle.FileName)
+            End If
+        End If
+    End Sub
+
+    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
+        opnFle.FileName = ""
+        opnFle.ShowDialog()
+        Try
+            If opnFle.FileName <> "" Then
+                'grdView.setViewFromFile(gv, opnFle.FileName)
+                grdView.ApplyViewLayout(gv, opnFle.FileName)
+                SaveSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, opnFle.FileName)
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub BarButtonItem22_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem22.ItemClick
+        grd.ShowPrintPreview()
+    End Sub
+    Private Sub frmHCSSetSteps_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub BarButtonItem23_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderSubmitToQC.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopSubmitToQC()
+    End Sub
+
+    Private Sub BarButtonItem25_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderReturnFromQC.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopReturnFromQC()
+    End Sub
+
+    Private Sub BarButtonItem24_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem24.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        UpdateLoopSubmittedToPrecomm()
+    End Sub
+
+    Private Sub BarButtonItem26_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuLoopTasks.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        GetLoopHCSTasks()
+    End Sub
+
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles grd.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
     End Sub
 End Class

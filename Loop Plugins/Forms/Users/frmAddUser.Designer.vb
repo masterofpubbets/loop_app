@@ -40,11 +40,12 @@ Partial Class frmAddUser
         Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ckLoopApproved = New System.Windows.Forms.CheckBox()
         Me.ckFolderBlockage = New System.Windows.Forms.CheckBox()
         Me.ckLoopDone = New System.Windows.Forms.CheckBox()
         Me.ckSubmittedToPrecomm = New System.Windows.Forms.CheckBox()
         Me.ckQCFolderReady = New System.Windows.Forms.CheckBox()
-        Me.ckQCApproved = New System.Windows.Forms.CheckBox()
+        Me.ckQCReleased = New System.Windows.Forms.CheckBox()
         Me.ckFolderPrepared = New System.Windows.Forms.CheckBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.pic = New System.Windows.Forms.PictureBox()
@@ -70,7 +71,8 @@ Partial Class frmAddUser
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
-        Me.RibbonControl1.Size = New System.Drawing.Size(654, 58)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(654, 60)
         '
         'Label1
         '
@@ -206,11 +208,12 @@ Partial Class frmAddUser
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.ckLoopApproved)
         Me.GroupBox1.Controls.Add(Me.ckFolderBlockage)
         Me.GroupBox1.Controls.Add(Me.ckLoopDone)
         Me.GroupBox1.Controls.Add(Me.ckSubmittedToPrecomm)
         Me.GroupBox1.Controls.Add(Me.ckQCFolderReady)
-        Me.GroupBox1.Controls.Add(Me.ckQCApproved)
+        Me.GroupBox1.Controls.Add(Me.ckQCReleased)
         Me.GroupBox1.Controls.Add(Me.ckFolderPrepared)
         Me.GroupBox1.Location = New System.Drawing.Point(126, 501)
         Me.GroupBox1.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
@@ -219,7 +222,18 @@ Partial Class frmAddUser
         Me.GroupBox1.Size = New System.Drawing.Size(518, 119)
         Me.GroupBox1.TabIndex = 10
         Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Notifications"
+        Me.GroupBox1.Text = "Loop Folders Notifications"
+        '
+        'ckLoopApproved
+        '
+        Me.ckLoopApproved.AutoSize = True
+        Me.ckLoopApproved.Location = New System.Drawing.Point(357, 74)
+        Me.ckLoopApproved.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ckLoopApproved.Name = "ckLoopApproved"
+        Me.ckLoopApproved.Size = New System.Drawing.Size(99, 17)
+        Me.ckLoopApproved.TabIndex = 6
+        Me.ckLoopApproved.Text = "Loop Approved"
+        Me.ckLoopApproved.UseVisualStyleBackColor = True
         '
         'ckFolderBlockage
         '
@@ -265,16 +279,16 @@ Partial Class frmAddUser
         Me.ckQCFolderReady.Text = "QC Folder Ready"
         Me.ckQCFolderReady.UseVisualStyleBackColor = True
         '
-        'ckQCApproved
+        'ckQCReleased
         '
-        Me.ckQCApproved.AutoSize = True
-        Me.ckQCApproved.Location = New System.Drawing.Point(129, 37)
-        Me.ckQCApproved.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.ckQCApproved.Name = "ckQCApproved"
-        Me.ckQCApproved.Size = New System.Drawing.Size(91, 17)
-        Me.ckQCApproved.TabIndex = 1
-        Me.ckQCApproved.Text = "QC Approved"
-        Me.ckQCApproved.UseVisualStyleBackColor = True
+        Me.ckQCReleased.AutoSize = True
+        Me.ckQCReleased.Location = New System.Drawing.Point(129, 37)
+        Me.ckQCReleased.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.ckQCReleased.Name = "ckQCReleased"
+        Me.ckQCReleased.Size = New System.Drawing.Size(88, 17)
+        Me.ckQCReleased.TabIndex = 1
+        Me.ckQCReleased.Text = "QC Released"
+        Me.ckQCReleased.UseVisualStyleBackColor = True
         '
         'ckFolderPrepared
         '
@@ -355,7 +369,7 @@ Partial Class frmAddUser
         Me.ckcmbUserType.Name = "ckcmbUserType"
         Me.ckcmbUserType.Properties.AllowMultiSelect = True
         Me.ckcmbUserType.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
-        Me.ckcmbUserType.Properties.Items.AddRange(New DevExpress.XtraEditors.Controls.CheckedListBoxItem() {New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Admin", "", "Admin"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Handover", "", "Handover"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("QC", "", "QC"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Construction", "", "Construction"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Precomm", "", "Precomm"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Production", "", "Production"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Planning", "", "Planning"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("ReadOnly", "", "ReadOnly")})
+        Me.ckcmbUserType.Properties.Items.AddRange(New DevExpress.XtraEditors.Controls.CheckedListBoxItem() {New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Admin", "", "Admin"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Handover", "", "Handover"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Support Team", "", "Support Team"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("QC", "", "QC"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Construction", "", "Construction"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Precomm", "", "Precomm"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Production", "", "Production"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Planning", "", "Planning"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("ReadOnly", "", "ReadOnly"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Loop Admin", "", "Loop Admin")})
         Me.ckcmbUserType.Properties.SortOrder = System.Windows.Forms.SortOrder.Ascending
         Me.ckcmbUserType.Size = New System.Drawing.Size(480, 20)
         Me.ckcmbUserType.TabIndex = 4
@@ -425,7 +439,7 @@ Partial Class frmAddUser
     Friend WithEvents ckLoopDone As CheckBox
     Friend WithEvents ckSubmittedToPrecomm As CheckBox
     Friend WithEvents ckQCFolderReady As CheckBox
-    Friend WithEvents ckQCApproved As CheckBox
+    Friend WithEvents ckQCReleased As CheckBox
     Friend WithEvents ckFolderPrepared As CheckBox
     Friend WithEvents ckFolderBlockage As CheckBox
     Friend WithEvents Label8 As Label
@@ -436,4 +450,5 @@ Partial Class frmAddUser
     Friend WithEvents txtTRUserName As TextBox
     Friend WithEvents Label9 As Label
     Friend WithEvents ckcmbUserType As DevExpress.XtraEditors.CheckedComboBoxEdit
+    Friend WithEvents ckLoopApproved As CheckBox
 End Class

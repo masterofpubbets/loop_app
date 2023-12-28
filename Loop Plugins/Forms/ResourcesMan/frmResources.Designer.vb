@@ -58,7 +58,8 @@ Partial Class frmResources
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 108)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 110)
         '
         'BarButtonItem1
         '
@@ -204,10 +205,10 @@ Partial Class frmResources
         'grd
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.grd.Location = New System.Drawing.Point(0, 108)
+        Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1198, 591)
+        Me.grd.Size = New System.Drawing.Size(1198, 589)
         Me.grd.TabIndex = 71
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -258,6 +259,7 @@ Partial Class frmResources
         Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
+        Me.IconOptions.Image = CType(resources.GetObject("frmResources.IconOptions.Image"), System.Drawing.Image)
         Me.IconOptions.LargeImage = CType(resources.GetObject("frmResources.IconOptions.LargeImage"), System.Drawing.Image)
         Me.Name = "frmResources"
         Me.Ribbon = Me.RibbonControl1

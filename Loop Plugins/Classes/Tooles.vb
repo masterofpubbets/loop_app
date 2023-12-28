@@ -74,7 +74,7 @@ Namespace EAMS
                     DA.Dispose()
                     Return DT
                 Catch ex As Exception
-                    pe.RaiseDataReadError()
+                    pe.RaiseDataReadError(ex.Message)
                 End Try
                 Return Nothing
             End Function
@@ -1271,7 +1271,7 @@ Namespace EAMS
                     DA.Dispose()
                     Return DT
                 Catch ex As Exception
-                    pe.RaiseDataReadError()
+                    pe.RaiseDataReadError(ex.Message)
                 End Try
                 Return Nothing
             End Function

@@ -50,4 +50,8 @@
             txtMark1To.EditValue = OldMark1To
         End If
     End Sub
+
+    Private Sub frmEditCableProduction_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
+        Me.WindowState = FormWindowState.Normal
+    End Sub
 End Class

@@ -273,7 +273,7 @@ Partial Class frmFindKeyword
         '
         'ToolStripButton1
         '
-        Me.ToolStripButton1.Image = Global.Loop_App.My.Resources.Resources.EXCEL97
+        Me.ToolStripButton1.Image = Global.EEICA.My.Resources.Resources.EXCEL97
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(76, 24)
@@ -281,7 +281,7 @@ Partial Class frmFindKeyword
         '
         'ToolStripButton2
         '
-        Me.ToolStripButton2.Image = Global.Loop_App.My.Resources.Resources.AdobeAcrobatReader5
+        Me.ToolStripButton2.Image = Global.EEICA.My.Resources.Resources.AdobeAcrobatReader5
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(95, 24)
