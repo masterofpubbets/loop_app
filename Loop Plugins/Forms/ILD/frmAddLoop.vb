@@ -1,4 +1,6 @@
-﻿Public Class frmAddLoop
+﻿Imports System.ComponentModel
+
+Public Class frmAddLoop
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick, BarButtonItem3.ItemClick
         sveFle.FileName = ""
         sveFle.ShowDialog()
@@ -69,5 +71,7 @@
         '---------------------------------------------------------------------------
     End Sub
 
-
+    Private Sub frmAddLoop_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
 End Class

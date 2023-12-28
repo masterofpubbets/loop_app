@@ -39,7 +39,7 @@ Namespace My.Resources
         Friend ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
             Get
                 If Object.ReferenceEquals(resourceMan, Nothing) Then
-                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("Loop_App.Resources", GetType(Resources).Assembly)
+                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("EEICA.Resources", GetType(Resources).Assembly)
                     resourceMan = temp
                 End If
                 Return resourceMan
@@ -373,6 +373,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property EEICA_Logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("EEICA Logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to SELECT
         '''[TAG]
         ''',[Type]
@@ -403,6 +413,36 @@ Namespace My.Resources
         Friend ReadOnly Property EEqValidate() As String
             Get
                 Return ResourceManager.GetString("EEqValidate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property EICA_Blue() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("EICA Blue", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property EICA_Blue_Trans() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("EICA Blue Trans", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property EICA_Logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("EICA Logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -596,6 +636,66 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property icons8_marker_b_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icons8-marker-b-32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property icons8_plug_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icons8-plug-32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property icons8_work_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icons8-work-32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property icons8_work_321() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icons8-work-321", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property icons8_work_94() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icons8-work-94", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property icons8_wyoming_48() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icons8-wyoming-48", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to SELECT [Area]
         '''      ,[Type]
         '''      ,[Tag]
@@ -721,6 +821,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property inst32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("inst32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to SELECT 
         '''[TBL_ID]
         ''',[Area]
@@ -738,6 +848,26 @@ Namespace My.Resources
         Friend ReadOnly Property InsValidate() As String
             Get
                 Return ResourceManager.GetString("InsValidate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Loginbackground() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Loginbackground", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property LoginbackgroundTrans2() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("LoginbackgroundTrans2", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -785,15 +915,12 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized string similar to SELECT DISTINCT
         '''tblInsLoop.Subsystem,tblInsLoop.Area,tblInsLoop.Active
+        ''',tblInsLoop.Planning_START_Date AS [Plan Start Date], tblInsLoop.Planning_FINISH_Date AS [Plane Finish Date], tblInsLoop.LoopPriority AS [Priority]
         ''',tblInsLoop.LoopName
         ''',VILDMAP.Area as [Item Area]
         ''',case when VILDMAP.Discipline is null then &apos;No ILD&apos; else VILDMAP.Discipline end as Discipline
         ''',VILDMAP.Type,VILDMAP.Item,VILDMAP.SubSystem AS [Item Subsystem],VILDMAP.Forecast,VILDMAP.Available
-        ''',VILDMAP.[Pulled/Installed],VILDMAP.[Cable Con 1],VILDMAP.[Cable Con 2],VILDMAP.[Calibrated/Tested],VILDMAP.[QC/HCS Released]
-        '''FROM TBLINSLOOP
-        '''LEFT JOIN 
-        '''(
-        '''SELECT TBLILD.Item,TBLILD.Loop_N [rest of string was truncated]&quot;;.
+        ''',VILDMAP.[Pulled/Installed],VILDMAP.[Cable [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Loop_Map() As String
             Get
@@ -985,6 +1112,16 @@ Namespace My.Resources
         Friend ReadOnly Property LoopWorkfront() As String
             Get
                 Return ResourceManager.GetString("LoopWorkfront", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property ok_svgrepo_com() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ok-svgrepo-com", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -1284,32 +1421,84 @@ Namespace My.Resources
         
         '''<summary>
         '''  Looks up a localized string similar to update tblild
-        '''set Loop_Name=REPLACE(loop_name,&apos; &apos;,&apos;&apos;)
+        '''
+        '''set Loop_Name=REPLACE(loop_name, &apos; &apos;,&apos;&apos;)
+        '''
         '''GO
-        '''UPDATE [tblILD]
-        '''set [Item_Type]=&apos;Ins Cable-Single Pair&apos;
-        '''where [tbl_id] in
-        '''(
-        '''SELECT 
-        '''max([tbl_id]) as ID
+        '''
+        '''--Ins Cable
+        '''UPDATE v
+        '''
+        '''set [Item_Type]= &apos;IC: &apos; + IC_Type
+        '''
         '''FROM
+        '''
         '''(
-        '''SELECT 
-        '''ROW_NUMBER() OVER(ORDER BY [Item] ASC) AS RowNo
-        ''',[Loop_Name],[Item_Type],[tbl_id],[Item],IC_Type
-        '''FROM
-        '''(
-        '''Select vILD.[tbl_id],[Loop_Name],[Item],[Item_Type],vILD.IC_Type
-        '''from 
-        '''(
-        '''Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],tblInsCableList.IC_Type
+        '''
+        '''Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
+        '''
+        '''tblInsCableList.IC_Type
+        '''
         '''from tblILD
-        '''inner join tblInsCableList
-        '''on [tblILD].[Item] [rest of string was truncated]&quot;;.
+        '''
+        '''INNER JOIN tblInsCableList
+        '''
+        '''on [tblILD].[Item]=tblInsCableList.IC_ID
+        '''
+        '''where [tblILD]. Item_Type IS NULL
+        '''
+        '''
+        ''')as V
+        '''
+        '''GO
+        '''
+        '''
+        '''
+        '''UPDATE v
+        '''
+        '''set [Item_Type]= &apos;EC: &apos; + EC_Type
+        '''
+        '''FROM
+        '''
+        '''(
+        '''
+        '''Select [tblILD].[tbl_id],[Loop_Name],[Item],[Item_Type],
+        '''
+        '''tblEleCableLis [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property ValidiateILD() As String
             Get
                 Return ResourceManager.GetString("ValidiateILD", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property wire() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("wire", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property wire2() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("wire2", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property wire32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("wire32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
     End Module

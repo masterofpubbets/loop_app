@@ -1,4 +1,6 @@
-﻿Public Class frmUpdateLoopDone
+﻿Imports System.ComponentModel
+
+Public Class frmUpdateLoopDone
 
     Private Sub RemoveLoop(ByVal inx As Integer)
         lstLoop.Items.RemoveAt(inx)
@@ -56,5 +58,9 @@
         ild.UpdateLoopConsFinishedWithoutMasterJobard()
         GetData()
         MsgBox("Loops Progress Updated and Validated in EICA", MsgBoxStyle.Information, Me.Text)
+    End Sub
+
+    Private Sub frmUpdateLoopDone_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

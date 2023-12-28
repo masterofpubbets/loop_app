@@ -1,4 +1,5 @@
-﻿Imports DevExpress.Data
+﻿Imports System.ComponentModel
+Imports DevExpress.Data
 Imports DevExpress.Internal.WinApi.Windows.UI.Notifications
 Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid
@@ -175,12 +176,14 @@ Public Class frmCableProduction
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -256,5 +259,9 @@ Public Class frmCableProduction
         If frm.isUpdated Then
             getData()
         End If
+    End Sub
+
+    Private Sub frmCableProduction_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

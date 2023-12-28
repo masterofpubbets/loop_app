@@ -58,5 +58,16 @@ Public Class FileSystem
         End Try
         Return False
     End Function
+    Public Function ReadTextFile(ByVal filePath As String) As String
+        Try
+            Dim obj As New System.IO.StreamReader(filePath)
+            Dim q As String = obj.ReadToEnd
+            obj.Close()
+            Return q
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+        Return ""
+    End Function
 
 End Class

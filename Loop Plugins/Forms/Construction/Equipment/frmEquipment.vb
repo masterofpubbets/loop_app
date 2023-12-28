@@ -1,7 +1,9 @@
-﻿Imports DevExpress.XtraEditors
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid
 Imports DevExpress.XtraGrid.Columns
 Imports DevExpress.XtraGrid.Views.Base
+Imports DevExpress.XtraSplashScreen
 
 Public Class frmEquipment
     Private eq As New Equipment
@@ -12,7 +14,17 @@ Public Class frmEquipment
     Private grdView As New GridViews
     Private StandardRulesAdded As Boolean = False
     Private docImage As Image = Image.FromFile(Application.StartupPath & "\res\doc12.png")
+    Private opnedHandle As IOverlaySplashScreenHandle
 
+
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
+
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
     Private Sub CheckAuth()
         rpProduction.Visible = False
         rpEngineering.Visible = False
@@ -109,6 +121,7 @@ Public Class frmEquipment
         gv.Columns("Installed Date").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
 
         gv.Columns("Id").Visible = False
+        gv.Columns("Resource").Visible = False
 
         gv.OptionsSelection.MultiSelect = True
 
@@ -123,7 +136,9 @@ Public Class frmEquipment
     End Sub
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        ShowProgressPanel()
         getData()
+        CloseProgressPanel(opnedHandle)
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
@@ -134,12 +149,14 @@ Public Class frmEquipment
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -170,11 +187,6 @@ Public Class frmEquipment
 
         End Try
     End Sub
-
-    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        grdView.CopySelectedItems(gv, "Tag")
-    End Sub
-
     Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
         sveFle.Filter = "Views File|*.xml"
         sveFle.FileName = ""
@@ -352,5 +364,17 @@ Public Class frmEquipment
                 e.Cache.DrawImage(docImage, p)
             End If
         End If
+    End Sub
+
+    Private Sub BarButtonItem20_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem20.ItemClick
+        grd.ShowPrintPreview()
+    End Sub
+
+    Private Sub BarButtonItem21_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
+        grdView.CopySelectedItems(gv, "Tag")
+    End Sub
+
+    Private Sub frmEquipment_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

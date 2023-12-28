@@ -1,4 +1,5 @@
-﻿Imports DevExpress.XtraGrid.Columns
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraGrid.Columns
 Imports DevExpress.XtraGrid.Views.Base
 
 Public Class frmLoopConstraints2
@@ -88,12 +89,14 @@ Public Class frmLoopConstraints2
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -112,11 +115,6 @@ Public Class frmLoopConstraints2
 
         End Try
     End Sub
-
-    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
-        grdView.CopySelectedItems(gv, "Loop Name")
-    End Sub
-
     Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Close Blockage For Selected Folders?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -253,5 +251,13 @@ Public Class frmLoopConstraints2
         msgR = MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         GetLoop()
+    End Sub
+
+    Private Sub frmLoopConstraints2_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem9.ItemClick
+        grdView.CopySelectedItems(gv, "Loop Name")
     End Sub
 End Class

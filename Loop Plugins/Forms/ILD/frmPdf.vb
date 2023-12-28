@@ -1,4 +1,5 @@
-﻿Imports DevExpress.Pdf
+﻿Imports System.ComponentModel
+Imports DevExpress.Pdf
 
 Public Class frmPdf
     Public PDFPath As String = ""
@@ -7,5 +8,9 @@ Public Class frmPdf
         If PDFPath <> "" Then
             p.LoadDocument(PDFPath)
         End If
+    End Sub
+
+    Private Sub frmPdf_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

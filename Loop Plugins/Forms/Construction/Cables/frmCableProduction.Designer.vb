@@ -42,6 +42,8 @@ Partial Class frmCableProduction
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
+        Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -50,13 +52,15 @@ Partial Class frmCableProduction
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
+        Me.RibbonControl1.Font = New System.Drawing.Font("Tahoma", 9.0!)
         Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem8, Me.BarButtonItem9})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.MaxItemId = 10
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.rpProduction})
+        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.rpProduction, Me.RibbonPage2})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
-        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 108)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 110)
         '
         'BarButtonItem1
         '
@@ -143,7 +147,7 @@ Partial Class frmCableProduction
         Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1, Me.RibbonPageGroup2})
         Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
-        Me.RibbonPage1.Text = "Construction"
+        Me.RibbonPage1.Text = "Home"
         '
         'RibbonPageGroup1
         '
@@ -152,7 +156,7 @@ Partial Class frmCableProduction
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem3)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem4)
         Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
-        Me.RibbonPageGroup1.Text = "File Options"
+        Me.RibbonPageGroup1.Text = "Data Options"
         '
         'RibbonPageGroup2
         '
@@ -179,10 +183,10 @@ Partial Class frmCableProduction
         'grd
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.grd.Location = New System.Drawing.Point(0, 108)
+        Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1198, 591)
+        Me.grd.Size = New System.Drawing.Size(1198, 589)
         Me.grd.TabIndex = 71
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -226,13 +230,25 @@ Partial Class frmCableProduction
         '
         Me.sveFle.Filter = "Excel File|*.xlsx"
         '
+        'RibbonPage2
+        '
+        Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4})
+        Me.RibbonPage2.ImageOptions.Image = CType(resources.GetObject("RibbonPage2.ImageOptions.Image"), System.Drawing.Image)
+        Me.RibbonPage2.Name = "RibbonPage2"
+        Me.RibbonPage2.Text = "View"
+        '
+        'RibbonPageGroup4
+        '
+        Me.RibbonPageGroup4.Name = "RibbonPageGroup4"
+        Me.RibbonPageGroup4.Text = "Cable Production View"
+        '
         'frmCableProduction
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.ClientSize = New System.Drawing.Size(1198, 699)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.IconOptions.Image = Global.Loop_App.My.Resources.Resources.eccables02
+        Me.IconOptions.Image = Global.EEICA.My.Resources.Resources.eccables02
         Me.Name = "frmCableProduction"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -265,4 +281,6 @@ Partial Class frmCableProduction
     Friend WithEvents RibbonPageGroup3 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem8 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem9 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
+    Friend WithEvents RibbonPageGroup4 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
 End Class

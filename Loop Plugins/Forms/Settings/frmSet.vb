@@ -1,4 +1,7 @@
-﻿Public Class frmSet
+﻿Imports System.ComponentModel
+
+Public Class frmSet
+    Private pe As New PublicErrors
     Private Sub frmSet_Load(sender As Object, e As EventArgs) Handles Me.Load
         lblDB.Text = ILDDBFile
         lblFolder.Text = SharedFolder
@@ -6,7 +9,7 @@
 
     Private Sub SimpleButton3_Click(sender As Object, e As EventArgs) Handles SimpleButton3.Click
         If lblDB.Text = "" Then
-            MsgBox("Please Select ILD DB Folder", MsgBoxStyle.Exclamation, Me.Text)
+            MsgBox("Please Select ILD DB File", MsgBoxStyle.Exclamation, Me.Text)
             Exit Sub
         End If
         If lblFolder.Text = "" Then
@@ -46,10 +49,15 @@
             fld.ShowDialog()
             If fld.SelectedPath = "" Then Exit Sub
             IO.File.Copy(Application.StartupPath & "\BlankDB\ILDDB.ilddb", fld.SelectedPath & "\ILDDB.ilddb", True)
-            lblDB.Text = fld.SelectedPath
-            lblNewDB.Text = fld.SelectedPath
+            lblDB.Text = fld.SelectedPath & "\ILDDB.ilddb"
+            lblNewDB.Text = fld.SelectedPath & "\ILDDB.ilddb"
         Catch ex As Exception
             lblDB.Text = ""
+            pe.RaiseUnknownError(ex.Message)
         End Try
+    End Sub
+
+    Private Sub frmSet_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

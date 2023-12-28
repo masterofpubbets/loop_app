@@ -1,7 +1,9 @@
-﻿Imports DevExpress.XtraEditors
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid
 Imports DevExpress.XtraGrid.Columns
 Imports DevExpress.XtraGrid.Views.Base
+Imports DevExpress.XtraSplashScreen
 
 Public Class frmLighting
     Private light As New Lighting
@@ -12,6 +14,19 @@ Public Class frmLighting
     Private grdView As New GridViews
     Private StandardRulesAdded As Boolean = False
     Private docImage As Image = Image.FromFile(Application.StartupPath & "\res\doc12.png")
+    Private Scope As Integer = 0
+    Private done As Integer = 0
+    Private opnedHandle As IOverlaySplashScreenHandle
+
+
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
+
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
 
     Private Sub CheckAuth()
         rpProduction.Visible = False
@@ -109,6 +124,7 @@ Public Class frmLighting
         gv.Columns("Installed Date").AppearanceCell.BackColor = Color.FromArgb(194, 241, 194)
         gv.Columns("Id").Visible = False
         gv.Columns("Resource").Visible = False
+        gv.Columns("IfInstalled").Visible = False
 
         gv.OptionsSelection.MultiSelect = True
 
@@ -126,7 +142,7 @@ Public Class frmLighting
         CheckAuth()
         getData()
         Try
-            If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
+            If System.IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
                 grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
             End If
         Catch ex As Exception
@@ -135,7 +151,9 @@ Public Class frmLighting
     End Sub
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        ShowProgressPanel()
         getData()
+        CloseProgressPanel(opnedHandle)
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
@@ -146,12 +164,14 @@ Public Class frmLighting
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -331,5 +351,13 @@ Public Class frmLighting
                 e.Cache.DrawImage(docImage, p)
             End If
         End If
+    End Sub
+
+    Private Sub BarButtonItem18_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem18.ItemClick
+        grd.ShowPrintPreview()
+    End Sub
+
+    Private Sub frmLighting_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

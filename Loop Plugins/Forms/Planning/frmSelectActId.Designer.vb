@@ -23,12 +23,16 @@ Partial Class frmSelectActId
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSelectActId))
+        Dim SplashScreenManager As DevExpress.XtraSplashScreen.SplashScreenManager = New DevExpress.XtraSplashScreen.SplashScreenManager(Me, Nothing, True, True)
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.grd = New DevExpress.XtraGrid.GridControl()
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton4 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton5 = New DevExpress.XtraEditors.SimpleButton()
+        Me.opnFle = New System.Windows.Forms.OpenFileDialog()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -41,7 +45,8 @@ Partial Class frmSelectActId
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 62)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(1198, 60)
         '
         'grd
         '
@@ -100,9 +105,9 @@ Partial Class frmSelectActId
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(1058, 642)
+        Me.SimpleButton2.Location = New System.Drawing.Point(1043, 642)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(128, 45)
+        Me.SimpleButton2.Size = New System.Drawing.Size(143, 45)
         Me.SimpleButton2.TabIndex = 72
         Me.SimpleButton2.Text = "Cancel"
         '
@@ -110,17 +115,47 @@ Partial Class frmSelectActId
         '
         Me.SimpleButton3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton3.Location = New System.Drawing.Point(924, 642)
+        Me.SimpleButton3.Location = New System.Drawing.Point(894, 642)
         Me.SimpleButton3.Name = "SimpleButton3"
-        Me.SimpleButton3.Size = New System.Drawing.Size(128, 45)
+        Me.SimpleButton3.Size = New System.Drawing.Size(143, 45)
         Me.SimpleButton3.TabIndex = 73
         Me.SimpleButton3.Text = "Select"
+        '
+        'SimpleButton4
+        '
+        Me.SimpleButton4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.SimpleButton4.ImageOptions.Image = CType(resources.GetObject("SimpleButton4.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton4.Location = New System.Drawing.Point(120, 571)
+        Me.SimpleButton4.Name = "SimpleButton4"
+        Me.SimpleButton4.Size = New System.Drawing.Size(102, 33)
+        Me.SimpleButton4.TabIndex = 75
+        Me.SimpleButton4.Text = "Load View"
+        '
+        'SimpleButton5
+        '
+        Me.SimpleButton5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SimpleButton5.ImageOptions.Image = CType(resources.GetObject("SimpleButton5.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton5.Location = New System.Drawing.Point(745, 642)
+        Me.SimpleButton5.Name = "SimpleButton5"
+        Me.SimpleButton5.Size = New System.Drawing.Size(143, 45)
+        Me.SimpleButton5.TabIndex = 76
+        Me.SimpleButton5.Text = "Copy to Clipboard"
+        '
+        'opnFle
+        '
+        Me.opnFle.Filter = "View Files|*.xml"
+        '
+        'SplashScreenManager
+        '
+        SplashScreenManager.ClosingDelay = 500
         '
         'frmSelectActId
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1198, 699)
+        Me.Controls.Add(Me.SimpleButton5)
+        Me.Controls.Add(Me.SimpleButton4)
         Me.Controls.Add(Me.SimpleButton3)
         Me.Controls.Add(Me.SimpleButton2)
         Me.Controls.Add(Me.SimpleButton1)
@@ -145,4 +180,7 @@ Partial Class frmSelectActId
     Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents SimpleButton2 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents SimpleButton3 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents SimpleButton4 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents SimpleButton5 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents opnFle As OpenFileDialog
 End Class

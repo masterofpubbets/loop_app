@@ -1,5 +1,6 @@
 SELECT DISTINCT
 tblInsLoop.Subsystem,tblInsLoop.Area,tblInsLoop.Active
+,tblInsLoop.Planning_START_Date AS [Plan Start Date], tblInsLoop.Planning_FINISH_Date AS [Plane Finish Date], tblInsLoop.LoopPriority AS [Priority]
 ,tblInsLoop.LoopName
 ,VILDMAP.Area as [Item Area]
 ,case when VILDMAP.Discipline is null then 'No ILD' else VILDMAP.Discipline end as Discipline
@@ -12,7 +13,7 @@ SELECT TBLILD.Item,TBLILD.Loop_Name,VMAP.*
 FROM TBLILD 
 LEFT JOIN
 (
-select Area,'Electrical Cable' as Discipline,Type,'IC-' + Tag AS Tag,[Eng Length] as Length
+select Area,'Electrical Cable' as Discipline,Type,Tag AS Tag,[Eng Length] as Length
 ,NULL AS Forecast,NULL as Available,[Last Pulling Update] as [Pulled/Installed]
 ,convert(nvarchar (50),[Connect From Date]) as [Cable Con 1]
 ,convert(nvarchar (50),[Connect To Date]) as [Cable Con 2]
@@ -25,7 +26,7 @@ from vECList with (Nolock)
 
 
 UNION ALL
-select Area,'Instrument Cable' as Discipline,Type,'IC-' + TAG as Tag,[Eng Length] as Length
+select Area,'Instrument Cable' as Discipline,Type,TAG as Tag,[Eng Length] as Length
 ,NULL AS Forecast,NULL as Available,[Last Pulling Update] as [Pulled/Installed]
 ,convert(nvarchar (50),[Connect From Date]) as [Cable Con 1]
 ,convert(nvarchar (50),[Connect To Date]) as [Cable Con 2]
@@ -35,57 +36,19 @@ select Area,'Instrument Cable' as Discipline,Type,'IC-' + TAG as Tag,[Eng Length
 ,NULL as PO
 ,Subsystem,[Qc Released Date] as [QC/HCS Released]
 from vICList with (Nolock)
- 
+
 
 UNION ALL
-select Area,'Electrical Equipment' as Discipline,Type,Tag,0 as Length
-,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
+select Area,tblEquipment.Discipline as Discipline,tblEquipment.[Type] as Type,tblEquipment.Tag as Tag,0 as Length
+,tblEquipment.ForecastedDate AS Forecast,convert(nvarchar (255),tblEquipment.ReceivedDate) as Available,tblEquipment.InstalledDate as [Pulled/Installed]
 ,'N/A' as [Cable Con 1]
 ,'N/A' as [Cable Con 2]
 ,'N/A' as [Calibrated/Tested]
 ,'N/A' as [Hookup]
 ,'N/A' as [Hookup Name]
 ,case when PO is null then 'No Mat Info' else po end as PO
-,Subsystem,tblElectricalEquipment.Installed_Date as [QC/HCS Released]
-from tblElectricalEquipment with (Nolock)
-
-
-UNION ALL
-select Area,'Instrument Equipment' as Discipline,Type,Tag,0 as Length
-,ForeCast_Date AS Forecast,convert(nvarchar (255),Arrived_Date) as Available,Installed_Date as [Pulled/Installed]
-,'N/A' as [Cable Con 1]
-,'N/A' as [Cable Con 2]
-,'N/A' as [Calibrated/Tested]
-,'N/A' as [Hookup]
-,'N/A' as [Hookup Name]
-,case when PO is null then 'No Mat Info' else po end as PO
-,Subsystem,tblInsEquipment.Installed_Date as [QC/HCS Released]
-from tblInsEquipment with (Nolock)
-
-
-UNION ALL
-select Area,'Electrical JB' as Discipline,JE_Type as Type,Tag,0 as Length
-,JE_ArriveSiteForeCast AS Forecast,convert(nvarchar (255),JE_ArriveSite) as Available,JE_Installed as [Pulled/Installed]
-,'N/A' as [Cable Con 1]
-,'N/A' as [Cable Con 2]
-,'N/A' as [Calibrated/Tested]
-,'N/A' as [Hookup]
-,'N/A' as [Hookup Name]
-,case when PO is null then 'No Mat Info' else po end as PO
-,Subsystem,tblEleJunctionBox.JE_TRQC as [QC/HCS Released]
-from tblEleJunctionBox with (Nolock)
-
-UNION ALL
-select Area,'Instrument JB' as Discipline,ji_Type as Type,JunctionBox as Tag,0 as Length
-,JI_ArriveForeCast AS Forecast,convert(nvarchar (255),ji_ArriveSite) as Available,ji_Installed as [Pulled/Installed]
-,'N/A' as [Cable Con 1]
-,'N/A' as [Cable Con 2]
-,'N/A' as [Calibrated/Tested]
-,'N/A' as [Hookup]
-,'N/A' as [Hookup Name]
-,case when PO is null then 'No Mat Info' else po end as PO
-,Subsystem,JunctionBox.JI_TRQC as [QC/HCS Released]
-from JunctionBox with (Nolock)
+,Subsystem,tblEquipment.QCDate as [QC/HCS Released]
+from tblEquipment with (Nolock)
 
 UNION ALL
 select Area,'Instruments' as Discipline
@@ -103,9 +66,10 @@ else convert(nvarchar (50),HookUp_Date) end as [Hookup]
 ,case when PO is null then 'No Mat Info' else po end as PO
 ,Subsystem,tblInstruments.Final_Installed_Date as [QC/HCS Released]
 from tblInstruments with (Nolock)
+
 ) AS VMAP
-ON CASE WHEN TBLILD.Item_Type LIKE '%INS%CABLE%' THEN  'IC-' + tblILD.Item ELSE tblILD.Item END =VMAP.Tag
+
+ON tblILD.Item =VMAP.Tag
 WHERE TBLILD.Item_Type IS NOT NULL
 ) AS VILDMAP
 ON tblInsLoop.LoopName=VILDMAP.Loop_Name
-ORDER BY tblInsLoop.Area,tblInsLoop.LoopName

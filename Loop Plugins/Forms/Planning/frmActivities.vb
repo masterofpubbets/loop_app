@@ -1,4 +1,5 @@
-﻿Imports DevExpress.XtraEditors
+﻿Imports System.ComponentModel
+Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid
 Imports DevExpress.XtraGrid.Columns
 
@@ -98,6 +99,13 @@ Public Class frmActivities
 
     Private Sub frmActivities_Load(sender As Object, e As EventArgs) Handles Me.Load
         GetData()
+        Try
+            If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
+                grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
+            End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
@@ -108,12 +116,14 @@ Public Class frmActivities
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -132,11 +142,6 @@ Public Class frmActivities
 
         End Try
     End Sub
-
-    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        grdView.CopySelectedItems(gv, "ActID")
-    End Sub
-
     Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
         Dim frm As New frmUpdateActWithPCS
         frm.ShowDialog(Me)
@@ -162,6 +167,7 @@ Public Class frmActivities
         Try
             If opnFle.FileName <> "" Then
                 grdView.ApplyViewLayout(gv, opnFle.FileName)
+                SaveSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, opnFle.FileName)
             End If
         Catch ex As Exception
 
@@ -231,6 +237,14 @@ Public Class frmActivities
 
     Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick
         Me.MdiParent = Nothing
+    End Sub
+
+    Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem11.ItemClick
+        grdView.CopySelectedItems(gv, "ActID")
+    End Sub
+
+    Private Sub frmActivities_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 
     'Private Sub gv_CustomDrawCell(sender As Object, e As RowCellCustomDrawEventArgs) Handles gv.CustomDrawCell

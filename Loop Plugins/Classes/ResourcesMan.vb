@@ -113,7 +113,7 @@ Public Class ResourcesMan
                 End If
             End If
         Catch ex As Exception
-            pe.RaiseDataReadError()
+            pe.RaiseDataReadError(ex.Message)
         End Try
 
     End Sub

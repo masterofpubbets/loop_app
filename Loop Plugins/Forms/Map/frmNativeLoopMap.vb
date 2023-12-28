@@ -1,7 +1,9 @@
-﻿Public Class frmNativeLoopMap
+﻿Imports System.ComponentModel
 
-      Private Sub GetData()
-        dim DT As New DataTable
+Public Class frmNativeLoopMap
+
+    Private Sub GetData()
+        Dim DT As New DataTable
         DT = New DataTable
         DT = DB.ReturnDataTable(My.Resources.Loop_Map)
         GRD.DataSource = DT
@@ -25,5 +27,9 @@
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub frmNativeLoopMap_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

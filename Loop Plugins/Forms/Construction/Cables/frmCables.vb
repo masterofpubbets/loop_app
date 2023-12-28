@@ -1,9 +1,9 @@
-﻿Imports DevExpress.Internal.WinApi.Windows.UI.Notifications
+﻿Imports System.ComponentModel
 Imports DevExpress.XtraEditors
 Imports DevExpress.XtraGrid
 Imports DevExpress.XtraGrid.Columns
 Imports DevExpress.XtraGrid.Views.Base
-
+Imports DevExpress.XtraSplashScreen
 Public Class frmCables
     Private cable As New Cables
     Public _filter As String = ""
@@ -14,6 +14,7 @@ Public Class frmCables
     Private viewType As Boolean = False
     Private StandardRulesAdded As Boolean = False
     Private docImage As Image = Image.FromFile(Application.StartupPath & "\res\doc12.png")
+    Private opnedHandle As IOverlaySplashScreenHandle
 
     Public Sub New(Optional ByVal ShowFullDetails As Boolean = False)
 
@@ -28,30 +29,68 @@ Public Class frmCables
             Me.Text &= " (Simple View)"
         End If
     End Sub
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
+    Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
+        opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
+        Return opnedHandle
+    End Function
+
+    Private Sub CloseProgressPanel(ByVal handle As IOverlaySplashScreenHandle)
+        If handle IsNot Nothing Then SplashScreenManager.CloseOverlayForm(handle)
+    End Sub
     Private Sub CheckAuth()
         rpProduction.Visible = False
         rpQC.Visible = False
         rpPlanning.Visible = False
         rpEngineering.Visible = False
+        rpProductionControl.Visible = False
+        rMenuAssignActIDs.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuChangeRoute.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuChangeTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuChangeType.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
 
         If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
             rpProduction.Visible = True
             rpQC.Visible = True
             rpPlanning.Visible = True
             rpEngineering.Visible = True
+            rpProductionControl.Visible = True
+            rMenuAssignActIDs.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeRoute.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeType.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             Exit Sub
         End If
         If InStr(Users.userType, "construction", CompareMethod.Text) > 0 Then
             rpProduction.Visible = True
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "qc", CompareMethod.Text) > 0 Then
             rpQC.Visible = True
         End If
         If InStr(Users.userType, "planning", CompareMethod.Text) > 0 Then
             rpPlanning.Visible = True
+            rMenuAssignActIDs.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeRoute.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeType.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "engineer", CompareMethod.Text) > 0 Then
             rpEngineering.Visible = True
+        End If
+        If InStr(Users.userType, "Production", CompareMethod.Text) > 0 Then
+            rpProductionControl.Visible = True
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
     End Sub
     Private Sub formatColumnsWidth()
@@ -116,6 +155,7 @@ Public Class frmCables
         End Try
     End Sub
     Private Sub getData()
+        ShowProgressPanel()
         saveColumnsWidth()
         If viewType Then
             grd.DataSource = cable.GetItems(Construction.ItemsTypes.CABLESFULL)
@@ -152,7 +192,7 @@ Public Class frmCables
         Filter()
 
         gv.BestFitColumns(True)
-
+        CloseProgressPanel(opnedHandle)
     End Sub
 
     Private Sub frmCables_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -166,12 +206,38 @@ Public Class frmCables
 
         End Try
     End Sub
+    Private Sub gv_CustomDrawCell(sender As Object, e As RowCellCustomDrawEventArgs) Handles gv.CustomDrawCell
+        If viewType Then
+            If e.Column.FieldName = "Tag" Then
+                If ((e.RowHandle >= 0) AndAlso (gv.GetDataRow(e.RowHandle).Item("Resource") = "Yes")) Then
+                    Dim p As New Point(e.Bounds.Width + e.Bounds.X - 12, e.Bounds.Y + 3)
+                    e.DefaultDraw()
+                    e.Cache.DrawImage(docImage, p)
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub frmCables_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles grd.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
+    End Sub
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         getData()
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim frm As New frmFilter
         frm.Text = "Cables Filter"
         For inx As Integer = 0 To gv.Columns.Count - 1
@@ -179,12 +245,14 @@ Public Class frmCables
         Next
         frm.ShowDialog(Me)
         If Not frm.isCancel Then
+            Dim bc As String = ""
+            If Not frm.Exact Then bc = "%"
             Dim _filter As String = ""
             For inx As Integer = 1 To frm.searchValues.Count
                 If inx <> 1 Then
-                    _filter &= String.Format("OR [{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter &= String.Format("OR [{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 Else
-                    _filter = String.Format("[{0}] LIKE '{1}'", frm.searchField, frm.searchValues.Item(inx))
+                    _filter = String.Format("[{0}] LIKE '{2}{1}{2}'", frm.searchField, frm.searchValues.Item(inx), bc)
                 End If
             Next
             gv.Columns(frm.searchField).FilterInfo = New ColumnFilterInfo(_filter)
@@ -193,6 +261,8 @@ Public Class frmCables
 
     Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
         Try
+            rMenu.HidePopup()
+            Application.DoEvents()
             sveFle.FileName = ""
             sveFle.Filter = "XLSX Files|*.xlsx"
             sveFle.ShowDialog()
@@ -204,10 +274,7 @@ Public Class frmCables
         End Try
     End Sub
 
-    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        grdView.CopySelectedItems(gv, "Tag")
-    End Sub
-    Private Sub BarButtonItem8_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem8.ItemClick
+    Private Sub BarButtonItem35_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem35.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as QC Released?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSetQCReleased
@@ -261,11 +328,14 @@ Public Class frmCables
 
         End Try
     End Sub
-    Private Sub BarButtonItem25_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem25.ItemClick
+
+    Private Sub BarButtonItem8_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem8.ItemClick
         Me.MdiParent = Nothing
     End Sub
 
-    Private Sub BarButtonItem26_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem26.ItemClick
+    Private Sub BarButtonItem17_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem17.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to change Pulling Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -283,7 +353,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem27_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem27.ItemClick
+    Private Sub BarButtonItem18_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem18.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to change Pulling Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -303,7 +375,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem28_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem28.ItemClick
+    Private Sub BarButtonItem19_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem19.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to clear Pulling Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
         Dim act As New Activities
@@ -317,7 +391,9 @@ Public Class frmCables
         getData()
     End Sub
 
-    Private Sub BarButtonItem29_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem29.ItemClick
+    Private Sub BarButtonItem20_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem20.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to change Conn From Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -335,7 +411,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem30_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem30.ItemClick
+    Private Sub BarButtonItem21_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to clear Conn From Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
         Dim act As New Activities
@@ -349,7 +427,9 @@ Public Class frmCables
         getData()
     End Sub
 
-    Private Sub BarButtonItem31_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem31.ItemClick
+    Private Sub BarButtonItem22_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem22.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to change Conn To Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -367,7 +447,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem32_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem32.ItemClick
+    Private Sub BarButtonItem23_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem23.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to clear Conn To Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
         Dim act As New Activities
@@ -381,7 +463,9 @@ Public Class frmCables
         getData()
     End Sub
 
-    Private Sub BarButtonItem33_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem33.ItemClick
+    Private Sub BarButtonItem24_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem24.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to change Test Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -399,7 +483,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem34_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem34.ItemClick
+    Private Sub BarButtonItem25_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem25.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         If MsgBox("Do you want to clear Test Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
         Dim act As New Activities
@@ -413,7 +499,7 @@ Public Class frmCables
         getData()
     End Sub
 
-    Private Sub BarButtonItem35_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem35.ItemClick
+    Private Sub BarButtonItem29_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem29.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To update All {0}{1} Selected for Pulling Workfront?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint(False)
@@ -443,7 +529,7 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem36_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem36.ItemClick
+    Private Sub BarButtonItem30_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem30.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To update All {0}{1} Selected for Gland From Workfront?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint(False)
@@ -473,7 +559,7 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem37_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem37.ItemClick
+    Private Sub BarButtonItem31_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem31.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To update All {0}{1} Selected for Gland To Workfront?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint(False)
@@ -503,7 +589,7 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem38_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem38.ItemClick
+    Private Sub BarButtonItem32_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem32.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To update All {0}{1} Selected for Connect From Workfront?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint(False)
@@ -533,7 +619,7 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem39_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem39.ItemClick
+    Private Sub BarButtonItem33_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem33.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To update All {0}{1} Selected for Connect To Workfront?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint(False)
@@ -563,7 +649,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem20_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem20.ItemClick
+    Private Sub BarButtonItem34_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem34.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Discipline for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim pullinActId As String = ""
@@ -593,7 +681,9 @@ Public Class frmCables
         getData()
     End Sub
 
-    Private Sub BarButtonItem21_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
+    Private Sub rMenuChangeRoute_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeRoute.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Routing for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmEditText With {.Text = "Change Cable Routing"}
@@ -609,7 +699,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem22_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem22.ItemClick
+    Private Sub rMenuChangeType_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeType.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Type for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmEditText With {.Text = "Change Cable Type"}
@@ -625,7 +717,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem24_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem24.ItemClick
+    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem12.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Pulled?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint
@@ -648,7 +742,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem40_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem40.ItemClick
+    Private Sub BarButtonItem13_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem13.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Connected From?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint
@@ -685,7 +781,9 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem41_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem41.ItemClick
+    Private Sub BarButtonItem14_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem14.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Connected To?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint
@@ -723,6 +821,8 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim fs As New FileSystem
         For Each row_handle As Integer In gv.GetSelectedRows
             If Not IsDBNull(gv.GetDataRow(row_handle).Item("RFINumber")) Then
@@ -731,7 +831,9 @@ Public Class frmCables
         Next
     End Sub
 
-    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
+    Private Sub rMenuChangeTeam_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeTeam.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Team for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmEditText With {.Text = "Change Team"}
@@ -752,7 +854,7 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem23_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem23.ItemClick
+    Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem11.ItemClick
         Dim inx As Integer = 0
         Dim filter As String = ""
         For Each row_handle As Integer In gv.GetSelectedRows
@@ -768,10 +870,11 @@ Public Class frmCables
             ._filterColumn = "Tag",
         ._filter = filter
         }
+        frmMain.AddToQuickAccess(frm)
         frm.Show()
     End Sub
 
-    Private Sub BarButtonItem43_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem43.ItemClick
+    Private Sub BarButtonItem15_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem15.ItemClick
         Dim frm As New frmSelectResource
         Dim res As New ResourcesMan
         frm.ShowDialog(Me)
@@ -792,18 +895,7 @@ Public Class frmCables
         End If
     End Sub
 
-    Private Sub BarButtonItem42_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem42.ItemClick
-        If gv.RowCount = 0 Then Exit Sub
-        If gv.GetSelectedRows.Length = 0 Then Exit Sub
-        Dim row_handle As Integer = gv.GetSelectedRows(0)
-        Dim itemId As Integer = gv.GetDataRow(row_handle).Item("Id")
-        Dim groupId As ResourcesMan.GROUPID = If(gv.GetDataRow(row_handle).Item("Discipline") = "Electrical", ResourcesMan.GROUPID.ElecatricalCable, ResourcesMan.GROUPID.InstrumentCable)
-        Dim frm As New frmItemResource(itemId, groupId)
-        frm.lblItem.Text = "Tag: " & gv.GetDataRow(row_handle).Item("Tag") & vbTab & "Discipline: " & gv.GetDataRow(row_handle).Item("Discipline")
-        frm.Show()
-    End Sub
-
-    Private Sub BarButtonItem44_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem44.ItemClick
+    Private Sub BarButtonItem16_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem16.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Clear All Resources For All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim res As ResourcesManItem, itemId As Integer = 0, groupId As ResourcesManItem.GROUPID = ResourcesMan.GROUPID.ElecatricalCable
@@ -823,15 +915,35 @@ Public Class frmCables
         getData()
     End Sub
 
-    Private Sub gv_CustomDrawCell(sender As Object, e As RowCellCustomDrawEventArgs) Handles gv.CustomDrawCell
-        If viewType Then
-            If e.Column.FieldName = "Tag" Then
-                If ((e.RowHandle >= 0) AndAlso (gv.GetDataRow(e.RowHandle).Item("Resource") = "Yes")) Then
-                    Dim p As New Point(e.Bounds.Width + e.Bounds.X - 12, e.Bounds.Y + 3)
-                    e.DefaultDraw()
-                    e.Cache.DrawImage(docImage, p)
-                End If
-            End If
-        End If
+    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
+        grd.ShowPrintPreview()
+    End Sub
+
+    Private Sub BarButtonItem4_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        If gv.RowCount = 0 Then Exit Sub
+        If gv.GetSelectedRows.Length = 0 Then Exit Sub
+        Dim row_handle As Integer = gv.GetSelectedRows(0)
+        Dim itemId As Integer = gv.GetDataRow(row_handle).Item("Id")
+        Dim groupId As ResourcesMan.GROUPID = If(gv.GetDataRow(row_handle).Item("Discipline") = "Electrical", ResourcesMan.GROUPID.ElecatricalCable, ResourcesMan.GROUPID.InstrumentCable)
+        Dim frm As New frmItemResource(itemId, groupId)
+        frm.lblItem.Text = "Tag: " & gv.GetDataRow(row_handle).Item("Tag") & vbTab & "Discipline: " & gv.GetDataRow(row_handle).Item("Discipline")
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem26_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem26.ItemClick
+        If MsgBox("Do you want to delete permanently selected cables and its production?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+        For Each row_handle As Integer In gv.GetSelectedRows
+            cable.Delete(gv.GetDataRow(row_handle).Item("Tag"), gv.GetDataRow(row_handle).Item("Discipline"))
+        Next
+        If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+        getData()
+    End Sub
+
+    Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        grdView.CopySelectedItems(gv, "Tag")
     End Sub
 End Class

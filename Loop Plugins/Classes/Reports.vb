@@ -3,6 +3,8 @@
     Public Enum ReportTypes
         EICADAILYTRACKINGELEResources = 1
         EICADAILYTRACKINGINSResources = 2
+        LOOPSUMMARY = 3
+        EICAITRCLOSED = 4
     End Enum
 
     Public Overloads Function GetItems(ByVal reportType As ReportTypes) As DataTable
@@ -12,6 +14,10 @@
                     Return (DB.ReturnDataTable("EXEC DailyTrackingResourceAllEle"))
                 Case ReportTypes.EICADAILYTRACKINGINSResources
                     Return (DB.ReturnDataTable("EXEC DailyTrackingResourceAllIns"))
+                Case ReportTypes.LOOPSUMMARY
+                    Return (DB.ReturnDataTable("EXEC LOOPS.GetSummary"))
+                Case ReportTypes.EICAITRCLOSED
+                    Return (DB.ReturnDataTableExcuteFromFile(Application.StartupPath & "\sqries\PendingItems.txt"))
             End Select
 
         Catch ex As Exception

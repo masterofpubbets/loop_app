@@ -1,4 +1,6 @@
-﻿Public Class frmILDManage
+﻿Imports System.ComponentModel
+
+Public Class frmILDManage
     Private DT As New DataTable
     Private Builder As OleDb.OleDbCommandBuilder
     Dim cmd As New OleDb.OleDbCommand("select * from tblILD", AccDB.Connection)
@@ -113,5 +115,9 @@
     Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick
         Dim frm As New frmExportILDpdf() With {.MdiParent = frmMain}
         frm.Show()
+    End Sub
+
+    Private Sub frmILDManage_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

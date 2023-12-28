@@ -42,7 +42,8 @@ Partial Class frmSelectResource
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(1067, 58)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(1067, 60)
         '
         'grd
         '

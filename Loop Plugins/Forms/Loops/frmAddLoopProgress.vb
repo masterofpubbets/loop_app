@@ -1,4 +1,6 @@
-﻿Public Class frmAddLoopProgress
+﻿Imports System.ComponentModel
+
+Public Class frmAddLoopProgress
     Private Eng As New Engineering
     Public isAdded As Boolean = False
 
@@ -42,5 +44,9 @@
             End If
         End Try
 
+    End Sub
+
+    Private Sub frmAddLoopProgress_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

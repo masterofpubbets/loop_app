@@ -1,4 +1,5 @@
-﻿Imports DevExpress.Pdf
+﻿Imports System.ComponentModel
+Imports DevExpress.Pdf
 Imports DevExpress.XtraPdfViewer
 
 Public Class frmExtractILD2
@@ -178,5 +179,9 @@ Public Class frmExtractILD2
 
     Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
         StartReplace()
+    End Sub
+
+    Private Sub frmExtractILD2_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class

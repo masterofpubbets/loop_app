@@ -1,4 +1,6 @@
-﻿Public Class frmLoopStatus
+﻿Imports System.ComponentModel
+
+Public Class frmLoopStatus
     Private DT As New DataTable
     Private Builder As SqlClient.SqlCommandBuilder
     Private cmd As New SqlClient.SqlCommand("SELECT TBL_ID,Area,[LoopName],L_Remarks,STATUS,Constraints,Active FROM [tblInsLoop] WHERE STATUS is not null", DB.DBConnection)
@@ -64,5 +66,9 @@
         AddHandler ild.FileCount, AddressOf h_LoopCnt
         AddHandler ild.UpdateLoopFinished, AddressOf h_Finished
         GetData()
+    End Sub
+
+    Private Sub frmLoopStatus_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        frmMain.MdiChildClosed(Me.Text)
     End Sub
 End Class
