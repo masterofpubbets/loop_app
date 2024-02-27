@@ -17,6 +17,13 @@ Public Class frmReports
         Select Case rptType
             Case Reports.ReportTypes.EICAITRCLOSED
                 barClipboardTag.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+                Me.Text = "ITR Closed"
+            Case Reports.ReportTypes.LOOPSUMMARY
+                Me.Text = "Loop Folder Summary"
+            Case Reports.ReportTypes.EICADAILYTRACKINGINSResources
+                Me.Text = "IN Resource Daily Tracking"
+            Case Reports.ReportTypes.EICADAILYTRACKINGELEResources
+                Me.Text = "EL Resource Daily Tracking"
         End Select
         ' Add any initialization after the InitializeComponent() call.
 

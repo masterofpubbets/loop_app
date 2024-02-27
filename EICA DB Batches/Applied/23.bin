@@ -1,0 +1,550 @@
+--version11.0.8
+UPDATE [dbo].[tblSettings] SET SetValue = '11.0.8' WHERE SetName = 'VERSION'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetFoldersHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.GetFoldersHCS
+END
+GO
+CREATE PROC [MOTORS].[GetFoldersHCS]
+AS
+WITH LoopsData AS (
+
+SELECT DISTINCT tblSolorun.Id
+	  ,Area
+      ,[FolderName] As [Folder Name]
+	  ,L_Description AS [Description]
+      ,[L_Type] As [Type]
+      ,[Sub_Type] AS [Sub Type]
+	  ,[Subsystem]
+	  ,[Subcontractor]
+      ,[Vendor]
+	  
+	  ,L_Constr_Release AS [Cons Complete]
+	  ,TR_Loop_Folder_QC_Release AS [QC Released]
+      ,[Folder_Preparation] AS [Folder Printed]
+      ,SubmitToQC AS [Submitted To QC]
+	  ,HCS_Folder_Ready AS [Folder Ready QC]
+      ,ReturnFromQC AS [Return From QC]
+	  ,Submitted_to_Precom AS [Submitted To Precomm]
+	  ,L_Done AS [Done]
+	  ,L_FinalApproval AS [Final Approval]
+      
+	  ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Loop Done'
+		WHEN L_Done IS NOT NULL THEN 'Loop Done'
+		WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+		WHEN ReturnFromQC IS NOT NULL THEN 'Returned From QC'
+		WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+		WHEN SubmitToQC IS NOT NULL THEN 'Submitted To QC'
+        WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Printed'
+		WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+		WHEN L_Constr_Release IS NOT NULL THEN 'Construction Complete'
+		ELSE 'Not Ready'
+		END AS [Folder Status]
+		,FolderPriority
+		,tblProject.Pro_Title AS [Project]
+		--,[qrCode] AS QRCode
+		,tblSolorun.ProUUID 
+        ,tblSolorun.PDSModel
+        ,tblSolorun.Planning_START_Date AS [Plan Start Date]
+        ,tblSolorun.Planning_FINISH_Date AS [Plan Finish Date]
+  FROM [tblSolorun] WITH (NOLOCK)
+  INNER JOIN tblProject ON [tblSolorun].ProUUID = tblProject.UUID
+  WHERE [tblSolorun].Active = 1
+)
+
+SELECT DISTINCT
+CASE WHEN LOOPS.tblLoopsCons.isClosed = 0 THEN 'Yes' ELSE 'No' END AS [Has Blockage]
+,LoopsData.*
+
+FROM LoopsData
+LEFT JOIN LOOPS.tblLoopsCons WITH (NOLOCK) ON LoopsData.Id = LOOPS.tblLoopsCons.loopId
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'tblFoldersCons'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	CREATE TABLE [MOTORS].[tblFoldersCons](
+        [id] [int] IDENTITY(1,1) NOT NULL,
+        [conCatId] [int] NOT NULL,
+        [folderId] [int] NOT NULL,
+        [description] [nvarchar](255) NOT NULL,
+        [issuedById] [int] NOT NULL,
+        [issuedToId] [int] NOT NULL,
+        [issuedDate] [date] NOT NULL,
+        [isClosed] [bit] NOT NULL DEFAULT 0,
+        [comments] [nvarchar](max) NULL,
+        [closedDate] [date] NULL,
+        [prevId] [int] NULL,
+        PRIMARY KEY (id)
+    ) 
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetFolderConstraints'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.GetFolderConstraints
+END
+GO
+CREATE PROC [MOTORS].[GetFolderConstraints]
+AS
+
+WITH Folders AS (
+	SELECT 
+		tblSolorun.[Id] AS FolderID
+		,Area
+		,[FolderName] As [Folder Name]
+		,[tblSolorun].L_Description AS [Description]
+		,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Folder Approved'
+			WHEN L_Done IS NOT NULL THEN 'Loop Done'
+			WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+			WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+			WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+			WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Prepared'
+			ELSE 'Not Ready'
+			END AS [Folder Status]
+			,FolderPriority
+			,tblProject.Pro_Title AS [Project]
+		FROM [tblSolorun] WITH (NOLOCK)
+		INNER JOIN tblProject ON [tblSolorun].ProUUID = tblProject.UUID
+		WHERE [tblSolorun].Active = 1 AND L_Done IS NULL
+	)
+
+SELECT 
+FolderCons.id AS ID
+,Folders.*
+,Cats.catName AS [Constraint Category]
+,FolderCons.[description] AS [Description], FolderCons.issuedDate AS [Issued Date]
+,IssuedBy.fullName AS [Issued By], IssuedBy.job AS [Issued By Title], IssuedBy.email AS [Issued By Mail]
+,IssuedTo.fullName AS [Issued To], IssuedTo.job AS [Issued To Title], IssuedTo.email AS [Issued To Mail]
+,FolderCons.comments AS Comments
+
+FROM Folders
+INNER JOIN MOTORS.tblFoldersCons AS FolderCons WITH (NOLOCK) ON Folders.FolderID = FolderCons.folderId
+LEFT JOIN LOOPS.tblConsCategory AS Cats WITH (NOLOCK) ON FolderCons.conCatId = Cats.id
+LEFT JOIN LOOPS.tblUsers AS IssuedBy WITH (NOLOCK) ON FolderCons.issuedById = IssuedBy.id
+LEFT JOIN LOOPS.tblUsers AS IssuedTo WITH (NOLOCK) ON FolderCons.issuedToId = IssuedTo.id
+
+WHERE FolderCons.isClosed = 0 
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'DefaultProject'
+          AND Object_ID = Object_ID(N'dbo.tblProject'))
+BEGIN
+    ALTER TABLE dbo.tblProject
+    ADD DefaultProject BIT NOT NULL DEFAULT 0
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopWithHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP PROC HCS.UpdateLoopWithHCS
+END
+GO
+CREATE PROC HCS.UpdateLoopWithHCS
+AS
+DECLARE @proID NVARCHAR(255)
+
+SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1
+
+--Update Deactivated
+UPDATE V
+    SET Active = 0
+FROM (
+    SELECT
+    tblInsLoop.LoopName, tblInsLoop.Active
+    FROM tblInsLoop
+    LEFT JOIN HCS.ProjectGroups AS H ON tblInsLoop.LoopName = H.GroupName
+    WHERE tblInsLoop.Active = 1 AND H.GroupName IS NULL
+) AS V
+
+--Update Reactivated
+UPDATE V
+    SET Active = 1
+FROM (
+    SELECT
+    tblInsLoop.LoopName, tblInsLoop.Active
+    FROM tblInsLoop
+    INNER JOIN HCS.ProjectGroups AS H ON tblInsLoop.LoopName = H.GroupName
+    WHERE tblInsLoop.Active = 0 AND H.[Type] LIKE '%loop%'
+) AS V
+
+--Insert New
+INSERT INTO tblInsLoop (LoopName, Area, Subsystem, Subcontractor, L_Description, L_Type, L_Remarks, Active, ProUUID)
+SELECT
+H.GroupName, H.Area, H.SubSystem, H.Subcontractor, H.[Description], H.[Type], 'Added From HCS Automation' AS Remarks,
+1 AS Active, @proId
+FROM HCS.ProjectGroups AS H
+LEFT JOIN tblInsLoop ON H.GroupName = tblInsLoop.LoopName
+WHERE H.[Type] LIKE '%loop%' AND tblInsLoop.LoopName IS NULL
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateMotorWithHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP PROC HCS.UpdateMotorWithHCS
+END
+GO
+CREATE PROC HCS.UpdateMotorWithHCS
+AS
+DECLARE @proID NVARCHAR(255)
+
+SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1
+--Update Deactivated
+UPDATE V
+    SET Active = 0
+FROM (
+    SELECT
+    tblSolorun.FolderName, tblSolorun.Active
+    FROM tblSolorun
+    LEFT JOIN HCS.ProjectGroups AS H ON tblSolorun.FolderName = H.GroupName
+    WHERE tblSolorun.Active = 1 AND H.GroupName IS NULL
+) AS V
+
+--Update Reactivated
+UPDATE V
+    SET Active = 1
+FROM (
+    SELECT
+    tblSolorun.FolderName, tblSolorun.Active
+    FROM tblSolorun
+    INNER JOIN HCS.ProjectGroups AS H ON tblSolorun.FolderName = H.GroupName
+    WHERE tblSolorun.Active = 0 AND H.[Type] LIKE '%motor%'
+) AS V
+
+--Insert New
+INSERT INTO tblSolorun (FolderName, Area, Subsystem, Subcontractor, L_Description, L_Type, L_Remarks, Active, ProUUID)
+SELECT
+H.GroupName, H.Area, H.SubSystem, H.Subcontractor, H.[Description], H.[Type], 'Added From HCS Automation' AS Remarks,
+1 AS Active, @proId
+FROM HCS.ProjectGroups AS H
+LEFT JOIN tblSolorun ON H.GroupName = tblSolorun.FolderName
+WHERE H.[Type] LIKE '%motor%' AND tblSolorun.FolderName IS NULL
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetGroupTasks'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP PROC HCS.GetGroupTasks
+END
+GO
+CREATE PROC [HCS].[GetGroupTasks]
+@UserName NVARCHAR(100)
+AS
+
+WITH HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Type]
+        ,[Discipline]
+        ,[Description]
+        ,[Subsystem]
+        ,[Group]
+        ,[GroupActive]
+        ,GroupType
+    FROM [HCS].[ProjectElements]
+    INNER JOIN TEMPDATA.GroupFilter ON [HCS].[ProjectElements].[Group] = TEMPDATA.GroupFilter.GroupName
+    WHERE TEMPDATA.GroupFilter.UserName = @UserName
+)
+
+SELECT 
+      HCSGroups.[Group],HCSGroups.GroupType,
+      [Module]
+      ,Tasks.[SubSystem]
+      ,[ElementCode] AS Tag
+      ,HCSGroups.[Type] AS [Item Type]
+      ,[Subcontractor]
+      ,[DocName]
+      ,Tasks.[Description]
+      ,[ClosingDate]
+      ,[ClosingRemarks]
+FROM [HCS].[ProjectTasks] AS Tasks
+INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+WHERE Tasks.Phase = 'Construction'
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopsConstraints'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetLoopsConstraints
+END
+GO
+CREATE PROC [LOOPS].[GetLoopsConstraints]
+AS
+
+WITH Loops AS (
+	SELECT 
+		[TBL_ID] AS LoopID
+		,Area
+		,[LoopName] As [Loop Name]
+		,[tblInsLoop].L_Description AS [Loop Description]
+		,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Folder Approved'
+			WHEN L_Done IS NOT NULL THEN 'Loop Done'
+			WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+			WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+			WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Prepared'
+            WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+			ELSE 'Not Ready'
+			END AS [Folder Status]
+			,LoopPriority
+			,tblProject.Pro_Title AS [Project]
+		FROM [tblInsLoop] WITH (NOLOCK)
+		INNER JOIN tblProject ON [tblInsLoop].ProUUID = tblProject.UUID
+		WHERE [tblInsLoop].Active = 1 AND L_Done IS NULL
+	)
+
+SELECT 
+LoopsCons.id AS ID
+,Loops.*
+,LoopsCats.catName AS [Constraint Category]
+,LoopsCons.[description] AS [Description], LoopsCons.issuedDate AS [Issued Date]
+,IssuedBy.fullName AS [Issued By], IssuedBy.job AS [Issued By Title], IssuedBy.email AS [Issued By Mail]
+,IssuedTo.fullName AS [Issued To], IssuedTo.job AS [Issued To Title], IssuedTo.email AS [Issued To Mail]
+,LoopsCons.comments AS Comments
+
+FROM Loops
+INNER JOIN LOOPS.tblLoopsCons AS LoopsCons WITH (NOLOCK) ON Loops.LoopID = LoopsCons.[loopId]
+LEFT JOIN LOOPS.tblConsCategory AS LoopsCats WITH (NOLOCK) ON LoopsCons.conCatId = LoopsCats.id
+LEFT JOIN LOOPS.tblUsers AS IssuedBy WITH (NOLOCK) ON LoopsCons.issuedById = IssuedBy.id
+LEFT JOIN LOOPS.tblUsers AS IssuedTo WITH (NOLOCK) ON LoopsCons.issuedToId = IssuedTo.id
+
+WHERE LoopsCons.isClosed = 0 
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetFolderConstraints'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.GetFolderConstraints
+END
+GO
+CREATE PROC [MOTORS].[GetFolderConstraints]
+AS
+
+WITH Folders AS (
+	SELECT 
+		tblSolorun.[Id] AS FolderID
+		,Area
+		,[FolderName] As [Folder Name]
+		,[tblSolorun].L_Description AS [Description]
+		,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Folder Approved'
+			WHEN L_Done IS NOT NULL THEN 'Loop Done'
+			WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+			WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+			WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Prepared'
+            WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+			ELSE 'Not Ready'
+			END AS [Folder Status]
+			,FolderPriority
+			,tblProject.Pro_Title AS [Project]
+		FROM [tblSolorun] WITH (NOLOCK)
+		INNER JOIN tblProject ON [tblSolorun].ProUUID = tblProject.UUID
+		WHERE [tblSolorun].Active = 1 AND L_Done IS NULL
+	)
+
+SELECT 
+FolderCons.id AS ID
+,Folders.*
+,Cats.catName AS [Constraint Category]
+,FolderCons.[description] AS [Description], FolderCons.issuedDate AS [Issued Date]
+,IssuedBy.fullName AS [Issued By], IssuedBy.job AS [Issued By Title], IssuedBy.email AS [Issued By Mail]
+,IssuedTo.fullName AS [Issued To], IssuedTo.job AS [Issued To Title], IssuedTo.email AS [Issued To Mail]
+,FolderCons.comments AS Comments
+
+FROM Folders
+INNER JOIN MOTORS.tblFoldersCons AS FolderCons WITH (NOLOCK) ON Folders.FolderID = FolderCons.folderId
+LEFT JOIN LOOPS.tblConsCategory AS Cats WITH (NOLOCK) ON FolderCons.conCatId = Cats.id
+LEFT JOIN LOOPS.tblUsers AS IssuedBy WITH (NOLOCK) ON FolderCons.issuedById = IssuedBy.id
+LEFT JOIN LOOPS.tblUsers AS IssuedTo WITH (NOLOCK) ON FolderCons.issuedToId = IssuedTo.id
+
+WHERE FolderCons.isClosed = 0 
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckLoopIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckLoopIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckLoopIntgerity]
+AS
+IF (SELECT LoopIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblInsLoop
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET TR_Loop_Folder_QC_Release = HCS_Folder_Ready
+        WHERE TR_Loop_Folder_QC_Release IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET L_Constr_Release = TR_Loop_Folder_QC_Release
+        WHERE L_Constr_Release IS NULL AND TR_Loop_Folder_QC_Release IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblInsLoop
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+    END
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckSolorunIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckSolorunIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckSolorunIntgerity]
+AS
+IF (SELECT SolorunIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblSolorun
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblSolorun
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET TR_Loop_Folder_QC_Release = HCS_Folder_Ready
+        WHERE TR_Loop_Folder_QC_Release IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET L_Constr_Release = TR_Loop_Folder_QC_Release
+        WHERE L_Constr_Release IS NULL AND TR_Loop_Folder_QC_Release IS NOT NULL
+
+        UPDATE tblSolorun
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblSolorun
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+
+        UPDATE V
+            SET V.Installed_date = V.TR_Loop_Folder_QC_Release
+        FROM (
+            SELECT
+                tblMotor.Installed_date, tblMotor.Tag,
+                tblSolorun.TR_Loop_Folder_QC_Release
+            FROM tblMotor
+            INNER JOIN tblSolorun ON tblMotor.Tag = tblSolorun.FolderName
+            WHERE 
+                (tblSolorun.TR_Loop_Folder_QC_Release IS NOT NULL) 
+            AND (tblMotor.Installed_date IS NULL)
+        ) AS V
+
+    END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateQCReleasedFromHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.UpdateQCReleasedFromHCS
+END
+GO
+CREATE PROC [MOTORS].[UpdateQCReleasedFromHCS]
+AS
+WITH HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Type]
+        ,[Discipline]
+        ,[Description]
+        ,[Subsystem]
+        ,[Group]
+        ,[GroupActive]
+        ,GroupType
+    FROM [HCS].[ProjectElements]
+)
+
+UPDATE v
+    SET v.TR_Loop_Folder_QC_Release = GETDATE()
+FROM (
+    SELECT
+    tblSolorun.FolderName, tblSolorun.TR_Loop_Folder_QC_Release,
+    TaskStatus.TaskCount, TaskStatus.TaskClosed
+    FROM tblSolorun
+    INNER JOIN (
+        SELECT 
+            HCSGroups.[Group]
+            ,COUNT([ElementCode]) AS TaskCount
+            ,COUNT([ClosingDate]) AS TaskClosed
+        FROM [HCS].[ProjectTasks] AS Tasks
+        INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+        WHERE Tasks.[Phase] <> 'Precommissioning'
+        GROUP BY HCSGroups.[Group]
+        HAVING COUNT([ElementCode]) = COUNT([ClosingDate])
+    ) AS TaskStatus
+    ON tblSolorun.FolderName = TaskStatus.[Group]
+) AS v
+WHERE v.TR_Loop_Folder_QC_Release IS NULL
+GO
+

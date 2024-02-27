@@ -1,0 +1,130 @@
+--version10.5
+UPDATE [dbo].[tblSettings] SET SetValue = 10.5 WHERE SetName = 'VERSION'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetTrays'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetTrays
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetTrays]
+AS
+WITH InsCblTray AS (
+	SELECT [Tag]
+		,SUM([Production_Qnty]) AS [Total Qnty]
+		,MAX([Production_Date]) AS [Last Update]
+	FROM [tblInsCableTrayProduction] WITH (NOLOCK)
+	GROUP BY Tag
+),
+EleCblTray AS (
+	SELECT [Tag]
+		,SUM([Production_Qnty]) AS [Total Qnty]
+		,MAX([Production_Date]) AS [Last Update]
+	FROM [tblEleCableTrayProduction] WITH (NOLOCK)
+	GROUP BY Tag
+), ActIds AS (
+    SELECT ActId, ActName, SubCon
+    FROM tblActIDS
+)
+
+SELECT 
+'Instrumentation' AS Discipline
+,[tbl_id] AS Id,[Area],[tblInsCableTray].[Tag],[IN_Tray_Type] AS [Type]
+,[IN_Tray_Description] AS [Description],[IN_Tray_Length] AS [Length]
+,[Subsystem]
+,[IC_Plan_P6_ActID_Install] AS [ActId]
+,ActIds.ActName AS [Activity Name], ActIds.SubCon AS [Activity Subcontractor]
+,InsCblTray.[Total Qnty]
+,ROUND(CONVERT(FLOAT,InsCblTray.[Total Qnty]) * 100 / CONVERT(FLOAT,[IN_Tray_Length]),2) AS [Percentage]
+,InsCblTray.[Last Update]
+,PDSModel
+,[Team]
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+FROM [tblInsCableTray] WITH (NOLOCK)
+LEFT JOIN InsCblTray ON [tblInsCableTray].Tag = InsCblTray.Tag
+LEFT JOIN ActIds ON tblInsCableTray.IC_Plan_P6_ActID_Install = ActIds.ActID
+
+UNION ALL
+
+
+SELECT 
+'Electrical' AS Discipline
+,[tbl_id] AS Id,[Area],[tblEleCableTray].[Tag],[EL_Tray_Type] AS [Type]
+,[EL_Tray_Description] AS [Description],[EL_Tray_Length] AS [Length]
+,[Subsystem]
+,[IC_Plan_P6_ActID_Install] AS [ActId]
+,ActIds.ActName AS [Activity Name], ActIds.SubCon AS [Activity Subcontractor]
+,EleCblTray.[Total Qnty]
+,ROUND(CONVERT(FLOAT,EleCblTray.[Total Qnty]) * 100 / CONVERT(FLOAT,[EL_Tray_Length]),2) AS [Percentage]
+,EleCblTray.[Last Update]
+,PDSModel
+,[Team]
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+FROM [tblEleCableTray] WITH (NOLOCK)
+LEFT JOIN EleCblTray ON [tblEleCableTray].Tag = EleCblTray.Tag
+LEFT JOIN ActIds ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIds.ActID
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetInstrumentsFull'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetInstrumentsFull
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetInstrumentsFull]
+AS
+
+WITH ActIds AS (
+    SELECT ActId, ActName, SubCon
+    FROM tblActIDS
+)
+
+SELECT [TBL_ID] AS Id, [Area]
+      ,[Instrument_Tag] AS Tag
+      ,[Loop_type] AS [Signal Type]
+      ,CASE WHEN [Instrument] ='Instrument' THEN 'Device' 
+      ELSE [Instrument] END AS Device
+      ,[Ins_Type] AS [Type]
+      ,[Instrument_Type_Desc] AS [Description]
+      ,[Equipment_Name] AS [Mounted Equipment]
+      ,[P_ID] AS [PID]
+      ,[Line_Number] AS [Line Number]
+      ,[Location]
+      ,[Subsystem]
+      ,PDSModel
+      ,[P6_Precalibration_ActID] AS [ActId Calibration]
+      ,ActCalib.ActName AS [Calibration Act Name], ActCalib.SubCon AS [Calibration Subcon]
+      ,[IC_Plan_P6_ActID_Install] AS [ActId Installation]
+      ,ActInst.ActName AS [Installation Act Name], ActInst.SubCon AS [Installation Subcon]
+      ,[IC_Plan_P6_ActID_Hookup] AS [ActId Hookup]
+      ,ActHookup.ActName AS [Hookup Act Name], ActHookup.SubCon AS [Hookup Subcon]
+      ,[Calibration_Type] AS [Calibration Scope]
+      ,[Calibration_Date] AS [Calibration Date]
+      ,[Installation_Date] AS [Installation Date]
+      ,CASE WHEN [hookup_name] IS NULL THEN 'N/A' ELSE hookup_name END AS [Hookup]
+      ,[HookUp_Date] AS [Hookup Date]
+      ,[Final_Installed_Date] AS [Re-Instated]
+      ,Installed_QC AS [Installation QC Released]
+      ,RFINumberInstallation
+      ,Calibration_QC_Date AS [Calibration QC Released]
+      ,RFINumberCalibration
+      ,Hookup_QC_Date AS [Hookup QC Released]
+      ,RFINumberHookup
+      ,[tp_name] AS [TP Name]
+      ,CASE WHEN [Furnished_By] IS NULL THEN 'TR' ELSE [Furnished_By] END AS [Furnished By]
+      ,[Team]
+      ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS [Status]
+  FROM [tblInstruments] WITH (NOLOCK)
+  LEFT JOIN ActIds AS ActInst ON tblInstruments.IC_Plan_P6_ActID_Install = ActInst.ActID
+  LEFT JOIN ActIds AS ActCalib ON tblInstruments.P6_Precalibration_ActID = ActCalib.ActID
+  LEFT JOIN ActIds AS ActHookup ON tblInstruments.IC_Plan_P6_ActID_Hookup = ActHookup.ActID
+  OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+

@@ -63,7 +63,7 @@ Partial Class frmEICALoopMap
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 110)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1202, 110)
         '
         'BarButtonItem1
         '
@@ -191,7 +191,7 @@ Partial Class frmEICALoopMap
         Me.GRD.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GRD.MenuManager = Me.RibbonControl1
         Me.GRD.Name = "GRD"
-        Me.GRD.Size = New System.Drawing.Size(1200, 590)
+        Me.GRD.Size = New System.Drawing.Size(1202, 591)
         Me.GRD.TabIndex = 3
         Me.GRD.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -238,7 +238,7 @@ Partial Class frmEICALoopMap
         'frmEICALoopMap
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1200, 700)
+        Me.ClientSize = New System.Drawing.Size(1202, 701)
         Me.Controls.Add(Me.GRD)
         Me.Controls.Add(Me.RibbonControl1)
         Me.IconOptions.Icon = CType(resources.GetObject("frmEICALoopMap.IconOptions.Icon"), System.Drawing.Icon)

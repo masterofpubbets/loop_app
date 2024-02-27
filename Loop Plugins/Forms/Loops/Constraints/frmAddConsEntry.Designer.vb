@@ -132,7 +132,8 @@ Partial Class frmAddConsEntry
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(828, 58)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(830, 60)
         '
         'lblActionBy
         '
@@ -157,7 +158,7 @@ Partial Class frmAddConsEntry
         'frmAddConsEntry
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(828, 526)
+        Me.ClientSize = New System.Drawing.Size(830, 527)
         Me.ControlBox = False
         Me.Controls.Add(Me.SimpleButton3)
         Me.Controls.Add(Me.lblActionBy)
@@ -172,6 +173,7 @@ Partial Class frmAddConsEntry
         Me.Controls.Add(Me.RibbonControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.IconOptions.Icon = CType(resources.GetObject("frmAddConsEntry.IconOptions.Icon"), System.Drawing.Icon)
+        Me.IconOptions.LargeImage = CType(resources.GetObject("frmAddConsEntry.IconOptions.LargeImage"), System.Drawing.Image)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmAddConsEntry"
         Me.Ribbon = Me.RibbonControl1

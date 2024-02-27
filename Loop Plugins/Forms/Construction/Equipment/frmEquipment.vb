@@ -17,6 +17,16 @@ Public Class frmEquipment
     Private opnedHandle As IOverlaySplashScreenHandle
 
 
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
+
     Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
         opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
         Return opnedHandle
@@ -30,22 +40,34 @@ Public Class frmEquipment
         rpEngineering.Visible = False
         rpPlanning.Visible = False
         rpQC.Visible = False
+        rMenuSetQCReleased.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuChangeTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuChangeActId.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
 
         If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
             rpProduction.Visible = True
             rpQC.Visible = True
             rpPlanning.Visible = True
             rpEngineering.Visible = True
+            rMenuSetQCReleased.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeActId.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             Exit Sub
         End If
         If InStr(Users.userType, "construction", CompareMethod.Text) > 0 Then
             rpProduction.Visible = True
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "planning", CompareMethod.Text) > 0 Then
             rpPlanning.Visible = True
+            rMenuChangeActId.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuChangeTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "qc", CompareMethod.Text) > 0 Then
             rpQC.Visible = True
+            rMenuSetQCReleased.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "engineering", CompareMethod.Text) > 0 Then
             rpEngineering.Visible = True
@@ -135,13 +157,13 @@ Public Class frmEquipment
 
     End Sub
 
-    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuRefresh.ItemClick
         ShowProgressPanel()
         getData()
         CloseProgressPanel(opnedHandle)
     End Sub
 
-    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
+    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuFilter.ItemClick
         Dim frm As New frmFilter
         frm.Text = "Equipment Filter"
         For inx As Integer = 0 To gv.Columns.Count - 1
@@ -180,8 +202,10 @@ Public Class frmEquipment
         CheckAuth()
         getData()
         Try
-            If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
-                grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
+            If _filter <> "" Then
+                If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
+                    grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
+                End If
             End If
         Catch ex As Exception
 
@@ -216,7 +240,7 @@ Public Class frmEquipment
         Me.MdiParent = Nothing
     End Sub
 
-    Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem9.ItemClick
+    Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuAssignActId.ItemClick
         If MsgBox("Do you want to change Pulling Activity ID for selected Equipment?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -229,7 +253,7 @@ Public Class frmEquipment
         End If
     End Sub
 
-    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem12.ItemClick
+    Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetAsInstalled.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Installed?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectDateConstraint
@@ -250,7 +274,7 @@ Public Class frmEquipment
         End If
     End Sub
 
-    Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick
+    Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuAssignActIdWithArea.ItemClick
         If MsgBox("Do you want to change Activity ID for selected Equipment?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
@@ -264,7 +288,7 @@ Public Class frmEquipment
         End If
     End Sub
 
-    Private Sub BarButtonItem13_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem13.ItemClick
+    Private Sub BarButtonItem13_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetQCReleased.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as QC Released?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSetQCReleased
@@ -294,7 +318,7 @@ Public Class frmEquipment
         Next
     End Sub
 
-    Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem11.ItemClick
+    Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuClearActId.ItemClick
         If MsgBox("Do you want to Clear Activity ID for selected Equipment?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim act As New Activities
         For Each row_handle As Integer In gv.GetSelectedRows
@@ -303,7 +327,7 @@ Public Class frmEquipment
         getData()
     End Sub
 
-    Private Sub BarButtonItem16_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem16.ItemClick
+    Private Sub BarButtonItem16_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeTeam.ItemClick
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Team for All {0}{1} Selected Equipment?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmEditText With {.Text = "Change Team"}
@@ -370,11 +394,50 @@ Public Class frmEquipment
         grd.ShowPrintPreview()
     End Sub
 
-    Private Sub BarButtonItem21_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
+    Private Sub BarButtonItem21_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuCopyTag.ItemClick
         grdView.CopySelectedItems(gv, "Tag")
     End Sub
 
     Private Sub frmEquipment_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub rMenuIsolate_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuIsolate.ItemClick
+        Dim _filter As String = ""
+        Dim inx As Integer = 0
+        For Each row_handle As Integer In gv.GetSelectedRows
+            If inx = 0 Then
+                _filter = "[Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+            Else
+                _filter &= " OR [Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+            End If
+            inx += 1
+        Next
+        gv.Columns("Tag").FilterInfo = New ColumnFilterInfo(_filter)
+    End Sub
+
+    Private Sub rMenuShare_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuShare.ItemClick
+        Dim frm As New frmSelectShareMessageUser
+        frm.ShowDialog(Me)
+        If frm.isSelected Then
+            Dim _filter As String = ""
+            Dim inx As Integer = 0
+            For Each row_handle As Integer In gv.GetSelectedRows
+                If inx = 0 Then
+                    _filter = "[Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+                Else
+                    _filter &= " OR [Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+                End If
+                inx += 1
+            Next
+            Notifications.PushMappedNotification(Users.userFullName, frm.selectedUserId, "Equipment", frm.description, Replace(_filter, "'", "''",,, CompareMethod.Text))
+
+        End If
+    End Sub
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles grd.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
     End Sub
 End Class

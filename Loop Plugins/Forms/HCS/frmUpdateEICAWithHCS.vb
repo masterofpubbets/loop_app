@@ -57,23 +57,57 @@
                 pbarLoopApproved.Visible = True
                 Application.DoEvents()
                 If hcs.DownloadLoopApproved Then
-                    picLoopApproved.Visible = True
-                    pbarLoopApproved.Visible = False
+                    If hcs.DownloadSoloRunApproved Then
+                        picLoopApproved.Visible = True
+                        pbarLoopApproved.Visible = False
+                    End If
+                End If
+            End If
+
+            If ckLoopsData.Checked Then
+                pbarLoopsData.Visible = True
+                Application.DoEvents()
+                If hcs.UpdateEICALoopsWithHCS Then
+                    picLoopsData.Visible = True
+                    pbarLoopsData.Visible = False
+                End If
+            End If
+
+            If ckMotorsData.Checked Then
+                pbarMotorsData.Visible = True
+                Application.DoEvents()
+                If hcs.UpdateEICAMotorsWithHCS Then
+                    picMotorsData.Visible = True
+                    pbarMotorsData.Visible = False
                 End If
             End If
 
             If ckSubsystem.Checked Then
                 pbarSubsystem.Visible = True
                 Application.DoEvents()
-                If hcs.DownloadLoopApproved Then
+                If hcs.UpdateEICAItemsSubsystemFromHCS Then
                     picSubsystem.Visible = True
                     pbarSubsystem.Visible = False
                 End If
             End If
 
-            If hcs.UpdateLoopQCReleasedFromHCS Then
-                MsgBox("Update with HCS has finished.", MsgBoxStyle.Information, Me.Text)
+            If ckFinalClean.Checked Then
+                pbarFinalClean.Visible = True
+                Application.DoEvents()
+                If hcs.ApplyFinalClean Then
+                    picFinalClean.Visible = True
+                    pbarFinalClean.Visible = False
+                End If
             End If
+
+
+            If hcs.UpdateLoopQCReleasedFromHCS Then
+            End If
+
+            If hcs.UpdateMotorsQCReleasedFromHCS Then
+            End If
+
+            MsgBox("Update with HCS has finished.", MsgBoxStyle.Information, Me.Text)
         Catch ex As Exception
 
         End Try
@@ -92,6 +126,9 @@
         ckLoopApproved.Checked = True
         ckSubsystem.Checked = True
         ckItemClosed.Checked = True
+        ckLoopsData.Checked = True
+        ckMotorsData.Checked = True
+        ckFinalClean.Checked = True
     End Sub
 
     Private Sub SimpleButton5_Click(sender As Object, e As EventArgs) Handles SimpleButton5.Click
@@ -101,5 +138,8 @@
         ckLoopApproved.Checked = False
         ckSubsystem.Checked = False
         ckItemClosed.Checked = False
+        ckLoopsData.Checked = False
+        ckMotorsData.Checked = False
+        ckFinalClean.Checked = False
     End Sub
 End Class

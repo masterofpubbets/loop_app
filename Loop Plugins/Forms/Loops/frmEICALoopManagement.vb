@@ -10,7 +10,7 @@ Public Class frmEICALoopManagement
     Private cmd As New SqlClient.SqlCommand("SELECT [TBL_ID] AS ID,[LoopName] AS [Loop Name],[L_Type] AS [Type],[Sub_Type] AS [Sub Type],[L_Description] AS [Description],
                                             [Subsystem],[Area],[Planning_START_Date] AS [Plan Start Date],[Planning_FINISH_Date] AS [Plan Finish Date],
                                             CASE WHEN [Active] = 1 THEN 'Active' ELSE 'Deleted' END AS [Status],[PID],[ACTIVITYID] AS [Activity ID],
-                                            [LoopPriority] AS [Priority],[Subcontractor],[Vendor],
+                                            [LoopPriority] AS [Priority],[Subcontractor],[Vendor], ControllerLocation AS [Controller Location], PDSModel,L_Remarks AS Remarks,
                                             [Folder_Preparation] AS [Folder Printed], L_Constr_Release AS [Cons Complete], TR_Loop_Folder_QC_Release AS [QC Released],
                                             HCS_Folder_Ready AS [Folder Ready QC], Submitted_to_Precom AS [Submitted To Precomm], L_Done AS [Done], L_FinalApproval AS [Final Approval]
                                             FROM tblInsLoop",
@@ -31,7 +31,15 @@ Public Class frmEICALoopManagement
 
 
 
-
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
     Private Sub SaveChanges()
         Dim frmd As New frmConfirmDataChanged(False)
         frmd.grdPred.DataSource = LoopLists.GetLoopsFoldersForPlanning
@@ -46,6 +54,8 @@ Public Class frmEICALoopManagement
                     DT = GRD.DataSource
                     rws = DA.Update(DT)
                     MsgBox(String.Format("All changes has been updated{0}Record(s) affected: {1}", vbCrLf, rws), MsgBoxStyle.Information, Me.Text)
+                    ClearChanges()
+                    lf.CheckIntgerity()
                 Catch ex As Exception
 
                 End Try
@@ -172,6 +182,8 @@ Public Class frmEICALoopManagement
 
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         ShowProgressPanel()
         getData()
         CloseProgressPanel(opnedHandle)
@@ -194,22 +206,85 @@ Public Class frmEICALoopManagement
     End Sub
 
     Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Try
             Dim msg As MsgBoxResult = MsgBox("Are You Sure You Want To Delete Selected Loop", MsgBoxStyle.YesNo, Me.Text)
             If msg = MsgBoxResult.No Then Exit Sub
-            gv.DeleteSelectedRows()
+            ShowProgressPanel()
+            Dim dt As New DataTable
+            dt.Columns.Add("Tag", System.Type.GetType("System.String"))
+            For Each row_handle As Integer In gv.GetSelectedRows
+                dt.Rows.Add(gv.GetDataRow(row_handle).Item("Loop Name"))
+            Next
+            If dt.Rows.Count = 0 Then
+                MsgBox("Nothing to update!", MsgBoxStyle.Exclamation, Me.Text)
+                CloseProgressPanel(opnedHandle)
+                Exit Sub
+            End If
+            Dim opKey As String = lf.UploadTempData(Enumerations.UpdateType.UPDATEDATA, dt)
+            If opKey <> "" Then
+                Dim dtResult As New DataTable
+                If lf.Delete(opKey, dtResult) Then
+                    lf.DeleteTempData(opKey)
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+                        CloseProgressPanel(opnedHandle)
+                        Exit Sub
+                    End If
+                    getData()
+                End If
+
+            Else
+                MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+            End If
+
         Catch ex As Exception
 
         End Try
+        CloseProgressPanel(opnedHandle)
     End Sub
 
     Private Sub BarButtonItem11_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem11.ItemClick
-        Dim frm As New frmUpdateLoopFolders
+        rMenu.HidePopup()
+        Application.DoEvents()
+        Dim folders As New List(Of LoopFolder)
+        For Each row_handle As Integer In gv.GetSelectedRows
+            folders.Add(New LoopFolder(
+                                        gv.GetDataRow(row_handle).Item("Loop Name"),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Plan Start Date")), "1/1/0001", gv.GetDataRow(row_handle).Item("Plan Start Date")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Plan Finish Date")), "1/1/0001", gv.GetDataRow(row_handle).Item("Plan Finish Date")),
+                                        0,
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Vendor")), "", gv.GetDataRow(row_handle).Item("Vendor")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Folder Printed")), "1/1/0001", gv.GetDataRow(row_handle).Item("Folder Printed")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Cons Complete")), "1/1/0001", gv.GetDataRow(row_handle).Item("Cons Complete")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("QC Released")), "1/1/0001", gv.GetDataRow(row_handle).Item("QC Released")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Folder Ready QC")), "1/1/0001", gv.GetDataRow(row_handle).Item("Folder Ready QC")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Submitted To Precomm")), "1/1/0001", gv.GetDataRow(row_handle).Item("Submitted To Precomm")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Done")), "1/1/0001", gv.GetDataRow(row_handle).Item("Done")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Final Approval")), "1/1/0001", gv.GetDataRow(row_handle).Item("Final Approval")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Area")), "", gv.GetDataRow(row_handle).Item("Area")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Type")), "", gv.GetDataRow(row_handle).Item("Type")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Sub Type")), "", gv.GetDataRow(row_handle).Item("Sub Type")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Activity ID")), "", gv.GetDataRow(row_handle).Item("Activity ID")),
+                                        CDate("1/1/0001"),
+                                        CDate("1/1/0001"),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Subsystem")), "", gv.GetDataRow(row_handle).Item("Subsystem")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Priority")), -1, gv.GetDataRow(row_handle).Item("Priority")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("PDSModel")), "", gv.GetDataRow(row_handle).Item("PDSModel")),
+                                        IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Controller Location")), "", gv.GetDataRow(row_handle).Item("Controller Location"))
+                                    ))
+        Next
+
+        Dim frm As New frmUpdateLoopFolders(folders)
+        frmMain.AddToQuickAccess(frm)
         frm.MdiParent = frmMain
         frm.Show()
     End Sub
 
     Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem9.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         Dim frm As New frmFilter
         frm.Text = "Loops Filter"
         For inx As Integer = 0 To gv.Columns.Count - 1
@@ -270,6 +345,8 @@ Public Class frmEICALoopManagement
     End Sub
 
     Private Sub BarButtonItem19_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem19.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         For Each row_handle As Integer In gv.GetSelectedRows
             Try
                 Dim pdfs As List(Of String)
@@ -294,6 +371,8 @@ Public Class frmEICALoopManagement
     End Sub
 
     Private Sub BarButtonItem16_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem16.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         grdView.CopySelectedItems(gv, "Loop Name")
     End Sub
 
@@ -329,6 +408,8 @@ Public Class frmEICALoopManagement
     End Sub
 
     Private Sub btnShowChanges_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles btnShowChanges.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
         SaveChanges()
     End Sub
 
@@ -344,9 +425,12 @@ Public Class frmEICALoopManagement
                     frmMain.MdiChildClosed(Me.Text)
                 Case frmConfirmClose.eResultType.Save
                     SaveChanges()
+                    frmMain.MdiChildClosed(Me.Text)
                 Case Else
                     e.Cancel = True
             End Select
+        Else
+            frmMain.MdiChildClosed(Me.Text)
         End If
     End Sub
     Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
@@ -358,5 +442,106 @@ Public Class frmEICALoopManagement
         If lf.CreateLoopPriority Then
             getData()
         End If
+    End Sub
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles GRD.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
+    End Sub
+
+    Private Sub BarButtonItem21_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        Dim frm As New frmUpdateLoopFolders(Nothing, True)
+        frmMain.AddToQuickAccess(frm)
+        frm.MdiParent = frmMain
+        frm.Show()
+    End Sub
+
+    Private Sub BarButtonItem8_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem8.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        Try
+            Dim msg As MsgBoxResult = MsgBox("Are You Sure You Want To Deactivate Selected Loop", MsgBoxStyle.YesNo, Me.Text)
+            If msg = MsgBoxResult.No Then Exit Sub
+            ShowProgressPanel()
+            Dim dt As New DataTable
+            dt.Columns.Add("Tag", System.Type.GetType("System.String"))
+            For Each row_handle As Integer In gv.GetSelectedRows
+                dt.Rows.Add(gv.GetDataRow(row_handle).Item("Loop Name"))
+            Next
+            If dt.Rows.Count = 0 Then
+                MsgBox("Nothing to update!", MsgBoxStyle.Exclamation, Me.Text)
+                CloseProgressPanel(opnedHandle)
+                Exit Sub
+            End If
+            Dim opKey As String = lf.UploadTempData(Enumerations.UpdateType.UPDATEDATA, dt)
+            If opKey <> "" Then
+                Dim dtResult As New DataTable
+                If lf.ChangeStatus(opKey, dtResult, 0) Then
+                    lf.DeleteTempData(opKey)
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+                        CloseProgressPanel(opnedHandle)
+                        Exit Sub
+                    End If
+                    getData()
+                End If
+
+            Else
+                MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+            End If
+
+        Catch ex As Exception
+
+        End Try
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick
+
+    End Sub
+
+    Private Sub BarButtonItem22_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem22.ItemClick
+
+    End Sub
+
+    Private Sub BarButtonItem23_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem23.ItemClick
+        rMenu.HidePopup()
+        Application.DoEvents()
+        Try
+            Dim msg As MsgBoxResult = MsgBox("Are You Sure You Want To Activate Selected Loop", MsgBoxStyle.YesNo, Me.Text)
+            If msg = MsgBoxResult.No Then Exit Sub
+            ShowProgressPanel()
+            Dim dt As New DataTable
+            dt.Columns.Add("Tag", System.Type.GetType("System.String"))
+            For Each row_handle As Integer In gv.GetSelectedRows
+                dt.Rows.Add(gv.GetDataRow(row_handle).Item("Loop Name"))
+            Next
+            If dt.Rows.Count = 0 Then
+                MsgBox("Nothing to update!", MsgBoxStyle.Exclamation, Me.Text)
+                CloseProgressPanel(opnedHandle)
+                Exit Sub
+            End If
+            Dim opKey As String = lf.UploadTempData(Enumerations.UpdateType.UPDATEDATA, dt)
+            If opKey <> "" Then
+                Dim dtResult As New DataTable
+                If lf.ChangeStatus(opKey, dtResult, 1) Then
+                    lf.DeleteTempData(opKey)
+                    If MsgBox(String.Format("Loops Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+                        CloseProgressPanel(opnedHandle)
+                        Exit Sub
+                    End If
+                    getData()
+                End If
+
+            Else
+                MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+            End If
+
+        Catch ex As Exception
+
+        End Try
+        CloseProgressPanel(opnedHandle)
     End Sub
 End Class

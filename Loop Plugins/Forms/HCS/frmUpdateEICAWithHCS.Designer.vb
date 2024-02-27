@@ -48,6 +48,15 @@ Partial Class frmUpdateEICAWithHCS
         Me.picGroups = New System.Windows.Forms.PictureBox()
         Me.pbarGroups = New DevExpress.XtraEditors.MarqueeProgressBarControl()
         Me.ckGroups = New DevExpress.XtraEditors.CheckEdit()
+        Me.picLoopsData = New System.Windows.Forms.PictureBox()
+        Me.pbarLoopsData = New DevExpress.XtraEditors.MarqueeProgressBarControl()
+        Me.ckLoopsData = New DevExpress.XtraEditors.CheckEdit()
+        Me.picMotorsData = New System.Windows.Forms.PictureBox()
+        Me.pbarMotorsData = New DevExpress.XtraEditors.MarqueeProgressBarControl()
+        Me.ckMotorsData = New DevExpress.XtraEditors.CheckEdit()
+        Me.picFinalClean = New System.Windows.Forms.PictureBox()
+        Me.pbarFinalClean = New DevExpress.XtraEditors.MarqueeProgressBarControl()
+        Me.ckFinalClean = New DevExpress.XtraEditors.CheckEdit()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ckSubsystem.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ckItemClosed.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -67,6 +76,15 @@ Partial Class frmUpdateEICAWithHCS
         CType(Me.picGroups, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbarGroups.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ckGroups.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picLoopsData, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbarLoopsData.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ckLoopsData.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picMotorsData, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbarMotorsData.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ckMotorsData.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picFinalClean, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pbarFinalClean.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ckFinalClean.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl1
@@ -78,7 +96,7 @@ Partial Class frmUpdateEICAWithHCS
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(804, 58)
+        Me.RibbonControl1.Size = New System.Drawing.Size(806, 58)
         '
         'ckSubsystem
         '
@@ -86,7 +104,7 @@ Partial Class frmUpdateEICAWithHCS
         Me.ckSubsystem.MenuManager = Me.RibbonControl1
         Me.ckSubsystem.Name = "ckSubsystem"
         Me.ckSubsystem.Properties.Caption = "Subsystem"
-        Me.ckSubsystem.Size = New System.Drawing.Size(112, 20)
+        Me.ckSubsystem.Size = New System.Drawing.Size(145, 20)
         Me.ckSubsystem.TabIndex = 4
         '
         'LabelControl1
@@ -109,13 +127,13 @@ Partial Class frmUpdateEICAWithHCS
         Me.ckItemClosed.MenuManager = Me.RibbonControl1
         Me.ckItemClosed.Name = "ckItemClosed"
         Me.ckItemClosed.Properties.Caption = "Items Closed"
-        Me.ckItemClosed.Size = New System.Drawing.Size(112, 20)
+        Me.ckItemClosed.Size = New System.Drawing.Size(145, 20)
         Me.ckItemClosed.TabIndex = 5
         '
         'pbarSubsystem
         '
         Me.pbarSubsystem.EditValue = 0
-        Me.pbarSubsystem.Location = New System.Drawing.Point(210, 295)
+        Me.pbarSubsystem.Location = New System.Drawing.Point(234, 295)
         Me.pbarSubsystem.MenuManager = Me.RibbonControl1
         Me.pbarSubsystem.Name = "pbarSubsystem"
         Me.pbarSubsystem.Size = New System.Drawing.Size(495, 17)
@@ -125,7 +143,7 @@ Partial Class frmUpdateEICAWithHCS
         'pbarItemClosed
         '
         Me.pbarItemClosed.EditValue = 0
-        Me.pbarItemClosed.Location = New System.Drawing.Point(210, 336)
+        Me.pbarItemClosed.Location = New System.Drawing.Point(234, 336)
         Me.pbarItemClosed.MenuManager = Me.RibbonControl1
         Me.pbarItemClosed.Name = "pbarItemClosed"
         Me.pbarItemClosed.Size = New System.Drawing.Size(495, 17)
@@ -135,7 +153,7 @@ Partial Class frmUpdateEICAWithHCS
         'pbarITRs
         '
         Me.pbarITRs.EditValue = 0
-        Me.pbarITRs.Location = New System.Drawing.Point(210, 180)
+        Me.pbarITRs.Location = New System.Drawing.Point(234, 180)
         Me.pbarITRs.MenuManager = Me.RibbonControl1
         Me.pbarITRs.Name = "pbarITRs"
         Me.pbarITRs.Size = New System.Drawing.Size(495, 17)
@@ -145,7 +163,7 @@ Partial Class frmUpdateEICAWithHCS
         'pBarElements
         '
         Me.pBarElements.EditValue = 0
-        Me.pBarElements.Location = New System.Drawing.Point(210, 141)
+        Me.pBarElements.Location = New System.Drawing.Point(234, 141)
         Me.pBarElements.MenuManager = Me.RibbonControl1
         Me.pBarElements.Name = "pBarElements"
         Me.pBarElements.Size = New System.Drawing.Size(495, 17)
@@ -158,7 +176,7 @@ Partial Class frmUpdateEICAWithHCS
         Me.ckITRs.MenuManager = Me.RibbonControl1
         Me.ckITRs.Name = "ckITRs"
         Me.ckITRs.Properties.Caption = "ITRs"
-        Me.ckITRs.Size = New System.Drawing.Size(112, 20)
+        Me.ckITRs.Size = New System.Drawing.Size(145, 20)
         Me.ckITRs.TabIndex = 1
         '
         'ckElements
@@ -167,13 +185,13 @@ Partial Class frmUpdateEICAWithHCS
         Me.ckElements.MenuManager = Me.RibbonControl1
         Me.ckElements.Name = "ckElements"
         Me.ckElements.Properties.Caption = "Elements"
-        Me.ckElements.Size = New System.Drawing.Size(112, 20)
+        Me.ckElements.Size = New System.Drawing.Size(145, 20)
         Me.ckElements.TabIndex = 0
         '
         'pbarLoopApproved
         '
         Me.pbarLoopApproved.EditValue = 0
-        Me.pbarLoopApproved.Location = New System.Drawing.Point(210, 258)
+        Me.pbarLoopApproved.Location = New System.Drawing.Point(234, 258)
         Me.pbarLoopApproved.MenuManager = Me.RibbonControl1
         Me.pbarLoopApproved.Name = "pbarLoopApproved"
         Me.pbarLoopApproved.Size = New System.Drawing.Size(495, 17)
@@ -185,8 +203,8 @@ Partial Class frmUpdateEICAWithHCS
         Me.ckLoopApproved.Location = New System.Drawing.Point(72, 257)
         Me.ckLoopApproved.MenuManager = Me.RibbonControl1
         Me.ckLoopApproved.Name = "ckLoopApproved"
-        Me.ckLoopApproved.Properties.Caption = "Loop Approved"
-        Me.ckLoopApproved.Size = New System.Drawing.Size(112, 20)
+        Me.ckLoopApproved.Properties.Caption = "Loop/Solo Run Approved"
+        Me.ckLoopApproved.Size = New System.Drawing.Size(145, 20)
         Me.ckLoopApproved.TabIndex = 3
         '
         'picElements
@@ -248,50 +266,50 @@ Partial Class frmUpdateEICAWithHCS
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(603, 640)
+        Me.SimpleButton1.Location = New System.Drawing.Point(605, 641)
         Me.SimpleButton1.Name = "SimpleButton1"
         Me.SimpleButton1.Size = New System.Drawing.Size(189, 49)
-        Me.SimpleButton1.TabIndex = 10
+        Me.SimpleButton1.TabIndex = 13
         Me.SimpleButton1.Text = "Cancel"
         '
         'SimpleButton2
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(408, 640)
+        Me.SimpleButton2.Location = New System.Drawing.Point(410, 641)
         Me.SimpleButton2.Name = "SimpleButton2"
         Me.SimpleButton2.Size = New System.Drawing.Size(189, 49)
-        Me.SimpleButton2.TabIndex = 9
+        Me.SimpleButton2.TabIndex = 12
         Me.SimpleButton2.Text = "Start"
         '
         'SimpleButton3
         '
         Me.SimpleButton3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton3.Location = New System.Drawing.Point(213, 640)
+        Me.SimpleButton3.Location = New System.Drawing.Point(215, 641)
         Me.SimpleButton3.Name = "SimpleButton3"
         Me.SimpleButton3.Size = New System.Drawing.Size(189, 49)
-        Me.SimpleButton3.TabIndex = 8
+        Me.SimpleButton3.TabIndex = 11
         Me.SimpleButton3.Text = "HCS Connection Settings"
         '
         'SimpleButton4
         '
         Me.SimpleButton4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton4.ImageOptions.Image = CType(resources.GetObject("SimpleButton4.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton4.Location = New System.Drawing.Point(45, 383)
+        Me.SimpleButton4.Location = New System.Drawing.Point(45, 519)
         Me.SimpleButton4.Name = "SimpleButton4"
         Me.SimpleButton4.Size = New System.Drawing.Size(91, 28)
-        Me.SimpleButton4.TabIndex = 6
+        Me.SimpleButton4.TabIndex = 9
         Me.SimpleButton4.Text = "Select All"
         '
         'SimpleButton5
         '
         Me.SimpleButton5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton5.ImageOptions.Image = CType(resources.GetObject("SimpleButton5.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton5.Location = New System.Drawing.Point(142, 383)
+        Me.SimpleButton5.Location = New System.Drawing.Point(142, 519)
         Me.SimpleButton5.Name = "SimpleButton5"
         Me.SimpleButton5.Size = New System.Drawing.Size(91, 28)
-        Me.SimpleButton5.TabIndex = 7
+        Me.SimpleButton5.TabIndex = 10
         Me.SimpleButton5.Text = "Select None"
         '
         'picGroups
@@ -308,7 +326,7 @@ Partial Class frmUpdateEICAWithHCS
         'pbarGroups
         '
         Me.pbarGroups.EditValue = 0
-        Me.pbarGroups.Location = New System.Drawing.Point(210, 220)
+        Me.pbarGroups.Location = New System.Drawing.Point(234, 220)
         Me.pbarGroups.MenuManager = Me.RibbonControl1
         Me.pbarGroups.Name = "pbarGroups"
         Me.pbarGroups.Size = New System.Drawing.Size(495, 17)
@@ -321,15 +339,114 @@ Partial Class frmUpdateEICAWithHCS
         Me.ckGroups.MenuManager = Me.RibbonControl1
         Me.ckGroups.Name = "ckGroups"
         Me.ckGroups.Properties.Caption = "Groups"
-        Me.ckGroups.Size = New System.Drawing.Size(112, 20)
+        Me.ckGroups.Size = New System.Drawing.Size(145, 20)
         Me.ckGroups.TabIndex = 2
+        '
+        'picLoopsData
+        '
+        Me.picLoopsData.Image = Global.EEICA.My.Resources.Resources.ok_svgrepo_com
+        Me.picLoopsData.Location = New System.Drawing.Point(45, 379)
+        Me.picLoopsData.Name = "picLoopsData"
+        Me.picLoopsData.Size = New System.Drawing.Size(20, 20)
+        Me.picLoopsData.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picLoopsData.TabIndex = 40
+        Me.picLoopsData.TabStop = False
+        Me.picLoopsData.Visible = False
+        '
+        'pbarLoopsData
+        '
+        Me.pbarLoopsData.EditValue = 0
+        Me.pbarLoopsData.Location = New System.Drawing.Point(234, 380)
+        Me.pbarLoopsData.MenuManager = Me.RibbonControl1
+        Me.pbarLoopsData.Name = "pbarLoopsData"
+        Me.pbarLoopsData.Size = New System.Drawing.Size(495, 17)
+        Me.pbarLoopsData.TabIndex = 39
+        Me.pbarLoopsData.Visible = False
+        '
+        'ckLoopsData
+        '
+        Me.ckLoopsData.Location = New System.Drawing.Point(72, 379)
+        Me.ckLoopsData.MenuManager = Me.RibbonControl1
+        Me.ckLoopsData.Name = "ckLoopsData"
+        Me.ckLoopsData.Properties.Caption = "Loops Data"
+        Me.ckLoopsData.Size = New System.Drawing.Size(145, 20)
+        Me.ckLoopsData.TabIndex = 6
+        '
+        'picMotorsData
+        '
+        Me.picMotorsData.Image = Global.EEICA.My.Resources.Resources.ok_svgrepo_com
+        Me.picMotorsData.Location = New System.Drawing.Point(45, 425)
+        Me.picMotorsData.Name = "picMotorsData"
+        Me.picMotorsData.Size = New System.Drawing.Size(20, 20)
+        Me.picMotorsData.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picMotorsData.TabIndex = 43
+        Me.picMotorsData.TabStop = False
+        Me.picMotorsData.Visible = False
+        '
+        'pbarMotorsData
+        '
+        Me.pbarMotorsData.EditValue = 0
+        Me.pbarMotorsData.Location = New System.Drawing.Point(234, 426)
+        Me.pbarMotorsData.MenuManager = Me.RibbonControl1
+        Me.pbarMotorsData.Name = "pbarMotorsData"
+        Me.pbarMotorsData.Size = New System.Drawing.Size(495, 17)
+        Me.pbarMotorsData.TabIndex = 42
+        Me.pbarMotorsData.Visible = False
+        '
+        'ckMotorsData
+        '
+        Me.ckMotorsData.Location = New System.Drawing.Point(72, 425)
+        Me.ckMotorsData.MenuManager = Me.RibbonControl1
+        Me.ckMotorsData.Name = "ckMotorsData"
+        Me.ckMotorsData.Properties.Caption = "Motors Data"
+        Me.ckMotorsData.Size = New System.Drawing.Size(145, 20)
+        Me.ckMotorsData.TabIndex = 7
+        '
+        'picFinalClean
+        '
+        Me.picFinalClean.Image = Global.EEICA.My.Resources.Resources.ok_svgrepo_com
+        Me.picFinalClean.Location = New System.Drawing.Point(45, 476)
+        Me.picFinalClean.Name = "picFinalClean"
+        Me.picFinalClean.Size = New System.Drawing.Size(20, 20)
+        Me.picFinalClean.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picFinalClean.TabIndex = 47
+        Me.picFinalClean.TabStop = False
+        Me.picFinalClean.Visible = False
+        '
+        'pbarFinalClean
+        '
+        Me.pbarFinalClean.EditValue = 0
+        Me.pbarFinalClean.Location = New System.Drawing.Point(234, 477)
+        Me.pbarFinalClean.MenuManager = Me.RibbonControl1
+        Me.pbarFinalClean.Name = "pbarFinalClean"
+        Me.pbarFinalClean.Size = New System.Drawing.Size(495, 17)
+        Me.pbarFinalClean.TabIndex = 46
+        Me.pbarFinalClean.Visible = False
+        '
+        'ckFinalClean
+        '
+        Me.ckFinalClean.Location = New System.Drawing.Point(72, 476)
+        Me.ckFinalClean.MenuManager = Me.RibbonControl1
+        Me.ckFinalClean.Name = "ckFinalClean"
+        Me.ckFinalClean.Properties.Caption = "Final Clean"
+        Me.ckFinalClean.Size = New System.Drawing.Size(145, 20)
+        Me.ckFinalClean.TabIndex = 8
         '
         'frmUpdateEICAWithHCS
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(804, 701)
+        Me.ClientSize = New System.Drawing.Size(806, 702)
         Me.ControlBox = False
+        Me.Controls.Add(Me.picFinalClean)
+        Me.Controls.Add(Me.pbarFinalClean)
+        Me.Controls.Add(Me.ckFinalClean)
+        Me.Controls.Add(Me.picMotorsData)
+        Me.Controls.Add(Me.pbarMotorsData)
+        Me.Controls.Add(Me.ckMotorsData)
+        Me.Controls.Add(Me.picLoopsData)
+        Me.Controls.Add(Me.pbarLoopsData)
+        Me.Controls.Add(Me.ckLoopsData)
         Me.Controls.Add(Me.picGroups)
         Me.Controls.Add(Me.pbarGroups)
         Me.Controls.Add(Me.ckGroups)
@@ -380,6 +497,15 @@ Partial Class frmUpdateEICAWithHCS
         CType(Me.picGroups, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pbarGroups.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ckGroups.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picLoopsData, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbarLoopsData.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ckLoopsData.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picMotorsData, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbarMotorsData.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ckMotorsData.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picFinalClean, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbarFinalClean.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ckFinalClean.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -410,4 +536,13 @@ Partial Class frmUpdateEICAWithHCS
     Friend WithEvents picGroups As PictureBox
     Friend WithEvents pbarGroups As DevExpress.XtraEditors.MarqueeProgressBarControl
     Friend WithEvents ckGroups As DevExpress.XtraEditors.CheckEdit
+    Friend WithEvents picLoopsData As PictureBox
+    Friend WithEvents pbarLoopsData As DevExpress.XtraEditors.MarqueeProgressBarControl
+    Friend WithEvents ckLoopsData As DevExpress.XtraEditors.CheckEdit
+    Friend WithEvents picMotorsData As PictureBox
+    Friend WithEvents pbarMotorsData As DevExpress.XtraEditors.MarqueeProgressBarControl
+    Friend WithEvents ckMotorsData As DevExpress.XtraEditors.CheckEdit
+    Friend WithEvents picFinalClean As PictureBox
+    Friend WithEvents pbarFinalClean As DevExpress.XtraEditors.MarqueeProgressBarControl
+    Friend WithEvents ckFinalClean As DevExpress.XtraEditors.CheckEdit
 End Class

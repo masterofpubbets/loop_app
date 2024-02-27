@@ -1,0 +1,56 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningEquipmentSAT'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningEquipmentSAT
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningEquipmentSAT
+AS
+WITH SatEquipmentTest AS (
+    SELECT
+        Subsystem, Area, [Description], Tag, PrecomTestDate,
+        COUNT(Loops) AS Loops, COUNT(DISTINCT Vendors) AS Vendors, COUNT(Done) AS Done,
+        MIN([Actual Start]) AS [Actual Start], MAX([Actual Finished]) AS [Actual Finished]
+    FROM (
+        SELECT DISTINCT
+            CASE WHEN Subsystem.Subsystem IS NULL THEN 'No Subsystem' ELSE tblInsLoop.Subsystem END AS Subsystem,
+            CASE WHEN tblEquipment.Area IS NULL THEN '-' ELSE tblEquipment.Area END AS Area,
+            CASE WHEN tblEquipment.[Description] IS NULL THEN '-' ELSE tblEquipment.[Description] END AS [Description],
+            tblEquipment.Tag, tblEquipment.PrecomTestDate,
+            tblInsLoop.loopName AS Loops, Vendor AS Vendors, L_Done AS Done, 
+            Planning_START_Date AS [Actual Start], Planning_FINISH_Date AS [Actual Finished]
+            FROM tblInsLoop
+            INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+            WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+    ) AS v
+        GROUP BY Subsystem, Area, [Description],Tag, PrecomTestDate
+)
+
+SELECT
+CONVERT(INT, '4' + CONVERT(NVARCHAR(50), ROW_NUMBER() OVER(ORDER BY SatEquipmentTest.Subsystem))) AS ID,
+3 AS ParentId,
+'Equipment' AS ItemType, SatEquipmentTest.Tag AS Name, SatEquipmentTest.[Description], SatEquipmentTest.Area,
+SatEquipmentTest.Loops, SatEquipmentTest.Vendors, 1 AS Sats, CASE WHEN PrecomTestDate IS NOT NULL THEN 1 ELSe 0 END AS [Sat Done], 
+DATEADD(DAY,-2,SatEquipmentTest.[Actual Start]) AS [Sat Late Finished], 
+SatEquipmentTest.[Actual Start], SatEquipmentTest.[Actual Finished],
+DATEDIFF(DAY,SatEquipmentTest.[Actual Start], SatEquipmentTest.[Actual Finished]) AS [Actual Duration], 
+SatEquipmentTest.Done AS [LoopDone], 
+ROUND(CONVERT(FLOAT,SatEquipmentTest.Done) * 100 / CONVERT(FLOAT,SatEquipmentTest.Loops), 0) AS Progress,
+ROUND(CONVERT(FLOAT,SatEquipmentTest.Loops) / CONVERT(FLOAT,DATEDIFF(DAY,SatEquipmentTest.[Actual Start], SatEquipmentTest.[Actual Finished])), 0) AS [Loop Per Day],
+-1 AS PredecessorIds,
+-1 AS SuccessorIds,
+2 AS DependencyType,
+0 AS DependencyLag,
+Subsystem
+FROM SatEquipmentTest
+
+
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO

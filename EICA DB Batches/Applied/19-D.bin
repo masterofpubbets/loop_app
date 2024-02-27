@@ -1,0 +1,99 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetArea'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PLANNING')
+			)
+BEGIN
+	DROP PROC PLANNING.GetArea
+END
+GO
+CREATE PROC PLANNING.GetArea
+AS
+SELECT [TBL_ID] AS Id
+      ,[Area]
+      ,[Unit]
+      ,[Type]
+      ,[Description]
+      ,[Comment]
+      ,[Warning]
+      ,[Img]
+      ,[DGN]
+      ,[Priority]
+FROM [dbo].[Area]
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'CreateLoopPriorities'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+    DROP TABLE LOOPS.CreateLoopPriorities
+END
+GO
+CREATE PROC LOOPS.CreateLoopPriorities
+AS
+UPDATE V
+    SET LoopPriority = Priority
+FROM (
+    SELECT
+    DENSE_RANK() OVER (ORDER BY FORMAT(Planning_START_Date,'yyyyMM')) AS Priority,
+    tblInsLoop.TBL_ID AS Id,
+    LoopPriority, LoopName
+    FROM tblInsLoop
+    WHERE Planning_START_Date IS NOT NULL
+) AS V
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopsHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetLoopsHCS
+END
+GO
+CREATE PROC [LOOPS].[GetLoopsHCS]
+AS
+WITH LoopsData AS (
+
+SELECT DISTINCT [TBL_ID] AS Id
+	  ,Area
+      ,[LoopName] As [Loop Name]
+	  ,L_Description AS [Description]
+      ,[L_Type] As [Type]
+      ,[Sub_Type] AS [Sub Type]
+	  ,[Subsystem]
+	  ,[Subcontractor]
+      ,[Vendor]
+	  ,[Folder_Preparation] AS [Folder Printed]
+	  ,L_Constr_Release AS [Cons Complete]
+	  ,TR_Loop_Folder_QC_Release AS [QC Released]
+	  ,HCS_Folder_Ready AS [Folder Ready QC]
+	  ,Submitted_to_Precom AS [Submitted To Precomm]
+	  ,L_Done AS [Done]
+	  ,L_FinalApproval AS [Final Approval]
+      
+	  ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Folder Approved'
+				WHEN L_Done IS NOT NULL THEN 'Loop Done'
+		WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+		WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+		WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+		WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Prepared'
+		ELSE 'Not Ready'
+		END AS [Folder Status]
+		,LoopPriority
+		,tblProject.Pro_Title AS [Project]
+		--,[qrCode] AS QRCode
+		,tblInsLoop.ProUUID 
+  FROM [tblInsLoop] WITH (NOLOCK)
+  INNER JOIN tblProject ON [tblInsLoop].ProUUID = tblProject.UUID
+  WHERE [tblInsLoop].Active = 1
+)
+
+SELECT DISTINCT
+CASE WHEN LOOPS.tblLoopsCons.isClosed = 0 THEN 'Yes' ELSE 'No' END AS [Has Blockage]
+,LoopsData.*
+
+FROM LoopsData
+LEFT JOIN LOOPS.tblLoopsCons WITH (NOLOCK) ON LoopsData.Id = LOOPS.tblLoopsCons.loopId
+GO

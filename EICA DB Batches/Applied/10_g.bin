@@ -1,0 +1,161 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopLoopsNoSATAll'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopLoopsNoSATAll
+END
+GO
+CREATE PROC PRECOMM.LoopLoopsNoSATAll
+AS
+WITH NoSatTestLoop AS (
+    SELECT
+        tblInsLoop.Subsystem, tblInsLoop.LoopName
+    FROM tblInsLoop
+    LEFT JOIN 
+    (
+        SELECT
+            tblInsLoop.loopName
+            FROM tblInsLoop
+            INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+    ) AS VSatLoops
+    ON tblInsLoop.LoopName = VSatLoops.LoopName
+    WHERE VSatLoops.LoopName IS NULL
+    AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+)
+
+SELECT
+*
+FROM NoSatTestLoop
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopLoopsSATAll'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopLoopsSATAll
+END
+GO
+CREATE PROC PRECOMM.LoopLoopsSATAll
+AS
+WITH SatLoop AS (
+    SELECT 
+        tblInsLoop.Subsystem, tblInsLoop.loopName AS Tag, 
+        tblEquipment.Tag AS Equipment
+        FROM tblInsLoop
+        INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+        INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+        LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+        WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+)
+
+SELECT
+*
+FROM SatLoop
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopMap'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopMap
+END
+GO
+CREATE PROC PRECOMM.LoopMap
+AS
+SELECT DISTINCT
+tblInsLoop.Subsystem,tblInsLoop.LoopName
+,tblInsLoop.Planning_START_Date AS [Plan Start Date], tblInsLoop.Planning_FINISH_Date AS [Plane Finish Date], 
+tblInsLoop.L_Done AS [Loop Done],
+tblInsLoop.LoopPriority AS [Priority]
+
+,VILDMAP.Area as [Item Area]
+,case when VILDMAP.Discipline is null then 'No ILD' else VILDMAP.Discipline end as Discipline
+,VILDMAP.Type,VILDMAP.Item,VILDMAP.SubSystem AS [Item Subsystem],VILDMAP.Forecast,VILDMAP.Available
+,VILDMAP.[Pulled/Installed],VILDMAP.[Cable Con 1],VILDMAP.[Cable Con 2],VILDMAP.[Calibrated/Tested],VILDMAP.[QC/HCS Released],
+
+(
+    (CASE WHEN VILDMAP.[Pulled/Installed] IS NULL THEN 0 ELSE 1 END) +
+    (CASE WHEN VILDMAP.[Cable Con 1] IS NULL THEN 0 ELSE 1 END) +
+    (CASE WHEN VILDMAP.[Cable Con 2] IS NULL THEN 0 ELSE 1 END) +
+    (CASE WHEN VILDMAP.[Calibrated/Tested] IS NULL THEN 0 ELSE 1 END) +
+    (CASE WHEN VILDMAP.[QC/HCS Released] IS NULL THEN 0 ELSE 1 END) 
+) * 100 / 5
+
+AS Progress
+
+FROM TBLINSLOOP
+LEFT JOIN 
+(
+SELECT TBLILD.Item,TBLILD.Loop_Name,VMAP.*
+FROM TBLILD 
+LEFT JOIN
+(
+select Area,'Electrical Cable' as Discipline,Type,Tag AS Tag,[Eng Length] as Length
+,NULL AS Forecast,NULL as Available,[Last Pulling Update] as [Pulled/Installed]
+,convert(nvarchar (50),[Connect From Date]) as [Cable Con 1]
+,convert(nvarchar (50),[Connect To Date]) as [Cable Con 2]
+,convert(nvarchar (50),[Test Date]) as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,NULL as PO
+,Subsystem,[Qc Released Date] as [QC/HCS Released]
+from vECList with (Nolock)
+
+
+UNION ALL
+select Area,'Instrument Cable' as Discipline,Type,TAG as Tag,[Eng Length] as Length
+,NULL AS Forecast,NULL as Available,[Last Pulling Update] as [Pulled/Installed]
+,convert(nvarchar (50),[Connect From Date]) as [Cable Con 1]
+,convert(nvarchar (50),[Connect To Date]) as [Cable Con 2]
+,convert(nvarchar (50),[Test Date]) as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,NULL as PO
+,Subsystem,[Qc Released Date] as [QC/HCS Released]
+from vICList with (Nolock)
+
+
+UNION ALL
+select Area,tblEquipment.Discipline as Discipline,tblEquipment.[Type] as Type,tblEquipment.Tag as Tag,0 as Length
+,tblEquipment.ForecastedDate AS Forecast,convert(nvarchar (255),tblEquipment.ReceivedDate) as Available,tblEquipment.InstalledDate as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,'N/A' as [Calibrated/Tested]
+,'N/A' as [Hookup]
+,'N/A' as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblEquipment.QCDate as [QC/HCS Released]
+from tblEquipment with (Nolock)
+
+UNION ALL
+select Area,'Instruments' as Discipline
+,case when [Furnished_By] is null then 'Instrument' else 'Instrument' + ' ' + [Furnished_By] end as Type
+,instrument_tag as Tag,0 as Length
+,[IN_Proc_ArrivalAtSite_Forecasted] AS Forecast,convert(nvarchar (255),[Received_Date]) as Available
+,[Installation_Date] as [Pulled/Installed]
+,'N/A' as [Cable Con 1]
+,'N/A' as [Cable Con 2]
+,case when Calibration_Type='no' then 'N/A'
+else convert(nvarchar (50),Calibration_Date) end as [Calibrated/Tested]
+,case when hookup_name is null then 'N/A'
+else convert(nvarchar (50),HookUp_Date) end as [Hookup]
+,hookup_name as [Hookup Name]
+,case when PO is null then 'No Mat Info' else po end as PO
+,Subsystem,tblInstruments.Final_Installed_Date as [QC/HCS Released]
+from tblInstruments with (Nolock)
+
+) AS VMAP
+
+ON tblILD.Item =VMAP.Tag
+WHERE TBLILD.Item_Type IS NOT NULL
+) AS VILDMAP
+ON tblInsLoop.LoopName=VILDMAP.Loop_Name
+GO
+
+MUCH 

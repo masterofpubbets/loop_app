@@ -63,4 +63,11 @@
     Private Sub frmSelectDateConstraint_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
         Me.WindowState = FormWindowState.Normal
     End Sub
+
+    Private Sub SimpleButton4_Click(sender As Object, e As EventArgs) Handles SimpleButton4.Click
+        If MsgBox("Do you want to select today date: " & Format(Now, "dddd dd-MMMM-yyyy"), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+        selectedDate = Now
+        isSelected = True
+        Me.Close()
+    End Sub
 End Class

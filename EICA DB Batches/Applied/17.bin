@@ -1,0 +1,1011 @@
+--version11.0.1
+UPDATE [dbo].[tblSettings] SET SetValue = '11.0.1' WHERE SetName = 'VERSION'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetPDSModelSummary'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PLANNING')
+			)
+BEGIN
+	DROP PROC PLANNING.GetPDSModelSummary
+END
+GO
+CREATE PROC PLANNING.GetPDSModelSummary
+
+
+AS
+
+
+WITH ActIDS AS (
+    SELECT
+        ActID, Package, PDSModel, EICA_Area AS Area, SubCon
+        FROM tblActIDS
+), ECPro AS (
+    SELECT
+        Tag, SUM(Per_Qnty) AS TotalPer
+    FROM tblEleCableProduction
+    GROUP BY Tag
+), ICPro AS (
+    SELECT
+        Tag, SUM(Per_Qnty) AS TotalPer
+    FROM tblEleCableProduction
+    GROUP BY Tag
+), EleTrayPro AS (
+    SELECT
+    Tag,
+    SUM(Production_Qnty) AS Done
+    FROM tblEleCableTrayProduction
+    GROUP BY Tag
+), InsTrayPro AS (
+    SELECT
+    Tag,
+    SUM(Production_Qnty) AS Done
+    FROM tblInsCableTrayProduction
+    GROUP BY Tag
+)
+
+SELECT
+    CASE WHEN Package IS NULL THEN 'UNDEFINED' ELSE Package END AS Package,
+    Area,
+    PDSModel,
+    
+    ROUND(([Ele. Pulling Progress] + [Ele. Termination Progress] + [LC. Pulling Progress] + [LC. Termination Progress] + [Ele. Equipment Progress] + [Ele. Tray Progress] + [Light. Tray Progress] +
+    [Ins. Pulling Progress] + [Ins. Termination Progress] + [Inst. Installation Progress] + [Inst. Calibration Progress] + [Inst. Hookup Progress] +
+    [Ins. Equipment Progress] + [Ins. Tray Progress]) / 14,0) AS [PDSModel Progress],
+
+    [Ele. Pulling Scope], [Ele. Pulling Done], [Ele. Pulling Pending], [Ele. Pulling Progress],
+    [Ele. Termination Scope], [Ele. Termination Done], [Ele. Termination Pending], [Ele. Termination Progress],
+    [LC. Pulling Scope], [LC. Pulling Done], [LC. Pulling Pending], [LC. Pulling Progress],
+    [LC. Termination Scope], [LC. Termination Done], [LC. Termination Pending], [LC. Termination Progress],
+    [Ele. Equipment Scope], [Ele. Equipment Done], [Ele. Equipment Pending], [Ele. Equipment Progress],
+    [Ele. Tray Scope], [Ele. Tray Done], [Ele. Tray Pending], [Ele. Tray Progress],
+    [Light. Tray Scope], [Light. Tray Done], [Light. Tray Pending], [Light. Tray Progress],
+    [Ins. Pulling Scope], [Ins. Pulling Done], [Ins. Pulling Pending], [Ins. Pulling Progress],
+    [Ins. Termination Scope], [Ins. Termination Done], [Ins. Termination Pending], [Ins. Termination Progress],
+    [Inst. Installation Scope], [Inst. Installation Done], [Inst. Installation Pending], [Inst. Installation Progress],
+    [Inst. Calibration Scope], [Inst. Calibration Done], [Inst. Calibration Pending], [Inst. Calibration Progress],
+    [Inst. Hookup Scope], [Inst. Hookup Done], [Inst. Hookup Pending], [Inst. Hookup Progress],
+    [Inst. Equipment Scope], [Inst. Equipment Done], [Ins. Equipment Pending], [Ins. Equipment Progress],
+    [Inst. Tray Scope], [Inst. Tray Done], [Ins. Tray Pending], [Ins. Tray Progress]
+
+
+FROM (
+    
+    SELECT
+        Package, Area,
+        CASE WHEN PDSModel IS NULL THEN 'UNDEFINED' ELSE PDSModel END AS PDSModel,
+
+        CASE WHEN [Ele. Pulling Scope] IS NULL THEN 0 ELSE [Ele. Pulling Scope] END AS [Ele. Pulling Scope],
+        CASE WHEN [Ele. Pulling Done] IS NULL THEN 0 ELSE [Ele. Pulling Done] END AS [Ele. Pulling Done],
+        CASE WHEN [Ele. Pulling Pending] IS NULL THEN 0 ELSE [Ele. Pulling Pending] END AS [Ele. Pulling Pending],
+        CASE WHEN (([Ele. Pulling Scope] IS NULL) OR ([Ele. Pulling Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Pulling Done] * 100 / [Ele. Pulling Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Pulling Done] * 100 / [Ele. Pulling Scope],0) END
+            ) END AS [Ele. Pulling Progress],
+
+        CASE WHEN [Ele. Termination Scope] IS NULL THEN 0 ELSE [Ele. Termination Scope] END AS [Ele. Termination Scope],
+        CASE WHEN [Ele. Termination Done] IS NULL THEN 0 ELSE [Ele. Termination Done] END AS [Ele. Termination Done],
+        CASE WHEN [Ele. Termination Pending] IS NULL THEN 0 ELSE [Ele. Termination Pending] END AS [Ele. Termination Pending],
+        CASE WHEN (([Ele. Termination Scope] IS NULL) OR ([Ele. Termination Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Termination Done] * 100 / [Ele. Termination Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Termination Done] * 100 / [Ele. Termination Scope],0) END
+            ) END AS [Ele. Termination Progress],
+
+        CASE WHEN [LC. Pulling Scope] IS NULL THEN 0 ELSE [LC. Pulling Scope] END AS [LC. Pulling Scope],
+        CASE WHEN [LC. Pulling Done] IS NULL THEN 0 ELSE [LC. Pulling Done] END AS [LC. Pulling Done],
+        CASE WHEN [LC. Pulling Pending] IS NULL THEN 0 ELSE [LC. Pulling Pending] END AS [LC. Pulling Pending],
+        CASE WHEN (([LC. Pulling Scope] IS NULL) OR ([LC. Pulling Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([LC. Pulling Done] * 100 / [LC. Pulling Scope]) IS NULL THEN 0 ELSE ROUND([LC. Pulling Done] * 100 / [LC. Pulling Scope],0) END
+            ) END AS [LC. Pulling Progress],
+
+        CASE WHEN [LC. Termination Scope] IS NULL THEN 0 ELSE [LC. Termination Scope] END AS [LC. Termination Scope],
+        CASE WHEN [LC. Termination Done] IS NULL THEN 0 ELSE [LC. Termination Done] END AS [LC. Termination Done],
+        CASE WHEN [LC. Termination Pending] IS NULL THEN 0 ELSE [LC. Termination Pending] END AS [LC. Termination Pending],
+        CASE WHEN (([LC. Termination Scope] IS NULL) OR ([LC. Termination Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([LC. Termination Done] * 100 / [LC. Termination Scope]) IS NULL THEN 0 ELSE ROUND([LC. Termination Done] * 100 / [LC. Termination Scope],0) END
+            ) END AS [LC. Termination Progress],
+
+        CASE WHEN [Ele. Equipment Scope] IS NULL THEN 0 ELSE [Ele. Equipment Scope] END AS [Ele. Equipment Scope],
+        CASE WHEN [Ele. Equipment Done] IS NULL THEN 0 ELSE [Ele. Equipment Done] END AS [Ele. Equipment Done],
+        CASE WHEN [Ele. Equipment Pending] IS NULL THEN 0 ELSE [Ele. Equipment Pending] END AS [Ele. Equipment Pending],
+        CASE WHEN (([Ele. Equipment Scope] IS NULL) OR ([Ele. Equipment Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Equipment Done] * 100 / [Ele. Equipment Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Equipment Done] * 100 / [Ele. Equipment Scope],0) END
+            )  END AS [Ele. Equipment Progress],
+
+        CASE WHEN [Ele. Tray Scope] IS NULL THEN 0 ELSE [Ele. Tray Scope] END AS [Ele. Tray Scope],
+        CASE WHEN [Ele. Tray Done] IS NULL THEN 0 ELSE [Ele. Tray Done] END AS [Ele. Tray Done],
+        CASE WHEN [Ele. Tray Pending] IS NULL THEN 0 ELSE [Ele. Tray Pending] END AS [Ele. Tray Pending],
+        CASE WHEN (([Ele. Tray Scope] IS NULL) OR ([Ele. Tray Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Tray Done] * 100 / [Ele. Tray Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Tray Done] * 100 / [Ele. Tray Scope],0) END
+        ) END AS [Ele. Tray Progress],
+        
+        CASE WHEN [Light. Tray Scope] IS NULL THEN 0 ELSE [Light. Tray Scope] END AS [Light. Tray Scope],
+        CASE WHEN [Light. Tray Done] IS NULL THEN 0 ELSE [Light. Tray Done] END AS [Light. Tray Done],
+        CASE WHEN [Light. Tray Pending] IS NULL THEN 0 ELSE [Light. Tray Pending] END AS [Light. Tray Pending],
+        CASE WHEN (([Light. Tray Scope] IS NULL) OR ([Light. Tray Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Light. Tray Done] * 100 / [Light. Tray Scope]) IS NULL THEN 0 ELSE ROUND([Light. Tray Done] * 100 / [Light. Tray Scope],0) END
+        ) END AS [Light. Tray Progress],
+
+        CASE WHEN [Ins. Pulling Scope] IS NULL THEN 0 ELSE [Ins. Pulling Scope] END AS [Ins. Pulling Scope],
+        CASE WHEN [Ins. Pulling Done] IS NULL THEN 0 ELSE [Ins. Pulling Done] END AS [Ins. Pulling Done],
+        CASE WHEN [Ins. Pulling Pending] IS NULL THEN 0 ELSE [Ins. Pulling Pending] END AS [Ins. Pulling Pending],
+        CASE WHEN (([Ins. Pulling Scope] IS NULL) OR ([Ins. Pulling Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ins. Pulling Done] * 100 / [Ins. Pulling Scope]) IS NULL THEN 0 ELSE ROUND([Ins. Pulling Done] * 100 / [Ins. Pulling Scope],0) END
+        ) END AS [Ins. Pulling Progress],
+
+        CASE WHEN [Ins. Termination Scope] IS NULL THEN 0 ELSE [Ins. Termination Scope] END AS [Ins. Termination Scope],
+        CASE WHEN [Ins. Termination Done] IS NULL THEN 0 ELSE [Ins. Termination Done] END AS [Ins. Termination Done],
+        CASE WHEN [Ins. Termination Pending] IS NULL THEN 0 ELSE [Ins. Termination Pending] END AS [Ins. Termination Pending],
+        CASE WHEN (([Ins. Termination Scope] IS NULL) OR ([Ins. Termination Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ins. Termination Done] * 100 / [Ins. Termination Scope]) IS NULL THEN 0 ELSE ROUND([Ins. Termination Done] * 100 / [Ins. Termination Scope],0) END
+        ) END AS [Ins. Termination Progress],
+
+        CASE WHEN [Inst. Installation Scope] IS NULL THEN 0 ELSE [Inst. Installation Scope] END AS [Inst. Installation Scope],
+        CASE WHEN [Inst. Installation Done] IS NULL THEN 0 ELSE [Inst. Installation Done] END AS [Inst. Installation Done],
+        CASE WHEN [Inst. Installation Pending] IS NULL THEN 0 ELSE [Inst. Installation Pending] END AS [Inst. Installation Pending],
+        CASE WHEN (([Inst. Installation Scope] IS NULL) OR ([Inst. Installation Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Installation Done] * 100 / [Inst. Installation Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Installation Done] * 100 / [Inst. Installation Scope],0) END
+        ) END AS [Inst. Installation Progress],
+
+        CASE WHEN [Inst. Calibration Scope] IS NULL THEN 0 ELSE [Inst. Calibration Scope] END AS [Inst. Calibration Scope],
+        CASE WHEN [Inst. Calibration Done] IS NULL THEN 0 ELSE [Inst. Calibration Done] END AS [Inst. Calibration Done],
+        CASE WHEN [Inst. Calibration Pending] IS NULL THEN 0 ELSE [Inst. Calibration Pending] END AS [Inst. Calibration Pending],
+        CASE WHEN (([Inst. Calibration Scope] IS NULL) OR ([Inst. Calibration Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Calibration Done] * 100 / [Inst. Calibration Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Calibration Done] * 100 / [Inst. Calibration Scope],0) END 
+        ) END AS [Inst. Calibration Progress],
+
+        CASE WHEN [Inst. Hookup Scope] IS NULL THEN 0 ELSE [Inst. Hookup Scope] END AS [Inst. Hookup Scope],
+        CASE WHEN [Inst. Hookup Done] IS NULL THEN 0 ELSE [Inst. Hookup Done] END AS [Inst. Hookup Done],
+        CASE WHEN [Inst. Hookup Pending] IS NULL THEN 0 ELSE [Inst. Hookup Pending] END AS [Inst. Hookup Pending],
+        CASE WHEN (([Inst. Hookup Scope] IS NULL) OR ([Inst. Hookup Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Hookup Done] * 100 / [Inst. Hookup Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Hookup Done] * 100 / [Inst. Hookup Scope],0) END
+        ) END AS [Inst. Hookup Progress],
+
+        CASE WHEN [Inst. Equipment Scope] IS NULL THEN 0 ELSE [Inst. Equipment Scope] END AS [Inst. Equipment Scope],
+        CASE WHEN [Inst. Equipment Done] IS NULL THEN 0 ELSE [Inst. Equipment Done] END AS [Inst. Equipment Done],
+        CASE WHEN [Ins. Equipment Pending] IS NULL THEN 0 ELSE [Ins. Equipment Pending] END AS [Ins. Equipment Pending],
+        CASE WHEN (([Inst. Equipment Scope] IS NULL) OR ([Inst. Equipment Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Equipment Done] * 100 / [Inst. Equipment Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Equipment Done] * 100 / [Inst. Equipment Scope],0) END
+        ) END AS [Ins. Equipment Progress],
+
+        CASE WHEN [Inst. Tray Scope] IS NULL THEN 0 ELSE [Inst. Tray Scope] END AS [Inst. Tray Scope],
+        CASE WHEN [Inst. Tray Done] IS NULL THEN 0 ELSE [Inst. Tray Done] END AS [Inst. Tray Done],
+        CASE WHEN [Ins. Tray Pending] IS NULL THEN 0 ELSE [Ins. Tray Pending] END AS [Ins. Tray Pending],
+        CASE WHEN (([Inst. Tray Scope] IS NULL) OR ([Inst. Tray Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Tray Done] * 100 / [Inst. Tray Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Tray Done] * 100 / [Inst. Tray Scope],0) END 
+        ) END AS [Ins. Tray Progress]
+
+
+
+    FROM (
+
+        SELECT
+            Package, Area, PDSModel,
+            SUM([Ele. Pulling Scope]) AS [Ele. Pulling Scope], SUM([Ele. Pulling Done]) AS [Ele. Pulling Done], SUM([Ele. Pulling Pending]) AS [Ele. Pulling Pending],
+            SUM([Ele. Termination Scope]) AS [Ele. Termination Scope], SUM([Ele. Termination Done]) AS [Ele. Termination Done], SUM([Ele. Termination Pending]) AS [Ele. Termination Pending],
+            SUM([LC. Scope]) AS [LC. Pulling Scope], SUM([LC. Done]) AS [LC. Pulling Done], SUM([LC. Pending]) AS [LC. Pulling Pending],
+            SUM([LC. Termination Scope]) AS [LC. Termination Scope], SUM([LC. Termination Done]) AS [LC. Termination Done], SUM([LC. Termination Pending]) AS [LC. Termination Pending],
+            SUM([Ele. Equipment Scope]) AS [Ele. Equipment Scope], SUM([Ele. Equipment Done]) AS [Ele. Equipment Done], SUM([Ele. Equipment Pending]) AS [Ele. Equipment Pending],
+            SUM([Ins. Pulling Scope]) AS [Ins. Pulling Scope], SUM([Ins. Pulling Done]) AS [Ins. Pulling Done], SUM([Ins. Pulling Pending]) AS [Ins. Pulling Pending],
+            SUM([Ins. Termination Scope]) AS [Ins. Termination Scope], SUM([Ins. Termination Done]) AS [Ins. Termination Done], SUM([Ins. Termination Pending]) AS [Ins. Termination Pending],
+            SUM([Inst. Installation Scope]) AS [Inst. Installation Scope], SUM([Inst. Installation Done]) AS [Inst. Installation Done], SUM([Inst. Installation Pending]) AS [Inst. Installation Pending],
+            SUM([Inst. Calibration Scope]) AS [Inst. Calibration Scope], SUM([Inst. Calibration Done]) AS [Inst. Calibration Done], SUM([Inst. Calibration Pending]) AS [Inst. Calibration Pending],
+            SUM([Inst. Hookup Scope]) AS [Inst. Hookup Scope], SUM([Inst. Hookup Done]) AS [Inst. Hookup Done], SUM([Inst. Hookup Pending]) AS [Inst. Hookup Pending],
+            SUM([Inst. Equipment Scope]) AS [Inst. Equipment Scope], SUM([Inst. Equipment Done]) AS [Inst. Equipment Done], SUM([Ins. Equipment Pending]) AS [Ins. Equipment Pending],
+            SUM([Ele. Tray Scope]) AS [Ele. Tray Scope], SUM([Ele. Tray Done]) AS [Ele. Tray Done], SUM([Ele. Tray Pending]) AS [Ele. Tray Pending],
+            SUM([Inst. Tray Scope]) AS [Inst. Tray Scope], SUM([Inst. Tray Done]) AS [Inst. Tray Done], SUM([Ins. Tray Pending]) AS [Ins. Tray Pending],
+            SUM([Light. Tray Scope]) AS [Light. Tray Scope], SUM([Light. Tray Done]) AS [Light. Tray Done], SUM([Light. Tray Pending]) AS [Light. Tray Pending]
+
+
+
+        FROM (
+
+            --Ele Pulling
+
+            SELECT
+            Package, Area, PDSModel, 
+            SUM(ScopePulled) AS [Ele. Pulling Scope], SUM(DonePulled) AS [Ele. Pulling Done], SUM(ScopePulled) - SUM(DonePulled) AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(tblEleCableList.EC_Length) AS ScopePulled,
+                SUM(ECPRO.TotalPer / 100 * tblEleCableList.EC_Length) AS DonePulled
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                LEFT JOIN ECPro ON tblEleCableList.EC_ID = ECPro.Tag
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ele Termination
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            SUM(ScopeCon) AS [Ele. Termination Scope], SUM(DoneCon) AS [Ele. Termination Done], SUM(ScopeCon) - SUM(DoneCon) AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_From) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect_2) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_To) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+             --Lighting Pulling
+
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            SUM(ScopePulled) AS [LC. Scope], SUM(DonePulled) AS [LC. Done], SUM(ScopePulled) - SUM(DonePulled) AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(tblEleCableList.EC_Length) AS ScopePulled,
+                SUM(ECPRO.TotalPer / 100 * tblEleCableList.EC_Length) AS DonePulled
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                LEFT JOIN ECPro ON tblEleCableList.EC_ID = ECPro.Tag
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Lighting Termination
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            SUM(ScopeCon) AS [LC. Termination Scope], SUM(DoneCon) AS [LC. Termination Done], SUM(ScopeCon) - SUM(DoneCon) AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_From) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect_2) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_To) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ele Equipment
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            SUM(Scope) AS [Ele. Equipment Scope], SUM(Done) AS [Ele. Equipment Done], SUM(Scope) - SUM(Done) AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Tag) AS Scope,
+                COUNT(InstalledDate) AS Done
+                FROM tblEquipment
+                INNER JOIN ActIDS ON tblEquipment.ActId = ActIDS.ActID
+                WHERE tblEquipment.Active = 1 AND tblEquipment.Discipline = 'Electrical'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            --Ins Pulling
+            UNION ALL
+
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            SUM(ScopePulled) AS [Ins. Pulling Scope], SUM(DonePulled) AS [Ins. Pulling Done], SUM(ScopePulled) - SUM(DonePulled) AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipmen.t Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+               ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(tblInsCableList.IC_Length) AS ScopePulled,
+                SUM(ICPRO.TotalPer / 100 * tblInsCableList.IC_Length) AS DonePulled
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                LEFT JOIN ICPro ON tblInsCableList.IC_ID = ICPro.Tag
+                WHERE tblInsCableList.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            --Ins Termination
+            UNION ALL
+
+            SELECT
+            Package, Area, PDSModel,
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            SUM(ScopeCon) AS [Ins. Termination Scope], SUM(DoneCon) AS [Ins. Termination Done], SUM(ScopeCon) - SUM(DoneCon) AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(IC_Plan_P6_ActID_Connect) AS ScopeCon,
+                COUNT(IC_Plan_Connected_Date_From) AS DoneCon
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(IC_Plan_P6_ActID_Connect_2) AS ScopeCon,
+                COUNT(IC_Plan_Connected_Date_To) AS DoneCon
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Inst INstallation
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            SUM(Scope) AS [Inst. Installation Scope], SUM(Done) AS [Inst. Installation Done], SUM(Scope) - SUM(Done) AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Instrument_Tag) AS Scope,
+                COUNT(Installation_Date) AS Done
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND ((tblInstruments.Furnished_By <> 'Vendor') OR (tblInstruments.Furnished_By IS NULL)) AND tblInstruments.Instrument  = 'Instrument'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Inst Calibration
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            SUM(Scope) AS [Inst. Calibration Scope], SUM(Done) AS [Inst. Calibration Done], SUM(Scope) - SUM(Done) AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Instrument_Tag) AS Scope,
+                COUNT(Calibration_Date) AS Done
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.P6_Precalibration_ActID = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND tblInstruments.Calibration_Type  = 'yes'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Inst Hookup
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            SUM(Scope) AS [Inst. Hookup Scope], SUM(Done) AS [Inst. Hookup Done], SUM(Scope) - SUM(Done) AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Instrument_Tag) AS Scope,
+                COUNT(HookUp_Date) AS Done
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.IC_Plan_P6_ActID_Hookup = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND tblInstruments.hookup_name  IS NOT NULL
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ins Equipment
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            SUM(Scope) AS [Inst. Equipment Scope], SUM(Done) AS [Inst. Equipment Done], SUM(Scope) - SUM(Done) AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Tag) AS Scope,
+                COUNT(InstalledDate) AS Done
+                FROM tblEquipment
+                INNER JOIN ActIDS ON tblEquipment.ActId = ActIDS.ActID
+                WHERE tblEquipment.Active = 1 AND tblEquipment.Discipline <> 'Electrical'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ele Tray
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            SUM(Scope) AS [Ele. Tray Scope], SUM(Done) AS [Ele. Tray Done], SUM(Scope) - SUM(Done) AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(EL_Tray_Length) AS Scope,
+                SUM(EleTrayPro.Done) AS Done
+                FROM tblEleCableTray
+                INNER JOIN ActIDS ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                LEFT JOIN EleTrayPro ON tblEleCableTray.Tag = EleTrayPro.Tag
+                WHERE tblEleCableTray.Active = 1 AND EL_Tray_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Light Tray
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            SUM(Scope) AS [Light. Tray Scope], SUM(Done) AS [Light. Tray Done], SUM(Scope) - SUM(Done) AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(EL_Tray_Length) AS Scope,
+                SUM(EleTrayPro.Done) AS Done
+                FROM tblEleCableTray
+                INNER JOIN ActIDS ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                LEFT JOIN EleTrayPro ON tblEleCableTray.Tag = EleTrayPro.Tag
+                WHERE tblEleCableTray.Active = 1 AND EL_Tray_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ins Tray
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            SUM(Scope) AS [Inst. Tray Scope], SUM(Done) AS [Inst. Tray Done], SUM(Scope) - SUM(Done) AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(in_Tray_Length) AS Scope,
+                SUM(InsTrayPro.Done) AS Done
+                FROM tblInsCableTray
+                INNER JOIN ActIDS ON tblInsCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                LEFT JOIN InsTrayPro ON tblInsCableTray.Tag = InsTrayPro.Tag
+                WHERE tblInsCableTray.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+            
+        ) AS VAll
+        GROUP BY Package, Area, PDSModel
+    ) AS VRefined
+) AS VSummaryProgress
+
+
+
+
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetPDSModelItems'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PLANNING')
+			)
+BEGIN
+	DROP PROC PLANNING.GetPDSModelItems
+END
+GO
+CREATE PROC PLANNING.GetPDSModelItems
+@PDSModel NVARCHAR(250)
+
+AS
+WITH ActIDS AS (
+    SELECT
+        ActID, Package, PDSModel, EICA_Area AS Area, SubCon
+        FROM tblActIDS
+        WHERE PDSModel = @PDSModel
+)
+
+
+
+
+
+            --Ele Pulling
+
+            SELECT
+            Package, Area, PDSModel,
+            'Ele. Cable Pulling' AS ItemType, 
+            Tag, ActID
+
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                Ec_ID AS Tag, ActIDS.ActID
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Ele Termination
+            SELECT
+            Package, Area, PDSModel,
+            'Ele. Cable Termination' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                EC_ID AS Tag, ActIDS.ActID
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                EC_ID AS Tag, ActIDS.ActID
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+            ) AS CableTer
+
+            UNION ALL
+
+             --Lighting Pulling
+
+            SELECT
+            Package, Area, PDSModel,
+            'Lighting. Cable Pulling' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                EC_ID AS Tag, ActIDS.ActID
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Lighting Termination
+            SELECT
+            Package, Area, PDSModel,
+            'Lighting. Cable Termination' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                EC_ID AS Tag, ActIDS.ActID
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                EC_ID AS Tag, ActIDS.ActID
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Ele Equipment
+            SELECT
+            Package, Area, PDSModel,
+            'Ele. Equipment' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                Tag, ActIDS.ActID
+                FROM tblEquipment
+                INNER JOIN ActIDS ON tblEquipment.ActId = ActIDS.ActID
+                WHERE tblEquipment.Active = 1 AND tblEquipment.Discipline = 'Electrical'
+            ) AS CableTer
+
+            --Ins Pulling
+            UNION ALL
+
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Cable Pulling' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+               ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                IC_ID AS Tag, ActIDS.ActID
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+            ) AS CableTer
+
+            --Ins Termination
+            UNION ALL
+
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Cable Termination' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                IC_ID AS Tag, ActIDS.ActID
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                IC_ID AS Tag, ActIDS.ActID
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+            ) AS CableTer
+
+            UNION ALL
+
+            --Inst INstallation
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Installation' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                Instrument AS Tag, ActIDS.ActID
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND ((tblInstruments.Furnished_By <> 'Vendor') OR (tblInstruments.Furnished_By IS NULL)) AND tblInstruments.Instrument  = 'Instrument'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Inst Calibration
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Calibration' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                Instrument AS Tag, ActIDS.ActID
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.P6_Precalibration_ActID = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND tblInstruments.Calibration_Type  = 'yes'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Inst Hookup
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Hookup' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                Instrument AS Tag, ActIDS.ActID
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.IC_Plan_P6_ActID_Hookup = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND tblInstruments.hookup_name  IS NOT NULL
+            ) AS CableTer
+
+            UNION ALL
+
+            --Ins Equipment
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Equipment' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                Tag, ActIDS.ActID
+                FROM tblEquipment
+                INNER JOIN ActIDS ON tblEquipment.ActId = ActIDS.ActID
+                WHERE tblEquipment.Active = 1 AND tblEquipment.Discipline <> 'Electrical'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Ele Tray
+            SELECT
+            Package, Area, PDSModel,
+            'Ele. Tray' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                tblEleCableTray.Tag, ActIDS.ActID
+                FROM tblEleCableTray
+                INNER JOIN ActIDS ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                WHERE tblEleCableTray.Active = 1 AND EL_Tray_Type NOT LIKE '%light%'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Light Tray
+            SELECT
+            Package, Area, PDSModel,
+            'Lighting. Tray' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                tblEleCableTray.Tag, ActIDS.ActID
+                FROM tblEleCableTray
+                INNER JOIN ActIDS ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                WHERE tblEleCableTray.Active = 1 AND EL_Tray_Type LIKE '%light%'
+            ) AS CableTer
+
+            UNION ALL
+
+            --Ins Tray
+            SELECT
+            Package, Area, PDSModel,
+            'Inst. Tray' AS ItemType,
+            Tag, ActID
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                tblInsCableTray.Tag, ActIDS.ActID
+                FROM tblInsCableTray
+                INNER JOIN ActIDS ON tblInsCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                WHERE tblInsCableTray.Active = 1
+            ) AS CableTer
+            
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'PrecomTestRequired'
+          AND Object_ID = Object_ID(N'dbo.tblEquipment'))
+BEGIN
+    ALTER TABLE tblEquipment
+    ADD PrecomTestRequired BIT NOT NULL DEFAULT 0
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'PrecomTestActID'
+          AND Object_ID = Object_ID(N'dbo.tblEquipment'))
+BEGIN
+    ALTER TABLE tblEquipment
+    ADD PrecomTestActID NVARCHAR(200) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'PrecomTestDate'
+          AND Object_ID = Object_ID(N'dbo.tblEquipment'))
+BEGIN
+    ALTER TABLE tblEquipment
+    ADD PrecomTestDate DATE NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Area'
+          AND Object_ID = Object_ID(N'dbo.Subsystem'))
+BEGIN
+    ALTER TABLE Subsystem
+    ADD Area NVARCHAR(250) NULL
+END
+GO

@@ -198,13 +198,15 @@ Public Class frmCables
     Private Sub frmCables_Load(sender As Object, e As EventArgs) Handles Me.Load
         CheckAuth()
         getData()
-        Try
-            If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
-                grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
-            End If
-        Catch ex As Exception
+        If _filter = "" Then
+            Try
+                If IO.File.Exists(GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, "")) Then
+                    grdView.ApplyViewLayout(gv, GetSetting("TR", "LOOPAPP", "VIEW_WINDOW_" & Me.Text, ""))
+                End If
+            Catch ex As Exception
 
-        End Try
+            End Try
+        End If
     End Sub
     Private Sub gv_CustomDrawCell(sender As Object, e As RowCellCustomDrawEventArgs) Handles gv.CustomDrawCell
         If viewType Then
@@ -230,13 +232,11 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         getData()
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim frm As New frmFilter
         frm.Text = "Cables Filter"
@@ -261,7 +261,6 @@ Public Class frmCables
 
     Private Sub BarButtonItem3_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem3.ItemClick
         Try
-            rMenu.HidePopup()
             Application.DoEvents()
             sveFle.FileName = ""
             sveFle.Filter = "XLSX Files|*.xlsx"
@@ -334,13 +333,13 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem17_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem17.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to change Pulling Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
         If frm.isSelect Then
             'change act id here
+            ShowProgressPanel()
             Dim act As New Activities
             For Each row_handle As Integer In gv.GetSelectedRows
                 If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -349,18 +348,20 @@ Public Class frmCables
                     act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Pulling, gv.GetDataRow(row_handle).Item("Tag"), frm.ActId)
                 End If
             Next
+            CloseProgressPanel(opnedHandle)
+            If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
             getData()
         End If
     End Sub
 
     Private Sub BarButtonItem18_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem18.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to change Pulling Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
         If frm.isSelect Then
             'change act id here
+            ShowProgressPanel()
             Dim act As New Activities
             For Each row_handle As Integer In gv.GetSelectedRows
                 If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -371,15 +372,17 @@ Public Class frmCables
                     act.UpdateArea(Activities.Discipline.InsCable, gv.GetDataRow(row_handle).Item("Tag"), frm.Area)
                 End If
             Next
+            CloseProgressPanel(opnedHandle)
+            If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
             getData()
         End If
     End Sub
 
     Private Sub BarButtonItem19_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem19.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to clear Pulling Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
+        ShowProgressPanel()
         Dim act As New Activities
         For Each row_handle As Integer In gv.GetSelectedRows
             If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -388,15 +391,17 @@ Public Class frmCables
                 act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Pulling, gv.GetDataRow(row_handle).Item("Tag"), "")
             End If
         Next
+        CloseProgressPanel(opnedHandle)
+        If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         getData()
     End Sub
 
     Private Sub BarButtonItem20_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem20.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to change Conn From Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
+        ShowProgressPanel()
         If frm.isSelect Then
             'change act id here
             Dim act As New Activities
@@ -407,15 +412,17 @@ Public Class frmCables
                     act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Conn1, gv.GetDataRow(row_handle).Item("Tag"), frm.ActId)
                 End If
             Next
+            CloseProgressPanel(opnedHandle)
+            If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
             getData()
         End If
     End Sub
 
     Private Sub BarButtonItem21_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem21.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to clear Conn From Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
+        ShowProgressPanel()
         Dim act As New Activities
         For Each row_handle As Integer In gv.GetSelectedRows
             If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -424,17 +431,19 @@ Public Class frmCables
                 act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Conn1, gv.GetDataRow(row_handle).Item("Tag"), "")
             End If
         Next
+        CloseProgressPanel(opnedHandle)
+        If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         getData()
     End Sub
 
     Private Sub BarButtonItem22_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem22.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to change Conn To Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
         If frm.isSelect Then
             'change act id here
+            ShowProgressPanel()
             Dim act As New Activities
             For Each row_handle As Integer In gv.GetSelectedRows
                 If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -443,15 +452,17 @@ Public Class frmCables
                     act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Conn2, gv.GetDataRow(row_handle).Item("Tag"), frm.ActId)
                 End If
             Next
+            CloseProgressPanel(opnedHandle)
+            If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
             getData()
         End If
     End Sub
 
     Private Sub BarButtonItem23_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem23.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to clear Conn To Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
+        ShowProgressPanel()
         Dim act As New Activities
         For Each row_handle As Integer In gv.GetSelectedRows
             If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -460,17 +471,19 @@ Public Class frmCables
                 act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Conn2, gv.GetDataRow(row_handle).Item("Tag"), "")
             End If
         Next
+        CloseProgressPanel(opnedHandle)
+        If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         getData()
     End Sub
 
     Private Sub BarButtonItem24_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem24.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to change Test Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim frm As New frmSelectActId
         frm.ShowDialog(Me)
         If frm.isSelect Then
             'change act id here
+            ShowProgressPanel()
             Dim act As New Activities
             For Each row_handle As Integer In gv.GetSelectedRows
                 If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -479,15 +492,17 @@ Public Class frmCables
                     act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Test, gv.GetDataRow(row_handle).Item("Tag"), frm.ActId)
                 End If
             Next
+            CloseProgressPanel(opnedHandle)
+            If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
             getData()
         End If
     End Sub
 
     Private Sub BarButtonItem25_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem25.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If MsgBox("Do you want to clear Test Activity ID for selected cables?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         'change act id here
+        ShowProgressPanel()
         Dim act As New Activities
         For Each row_handle As Integer In gv.GetSelectedRows
             If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -496,6 +511,8 @@ Public Class frmCables
                 act.UpdateActIds(Activities.Discipline.InsCable, Activities.Keys.Test, gv.GetDataRow(row_handle).Item("Tag"), "")
             End If
         Next
+        CloseProgressPanel(opnedHandle)
+        If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         getData()
     End Sub
 
@@ -505,6 +522,7 @@ Public Class frmCables
         Dim frm As New frmSelectDateConstraint(False)
         frm.ShowDialog(Me)
         If frm.isSelected Then
+            ShowProgressPanel()
             Dim act As New Activities
             If frm.isCleared Then
                 For Each row_handle As Integer In gv.GetSelectedRows
@@ -523,6 +541,7 @@ Public Class frmCables
                     End If
                 Next
             End If
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Workfront Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -535,6 +554,7 @@ Public Class frmCables
         Dim frm As New frmSelectDateConstraint(False)
         frm.ShowDialog(Me)
         If frm.isSelected Then
+            ShowProgressPanel()
             Dim act As New Activities
             If frm.isCleared Then
                 For Each row_handle As Integer In gv.GetSelectedRows
@@ -553,6 +573,7 @@ Public Class frmCables
                     End If
                 Next
             End If
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Workfront Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -565,6 +586,7 @@ Public Class frmCables
         Dim frm As New frmSelectDateConstraint(False)
         frm.ShowDialog(Me)
         If frm.isSelected Then
+            ShowProgressPanel()
             Dim act As New Activities
             If frm.isCleared Then
                 For Each row_handle As Integer In gv.GetSelectedRows
@@ -583,6 +605,7 @@ Public Class frmCables
                     End If
                 Next
             End If
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Workfront Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -595,6 +618,7 @@ Public Class frmCables
         Dim frm As New frmSelectDateConstraint(False)
         frm.ShowDialog(Me)
         If frm.isSelected Then
+            ShowProgressPanel()
             Dim act As New Activities
             If frm.isCleared Then
                 For Each row_handle As Integer In gv.GetSelectedRows
@@ -613,6 +637,7 @@ Public Class frmCables
                     End If
                 Next
             End If
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Workfront Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -625,6 +650,7 @@ Public Class frmCables
         Dim frm As New frmSelectDateConstraint(False)
         frm.ShowDialog(Me)
         If frm.isSelected Then
+            ShowProgressPanel()
             Dim act As New Activities
             If frm.isCleared Then
                 For Each row_handle As Integer In gv.GetSelectedRows
@@ -643,6 +669,7 @@ Public Class frmCables
                     End If
                 Next
             End If
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Workfront Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -650,7 +677,6 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem34_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem34.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Discipline for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -664,6 +690,7 @@ Public Class frmCables
         frm.Text = "Change Cable Discipline"
         frm.ShowDialog(Me)
 
+        ShowProgressPanel()
         For Each row_handle As Integer In gv.GetSelectedRows
             pullinActId = If(IsDBNull(gv.GetDataRow(row_handle).Item("Pulling ActId")), "", gv.GetDataRow(row_handle).Item("Pulling ActId"))
             conFromActId = If(IsDBNull(gv.GetDataRow(row_handle).Item("Con From ActId")), "", gv.GetDataRow(row_handle).Item("Con From ActId"))
@@ -676,13 +703,13 @@ Public Class frmCables
                 cable.MoveICEC(gv.GetDataRow(row_handle).Item("Tag"), pullinActId, conFromActId, conToActId, testActId, frm.newValye)
             End If
         Next
+        CloseProgressPanel(opnedHandle)
         msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         getData()
     End Sub
 
     Private Sub rMenuChangeRoute_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeRoute.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Routing for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -690,9 +717,11 @@ Public Class frmCables
         frm.lblTitle.Text = "Please type the Routing value"
         frm.ShowDialog(Me)
         If frm.isUpdated Then
+            ShowProgressPanel()
             For Each row_handle As Integer In gv.GetSelectedRows
                 cable.ChangeRouting(gv.GetDataRow(row_handle).Item("Tag"), gv.GetDataRow(row_handle).Item("Discipline"), frm.newValye)
             Next
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -700,7 +729,6 @@ Public Class frmCables
     End Sub
 
     Private Sub rMenuChangeType_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeType.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Type for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -708,9 +736,11 @@ Public Class frmCables
         frm.lblTitle.Text = "Please type the New value"
         frm.ShowDialog(Me)
         If frm.isUpdated Then
+            ShowProgressPanel()
             For Each row_handle As Integer In gv.GetSelectedRows
                 cable.ChangeType(gv.GetDataRow(row_handle).Item("Tag"), gv.GetDataRow(row_handle).Item("Discipline"), frm.newValye)
             Next
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -718,7 +748,6 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem12_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem12.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Pulled?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -728,6 +757,7 @@ Public Class frmCables
             If frm.isCleared Then
 
             Else
+                ShowProgressPanel()
                 For Each row_handle As Integer In gv.GetSelectedRows
                     If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
                         cable.SetPulled(gv.GetDataRow(row_handle).Item("Tag"), 100, frm.selectedDate, 0, gv.GetDataRow(row_handle).Item("Length"))
@@ -735,15 +765,14 @@ Public Class frmCables
                         cable.SetICPulled(gv.GetDataRow(row_handle).Item("Tag"), 100, frm.selectedDate, 0, gv.GetDataRow(row_handle).Item("Length"))
                     End If
                 Next
+                CloseProgressPanel(opnedHandle)
             End If
-            msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
-            If msgR = MsgBoxResult.No Then Exit Sub
+            If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
             getData()
         End If
     End Sub
 
     Private Sub BarButtonItem13_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem13.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Connected From?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -754,6 +783,7 @@ Public Class frmCables
             If frm.isCleared Then
 
             Else
+                ShowProgressPanel()
                 For Each row_handle As Integer In gv.GetSelectedRows
                     If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
                         If Not IsDBNull(gv.GetDataRow(row_handle).Item("Pulled Date")) Then
@@ -769,6 +799,7 @@ Public Class frmCables
                         End If
                     End If
                 Next
+                CloseProgressPanel(opnedHandle)
             End If
             If result <> "" Then
                 Dim frmResult As New frmResults
@@ -782,7 +813,6 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem14_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem14.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Connected To?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -793,6 +823,7 @@ Public Class frmCables
             If frm.isCleared Then
 
             Else
+                ShowProgressPanel()
                 For Each row_handle As Integer In gv.GetSelectedRows
                     If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
                         If Not IsDBNull(gv.GetDataRow(row_handle).Item("Pulled Date")) Then
@@ -808,6 +839,7 @@ Public Class frmCables
                         End If
                     End If
                 Next
+                CloseProgressPanel(opnedHandle)
             End If
             If result <> "" Then
                 Dim frmResult As New frmResults
@@ -821,7 +853,6 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim fs As New FileSystem
         For Each row_handle As Integer In gv.GetSelectedRows
@@ -832,7 +863,6 @@ Public Class frmCables
     End Sub
 
     Private Sub rMenuChangeTeam_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuChangeTeam.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Change Team for All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -841,6 +871,7 @@ Public Class frmCables
         frm.ShowDialog(Me)
         If frm.isUpdated Then
             Dim act As New Activities
+            ShowProgressPanel()
             For Each row_handle As Integer In gv.GetSelectedRows
                 If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
                     act.UpdateTeam(Activities.Discipline.EleCable, gv.GetDataRow(row_handle).Item("Tag"), frm.newValye)
@@ -848,6 +879,7 @@ Public Class frmCables
                     act.UpdateTeam(Activities.Discipline.InsCable, gv.GetDataRow(row_handle).Item("Tag"), frm.newValye)
                 End If
             Next
+            CloseProgressPanel(opnedHandle)
             msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
             getData()
@@ -879,6 +911,7 @@ Public Class frmCables
         Dim res As New ResourcesMan
         frm.ShowDialog(Me)
         If frm.IsSelected Then
+            ShowProgressPanel()
             For Each row_handle As Integer In gv.GetSelectedRows
                 For inx As Integer = 1 To frm.ResId.Count
                     If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -888,6 +921,7 @@ Public Class frmCables
                     End If
                 Next
             Next
+            CloseProgressPanel(opnedHandle)
             Dim msgR As MsgBoxResult = MsgBox("Resource Has Been Assigned.", MsgBoxStyle.Information, Me.Text)
             msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
             If msgR = MsgBoxResult.No Then Exit Sub
@@ -899,6 +933,8 @@ Public Class frmCables
         Dim msgR As MsgBoxResult = MsgBox(String.Format("Do You Want To Clear All Resources For All {0}{1} Selected Cables?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
         Dim res As ResourcesManItem, itemId As Integer = 0, groupId As ResourcesManItem.GROUPID = ResourcesMan.GROUPID.ElecatricalCable
+
+        ShowProgressPanel()
         For Each row_handle As Integer In gv.GetSelectedRows
             itemId = gv.GetDataRow(row_handle).Item("Id")
             If gv.GetDataRow(row_handle).Item("Discipline") = "Electrical" Then
@@ -909,6 +945,7 @@ Public Class frmCables
             res = New ResourcesManItem(itemId, groupId)
             res.ClearResources()
         Next
+        CloseProgressPanel(opnedHandle)
         MsgBox("Resource Has Been Cleared.", MsgBoxStyle.Information, Me.Text)
         msgR = MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text)
         If msgR = MsgBoxResult.No Then Exit Sub
@@ -920,7 +957,6 @@ Public Class frmCables
     End Sub
 
     Private Sub BarButtonItem4_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         If gv.RowCount = 0 Then Exit Sub
         If gv.GetSelectedRows.Length = 0 Then Exit Sub
@@ -934,16 +970,50 @@ Public Class frmCables
 
     Private Sub BarButtonItem26_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem26.ItemClick
         If MsgBox("Do you want to delete permanently selected cables and its production?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+        ShowProgressPanel()
         For Each row_handle As Integer In gv.GetSelectedRows
             cable.Delete(gv.GetDataRow(row_handle).Item("Tag"), gv.GetDataRow(row_handle).Item("Discipline"))
         Next
+        CloseProgressPanel(opnedHandle)
         If MsgBox(String.Format("Cables Have Been Updated {0} Do You Want To Refresh?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         getData()
     End Sub
 
     Private Sub BarButtonItem5_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem5.ItemClick
-        rMenu.HidePopup()
         Application.DoEvents()
         grdView.CopySelectedItems(gv, "Tag")
+    End Sub
+
+    Private Sub BarButtonItem27_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuShare.ItemClick
+        Dim frm As New frmSelectShareMessageUser
+        frm.ShowDialog(Me)
+        If frm.isSelected Then
+            Dim _filter As String = ""
+            Dim inx As Integer = 0
+            For Each row_handle As Integer In gv.GetSelectedRows
+                If inx = 0 Then
+                    _filter = "[Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+                Else
+                    _filter &= " OR [Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+                End If
+                inx += 1
+            Next
+            Notifications.PushMappedNotification(Users.userFullName, frm.selectedUserId, "Cable", frm.description, Replace(_filter, "'", "''",,, CompareMethod.Text))
+
+        End If
+    End Sub
+
+    Private Sub BarButtonItem28_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuIsolate.ItemClick
+        Dim _filter As String = ""
+        Dim inx As Integer = 0
+        For Each row_handle As Integer In gv.GetSelectedRows
+            If inx = 0 Then
+                _filter = "[Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+            Else
+                _filter &= " OR [Tag] LIKE '" & gv.GetDataRow(row_handle).Item("Tag") & "'"
+            End If
+            inx += 1
+        Next
+        gv.Columns("Tag").FilterInfo = New ColumnFilterInfo(_filter)
     End Sub
 End Class

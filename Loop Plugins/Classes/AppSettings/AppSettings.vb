@@ -28,6 +28,31 @@ Public Class AppSettings
             End Try
         End Set
     End Property
+    Public Property SolorunIntegrity() As Boolean
+        Get
+            Try
+                Return (
+                    IIf(
+                    DB.ExcutResult("SELECT SolorunIntegrity FROM dbo.AppSettings WHERE Id = (SELECT MAX(Id) FROM dbo.AppSettings)") = "True",
+                    True, False
+                    ))
+            Catch ex As Exception
+                pe.RaiseDataReadError(ex.Message)
+            End Try
+            Return False
+        End Get
+        Set(ByVal value As Boolean)
+            Try
+                If value Then
+                    DB.ExcuteNoneResult("UPDATE dbo.AppSettings SET SolorunIntegrity = 1")
+                Else
+                    DB.ExcuteNoneResult("UPDATE dbo.AppSettings SET SolorunIntegrity = 0")
+                End If
+            Catch ex As Exception
+                pe.RaiseDataExecuteError(ex.Message)
+            End Try
+        End Set
+    End Property
     Public ReadOnly Property DBVersion() As String
         Get
             Try

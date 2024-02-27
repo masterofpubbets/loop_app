@@ -1,0 +1,4151 @@
+--version12.0.3
+UPDATE [dbo].[tblSettings] SET SetValue = '12.0.3' WHERE SetName = 'VERSION'
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Discipline'
+          AND Object_ID = Object_ID(N'dbo.tblEleCableTray'))
+BEGIN
+    ALTER TABLE dbo.tblEleCableTray
+    ADD Discipline NVARCHAR(250) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Family'
+          AND Object_ID = Object_ID(N'dbo.tblEleCableTray'))
+BEGIN
+    ALTER TABLE dbo.tblEleCableTray
+    ADD Family NVARCHAR(250) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ControllerLocation'
+          AND Object_ID = Object_ID(N'dbo.tblInsLoop'))
+BEGIN
+    ALTER TABLE dbo.tblInsLoop
+    ADD ControllerLocation NVARCHAR(250) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ControllerLocation'
+          AND Object_ID = Object_ID(N'dbo.tblSoloRun'))
+BEGIN
+    ALTER TABLE dbo.tblSoloRun
+    ADD ControllerLocation NVARCHAR(250) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ControllerLocation'
+          AND Object_ID = Object_ID(N'TEMPDATA.SolorunTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.SolorunTemp
+    ADD ControllerLocation NVARCHAR(250) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ControllerLocation'
+          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.LoopTemp
+    ADD ControllerLocation NVARCHAR(250) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ParentID'
+          AND Object_ID = Object_ID(N'dbo.tblEquipment'))
+BEGIN
+    ALTER TABLE dbo.tblEquipment
+    ADD ParentID INT NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetEquipment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetEquipment
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetEquipment]
+AS
+
+SELECT
+VALL.Discipline,VALL.Family,VALL.[Type],VALL.Subtype,VALL.Area,VALL.Subsystem,VALL.Tag,VALL.[Description],
+VALL.ActId,tblActIDS.ActName,tblActIDS.SubCon AS [Act Subcon],
+VALL.PrecomTestActID,ActIDPrecomm.ActName AS [Precomm Act Name],
+VALL.[Installed Date],VALL.[QC Released Date],VALL.RFINumber,VALL.[Installation Scope],
+VALL.[Precom Test Required], VALL.[Precom Test Date],
+VALL.PDSModel,VALL.Team,VALL.[Status],VALL.Id,
+CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource],
+VALL.PO,
+ParentEQ.Tag AS Parent
+FROM (
+    SELECT 
+    Discipline,Family,[Type],Subtype,
+    [Area],[Subsystem],Tag
+    ,[Description]
+    ,[ActId]
+    ,[PrecomTestActID]
+    ,InstalledDate AS [Installed Date]
+    ,QCDate AS [QC Released Date]
+    ,RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,eqId AS Id
+    ,CASE WHEN PrecomTestRequired =1 THEN 'Yes' ELSE 'No' END AS [Precom Test Required]
+    ,PrecomTestDate AS [Precom Test Date]
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    ,PO
+    FROM tblEquipment WITH (NOLOCK)
+) AS VALL
+LEFT JOIN tblActIDS ON VALL.ActId = tblActIDS.ActID
+LEFT JOIN tblActIDS AS ActIDPrecomm ON VALL.PrecomTestActID = ActIDPrecomm.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 500) AS Res ON VALL.Id = Res.ItemId
+LEFT JOIN tblEquipment AS ParentEQ ON VALL.Id = ParentEQ.eqId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckSolorunIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckSolorunIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckSolorunIntgerity]
+AS
+IF (SELECT SolorunIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblSolorun
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblSolorun
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET TR_Loop_Folder_QC_Release = HCS_Folder_Ready
+        WHERE TR_Loop_Folder_QC_Release IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblSolorun
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+
+    END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'AddBlockage'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.AddBlockage
+END
+GO
+CREATE PROC MOTORS.[AddBlockage]
+@catName NVARCHAR(100),
+@folderId INT,
+@description NVARCHAR(255),
+@issuedById INT,
+@issuedToId INT
+
+AS
+DECLARE @catId INT
+
+SELECT @catId = id FROM LOOPS.tblConsCategory WHERE catName = @catName
+INSERT INTO MOTORS.tblFoldersCons ([conCatId], [folderId], [description], [issuedById], [issuedToId], [issuedDate], [isClosed])
+VALUES (@catId, @folderId, @description, @issuedById, @issuedToId, GETDATE(), 0)
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'AddComment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.AddComment
+END
+GO
+CREATE PROC [MOTORS].[AddComment]
+@id INT,
+@comm NVARCHAR(MAX)
+
+AS
+UPDATE MOTORS.tblFoldersCons SET comments = @comm WHERE id = @id
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CloseBlockage'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.CloseBlockage
+END
+GO
+CREATE PROC [MOTORS].[CloseBlockage]
+@id INT
+
+AS
+UPDATE MOTORS.tblFoldersCons SET isClosed = 1, closedDate = GETDATE() WHERE id = @id
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'ReassignBlockage'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.ReassignBlockage
+END
+GO
+CREATE PROC [MOTORS].[ReassignBlockage]
+@id INT,
+@catName NVARCHAR(100),
+@folderId INT,
+@description NVARCHAR(255),
+@issuedById INT,
+@issuedToId INT
+
+AS
+DECLARE @catId INT
+SELECT @catId = id FROM LOOPS.tblConsCategory WHERE catName = @catName
+
+BEGIN TRY
+	INSERT INTO MOTORS.tblFoldersCons ([conCatId], [folderId], [description], [issuedById], [issuedToId], [issuedDate], [isClosed], prevId)
+	VALUES (@catId, @folderId, @description, @issuedById, @issuedToId, GETDATE(), 0, @id)
+
+	UPDATE MOTORS.tblFoldersCons SET isClosed = 1, closedDate = GETDATE() WHERE id = @id
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+GO
+IF DATABASE_PRINCIPAL_ID('db_executer') IS NULL
+    BEGIN
+        CREATE ROLE db_executer AUTHORIZATION db_owner; 
+    END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GrantExecute'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.GrantExecute
+END
+GO
+CREATE PROC dbo.GrantExecute( 
+    @To AS NVARCHAR(255)
+    , @NameLike AS NVARCHAR(MAX)
+    , @SchemaLike as NVARCHAR(MAX) = N'dbo'
+    ) AS
+
+DECLARE @sql as NVARCHAR(MAX)
+SET @sql = ''
+
+SELECT @sql = @sql + '
+ GRANT EXECUTE ON OBJECT::['+ROUTINE_SCHEMA+'].['+ROUTINE_NAME+'] TO '+@To+';'
+FROM INFORMATION_SCHEMA.ROUTINES
+WHERE ROUTINE_NAME LIKE @NameLike
+ AND ROUTINE_SCHEMA LIKE @SchemaLike
+
+PRINT @sql
+EXEC(@sql)
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GrantExecuteType'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.GrantExecuteType
+END
+GO
+CREATE PROC dbo.GrantExecuteType( 
+    @To AS NVARCHAR(255)
+    , @RoutineType AS NVARCHAR(MAX)
+    , @SchemaLike as NVARCHAR(MAX) = N'dbo'
+    ) AS
+
+DECLARE @sql as NVARCHAR(MAX)
+SET @sql = ''
+
+SELECT @sql = @sql + '
+ GRANT EXECUTE ON OBJECT::['+ROUTINE_SCHEMA+'].['+ROUTINE_NAME+'] TO '+@To+';'
+FROM INFORMATION_SCHEMA.ROUTINES
+WHERE ROUTINE_TYPE LIKE @RoutineType
+ AND ROUTINE_SCHEMA LIKE @SchemaLike
+
+PRINT @sql
+EXEC(@sql)
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopsConstraints'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetLoopsConstraints
+END
+GO
+CREATE PROC [LOOPS].[GetLoopsConstraints]
+AS
+
+WITH Loops AS (
+	SELECT 
+		[TBL_ID] AS LoopID
+		,Area
+		,[LoopName] As [Loop Name]
+		,[tblInsLoop].L_Description AS [Loop Description]
+		,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Loop Done'
+			WHEN L_Done IS NOT NULL THEN 'Loop Done'
+			WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+			WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+			WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Prepared'
+            WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+			ELSE 'Not Ready'
+			END AS [Folder Status]
+			,LoopPriority
+			,tblProject.Pro_Title AS [Project]
+		FROM [tblInsLoop] WITH (NOLOCK)
+		INNER JOIN tblProject ON [tblInsLoop].ProUUID = tblProject.UUID
+		WHERE [tblInsLoop].Active = 1
+	)
+
+SELECT 
+LoopsCons.id AS ID
+,Loops.*
+,LoopsCats.catName AS [Constraint Category]
+,LoopsCons.[description] AS [Description], LoopsCons.issuedDate AS [Issued Date]
+,IssuedBy.fullName AS [Issued By], IssuedBy.job AS [Issued By Title], IssuedBy.email AS [Issued By Mail]
+,IssuedTo.fullName AS [Issued To], IssuedTo.job AS [Issued To Title], IssuedTo.email AS [Issued To Mail]
+,LoopsCons.comments AS Comments
+
+FROM Loops
+INNER JOIN LOOPS.tblLoopsCons AS LoopsCons WITH (NOLOCK) ON Loops.LoopID = LoopsCons.[loopId]
+LEFT JOIN LOOPS.tblConsCategory AS LoopsCats WITH (NOLOCK) ON LoopsCons.conCatId = LoopsCats.id
+LEFT JOIN LOOPS.tblUsers AS IssuedBy WITH (NOLOCK) ON LoopsCons.issuedById = IssuedBy.id
+LEFT JOIN LOOPS.tblUsers AS IssuedTo WITH (NOLOCK) ON LoopsCons.issuedToId = IssuedTo.id
+
+WHERE LoopsCons.isClosed = 0 
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetFolderConstraints'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.GetFolderConstraints
+END
+GO
+CREATE PROC [MOTORS].[GetFolderConstraints]
+AS
+
+WITH Folders AS (
+	SELECT 
+		tblSolorun.[Id] AS FolderID
+		,Area
+		,[FolderName] As [Folder Name]
+		,[tblSolorun].L_Description AS [Description]
+		,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Solo Run Done'
+			WHEN L_Done IS NOT NULL THEN 'Solo Run Done'
+			WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+			WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+			WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Prepared'
+            WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+			ELSE 'Not Ready'
+			END AS [Folder Status]
+			,FolderPriority
+			,tblProject.Pro_Title AS [Project]
+		FROM [tblSolorun] WITH (NOLOCK)
+		INNER JOIN tblProject ON [tblSolorun].ProUUID = tblProject.UUID
+		WHERE [tblSolorun].Active = 1
+	)
+
+SELECT 
+FolderCons.id AS ID
+,Folders.*
+,Cats.catName AS [Constraint Category]
+,FolderCons.[description] AS [Description], FolderCons.issuedDate AS [Issued Date]
+,IssuedBy.fullName AS [Issued By], IssuedBy.job AS [Issued By Title], IssuedBy.email AS [Issued By Mail]
+,IssuedTo.fullName AS [Issued To], IssuedTo.job AS [Issued To Title], IssuedTo.email AS [Issued To Mail]
+,FolderCons.comments AS Comments
+
+FROM Folders
+INNER JOIN MOTORS.tblFoldersCons AS FolderCons WITH (NOLOCK) ON Folders.FolderID = FolderCons.folderId
+LEFT JOIN LOOPS.tblConsCategory AS Cats WITH (NOLOCK) ON FolderCons.conCatId = Cats.id
+LEFT JOIN LOOPS.tblUsers AS IssuedBy WITH (NOLOCK) ON FolderCons.issuedById = IssuedBy.id
+LEFT JOIN LOOPS.tblUsers AS IssuedTo WITH (NOLOCK) ON FolderCons.issuedToId = IssuedTo.id
+
+WHERE FolderCons.isClosed = 0 
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateLoopsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Not Exist)
+UPDATE V
+	SET Error = 'Loop Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblInsLoop.LoopName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblInsLoop.L_Description
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblInsLoop.Vendor AS L_Vendor
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblInsLoop.Subsystem AS L_Subsystem
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblInsLoop.Area AS L_Area
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblInsLoop.L_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblInsLoop.Sub_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblInsLoop.ACTIVITYID
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.StartDate = '1/1/0001' THEN NULL ELSE temp.StartDate END AS StartDate,
+		tblInsLoop.Planning_START_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.FinishDate = '1/1/0001' THEN NULL ELSE temp.FinishDate END AS FinishDate,
+		tblInsLoop.Planning_FINISH_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblInsLoop.Active
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Priority
+UPDATE V
+	SET LoopPriority = CONVERT(INT,TempPriority)
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Priority = 'SETASNULL' THEN NULL ELSE temp.Priority END AS TempPriority,
+		tblInsLoop.LoopPriority
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Priority IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE PDSModel
+UPDATE V
+	SET LModel = PDSModel
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.PDSModel = 'SETASNULL' THEN NULL ELSE temp.PDSModel END AS PDSModel,
+		tblInsLoop.PDSModel AS LModel
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.PDSModel IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblInsLoop.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--CLear Loop Printed
+UPDATE V
+	SET Folder_Preparation = NULL,
+        SubmitToQC = NULL,
+        ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation, tblInsLoop.SubmitToQC, tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPPRINTED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--====================================================================
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPQCRELEASED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblInsLoop.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERREADY' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblInsLoop.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblInsLoop.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Loop Done
+UPDATE V
+	SET L_Done = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERDONE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblInsLoop.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--Clear Loop Approved
+UPDATE V
+	SET L_FinalApproval = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERAPPROVED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblInsLoop.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblInsLoop.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submit to QC
+UPDATE V
+	SET SubmitToQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.SubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDESUBMITTOQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblInsLoop.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblInsLoop.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Return from QC
+UPDATE V
+	SET ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERRETURNFROMQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Construction Complete
+UPDATE V
+	SET LConstr_Release = ConstrRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ConstrRelease,
+		tblInsLoop.L_Constr_Release AS LConstr_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERCONSRELEASE' AND Error IS NULL AND temp.ConstrRelease IS NOT NULL AND tblInsLoop.L_Constr_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Construction Complete
+UPDATE V
+	SET L_Constr_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.L_Constr_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERCONSRELEASE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+EXEC dbo.CheckLoopIntgerity
+
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate,
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate,
+Active, Priority, PDSModel, ReportedBy,
+ConstrRelease,FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateSolorunBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateSolorunBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateSolorunBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Solorun Does Not Exist)
+UPDATE V
+	SET Error = 'Solorun Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblSolorun.FolderName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblSolorun.L_Description
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblSolorun.Vendor AS L_Vendor
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblSolorun.Subsystem AS L_Subsystem
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblSolorun.Area AS L_Area
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblSolorun.L_Type
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblSolorun.Sub_Type
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblSolorun.ACTIVITYID
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.StartDate AS StartDate,
+		tblSolorun.Planning_START_Date
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinishDate AS FinishDate,
+		tblSolorun.Planning_FINISH_Date
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblSolorun.Active
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Priority
+UPDATE V
+	SET FolderPriority = CONVERT(INT,TempPriority)
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Priority = 'SETASNULL' THEN NULL ELSE temp.Priority END AS TempPriority,
+		tblSolorun.FolderPriority
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Priority IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE PDSModel
+UPDATE V
+	SET LModel = PDSModel
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.PDSModel = 'SETASNULL' THEN NULL ELSE temp.PDSModel END AS PDSModel,
+		tblSolorun.PDSModel AS LModel
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.PDSModel IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblSolorun.Folder_Preparation
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblSolorun.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--CLear Loop Printed
+UPDATE V
+	SET Folder_Preparation = NULL,
+        SubmitToQC = NULL,
+        ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblSolorun.Folder_Preparation, tblSolorun.SubmitToQC, tblSolorun.ReturnFromQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPPRINTED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--====================================================================
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblSolorun.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblSolorun.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblSolorun.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPQCRELEASED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblSolorun.HCS_Folder_Ready
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblSolorun.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblSolorun.HCS_Folder_Ready
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERREADY' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblSolorun.Submitted_to_Precom
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblSolorun.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblSolorun.Submitted_to_Precom
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblSolorun.L_Done
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblSolorun.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Loop Done
+UPDATE V
+	SET L_Done = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblSolorun.L_Done
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERDONE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblSolorun.L_FinalApproval
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblSolorun.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--Clear Loop Approved
+UPDATE V
+	SET L_FinalApproval = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblSolorun.L_FinalApproval
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERAPPROVED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblSolorun.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblSolorun.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submit to QC
+UPDATE V
+	SET SubmitToQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblSolorun.SubmitToQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDESUBMITTOQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblSolorun.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblSolorun.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Return from QC
+UPDATE V
+	SET ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblSolorun.ReturnFromQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERRETURNFROMQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Construction Released
+UPDATE V
+	SET LConstrRelease = ConstrRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ConstrRelease,
+		tblSolorun.L_Constr_Release AS LConstrRelease
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERCONSRELEASE' AND Error IS NULL AND temp.ConstrRelease IS NOT NULL AND tblSolorun.L_Constr_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Construction Released
+UPDATE V
+	SET L_Constr_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblSolorun.L_Constr_Release
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERCONSRELEASE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+EXEC dbo.CheckSolorunIntgerity
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, StartDate, FinishDate, Active, Priority, PDSModel, ReportedBy,
+ConstrRelease,
+FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.SolorunTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopsHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetLoopsHCS
+END
+GO
+CREATE PROC [LOOPS].[GetLoopsHCS]
+AS
+WITH LoopsData AS (
+    SELECT DISTINCT [TBL_ID] AS Id
+	  ,Area
+      ,[LoopName] As [Loop Name]
+	  ,L_Description AS [Description]
+      ,[L_Type] As [Type]
+      ,[Sub_Type] AS [Sub Type]
+	  ,[Subsystem]
+	  ,[Subcontractor]
+      ,[Vendor]
+	  ,ControllerLocation AS [Controller Location]
+	  ,L_Constr_Release AS [Cons Complete]
+	  ,TR_Loop_Folder_QC_Release AS [QC Released]
+      ,[Folder_Preparation] AS [Folder Printed]
+      ,SubmitToQC AS [Submitted To QC]
+	  ,HCS_Folder_Ready AS [Folder Ready QC]
+      ,ReturnFromQC AS [Return From QC]
+	  ,Submitted_to_Precom AS [Submitted To Precomm]
+	  ,L_Done AS [Done]
+	  ,L_FinalApproval AS [Final Approval]
+      
+	  ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Loop Done'
+		WHEN L_Done IS NOT NULL THEN 'Loop Done'
+		WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+		WHEN ReturnFromQC IS NOT NULL THEN 'Returned From QC'
+		WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+		WHEN SubmitToQC IS NOT NULL THEN 'Submitted To QC'
+        WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Printed'
+		WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+		WHEN L_Constr_Release IS NOT NULL THEN 'Construction Complete'
+		ELSE 'Not Ready'
+		END AS [Folder Status]
+		,LoopPriority
+		,tblProject.Pro_Title AS [Project]
+		--,[qrCode] AS QRCode
+		,tblInsLoop.ProUUID 
+        ,tblInsLoop.PDSModel
+        ,tblInsLoop.Planning_START_Date AS [Plan Start Date]
+        ,tblInsLoop.Planning_FINISH_Date AS [Plan Finish Date]
+  FROM [tblInsLoop] WITH (NOLOCK)
+  INNER JOIN tblProject ON [tblInsLoop].ProUUID = tblProject.UUID
+  WHERE [tblInsLoop].Active = 1
+), HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Group]
+    FROM [HCS].[ProjectElements]
+), LoopsITR AS (
+    SELECT
+    tblInsLoop.LoopName,
+    TaskStatus.TaskCount, TaskStatus.TaskClosed
+    FROM tblInsLoop
+    INNER JOIN (
+        SELECT 
+            HCSGroups.[Group]
+            ,COUNT([ElementCode]) AS TaskCount
+            ,COUNT([ClosingDate]) AS TaskClosed
+        FROM [HCS].[ProjectTasks] AS Tasks
+        INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+        WHERE Tasks.[Description] NOT LIKE '%VENDOR SITE ACCEPTANCE TEST%' AND Tasks.Phase = 'Construction'
+        GROUP BY HCSGroups.[Group]
+    ) AS TaskStatus
+    ON tblInsLoop.LoopName = TaskStatus.[Group]
+)
+
+
+SELECT DISTINCT
+CASE WHEN LOOPS.tblLoopsCons.isClosed = 0 THEN 'Yes' ELSE 'No' END AS [Has Blockage]
+,LoopsData.*
+,LoopsITR.TaskCount
+,LoopsITR.TaskClosed
+
+FROM LoopsData
+LEFT JOIN LOOPS.tblLoopsCons WITH (NOLOCK) ON LoopsData.Id = LOOPS.tblLoopsCons.loopId
+LEFT JOIN LoopsITR ON LoopsData.[Loop Name] = LoopsITR.LoopName
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateQCReleasedFromHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.UpdateQCReleasedFromHCS
+END
+GO
+CREATE PROC [LOOPS].[UpdateQCReleasedFromHCS]
+AS
+WITH HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Type]
+        ,[Discipline]
+        ,[Description]
+        ,[Subsystem]
+        ,[Group]
+        ,[GroupActive]
+        ,GroupType
+    FROM [HCS].[ProjectElements]
+)
+
+UPDATE v
+    SET v.TR_Loop_Folder_QC_Release = GETDATE()
+FROM (
+    SELECT
+    tblInsLoop.LoopName, tblInsLoop.TR_Loop_Folder_QC_Release,
+    TaskStatus.TaskCount, TaskStatus.TaskClosed
+    FROM tblInsLoop
+    INNER JOIN (
+        SELECT 
+            HCSGroups.[Group]
+            ,COUNT([ElementCode]) AS TaskCount
+            ,COUNT([ClosingDate]) AS TaskClosed
+        FROM [HCS].[ProjectTasks] AS Tasks
+        INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+        WHERE Tasks.[Description] NOT LIKE '%VENDOR SITE ACCEPTANCE TEST%' AND Tasks.Phase = 'Construction'
+        GROUP BY HCSGroups.[Group]
+        HAVING COUNT([ElementCode]) = COUNT([ClosingDate])
+    ) AS TaskStatus
+    ON tblInsLoop.LoopName = TaskStatus.[Group]
+) AS v
+WHERE v.TR_Loop_Folder_QC_Release IS NULL
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetCablesFull'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetCablesFull
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetCablesFull]
+AS
+WITH Equipment AS (
+    SELECT 
+    Tag,Area
+    ,PDSModel
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblEquipment WITH (NOLOCK)
+
+    UNION ALL
+
+    SELECT 
+    Instrument_Tag AS Tag,Area
+    ,PDSModel
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblInstruments WITH (NOLOCK)
+
+    UNION ALL
+
+    SELECT 
+    TAG,Area
+    ,PDSModel
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblLightingFixture WITH (NOLOCK)
+), ElePro AS (
+    SELECT 
+        Tag, SUM(TotalPercentage) AS TotalPercentage, MAX(LastUpdated) AS LastUpdated, SUM(Weekly) AS Weekly,
+        MAX([Actual Length]) AS [Actual Length]
+    FROM (
+        SELECT 
+            [Tag]
+            ,[Per_Qnty] AS TotalPercentage
+            ,[Pro_Date] AS LastUpdated
+            ,ABS(cable_mark_1_from - cable_mark_1_to) AS [Actual Length]
+            ,CASE WHEN pro_Date BETWEEN DATEADD(DAY, -6, (SELECT tblTMP.tmp_date FROM tblTmp WHERE tblTMP.tmp_id = 1)) AND (SELECT tblTMP.tmp_date FROM tblTmp WHERE tblTMP.tmp_id = 1) THEN Per_Qnty ELSE 0 END AS Weekly
+        FROM [tblEleCableProduction] WITH (NOLOCK)
+    ) AS VEC
+    GROUP BY Tag
+), InsPro AS (
+    SELECT 
+        Tag, SUM(TotalPercentage) AS TotalPercentage, MAX(LastUpdated) AS LastUpdated, SUM(Weekly) AS Weekly,
+        MAX([Actual Length]) AS [Actual Length]
+    FROM(
+        SELECT 
+            [Tag]
+            ,[Per_Qnty] AS TotalPercentage
+            ,[Pro_Date] AS LastUpdated
+            ,ABS(cable_mark_1_from - cable_mark_1_to) AS [Actual Length]
+            ,CASE WHEN pro_Date BETWEEN DATEADD(DAY, -6, (SELECT tblTMP.tmp_date FROM tblTmp WHERE tblTMP.tmp_id = 1)) AND (SELECT tblTMP.tmp_date FROM tblTmp WHERE tblTMP.tmp_id = 1) THEN Per_Qnty ELSE 0 END AS Weekly
+        FROM [tblInsCableProduction] WITH (NOLOCK)
+    ) AS VIC
+    GROUP BY Tag
+), ActId AS (
+    SELECT [ActID],[ActName],[SubCon],[Family],[EICA_Area],[Team],[StartDate],[EndDate] FROM [tblActIDS] WITH (NOLOCK)
+)
+
+
+SELECT DISTINCT
+EC.Discipline,EC.[Area],[EC_Type] AS [Type],[EC_ID] AS Tag,[EC_Length] AS [Length],[EC_Description] AS [Description],Routing
+,EC.[SubSystem]
+,[EC_From] AS [From],[From_Description] AS [From Description], EqFrom.Area AS [Eq From Area], EqFrom.PDSModel AS [Eq From PDSModel], EqFrom.[Status] AS [Eq From Status]
+,[EC_To] AS [To],[To_Description] AS [To Description], EqTo.Area AS [Eq To Area], EqTo.PDSModel AS [Eq To PDSModel], EqTo.[Status] AS [Eq To Status]
+,Drawing
+
+,[EC_Plan_P6_ActID_Pulling] AS [Pulling ActId], PullAct.ActName AS [Pulling ActName],PullAct.EICA_Area AS [Pulling Act Area],PullAct.Family AS [Pulling Act Family],PullAct.SubCon AS [Pulling Act Subcon],PullAct.Team AS [Pulling Act Team],PullAct.StartDate AS [Pulling Act StartDate],PullAct.EndDate AS [Pulling Act EndDate]
+,[EC_Plan_P6_ActID_Connect] AS [Con From ActId], ConFromAct.ActName AS [ConFrom ActName],ConFromAct.EICA_Area AS [ConFrom Act Area],ConFromAct.Family AS [ConFrom Act Family],ConFromAct.SubCon AS [ConFrom Act Subcon],ConFromAct.Team AS [ConFrom Act Team],ConFromAct.StartDate AS [ConFrom Act StartDate],ConFromAct.EndDate AS [ConFrom Act EndDate]
+,[EC_Plan_P6_ActID_Connect_2] AS [Con To ActId], ConToAct.ActName AS [ConTo ActName],ConToAct.EICA_Area AS [ConTo Act Area],ConToAct.Family AS [ConTo Act Family],ConToAct.SubCon AS [ConTo Act Subcon],ConToAct.Team AS [ConTo Act Team],ConToAct.StartDate AS [ConTo Act StartDate],ConToAct.EndDate AS [ConTo Act EndDate]
+,[EC_Plan_P6_ActID_Test] AS [Test ActId]
+
+,PullingWorkfront AS [Pulling Workfront]
+,ElePro.TotalPercentage * EC.EC_Length / 100 AS [Pulled Lm]
+,ElePro.[Actual Length]
+,ElePro.LastUpdated [Pulled Date]
+,ElePro.TotalPercentage
+,ElePro.Weekly * EC.EC_Length / 100 AS [Weekly Pulled Lm]
+
+,GlandFromWorkfront AS [Gland From Workfront]
+,EC_Cable_Gland_From AS [Gland From Date]
+
+,GlandToWorkfront AS [Gland To Workfront]
+,EC_Cable_Gland_To AS [Gland To Date]
+
+,ConnFromWorkfront AS [Conn From Workfront]
+,[EC_Plan_Connected_Date_From] AS [Con From Date]
+
+,ConnToWorkfront AS [Conn To Workfront]
+,[EC_Plan_Connected_Date_To] AS [Con To Date]
+
+,[EC_Megger] AS [Test Date]
+,[TR_QC_Released] AS [QC Released Date]
+,EC.RFINumber
+,EC.PDSModel
+,[Remarks]
+,EC.[Team], tbl_id AS Id
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+,CASE WHEN EleRes.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM [tblEleCableList] AS EC WITH (NOLOCK)
+LEFT JOIN ElePro ON EC.EC_ID = ElePro.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN Equipment AS EqFrom ON EC.EC_From = EqFrom.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN Equipment AS EqTo ON EC.EC_To = EqTo.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN ActId AS PullAct ON EC.EC_Plan_P6_ActID_Pulling = PullAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN ActId AS ConFromAct ON EC.EC_Plan_P6_ActID_Connect = ConFromAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN ActId AS ConToAct ON EC.EC_Plan_P6_ActID_Connect_2 = ConToAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 100) AS EleRes ON EC.TBL_ID = EleRes.ItemId
+
+
+UNION ALL
+
+SELECT DISTINCT
+IC.Discipline,IC.[Area],[IC_Type] AS [Type],[IC_ID] AS Tag,[IC_Length] AS [Length],[IC_Description] AS [Description],Routing
+,IC.[SubSystem]
+,[IC_From] AS [From],[From_Description] AS [From Description], EqFrom.Area AS [Eq From Area], EqFrom.PDSModel AS [Eq From PDSModel], EqFrom.[Status] AS [Eq From Status]
+,[IC_To] AS [To],[To_Description] AS [To Description], EqTo.Area AS [Eq To Area], EqTo.PDSModel AS [Eq To PDSModel], EqTo.[Status] AS [Eq To Status]
+,Drawing
+
+,[IC_Plan_P6_ActID_Pulling] AS [Pulling ActId], PullAct.ActName AS [Pulling ActName],PullAct.EICA_Area AS [Pulling Act Area],PullAct.Family AS [Pulling Act Family],PullAct.SubCon AS [Pulling Act Subcon],PullAct.Team AS [Pulling Act Team],PullAct.StartDate AS [Pulling Act StartDate],PullAct.EndDate AS [Pulling Act EndDate]
+,[IC_Plan_P6_ActID_Connect] AS [Con From ActId], ConFromAct.ActName AS [ConFrom ActName],ConFromAct.EICA_Area AS [ConFrom Act Area],ConFromAct.Family AS [ConFrom Act Family],ConFromAct.SubCon AS [ConFrom Act Subcon],ConFromAct.Team AS [ConFrom Act Team],ConFromAct.StartDate AS [ConFrom Act StartDate],ConFromAct.EndDate AS [ConFrom Act EndDate]
+,[IC_Plan_P6_ActID_Connect_2] AS [Con To ActId], ConToAct.ActName AS [ConTo ActName],ConToAct.EICA_Area AS [ConTo Act Area],ConToAct.Family AS [ConTo Act Family],ConToAct.SubCon AS [ConTo Act Subcon],ConToAct.Team AS [ConTo Act Team],ConToAct.StartDate AS [ConTo Act StartDate],ConToAct.EndDate AS [ConTo Act EndDate]
+,[IC_Plan_P6_ActID_Test] AS [Test ActId]
+
+,PullingWorkfront AS [Pulling Workfront]
+,InsPro.TotalPercentage * IC.IC_Length / 100 AS [Pulled Lm]
+,InsPro.[Actual Length]
+,InsPro.LastUpdated [Pulled Date]
+,InsPro.TotalPercentage
+,InsPro.Weekly * IC.IC_Length / 100 AS [Weekly Pulled Lm]
+
+,GlandFromWorkfront AS [Gland From Workfront]
+,IC_Cable_Gland_From AS [Gland From Date]
+
+,GlandToWorkfront AS [Gland To Workfront]
+,IC_Cable_Gland_To AS [Gland To Date]
+
+,ConnFromWorkfront AS [Conn From Workfront]
+,[IC_Plan_Connected_Date_From] AS [Con From Date]
+
+,ConnToWorkfront AS [Conn To Workfront]
+,[IC_Plan_Connected_Date_To] AS [Con To Date]
+
+,[IC_Megger] AS [Test Date]
+,[TR_QC_Released] AS [QC Released Date]
+,IC.RFINumber
+,IC.PDSModel
+,[Remarks]
+,IC.[Team], tbl_id AS Id
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+,CASE WHEN InsRes.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM [tblInsCableList] AS IC WITH (NOLOCK)
+LEFT JOIN InsPro ON IC.IC_ID = InsPro.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN Equipment AS EqFrom ON IC.IC_From = EqFrom.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN Equipment AS EqTo ON IC.IC_To = EqTo.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN ActId AS PullAct ON IC.IC_Plan_P6_ActID_Pulling = PullAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN ActId AS ConFromAct ON IC.IC_Plan_P6_ActID_Connect = ConFromAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN ActId AS ConToAct ON IC.IC_Plan_P6_ActID_Connect_2 = ConToAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 200) AS InsRes ON IC.TBL_ID = InsRes.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetFoldersHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.GetFoldersHCS
+END
+GO
+CREATE PROC [MOTORS].[GetFoldersHCS]
+AS
+
+IF OBJECT_ID('tempdb..#MotorsITR') IS NOT NULL
+    BEGIN
+        DROP TABLE #MotorsITR
+    END
+CREATE TABLE  #MotorsITR (
+    FolderName NVARCHAR(250) NOT NULL,
+    TaskCount INT NOT NULL DEFAULT 0,
+    TaskClosed INT NOT NULL DEFAULT 0
+)
+
+INSERT INTO #MotorsITR
+SELECT
+    Solo.FolderName,
+    COUNT([ElementCode]) AS TaskCount,
+    COUNT([ClosingDate]) AS TaskClosed
+    FROM tblSolorun AS Solo WITH (NOLOCK)
+    INNER JOIN [HCS].[ProjectElements] AS HCSGroups WITH (NOLOCK) ON Solo.FolderName = HCSGroups.[Group]
+    INNER JOIN [HCS].[ProjectTasks] AS Tasks WITH (NOLOCK) ON Tasks.ElementCode = HCSGroups.ElementTag
+    WHERE Tasks.[Phase] <> 'Precommissioning'
+    GROUP BY Solo.FolderName
+
+
+
+SELECT
+
+MotorData.*,
+#MotorsITR.*
+
+FROM (
+    SELECT DISTINCT tblSolorun.Id
+        ,Area
+        ,[FolderName] As [Folder Name]
+        ,L_Description AS [Description]
+        ,[L_Type] As [Type]
+        ,[Sub_Type] AS [Sub Type]
+        ,[Subsystem]
+        ,[Subcontractor]
+        ,[Vendor]
+        ,ControllerLocation AS [Controller Location]
+        ,L_Constr_Release AS [Cons Complete]
+        ,TR_Loop_Folder_QC_Release AS [QC Released]
+        ,[Folder_Preparation] AS [Folder Printed]
+        ,SubmitToQC AS [Submitted To QC]
+        ,HCS_Folder_Ready AS [Folder Ready QC]
+        ,ReturnFromQC AS [Return From QC]
+        ,Submitted_to_Precom AS [Submitted To Precomm]
+        ,L_Done AS [Done]
+        ,L_FinalApproval AS [Final Approval]
+        
+        ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Solo Run Done'
+            WHEN L_Done IS NOT NULL THEN 'Solo Run Done'
+            WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+            WHEN ReturnFromQC IS NOT NULL THEN 'Returned From QC'
+            WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+            WHEN SubmitToQC IS NOT NULL THEN 'Submitted To QC'
+            WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Printed'
+            WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+            WHEN L_Constr_Release IS NOT NULL THEN 'Construction Complete'
+            ELSE 'Not Ready'
+            END AS [Folder Status]
+            ,FolderPriority
+            ,tblProject.Pro_Title AS [Project]
+            --,[qrCode] AS QRCode
+            ,tblSolorun.ProUUID 
+            ,tblSolorun.PDSModel
+            ,tblSolorun.Planning_START_Date AS [Plan Start Date]
+            ,tblSolorun.Planning_FINISH_Date AS [Plan Finish Date]
+    FROM [tblSolorun] WITH (NOLOCK)
+    INNER JOIN tblProject ON [tblSolorun].ProUUID = tblProject.UUID
+    WHERE [tblSolorun].Active = 1
+) AS MotorData
+
+LEFT JOIN #MotorsITR ON MotorData.[Folder Name] = #MotorsITR.FolderName COLLATE Modern_Spanish_CI_AS
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'ProjectAdditionalElements'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	CREATE TABLE HCS.ProjectAdditionalElements (
+        Id INT IDENTITY(1, 1) NOT NULL,
+        [ElementTag] NVARCHAR(MAX) NOT NULL,
+        [Type] NVARCHAR(MAX) NULL,
+        [Subcontract] NVARCHAR(MAX) NULL,
+        [Discipline] NVARCHAR(MAX) NULL,
+        [Description] NVARCHAR(MAX) NULL,
+        [Subsystem] NVARCHAR(MAX) NULL,
+        [Group] NVARCHAR(MAX) NOT NULL,
+        [GroupType] NVARCHAR(MAX) NOT NULL DEFAULT 'CONTROL_LOOP',
+        [GroupActive] NVARCHAR(MAX) NOT NULL DEFAULT 'True',
+        PRIMARY KEY (Id)
+    )
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'AddAdditionalElements'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP PROC HCS.AddAdditionalElements
+END
+GO
+CREATE PROC HCS.AddAdditionalElements
+AS
+INSERT INTO HCS.ProjectElements (
+        [ElementTag],
+        [Type],
+        [Subcontract],
+        [Discipline],
+        [Description],
+        [Subsystem],
+        [Group],
+        [GroupType],
+        [GroupActive]
+)
+
+SELECT DISTINCT [ElementTag],
+        [Type],
+        [Subcontract],
+        [Discipline],
+        [Description],
+        [Subsystem],
+        [Group],
+        [GroupType],
+        [GroupActive]
+FROM HCS.ProjectAdditionalElements
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckLoopIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckLoopIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckLoopIntgerity]
+AS
+IF (SELECT LoopIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblInsLoop
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblInsLoop
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+    END
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckSolorunIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckSolorunIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckSolorunIntgerity]
+AS
+IF (SELECT SolorunIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblSolorun
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblSolorun
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblSolorun
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+
+    END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UploadLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UploadLoopsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UploadLoopsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Exist)
+UPDATE V
+	SET Error = 'Loop Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--Insert to DB with no Error
+
+INSERT INTO dbo.tblInsLoop (LoopName, [L_Type], Sub_Type, Area, [L_Description], Vendor, Subsystem, ACTIVITYID, Planning_START_Date, Planning_FINISH_Date, LoopPriority, PDSModel, Active, ControllerLocation)
+SELECT 
+Tag, 
+CASE WHEN [Type] IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE [Type] END AS [Type], 
+CASE WHEN Subtype IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Subtype END AS Subtype, 
+CASE WHEN Area IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Area END AS Area, 
+CASE WHEN [Description] IN ('NOUPDATE', 'SETASNULL') THEN  NULL ELSE [Description] END AS [Description] , 
+CASE WHEN Vendor IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Vendor END AS Vendor, 
+CASE WHEN Subsystem IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Subsystem END AS Subsystem, 
+CASE WHEN ActId IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE ActId END AS ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate, 
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate, 
+Priority, PDSModel,
+1,
+CASE WHEN [ControllerLocation] IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE [ControllerLocation] END AS [ControllerLocation]
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey AND [Error] IS NULL
+--===========================================
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate, 
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate, 
+Active,
+Priority, PDSModel, ControllerLocation AS [ControllerLocation], ReportedBy
+FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UploadSolorunsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UploadSolorunsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UploadSolorunsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Motor Does Exist)
+UPDATE V
+	SET Error = 'Motor Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--Insert to DB with no Error
+
+INSERT INTO dbo.tblSolorun (FolderName, [L_Type], Sub_Type, Area, [L_Description], Vendor, Subsystem, ACTIVITYID, Planning_START_Date, Planning_FINISH_Date, FolderPriority, PDSModel, Active, ControllerLocation)
+SELECT 
+Tag, 
+CASE WHEN [Type] IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE [Type] END AS [Type], 
+CASE WHEN Subtype IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Subtype END AS Subtype, 
+CASE WHEN Area IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Area END AS Area, 
+CASE WHEN [Description] IN ('NOUPDATE', 'SETASNULL') THEN  NULL ELSE [Description] END AS [Description] , 
+CASE WHEN Vendor IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Vendor END AS Vendor, 
+CASE WHEN Subsystem IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE Subsystem END AS Subsystem, 
+CASE WHEN ActId IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE ActId END AS ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate, 
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate, 
+Priority, PDSModel,
+1,
+CASE WHEN [ControllerLocation] IN ('NOUPDATE', 'SETASNULL') THEN NULL ELSE [ControllerLocation] END AS [ControllerLocation]
+FROM TEMPDATA.SolorunTemp
+WHERE OpKey = @opKey AND [Error] IS NULL
+--===========================================
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate, 
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate, 
+Active,
+Priority, PDSModel, ControllerLocation AS [ControllerLocation], ReportedBy
+FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.SolorunTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateSolorunBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateSolorunBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateSolorunBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.SolorunTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Solorun Does Not Exist)
+UPDATE V
+	SET Error = 'Solorun Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblSolorun.FolderName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.SolorunTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblSolorun.L_Description
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblSolorun.Vendor AS L_Vendor
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblSolorun.Subsystem AS L_Subsystem
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblSolorun.Area AS L_Area
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblSolorun.L_Type
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblSolorun.Sub_Type
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblSolorun.ACTIVITYID
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Controller Location
+UPDATE V
+	SET ControllerLocation = NewControllerLocation
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ControllerLocation = 'SETASNULL' THEN NULL ELSE temp.ControllerLocation END AS NewControllerLocation,
+		tblSolorun.ControllerLocation
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ControllerLocation <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.StartDate AS StartDate,
+		tblSolorun.Planning_START_Date
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinishDate AS FinishDate,
+		tblSolorun.Planning_FINISH_Date
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblSolorun.Active
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Priority
+UPDATE V
+	SET FolderPriority = CONVERT(INT,TempPriority)
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Priority = 'SETASNULL' THEN NULL ELSE temp.Priority END AS TempPriority,
+		tblSolorun.FolderPriority
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Priority IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE PDSModel
+UPDATE V
+	SET LModel = PDSModel
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.PDSModel = 'SETASNULL' THEN NULL ELSE temp.PDSModel END AS PDSModel,
+		tblSolorun.PDSModel AS LModel
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.PDSModel IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblSolorun.Folder_Preparation
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblSolorun.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--CLear Loop Printed
+UPDATE V
+	SET Folder_Preparation = NULL,
+        SubmitToQC = NULL,
+        ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblSolorun.Folder_Preparation, tblSolorun.SubmitToQC, tblSolorun.ReturnFromQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPPRINTED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--====================================================================
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblSolorun.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblSolorun.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblSolorun.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPQCRELEASED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblSolorun.HCS_Folder_Ready
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblSolorun.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblSolorun.HCS_Folder_Ready
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERREADY' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblSolorun.Submitted_to_Precom
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblSolorun.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblSolorun.Submitted_to_Precom
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblSolorun.L_Done
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblSolorun.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Loop Done
+UPDATE V
+	SET L_Done = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblSolorun.L_Done
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERDONE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblSolorun.L_FinalApproval
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblSolorun.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--Clear Loop Approved
+UPDATE V
+	SET L_FinalApproval = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblSolorun.L_FinalApproval
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERAPPROVED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblSolorun.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblSolorun.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submit to QC
+UPDATE V
+	SET SubmitToQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblSolorun.SubmitToQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDESUBMITTOQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblSolorun.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblSolorun.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Return from QC
+UPDATE V
+	SET ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblSolorun.ReturnFromQC
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERRETURNFROMQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Construction Released
+UPDATE V
+	SET LConstrRelease = ConstrRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ConstrRelease,
+		tblSolorun.L_Constr_Release AS LConstrRelease
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'UPDATELOOPFOLDERCONSRELEASE' AND Error IS NULL AND temp.ConstrRelease IS NOT NULL AND tblSolorun.L_Constr_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Construction Released
+UPDATE V
+	SET L_Constr_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblSolorun.L_Constr_Release
+		FROM TEMPDATA.SolorunTemp AS temp
+		INNER JOIN tblSolorun ON temp.Tag = tblSolorun.FolderName
+		WHERE UpdateType = 'CLEARLOOPFOLDERCONSRELEASE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+EXEC dbo.CheckSolorunIntgerity
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, StartDate, FinishDate, Active, Priority, PDSModel, ControllerLocation AS [Controller Location], ReportedBy,
+ConstrRelease,
+FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.SolorunTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateLoopsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Not Exist)
+UPDATE V
+	SET Error = 'Loop Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblInsLoop.LoopName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblInsLoop.L_Description
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblInsLoop.Vendor AS L_Vendor
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblInsLoop.Subsystem AS L_Subsystem
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblInsLoop.Area AS L_Area
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblInsLoop.L_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblInsLoop.Sub_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblInsLoop.ACTIVITYID
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Controller Location
+UPDATE V
+	SET ControllerLocation = NewControllerLocation
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ControllerLocation = 'SETASNULL' THEN NULL ELSE temp.ControllerLocation END AS NewControllerLocation,
+		tblInsLoop.ControllerLocation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ControllerLocation <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.StartDate = '1/1/0001' THEN NULL ELSE temp.StartDate END AS StartDate,
+		tblInsLoop.Planning_START_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.FinishDate = '1/1/0001' THEN NULL ELSE temp.FinishDate END AS FinishDate,
+		tblInsLoop.Planning_FINISH_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblInsLoop.Active
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Priority
+UPDATE V
+	SET LoopPriority = CONVERT(INT,TempPriority)
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Priority = 'SETASNULL' THEN NULL ELSE temp.Priority END AS TempPriority,
+		tblInsLoop.LoopPriority
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Priority IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE PDSModel
+UPDATE V
+	SET LModel = PDSModel
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.PDSModel = 'SETASNULL' THEN NULL ELSE temp.PDSModel END AS PDSModel,
+		tblInsLoop.PDSModel AS LModel
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.PDSModel IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblInsLoop.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--CLear Loop Printed
+UPDATE V
+	SET Folder_Preparation = NULL,
+        SubmitToQC = NULL,
+        ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation, tblInsLoop.SubmitToQC, tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPPRINTED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--====================================================================
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPQCRELEASED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblInsLoop.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERREADY' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblInsLoop.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblInsLoop.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Loop Done
+UPDATE V
+	SET L_Done = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERDONE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblInsLoop.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--Clear Loop Approved
+UPDATE V
+	SET L_FinalApproval = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERAPPROVED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblInsLoop.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblInsLoop.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submit to QC
+UPDATE V
+	SET SubmitToQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.SubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDESUBMITTOQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblInsLoop.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblInsLoop.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Return from QC
+UPDATE V
+	SET ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERRETURNFROMQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Construction Complete
+UPDATE V
+	SET LConstr_Release = ConstrRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ConstrRelease,
+		tblInsLoop.L_Constr_Release AS LConstr_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERCONSRELEASE' AND Error IS NULL AND temp.ConstrRelease IS NOT NULL AND tblInsLoop.L_Constr_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Construction Complete
+UPDATE V
+	SET L_Constr_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.L_Constr_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERCONSRELEASE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+EXEC dbo.CheckLoopIntgerity
+
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate,
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate,
+Active, Priority, PDSModel, ControllerLocation AS [Controller Location], ReportedBy,
+ConstrRelease,FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateLoopsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Not Exist)
+UPDATE V
+	SET Error = 'Loop Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblInsLoop.LoopName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblInsLoop.L_Description
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblInsLoop.Vendor AS L_Vendor
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblInsLoop.Subsystem AS L_Subsystem
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblInsLoop.Area AS L_Area
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblInsLoop.L_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblInsLoop.Sub_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblInsLoop.ACTIVITYID
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Controller Location
+UPDATE V
+	SET ControllerLocation = NewControllerLocation
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ControllerLocation = 'SETASNULL' THEN NULL ELSE temp.ControllerLocation END AS NewControllerLocation,
+		tblInsLoop.ControllerLocation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ControllerLocation <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.StartDate = '1/1/0001' THEN NULL ELSE temp.StartDate END AS StartDate,
+		tblInsLoop.Planning_START_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.FinishDate = '1/1/0001' THEN NULL ELSE temp.FinishDate END AS FinishDate,
+		tblInsLoop.Planning_FINISH_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblInsLoop.Active
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Priority
+UPDATE V
+	SET LoopPriority = CONVERT(INT,TempPriority)
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Priority = 'SETASNULL' THEN NULL ELSE temp.Priority END AS TempPriority,
+		tblInsLoop.LoopPriority
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Priority IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE PDSModel
+UPDATE V
+	SET LModel = PDSModel
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.PDSModel = 'SETASNULL' THEN NULL ELSE temp.PDSModel END AS PDSModel,
+		tblInsLoop.PDSModel AS LModel
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.PDSModel IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblInsLoop.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--CLear Loop Printed
+UPDATE V
+	SET Folder_Preparation = NULL,
+        SubmitToQC = NULL,
+        ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation, tblInsLoop.SubmitToQC, tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPPRINTED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--====================================================================
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPQCRELEASED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblInsLoop.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERREADY' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblInsLoop.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblInsLoop.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Loop Done
+UPDATE V
+	SET L_Done = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERDONE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblInsLoop.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--Clear Loop Approved
+UPDATE V
+	SET L_FinalApproval = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERAPPROVED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblInsLoop.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblInsLoop.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submit to QC
+UPDATE V
+	SET SubmitToQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.SubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDESUBMITTOQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblInsLoop.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblInsLoop.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Return from QC
+UPDATE V
+	SET ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERRETURNFROMQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Construction Complete
+UPDATE V
+	SET LConstr_Release = ConstrRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ConstrRelease,
+		tblInsLoop.L_Constr_Release AS LConstr_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERCONSRELEASE' AND Error IS NULL AND temp.ConstrRelease IS NOT NULL AND tblInsLoop.L_Constr_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Construction Complete
+UPDATE V
+	SET L_Constr_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.L_Constr_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERCONSRELEASE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+EXEC dbo.CheckLoopIntgerity
+
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, 
+CASE WHEN StartDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE StartDate END AS StartDate,
+CASE WHEN FinishDate IN ('1/1/0001', '1/1/1900') THEN NULL ELSE FinishDate END AS FinishDate,
+Active, Priority, PDSModel, ControllerLocation AS [Controller Location], ReportedBy,
+ConstrRelease,FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'Notifications'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP TABLE TEMPDATA.Notifications
+END
+GO
+CREATE TABLE TEMPDATA.Notifications (
+    Id INT IDENTITY(1, 1) NOT NULL,
+    FromFullName NVARCHAR(250) NULL,
+    ToId INT NOT NULL,
+    Header NVARCHAR(250) NOT NULL,
+	Tag NVARCHAR(200) NULL,
+    Mes NVARCHAR(250) NOT NULL,
+    PushedDate DATE NOT NULL DEFAULT GETDATE(),
+	MappingCategory NTEXT NULL,
+    IsRead BIT NOT NULL DEFAULT 0,
+    PRIMARY KEY (Id)
+)
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'PushNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.PushNotification
+END
+GO
+CREATE PROC TEMPDATA.PushNotification
+@fromFullName NVARCHAR(250),
+@ToId INT,
+@Header NVARCHAR(250),
+@Tag NVARCHAR(200),
+@Mes NVARCHAR(250),
+@mapping NTEXT = NULL
+AS
+INSERT INTO TEMPDATA.Notifications (
+    FromFullName, ToId, Header, Tag, Mes, PushedDate, MappingCategory
+)
+VALUES (@fromFullName, @ToId, @Header, @Tag, @Mes, GETDATE(), @mapping)
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.GetNotification
+END
+GO
+CREATE PROC TEMPDATA.GetNotification
+@ToId INT
+
+AS
+SELECT
+PushedDate AS [Received], Header, Tag, Mes AS Message, FromFullName AS [From]
+FROM TEMPDATA.Notifications
+WHERE ToId = @ToId AND IsRead = 0 AND MappingCategory IS NULL
+ORDER BY PushedDate DESC
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'DeleteNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.DeleteNotification
+END
+GO
+CREATE PROC [TEMPDATA].[DeleteNotification]
+@ToId INT
+
+AS
+DELETE FROM TEMPDATA.Notifications
+WHERE ToId = @ToId
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'SetAsReadNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.SetAsReadNotification
+END
+GO
+CREATE PROC [TEMPDATA].[SetAsReadNotification]
+@ToId INT
+
+AS
+UPDATE TEMPDATA.Notifications
+    SET IsRead = 1
+WHERE ToId = @ToId
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetMappingNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.GetMappingNotification
+END
+GO
+CREATE PROC TEMPDATA.GetMappingNotification
+@ToId INT
+
+AS
+SELECT
+PushedDate AS [Received], Header, Mes AS Message, FromFullName AS [From],
+MappingCategory
+FROM TEMPDATA.Notifications
+WHERE ToId = @ToId AND IsRead = 0 AND MappingCategory IS NOT NULL
+ORDER BY PushedDate DESC
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopsHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetLoopsHCS
+END
+GO
+CREATE PROC [LOOPS].[GetLoopsHCS]
+AS
+WITH LoopsData AS (
+    SELECT DISTINCT [TBL_ID] AS Id
+	  ,Area
+      ,[LoopName] As [Loop Name]
+	  ,L_Description AS [Description]
+      ,[L_Type] As [Type]
+      ,[Sub_Type] AS [Sub Type]
+	  ,[Subsystem]
+	  ,[Subcontractor]
+      ,[Vendor]
+	  ,ControllerLocation AS [Controller Location]
+	  ,L_Constr_Release AS [Cons Complete]
+	  ,TR_Loop_Folder_QC_Release AS [QC Released]
+      ,[Folder_Preparation] AS [Folder Printed]
+      ,SubmitToQC AS [Submitted To QC]
+	  ,HCS_Folder_Ready AS [Folder Ready QC]
+      ,ReturnFromQC AS [Return From QC]
+	  ,Submitted_to_Precom AS [Submitted To Precomm]
+	  ,L_Done AS [Done]
+	  ,L_FinalApproval AS [Final Approval]
+      
+	  ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Loop Done'
+		WHEN L_Done IS NOT NULL THEN 'Loop Done'
+		WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+		WHEN ReturnFromQC IS NOT NULL THEN 'Returned From QC'
+		WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+		WHEN SubmitToQC IS NOT NULL THEN 'Submitted To QC'
+        WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Printed'
+		WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+		WHEN L_Constr_Release IS NOT NULL THEN 'Construction Complete'
+		ELSE 'Not Ready'
+		END AS [Folder Status]
+		,LoopPriority
+		,tblProject.Pro_Title AS [Project]
+		--,[qrCode] AS QRCode
+		,tblInsLoop.ProUUID 
+        ,tblInsLoop.PDSModel
+        ,tblInsLoop.Planning_START_Date AS [Plan Start Date]
+        ,tblInsLoop.Planning_FINISH_Date AS [Plan Finish Date]
+  FROM [tblInsLoop] WITH (NOLOCK)
+  INNER JOIN tblProject ON [tblInsLoop].ProUUID = tblProject.UUID
+  WHERE [tblInsLoop].Active = 1
+), HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Group]
+    FROM [HCS].[ProjectElements]
+), LoopsITR AS (
+    SELECT
+    tblInsLoop.LoopName,
+    TaskStatus.TaskCount, TaskStatus.TaskClosed
+    FROM tblInsLoop
+    INNER JOIN (
+        SELECT 
+            HCSGroups.[Group]
+            ,COUNT([ElementCode]) AS TaskCount
+            ,COUNT([ClosingDate]) AS TaskClosed
+        FROM [HCS].[ProjectTasks] AS Tasks
+        INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+        WHERE Tasks.[Description] NOT LIKE '%VENDOR SITE ACCEPTANCE TEST%' AND Tasks.Phase = 'Construction'
+        GROUP BY HCSGroups.[Group]
+    ) AS TaskStatus
+    ON tblInsLoop.LoopName = TaskStatus.[Group]
+), Constraints AS (
+    SELECT
+        LOOPS.tblLoopsCons.loopId
+        FROM LOOPS.tblLoopsCons
+        INNER JOIN tblInsLoop ON LOOPS.tblLoopsCons.loopId = tblInsLoop.TBL_ID
+        WHERE LOOPS.tblLoopsCons.isClosed = 0
+)
+
+
+SELECT DISTINCT
+CASE WHEN Constraints.loopId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Has Blockage]
+,LoopsData.*
+,LoopsITR.TaskCount
+,LoopsITR.TaskClosed
+, CASE WHEN NOT ((LoopsITR.TaskCount IS NULL) OR (LoopsITR.TaskCount = 0 )) THEN 
+    ROUND(CONVERT(FLOAT,LoopsITR.TaskClosed) * 100 / CONVERT(FLOAT, LoopsITR.TaskCount), 0) 
+    ELSE 100 END AS [SQMS Progress %]
+FROM LoopsData
+LEFT JOIN Constraints WITH (NOLOCK) ON LoopsData.Id = Constraints.loopId
+LEFT JOIN LoopsITR ON LoopsData.[Loop Name] = LoopsITR.LoopName
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetFoldersHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.GetFoldersHCS
+END
+GO
+CREATE PROC [MOTORS].[GetFoldersHCS]
+AS
+
+IF OBJECT_ID('tempdb..#MotorsITR') IS NOT NULL
+    BEGIN
+        DROP TABLE #MotorsITR
+    END
+CREATE TABLE  #MotorsITR (
+    FolderName NVARCHAR(250) NOT NULL,
+    TaskCount INT NOT NULL DEFAULT 0,
+    TaskClosed INT NOT NULL DEFAULT 0
+);
+
+
+INSERT INTO #MotorsITR
+SELECT
+    Solo.FolderName,
+    COUNT([ElementCode]) AS TaskCount,
+    COUNT([ClosingDate]) AS TaskClosed
+    FROM tblSolorun AS Solo WITH (NOLOCK)
+    INNER JOIN [HCS].[ProjectElements] AS HCSGroups WITH (NOLOCK) ON Solo.FolderName = HCSGroups.[Group]
+    INNER JOIN [HCS].[ProjectTasks] AS Tasks WITH (NOLOCK) ON Tasks.ElementCode = HCSGroups.ElementTag
+    WHERE Tasks.[Phase] <> 'Precommissioning'
+    GROUP BY Solo.FolderName
+
+SELECT
+CASE WHEN Constraints.folderId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Has Blockage],
+MotorData.*,
+#MotorsITR.*, 
+CASE WHEN NOT ((#MotorsITR.TaskCount IS NULL) OR (#MotorsITR.TaskCount = 0 )) THEN 
+    ROUND(CONVERT(FLOAT,#MotorsITR.TaskClosed) * 100 / CONVERT(FLOAT, #MotorsITR.TaskCount), 0) 
+    ELSE 100 END AS [SQMS Progress %]
+
+FROM (
+    SELECT DISTINCT tblSolorun.Id
+        ,Area
+        ,[FolderName] As [Folder Name]
+        ,L_Description AS [Description]
+        ,[L_Type] As [Type]
+        ,[Sub_Type] AS [Sub Type]
+        ,[Subsystem]
+        ,[Subcontractor]
+        ,[Vendor]
+        ,ControllerLocation AS [Controller Location]
+        ,L_Constr_Release AS [Cons Complete]
+        ,TR_Loop_Folder_QC_Release AS [QC Released]
+        ,[Folder_Preparation] AS [Folder Printed]
+        ,SubmitToQC AS [Submitted To QC]
+        ,HCS_Folder_Ready AS [Folder Ready QC]
+        ,ReturnFromQC AS [Return From QC]
+        ,Submitted_to_Precom AS [Submitted To Precomm]
+        ,L_Done AS [Done]
+        ,L_FinalApproval AS [Final Approval]
+        
+        ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Solo Run Done'
+            WHEN L_Done IS NOT NULL THEN 'Solo Run Done'
+            WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+            WHEN ReturnFromQC IS NOT NULL THEN 'Returned From QC'
+            WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+            WHEN SubmitToQC IS NOT NULL THEN 'Submitted To QC'
+            WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Printed'
+            WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+            WHEN L_Constr_Release IS NOT NULL THEN 'Construction Complete'
+            ELSE 'Not Ready'
+            END AS [Folder Status]
+            ,FolderPriority
+            ,tblProject.Pro_Title AS [Project]
+            --,[qrCode] AS QRCode
+            ,tblSolorun.ProUUID 
+            ,tblSolorun.PDSModel
+            ,tblSolorun.Planning_START_Date AS [Plan Start Date]
+            ,tblSolorun.Planning_FINISH_Date AS [Plan Finish Date]
+    FROM [tblSolorun] WITH (NOLOCK)
+    INNER JOIN tblProject ON [tblSolorun].ProUUID = tblProject.UUID
+    WHERE [tblSolorun].Active = 1
+) AS MotorData
+LEFT JOIN (
+    SELECT
+        MOTORS.tblFoldersCons.folderId
+        FROM MOTORS.tblFoldersCons
+        INNER JOIN tblSolorun ON MOTORS.tblFoldersCons.folderId = tblSolorun.Id
+        WHERE MOTORS.tblFoldersCons.isClosed = 0
+) AS Constraints
+ON MotorData.Id = Constraints.folderId
+
+LEFT JOIN #MotorsITR ON MotorData.[Folder Name] = #MotorsITR.FolderName COLLATE Modern_Spanish_CI_AS
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'AddBlockage'
+			AND schema_id = (select schema_id from sys.schemas where name = 'MOTORS')
+			)
+BEGIN
+	DROP PROC MOTORS.AddBlockage
+END
+GO
+CREATE PROC [MOTORS].[AddBlockage]
+@catName NVARCHAR(100),
+@folderId INT,
+@description NVARCHAR(255),
+@issuedById INT,
+@issuedToId INT
+
+AS
+DECLARE @catId INT
+DECLARE @CheckId INT
+
+SELECT @CheckId = MOTORS.tblFoldersCons.id FROM MOTORS.tblFoldersCons WHERE [description] = @description AND folderId = @folderId
+
+IF @CheckId IS NULL
+    BEGIN
+        SELECT @catId = id FROM LOOPS.tblConsCategory WHERE catName = @catName
+        INSERT INTO MOTORS.tblFoldersCons ([conCatId], [folderId], [description], [issuedById], [issuedToId], [issuedDate], [isClosed])
+        VALUES (@catId, @folderId, @description, @issuedById, @issuedToId, GETDATE(), 0)
+    END
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'AddBlockage'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.AddBlockage
+END
+GO
+CREATE PROC [LOOPS].[AddBlockage]
+@catName NVARCHAR(100),
+@loopId INT,
+@description NVARCHAR(255),
+@issuedById INT,
+@issuedToId INT
+
+AS
+DECLARE @catId INT
+DECLARE @CheckId INT
+
+SELECT @CheckId = LOOPS.tblLoopsCons.id FROM LOOPS.tblLoopsCons WHERE [description] = @description AND loopId = @loopId
+
+IF @CheckId IS NULL
+    BEGIN
+        SELECT @catId = id FROM LOOPS.tblConsCategory WHERE catName = @catName
+        INSERT INTO LOOPS.tblLoopsCons ([conCatId], [loopId], [description], [issuedById], [issuedToId], [issuedDate], [isClosed])
+        VALUES (@catId, @loopId, @description, @issuedById, @issuedToId, GETDATE(), 0)
+    END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckLoopIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckLoopIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckLoopIntgerity]
+AS
+IF (SELECT LoopIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblInsLoop
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblInsLoop
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET L_Constr_Release = TR_Loop_Folder_QC_Release
+        WHERE L_Constr_Release IS NULL AND TR_Loop_Folder_QC_Release IS NOT NULL
+
+    END
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckSolorunIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckSolorunIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckSolorunIntgerity]
+AS
+IF (SELECT SolorunIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblSolorun
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblSolorun
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblSolorun
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblSolorun
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblSolorun
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+
+        UPDATE tblSolorun
+            SET L_Constr_Release = TR_Loop_Folder_QC_Release
+        WHERE L_Constr_Release IS NULL AND TR_Loop_Folder_QC_Release IS NOT NULL
+
+    END
+GO

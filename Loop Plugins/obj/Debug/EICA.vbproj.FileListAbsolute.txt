@@ -97,7 +97,10 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.XtraVerticalG
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EICA.vbproj.AssemblyReference.cache
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmConfirmClose.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmEditText.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmNotifications.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmNotificationsMaping.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSelectRFIPath.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSelectShareMessageUser.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmAddComment.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmConfirmDataChanged.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmDataResult.resources
@@ -123,6 +126,7 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmTrays.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmEICALoopManagement.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmAddLoopProgress.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmEditLoopBProgress.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmLoopLogs.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmNewLoopProgress.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUpdateLoopDone.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmCopyILD.resources
@@ -147,7 +151,7 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUpdateFolderSte
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmValidateSubPro.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmFolderStatus.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmLoopStepStatus.resources
-D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmHCSSetSteps.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmLoopFolders.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUploadHCSData.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmAddLoop.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmExportILDpdf.resources
@@ -177,6 +181,11 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmItemResource.re
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmResources.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSelectResource.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSet.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSoloRunConstraints.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSolorunFolders.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSolorunManagement.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUpdateSoloRunFolders.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmTests.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmAddUser.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmEditUser.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmResetPass.resources

@@ -1,4 +1,8 @@
-﻿Imports DevExpress.XtraBars.ToastNotifications
+﻿Imports System.Drawing.Imaging
+Imports DevExpress.Utils
+Imports DevExpress.XtraBars
+Imports DevExpress.XtraBars.Ribbon
+Imports DevExpress.XtraBars.ToastNotifications
 Imports DevExpress.XtraSplashScreen
 
 Public Class frmMain
@@ -6,7 +10,83 @@ Public Class frmMain
     Private appset As New AppSettings
     Private coDate As New CutoffDate
     Private OpenedForms As New List(Of FormsHandle)
+    Private WithEvents notify As EICANotifications
 
+    Delegate Sub GNotifications(loopBlockagesCount As Integer, solorunBlockagesCount As Integer, pushedNotification As DataTable, pushedMappedNotification As DataTable)
+
+
+    Private Sub GetNotifications(loopBlockagesCount As Integer, solorunBlockagesCount As Integer, pushedNotification As DataTable, pushedMappedNotification As DataTable)
+        notify.Cancel()
+
+        'Loop BLockages
+        If loopBlockagesCount = 0 Then
+            lblLoopBlockages.Visibility = BarItemVisibility.OnlyInCustomizing
+        Else
+            lblLoopBlockages.Visibility = BarItemVisibility.Always
+        End If
+        lblLoopBlockages.Caption = "My Loop Blockages: " & loopBlockagesCount
+
+        'Solo Run BLockages
+        If solorunBlockagesCount = 0 Then
+            lblSolorunBlockages.Visibility = BarItemVisibility.OnlyInCustomizing
+        Else
+            lblSolorunBlockages.Visibility = BarItemVisibility.Always
+        End If
+        lblSolorunBlockages.Caption = "My Solo Run Blockages: " & solorunBlockagesCount
+
+        'Pushed Notification
+        If pushedNotification.Rows.Count > 0 Then
+            Dim frm As New frmNotifications
+            frm.grd.DataSource = pushedNotification
+            frm.gv.BestFitColumns(True)
+            frm.Show()
+        End If
+
+        'Pushed Mapped Notification
+        If pushedMappedNotification.Rows.Count > 0 Then
+            For Inx As Integer = 0 To pushedMappedNotification.Rows.Count - 1
+                Dim frm As New frmNotificationsMaping With {
+                                .Text = "Notifications: Shared Actions"
+                                }
+                frm.lblFrom.Text = pushedMappedNotification.Rows(Inx).Item("From") & " Shared with you:"
+                frm.lblDes.Text = pushedMappedNotification.Rows(Inx).Item("Message")
+                frm.lblHeader.Text = pushedMappedNotification.Rows(Inx).Item("Header")
+                frm.MapFilter = pushedMappedNotification.Rows(Inx).Item("MappingCategory")
+                frm.MapName = pushedMappedNotification.Rows(Inx).Item("Header")
+                frm.Show()
+            Next
+
+        End If
+
+
+        notificationsTimer.Start()
+    End Sub
+
+    Private Sub globatNotis(loopBlockagesCount As Integer, solorunBlockagesCount As Integer, pushedNotification As DataTable, pushedMappedNotification As DataTable) Handles notify.GlobalNotifications
+        notificationsTimer.Stop()
+
+        If RibbonControl1.InvokeRequired Then
+            Dim d As New GNotifications(AddressOf GetNotifications)
+            RibbonControl1.Invoke(d, New Object() {loopBlockagesCount, solorunBlockagesCount, pushedNotification, pushedMappedNotification})
+        End If
+    End Sub
+    Private Sub GetUserSkin()
+        Try
+            Dim skinName As String = GetSetting("TR", "EIKA", "skinName" & DB.DataBaseName & DB.DataBaseLocation & Users.userName, "The Bezier")
+            Dim colorPalette As String = GetSetting("TR", "EIKA", "colorPalette" & DB.DataBaseName & DB.DataBaseLocation & Users.userName, "Default")
+            DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(skinName, colorPalette)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+    Private Sub SaveUserSkin(ByVal skinName As String, ByVal colorPalette As String)
+        Try
+            SaveSetting("TR", "EIKA", "skinName" & DB.DataBaseName & DB.DataBaseLocation & Users.userName, skinName)
+            SaveSetting("TR", "EIKA", "colorPalette" & DB.DataBaseName & DB.DataBaseLocation & Users.userName, colorPalette)
+        Catch ex As Exception
+
+        End Try
+    End Sub
 
     Public Sub MdiChildClosed(formText As String)
         Dim frmCount As Integer = 0
@@ -58,14 +138,15 @@ Public Class frmMain
     End Sub
     Private Sub PrepareSettingsPanel()
         If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
-            gpAdmin.Enabled = True
+            gpAdmin.Visible = True
         Else
-            gpAdmin.Enabled = False
+            gpAdmin.Visible = False
         End If
         If Users.userType = String.Empty Then
-            gpAdmin.Enabled = True
+            gpAdmin.Visible = True
         End If
         tgLoopIntegrity.IsOn = appset.LoopIntegrity
+        tgSolorunIntegrity.IsOn = appset.SolorunIntegrity
         lblCutoffDate.Text = Format(coDate.CurrentCutoffDate(), "dddd, dd-MMMM-yyyy")
         lblDBVersion.Text = appset.DBVersion
     End Sub
@@ -89,6 +170,7 @@ Public Class frmMain
         rpHandover.Visible = False
         rpSupportTeam.Visible = False
         barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        gpAdmin.Visible = False
     End Sub
     Private Sub HandleDataReadError(ByVal er As String)
         Try
@@ -156,6 +238,7 @@ Public Class frmMain
             rpPlanning.Visible = True
             rpPC.Visible = True
             rpSupportTeam.Visible = True
+            gpAdmin.Visible = True
         End If
         If InStr(Users.userType, "handover", CompareMethod.Text) > 0 Then
             rpHandover.Visible = True
@@ -175,7 +258,7 @@ Public Class frmMain
         If InStr(Users.userType, "support team", CompareMethod.Text) > 0 Then
             rpSupportTeam.Visible = True
         End If
-        If InStr(Users.userType, "loop admin", CompareMethod.Text) > 0 Then
+        If InStr(Users.userType, "folder admin", CompareMethod.Text) > 0 Then
             barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
     End Sub
@@ -213,6 +296,7 @@ Public Class frmMain
         End If
     End Sub
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        GetUserSkin()
         AddHandler PublicErrors.DataReadError, AddressOf HandleDataReadError
         AddHandler PublicErrors.ILDDBConnectionError, AddressOf HandleILDConnectionError
         AddHandler PublicErrors.DataConnectionError, AddressOf HandleDataConnectionError
@@ -223,6 +307,9 @@ Public Class frmMain
         checkProjectUUID()
         BackstageViewControl1.SelectedTabIndex = 0
         OnEICAConnected()
+
+        'notify = New EICANotifications
+        'notify.Start()
     End Sub
 
     Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
@@ -332,7 +419,7 @@ Public Class frmMain
     Private Sub BarButtonItem38_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem38.ItemClick, BarButtonItem3.ItemClick, BarButtonItem39.ItemClick
         ShowProgressPanel()
         Application.DoEvents()
-        Dim frm As New frmHCSSetSteps
+        Dim frm As New frmLoopFolders
         frm.MdiParent = Me
         AddToQuickAccess(frm)
         frm.Show()
@@ -340,14 +427,14 @@ Public Class frmMain
     End Sub
 
     Private Sub BarButtonItem45_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
-        Dim frm As New frmHCSSetSteps With {
+        Dim frm As New frmLoopFolders With {
             .MdiParent = Me
         }
         frm.Show()
     End Sub
 
     Private Sub BarButtonItem47_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
-        Dim frm As New frmHCSSetSteps With {
+        Dim frm As New frmLoopFolders With {
            .MdiParent = Me
        }
         frm.Show()
@@ -600,4 +687,90 @@ Public Class frmMain
         Dim frm As New frmResetPass
         frm.ShowDialog(Me)
     End Sub
+
+    Private Sub BarButtonItem6_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem6.ItemClick
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmLoopLogs
+        AddToQuickAccess(frm)
+        frm.MdiParent = Me
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+    Private Sub tgSolorunIntegrity_IsOnChanged(sender As Object, e As EventArgs) Handles tgSolorunIntegrity.IsOnChanged
+        appset.SolorunIntegrity = tgSolorunIntegrity.IsOn
+    End Sub
+
+    Private Sub BarButtonItem7_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem7.ItemClick
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmSolorunManagement
+        AddToQuickAccess(frm)
+        frm.MdiParent = Me
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem10.ItemClick
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmSolorunFolders
+        frm.MdiParent = Me
+        AddToQuickAccess(frm)
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub BarButtonItem13_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem13.ItemClick
+        Dim frm As New frmSoloRunConstraints() With {.MdiParent = Me}
+        AddToQuickAccess(frm)
+        frm.Show()
+    End Sub
+
+    Private Sub SimpleButton9_Click(sender As Object, e As EventArgs) Handles SimpleButton9.Click
+        BackstageViewControl1.Close()
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmReports(Reports.ReportTypes.LOOPBLOCKAGERESPONSIBLE)
+        AddToQuickAccess(frm)
+        frm.MdiParent = Me
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub BarButtonItem17_ItemClick(sender As Object, e As ItemClickEventArgs) Handles BarButtonItem17.ItemClick
+        Dim skinColor As String = ""
+        If SkinPaletteRibbonGalleryBarItem.Gallery.GetCheckedItemsCount = 0 Then
+            skinColor = "Default"
+        Else
+            skinColor = SkinPaletteRibbonGalleryBarItem.Gallery.GetCheckedItem.Caption
+        End If
+        SaveUserSkin(
+                    SkinDropDownButtonItem.DropDownGallery.Gallery.GetCheckedItem.Caption,
+                    skinColor
+                    )
+    End Sub
+
+    Private Sub notificationsTimer_Tick(sender As Object, e As EventArgs) Handles notificationsTimer.Tick
+        notify.Start()
+    End Sub
+
+    Private Sub lblLoopBlockages_ItemClick(sender As Object, e As ItemClickEventArgs) Handles lblLoopBlockages.ItemClick
+        Dim filter As String = "[Issued To] LIKE '" & Users.userFullName & "'"
+        Dim frm As New frmLoopConstraints2 With {
+            ._filterColumn = "Issued To",
+        ._filter = filter
+        }
+        frm.Show()
+    End Sub
+
+    Private Sub lblSolorunBlockages_ItemClick(sender As Object, e As ItemClickEventArgs) Handles lblSolorunBlockages.ItemClick
+        Dim filter As String = "[Issued To] LIKE '" & Users.userFullName & "'"
+        Dim frm As New frmSoloRunConstraints With {
+            ._filterColumn = "Issued To",
+        ._filter = filter
+        }
+        frm.Show()
+    End Sub
+
 End Class

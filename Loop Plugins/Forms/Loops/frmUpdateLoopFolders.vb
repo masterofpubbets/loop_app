@@ -1,12 +1,27 @@
 ﻿Imports System.ComponentModel
 Imports DevExpress.XtraEditors.Controls
-Imports EEICA.EAMS
 
 Public Class frmUpdateLoopFolders
     Private sheet As New DevExpressUserSpreadSheet
     Private lf As New LoopFolders
     Private prepared As Boolean = False
     Const SHEETNAME = "Loops"
+    Private loadedFolders As List(Of LoopFolder) = Nothing
+    Private IsAddNew As Boolean = False
+    Private DisabledConfirmation As Boolean = False
+
+    Public Sub New(Optional folders As List(Of LoopFolder) = Nothing, Optional bhIsAddNew As Boolean = False)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        loadedFolders = folders
+        IsAddNew = bhIsAddNew
+        If IsAddNew Then
+            btnAddNew.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            btnUpdate.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        End If
+    End Sub
 
     Private Sub prepareSheets()
         sheet.renameActiveSheet(ss, SHEETNAME)
@@ -16,8 +31,32 @@ Public Class frmUpdateLoopFolders
                 sheet.setActiveSheetValue(ss, c.IndexName, c.Name)
             End If
         Next
+
+        If Not IsAddNew Then
+            If Not IsNothing(loadedFolders) Then
+                Dim rInx As Integer = 1
+                For Each lf As LoopFolder In loadedFolders
+                    sheet.setActiveSheetValue(ss, rInx, 0, lf.Name)
+                    sheet.setActiveSheetValue(ss, rInx, 1, lf.Description)
+                    sheet.setActiveSheetValue(ss, rInx, 2, lf.Area)
+                    sheet.setActiveSheetValue(ss, rInx, 3, lf.Type)
+                    sheet.setActiveSheetValue(ss, rInx, 4, lf.Subtype)
+                    sheet.setActiveSheetValue(ss, rInx, 5, lf.ActId)
+                    sheet.setActiveSheetValue(ss, rInx, 6, lf.Vendors)
+                    sheet.setActiveSheetValue(ss, rInx, 7, IIf(lf.StartDate = "1/1/0001", "", lf.StartDate))
+                    sheet.setActiveSheetValue(ss, rInx, 8, IIf(lf.FinishDate = "1/1/0001", "", lf.FinishDate))
+                    sheet.setActiveSheetValue(ss, rInx, 9, lf.Subsystem)
+                    sheet.setActiveSheetValue(ss, rInx, 10, IIf(lf.Priority = -1, "", lf.Priority))
+                    sheet.setActiveSheetValue(ss, rInx, 11, lf.PDSModel)
+                    sheet.setActiveSheetValue(ss, rInx, 12, lf.ControllerLocation)
+                    rInx += 1
+                Next
+            End If
+        End If
+
         sheet.autoFilterActiveSheet(ss, 0, sheet.GetFirstColumnEmptyIndex(ss))
         sheet.autoColumnsFitActiveSheet(ss, 0, sheet.GetFirstColumnEmptyIndex(ss))
+
         prepared = True
     End Sub
 
@@ -26,14 +65,14 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgType_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgType.EditValueChanging
-        If tgType.IsOn Then
+        If tgType.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Type" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
         End If
     End Sub
     Private Sub tgDescription_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgDescription.EditValueChanging
-        If tgDescription.IsOn Then
+        If tgDescription.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Description" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -41,7 +80,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgSubtype_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgSubtype.EditValueChanging
-        If tgSubtype.IsOn Then
+        If tgSubtype.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Subtype" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -49,7 +88,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgActId_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgActId.EditValueChanging
-        If tgActId.IsOn Then
+        If tgActId.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "ActId" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -57,7 +96,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgVendor_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgVendor.EditValueChanging
-        If tgVendor.IsOn Then
+        If tgVendor.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Vendor" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -65,7 +104,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgStartDate_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgStartDate.EditValueChanging
-        If tgStartDate.IsOn Then
+        If tgStartDate.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Start Date" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -73,13 +112,19 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgFinishDate_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgFinishDate.EditValueChanging
-        If tgFinishDate.IsOn Then
+        If tgFinishDate.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Finish Date" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
         End If
     End Sub
-
+    Private Sub tgcontrollerlocation_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgControllerLocation.EditValueChanging
+        If tgControllerLocation.IsOn And Not DisabledConfirmation Then
+            If MsgBox("Do you want to delete column(" & "Controller Location" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+                e.Cancel = True
+            End If
+        End If
+    End Sub
     Private Sub tgFinishDate_EditValueChanged(sender As Object, e As EventArgs) Handles tgFinishDate.EditValueChanged
         If Not prepared Then
             Exit Sub
@@ -209,8 +254,26 @@ Public Class frmUpdateLoopFolders
             End If
         End If
     End Sub
-
-    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+    Private Sub tgControllerLocation_EditValueChanged(sender As Object, e As EventArgs) Handles tgControllerLocation.EditValueChanged
+        If Not prepared Then
+            Exit Sub
+        End If
+        Dim c As ColumnObject = lf.LoopColumns.Find(Function(x) x.Name = "ControllerLocation")
+        If Not IsNothing(c) Then
+            If tgControllerLocation.IsOn Then
+                If Not sheet.ColumnExists(ss, c.Name) Then
+                    Dim inx As Integer = sheet.GetFirstColumnEmptyIndex(ss, 1)
+                    ss.ActiveWorksheet.Columns.Insert(inx)
+                    sheet.setActiveSheetValue(ss, 0, inx, c.Name)
+                    sheet.RemoveEmptyColumnHeader(ss, c.Index)
+                End If
+            Else
+                Dim colInx As Integer = sheet.GetColumnIndex(ss, c.Name)
+                If colInx > -1 Then ss.ActiveWorksheet.Columns.Item(colInx).Delete()
+            End If
+        End If
+    End Sub
+    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles btnUpdate.ItemClick
         If MsgBox("Do you want to update Loops?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
         Dim dt As New DataTable
         dt = sheet.convertActiveSheetToDatatable(ss, SHEETNAME)
@@ -234,11 +297,10 @@ Public Class frmUpdateLoopFolders
         Else
             MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
         End If
-
     End Sub
 
     Private Sub tgSubsystem_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgSubsystem.EditValueChanging
-        If tgSubsystem.IsOn Then
+        If tgSubsystem.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Subsystem" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -309,7 +371,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgArea_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgArea.EditValueChanging
-        If tgArea.IsOn Then
+        If tgArea.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Area" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -368,7 +430,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgPriority_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgPriority.EditValueChanging
-        If tgPriority.IsOn Then
+        If tgPriority.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "Priority" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -376,7 +438,7 @@ Public Class frmUpdateLoopFolders
     End Sub
 
     Private Sub tgPDSModel_EditValueChanging(sender As Object, e As ChangingEventArgs) Handles tgPDSModel.EditValueChanging
-        If tgPDSModel.IsOn Then
+        If tgPDSModel.IsOn And Not DisabledConfirmation Then
             If MsgBox("Do you want to delete column(" & "PDSModel" & ")?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
                 e.Cancel = True
             End If
@@ -399,5 +461,54 @@ Public Class frmUpdateLoopFolders
                 If colInx > -1 Then ss.ActiveWorksheet.Columns.Item(colInx).Delete()
             End If
         End If
+    End Sub
+
+    Private Sub frmUpdateLoopFolders_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub btnAddNew_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles btnAddNew.ItemClick
+        If MsgBox("Do you want to Add these Loops?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+        Dim dt As New DataTable
+        dt = sheet.convertActiveSheetToDatatable(ss, SHEETNAME)
+        If IsNothing(dt) Then
+            MsgBox("Nothing to import!", MsgBoxStyle.Exclamation, Me.Text)
+            Exit Sub
+        End If
+        If dt.Rows.Count = 0 Then
+            MsgBox("Nothing to import!", MsgBoxStyle.Exclamation, Me.Text)
+            Exit Sub
+        End If
+        Dim opKey As String = lf.UploadTempData(Enumerations.UpdateType.UPDATEDATA, dt)
+        If opKey <> "" Then
+            Dim dtResult As New DataTable
+            If lf.AddNewData(opKey, dtResult) Then
+                Dim frm As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                frm.ShowDialog(Me)
+                lf.DeleteTempData(opKey)
+            End If
+
+        Else
+            MsgBox("Something is wrong. Nothing to import.", MsgBoxStyle.Exclamation, Me.Text)
+        End If
+    End Sub
+    Private Sub tgAll_Toggled(sender As Object, e As EventArgs) Handles tgAll.Toggled
+        If Not tgAll.IsOn Then
+            If MsgBox("Do you want to delete all columns?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+        End If
+        DisabledConfirmation = True
+        tgType.IsOn = tgAll.IsOn
+        tgArea.IsOn = tgAll.IsOn
+        tgDescription.IsOn = tgAll.IsOn
+        tgSubtype.IsOn = tgAll.IsOn
+        tgActId.IsOn = tgAll.IsOn
+        tgVendor.IsOn = tgAll.IsOn
+        tgStartDate.IsOn = tgAll.IsOn
+        tgFinishDate.IsOn = tgAll.IsOn
+        tgSubsystem.IsOn = tgAll.IsOn
+        tgPriority.IsOn = tgAll.IsOn
+        tgPDSModel.IsOn = tgAll.IsOn
+        tgControllerLocation.IsOn = tgAll.IsOn
+        DisabledConfirmation = False
     End Sub
 End Class

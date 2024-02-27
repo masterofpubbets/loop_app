@@ -56,7 +56,7 @@ Partial Class frmUsers
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1029, 110)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 110)
         '
         'BarButtonItem1
         '
@@ -155,7 +155,7 @@ Partial Class frmUsers
         Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1029, 459)
+        Me.grd.Size = New System.Drawing.Size(1200, 590)
         Me.grd.TabIndex = 67
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -198,16 +198,17 @@ Partial Class frmUsers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1029, 569)
+        Me.ClientSize = New System.Drawing.Size(1200, 700)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
-        Me.IconOptions.Icon = CType(resources.GetObject("frmUsers.IconOptions.Icon"), System.Drawing.Icon)
+        Me.IconOptions.Image = CType(resources.GetObject("frmUsers.IconOptions.Image"), System.Drawing.Image)
         Me.IconOptions.LargeImage = CType(resources.GetObject("frmUsers.IconOptions.LargeImage"), System.Drawing.Image)
         Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.Name = "frmUsers"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Users"
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).EndInit()

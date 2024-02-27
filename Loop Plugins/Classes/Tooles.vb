@@ -857,7 +857,7 @@ Namespace EAMS
                     RaiseEvent err(ex.Message)
                 End Try
             End Sub
-            Public Function ExcuteNoneResult(ByVal Query As String, Optional ByVal Timeout As Integer = 15) As Integer
+            Public Function ExcuteNoneResult(ByVal Query As String, Optional ByVal Timeout As Integer = 0) As Integer
                 'Dim Rslt As Integer
                 'SaveLog(Query)
                 SQLServerCmd.Connection = DB

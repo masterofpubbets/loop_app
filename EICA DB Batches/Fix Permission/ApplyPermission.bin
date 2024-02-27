@@ -1,0 +1,13 @@
+EXEC dbo.GrantExecuteType 'db_executer', 'FUNCTION', 'dbo'
+
+EXEC dbo.GrantExecuteType 'db_executer', 'FUNCTION', 'CONSTRUCTION'
+
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'dbo'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'TEMPDATA'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'PRECOMM'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'MOTORS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'CONSTRUCTION'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'LOOPS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'PLANNING'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'ENGINEERING'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'HCS'

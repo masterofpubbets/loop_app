@@ -72,7 +72,7 @@ Partial Class frmAddUser
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(654, 60)
+        Me.RibbonControl1.Size = New System.Drawing.Size(656, 60)
         '
         'Label1
         '
@@ -190,7 +190,7 @@ Partial Class frmAddUser
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(298, 635)
+        Me.SimpleButton2.Location = New System.Drawing.Point(300, 636)
         Me.SimpleButton2.Name = "SimpleButton2"
         Me.SimpleButton2.Size = New System.Drawing.Size(170, 54)
         Me.SimpleButton2.TabIndex = 11
@@ -200,7 +200,7 @@ Partial Class frmAddUser
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(474, 635)
+        Me.SimpleButton1.Location = New System.Drawing.Point(476, 636)
         Me.SimpleButton1.Name = "SimpleButton1"
         Me.SimpleButton1.Size = New System.Drawing.Size(170, 54)
         Me.SimpleButton1.TabIndex = 12
@@ -324,7 +324,7 @@ Partial Class frmAddUser
         '
         Me.SimpleButton3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton3.Location = New System.Drawing.Point(240, 366)
+        Me.SimpleButton3.Location = New System.Drawing.Point(242, 367)
         Me.SimpleButton3.Name = "SimpleButton3"
         Me.SimpleButton3.Size = New System.Drawing.Size(71, 28)
         Me.SimpleButton3.TabIndex = 8
@@ -334,7 +334,7 @@ Partial Class frmAddUser
         '
         Me.SimpleButton4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton4.ImageOptions.Image = CType(resources.GetObject("SimpleButton4.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton4.Location = New System.Drawing.Point(240, 400)
+        Me.SimpleButton4.Location = New System.Drawing.Point(242, 401)
         Me.SimpleButton4.Name = "SimpleButton4"
         Me.SimpleButton4.Size = New System.Drawing.Size(71, 28)
         Me.SimpleButton4.TabIndex = 9
@@ -369,7 +369,7 @@ Partial Class frmAddUser
         Me.ckcmbUserType.Name = "ckcmbUserType"
         Me.ckcmbUserType.Properties.AllowMultiSelect = True
         Me.ckcmbUserType.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
-        Me.ckcmbUserType.Properties.Items.AddRange(New DevExpress.XtraEditors.Controls.CheckedListBoxItem() {New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Admin", "", "Admin"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Handover", "", "Handover"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Support Team", "", "Support Team"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("QC", "", "QC"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Construction", "", "Construction"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Precomm", "", "Precomm"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Production", "", "Production"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Planning", "", "Planning"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("ReadOnly", "", "ReadOnly"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Loop Admin", "", "Loop Admin")})
+        Me.ckcmbUserType.Properties.Items.AddRange(New DevExpress.XtraEditors.Controls.CheckedListBoxItem() {New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Admin", "", "Admin"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Handover", "", "Handover"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Support Team", "", "Support Team"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("QC", "", "QC"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Construction", "", "Construction"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Precomm", "", "Precomm"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Production", "", "Production"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Planning", "", "Planning"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("ReadOnly", "", "ReadOnly"), New DevExpress.XtraEditors.Controls.CheckedListBoxItem("Folder Admin", "", "Folder Admin")})
         Me.ckcmbUserType.Properties.SortOrder = System.Windows.Forms.SortOrder.Ascending
         Me.ckcmbUserType.Size = New System.Drawing.Size(480, 20)
         Me.ckcmbUserType.TabIndex = 4
@@ -378,7 +378,7 @@ Partial Class frmAddUser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(654, 699)
+        Me.ClientSize = New System.Drawing.Size(656, 700)
         Me.Controls.Add(Me.ckcmbUserType)
         Me.Controls.Add(Me.txtTRUserName)
         Me.Controls.Add(Me.Label9)

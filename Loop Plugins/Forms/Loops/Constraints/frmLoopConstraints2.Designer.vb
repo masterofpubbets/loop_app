@@ -22,6 +22,7 @@ Partial Class frmLoopConstraints2
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmLoopConstraints2))
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
@@ -41,9 +42,11 @@ Partial Class frmLoopConstraints2
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
         Me.grd = New DevExpress.XtraGrid.GridControl()
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.rMenu = New DevExpress.XtraBars.Ribbon.RadialMenu(Me.components)
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl1
@@ -62,6 +65,8 @@ Partial Class frmLoopConstraints2
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Refresh"
+        Me.BarButtonItem1.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem1.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem1.Id = 1
         Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
@@ -70,6 +75,8 @@ Partial Class frmLoopConstraints2
         'BarButtonItem4
         '
         Me.BarButtonItem4.Caption = "Filter"
+        Me.BarButtonItem4.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem4.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem4.Id = 8
         Me.BarButtonItem4.ImageOptions.Image = CType(resources.GetObject("BarButtonItem4.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem4.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem4.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -88,6 +95,8 @@ Partial Class frmLoopConstraints2
         'BarButtonItem3
         '
         Me.BarButtonItem3.Caption = "Close Blockage"
+        Me.BarButtonItem3.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem3.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem3.Id = 11
         Me.BarButtonItem3.ImageOptions.Image = CType(resources.GetObject("BarButtonItem3.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem3.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem3.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -97,6 +106,8 @@ Partial Class frmLoopConstraints2
         'BarButtonItem6
         '
         Me.BarButtonItem6.Caption = "Re-Assign Responsible"
+        Me.BarButtonItem6.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem6.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem6.Id = 12
         Me.BarButtonItem6.ImageOptions.Image = CType(resources.GetObject("BarButtonItem6.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem6.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem6.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -116,6 +127,8 @@ Partial Class frmLoopConstraints2
         'BarButtonItem7
         '
         Me.BarButtonItem7.Caption = "Add"
+        Me.BarButtonItem7.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem7.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem7.Id = 15
         Me.BarButtonItem7.ImageOptions.Image = CType(resources.GetObject("BarButtonItem7.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem7.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem7.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -124,6 +137,8 @@ Partial Class frmLoopConstraints2
         'BarButtonItem8
         '
         Me.BarButtonItem8.Caption = "Delete"
+        Me.BarButtonItem8.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem8.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem8.Id = 16
         Me.BarButtonItem8.ImageOptions.Image = CType(resources.GetObject("BarButtonItem8.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem8.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem8.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -141,7 +156,9 @@ Partial Class frmLoopConstraints2
         '
         'BarButtonItem9
         '
-        Me.BarButtonItem9.Caption = "Copy Loop Tag"
+        Me.BarButtonItem9.Caption = "Copy Folder Tag"
+        Me.BarButtonItem9.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem9.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem9.Id = 18
         Me.BarButtonItem9.ImageOptions.Image = CType(resources.GetObject("BarButtonItem9.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem9.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem9.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -238,6 +255,19 @@ Partial Class frmLoopConstraints2
         Me.gv.OptionsView.ShowFooter = True
         Me.gv.OptionsView.ShowGroupedColumns = True
         '
+        'rMenu
+        '
+        Me.rMenu.AutoExpand = True
+        Me.rMenu.Glyph = CType(resources.GetObject("rMenu.Glyph"), System.Drawing.Image)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem3)
+        Me.rMenu.ItemLinks.Add(Me.BarSubItem1)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem4)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem6)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem1)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem9)
+        Me.rMenu.Name = "rMenu"
+        Me.rMenu.Ribbon = Me.RibbonControl1
+        '
         'frmLoopConstraints2
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -250,11 +280,12 @@ Partial Class frmLoopConstraints2
         Me.Name = "frmLoopConstraints2"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Loops Constraints"
+        Me.Text = "Loops Blockages"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -278,4 +309,5 @@ Partial Class frmLoopConstraints2
     Friend WithEvents RibbonPageGroup5 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarSubItem2 As DevExpress.XtraBars.BarSubItem
     Friend WithEvents BarButtonItem9 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenu As DevExpress.XtraBars.Ribbon.RadialMenu
 End Class

@@ -10,6 +10,16 @@ Public Class frmLoopConstraints2
     Private focusedRowHandler As Integer = -1
     Private grdView As New GridViews
 
+
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
     Private Sub CheckAuth()
 
     End Sub
@@ -124,7 +134,10 @@ Public Class frmLoopConstraints2
             If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
                 If loops.closeBlockage(gv.GetDataRow(row_handle).Item("ID")) Then
                 End If
-            ElseIf Users.userType = "admin" Then
+            ElseIf gv.GetDataRow(row_handle).Item("Issued By") = Users.userFullName Then
+                If loops.closeBlockage(gv.GetDataRow(row_handle).Item("ID")) Then
+                End If
+            ElseIf instr(Users.userType, "admin", CompareMethod.Text) > 0 Then
                 If loops.closeBlockage(gv.GetDataRow(row_handle).Item("ID")) Then
                 End If
             Else
@@ -160,6 +173,9 @@ Public Class frmLoopConstraints2
                 If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
                     If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
                     End If
+                ElseIf gv.GetDataRow(row_handle).Item("Issued By") = Users.userFullName Then
+                    If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
+                    End If
                 ElseIf Users.userType = "admin" Then
                     If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
                     End If
@@ -169,7 +185,7 @@ Public Class frmLoopConstraints2
 
             Next
 
-            loops.SendNotificationsMail(LoopsAPI.MailTypes.FolderBlockage)
+            'loops.SendNotificationsMail(LoopsAPI.MailTypes.FolderBlockage)
 
             If result <> "" Then
                 Dim frmErr As New frmResults
@@ -195,7 +211,7 @@ Public Class frmLoopConstraints2
             If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
                 If loops.addComment(gv.GetDataRow(row_handle).Item("ID"), frmComment.Comment) Then
                 End If
-            ElseIf Users.userType = "admin" Then
+            ElseIf instr(Users.userType, "admin", CompareMethod.Text) > 0 Then
                 If loops.addComment(gv.GetDataRow(row_handle).Item("ID"), frmComment.Comment) Then
                 End If
             Else
@@ -235,7 +251,7 @@ Public Class frmLoopConstraints2
             If gv.GetDataRow(row_handle).Item("Issued To") = Users.userFullName Then
                 If loops.removeComment(gv.GetDataRow(row_handle).Item("ID")) Then
                 End If
-            ElseIf Users.userType = "admin" Then
+            ElseIf instr(Users.userType, "admin", CompareMethod.Text) > 0 Then
                 If loops.removeComment(gv.GetDataRow(row_handle).Item("ID")) Then
                 End If
             Else
@@ -259,5 +275,11 @@ Public Class frmLoopConstraints2
 
     Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem9.ItemClick
         grdView.CopySelectedItems(gv, "Loop Name")
+    End Sub
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles grd.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
     End Sub
 End Class

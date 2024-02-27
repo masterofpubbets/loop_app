@@ -1,0 +1,149 @@
+--version12.0.4
+UPDATE [dbo].[tblSettings] SET SetValue = '12.0.4' WHERE SetName = 'VERSION'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'Notifications'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP TABLE TEMPDATA.Notifications
+END
+GO
+CREATE TABLE TEMPDATA.Notifications (
+    Id INT IDENTITY(1, 1) NOT NULL,
+    FromFullName NVARCHAR(250) NULL,
+    ToId INT NOT NULL,
+    Header NVARCHAR(250) NOT NULL,
+	Tag NVARCHAR(200) NULL,
+    Mes NVARCHAR(250) NOT NULL,
+    PushedDate DATE NOT NULL DEFAULT GETDATE(),
+	MappingCategory NTEXT NULL,
+    IsRead BIT NOT NULL DEFAULT 0,
+    PRIMARY KEY (Id)
+)
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.GetNotification
+END
+GO
+CREATE PROC [TEMPDATA].[GetNotification]
+@ToId INT
+
+AS
+SELECT
+PushedDate AS [Received], Header, Tag, Mes AS Message, FromFullName AS [From]
+FROM TEMPDATA.Notifications
+WHERE ToId = @ToId AND IsRead = 0 AND MappingCategory IS NULL
+ORDER BY PushedDate DESC
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetMappingNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.GetMappingNotification
+END
+GO
+CREATE PROC [TEMPDATA].[GetMappingNotification]
+@ToId INT
+
+AS
+SELECT
+PushedDate AS [Received], Header, Mes AS Message, FromFullName AS [From],
+MappingCategory
+FROM TEMPDATA.Notifications
+WHERE ToId = @ToId AND IsRead = 0 AND MappingCategory IS NOT NULL
+ORDER BY PushedDate DESC
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'SetAsReadNotification'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.SetAsReadNotification
+END
+GO
+CREATE PROC [TEMPDATA].[SetAsReadNotification]
+@ToId INT
+
+AS
+UPDATE TEMPDATA.Notifications
+    SET IsRead = 1
+WHERE ToId = @ToId
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'AddPermissions'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.AddPermissions
+END
+GO
+CREATE PROC dbo.AddPermissions
+AS
+EXEC dbo.GrantExecuteType 'db_executer', 'FUNCTION', 'dbo'
+
+EXEC dbo.GrantExecuteType 'db_executer', 'FUNCTION', 'CONSTRUCTION'
+
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'dbo'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'TEMPDATA'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'PRECOMM'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'MOTORS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'CONSTRUCTION'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'LOOPS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'PLANNING'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'ENGINEERING'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'HCS'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetGroupPendingUniqueTasks'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP PROC HCS.GetGroupPendingUniqueTasks
+END
+GO
+CREATE PROC [HCS].[GetGroupPendingUniqueTasks]
+@UserName NVARCHAR(100)
+AS
+
+WITH HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Type]
+        ,[Discipline]
+        ,[Description]
+        ,[Subsystem]
+        ,[Group]
+        ,[GroupActive]
+        ,GroupType
+    FROM [HCS].[ProjectElements]
+    INNER JOIN TEMPDATA.GroupFilter ON [HCS].[ProjectElements].[Group] = TEMPDATA.GroupFilter.GroupName
+    WHERE TEMPDATA.GroupFilter.UserName = @UserName
+)
+
+SELECT SELECT DISTINCT 
+      [ElementCode] AS Tag
+      ,[Subcontractor]
+      ,[DocName]
+      ,Tasks.[Description]
+FROM [HCS].[ProjectTasks] AS Tasks
+INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+WHERE Tasks.Phase = 'Construction' AND ClosingDate IS NULL
+GO
+
+
+
+
+
+
+EXEC dbo.AddPermissions

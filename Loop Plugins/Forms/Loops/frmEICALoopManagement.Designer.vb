@@ -22,6 +22,7 @@ Partial Class frmEICALoopManagement
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim SplashScreenManager As DevExpress.XtraSplashScreen.SplashScreenManager = New DevExpress.XtraSplashScreen.SplashScreenManager(Me, Nothing, True, True)
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEICALoopManagement))
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
@@ -49,6 +50,9 @@ Partial Class frmEICALoopManagement
         Me.BarButtonItem3 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarSubItem2 = New DevExpress.XtraBars.BarSubItem()
         Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem10 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem22 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem23 = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage4 = New DevExpress.XtraBars.Ribbon.RibbonPage()
@@ -59,11 +63,11 @@ Partial Class frmEICALoopManagement
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
-        Me.BarButtonItem10 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem22 = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenu = New DevExpress.XtraBars.Ribbon.RadialMenu(Me.components)
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GRD, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SplashScreenManager
@@ -74,15 +78,15 @@ Partial Class frmEICALoopManagement
         '
         Me.RibbonControl1.CaptionBarItemLinks.Add(Me.cmdSave)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.cmdSave, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem11, Me.BarButtonItem9, Me.BarButtonItem4, Me.BarButtonItem12, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarSubItem1, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem8, Me.BarButtonItem21, Me.btnShowChanges, Me.BarButtonItem3, Me.BarSubItem2, Me.BarButtonItem2, Me.BarButtonItem10, Me.BarButtonItem22})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.cmdSave, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem11, Me.BarButtonItem9, Me.BarButtonItem4, Me.BarButtonItem12, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarSubItem1, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem8, Me.BarButtonItem21, Me.btnShowChanges, Me.BarButtonItem3, Me.BarSubItem2, Me.BarButtonItem2, Me.BarButtonItem10, Me.BarButtonItem22, Me.BarButtonItem23})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.RibbonControl1.MaxItemId = 37
+        Me.RibbonControl1.MaxItemId = 38
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage2, Me.RibbonPage4, Me.RibbonPage3})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 110)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1202, 110)
         '
         'cmdSave
         '
@@ -96,6 +100,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Refresh"
+        Me.BarButtonItem1.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem1.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem1.Id = 1
         Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.Name = "BarButtonItem1"
@@ -103,7 +109,7 @@ Partial Class frmEICALoopManagement
         '
         'BarButtonItem5
         '
-        Me.BarButtonItem5.Caption = "Export"
+        Me.BarButtonItem5.Caption = "Export to Excel"
         Me.BarButtonItem5.Id = 5
         Me.BarButtonItem5.ImageOptions.Image = CType(resources.GetObject("BarButtonItem5.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem5.Name = "BarButtonItem5"
@@ -111,7 +117,9 @@ Partial Class frmEICALoopManagement
         '
         'BarButtonItem6
         '
-        Me.BarButtonItem6.Caption = "Delete Loop"
+        Me.BarButtonItem6.Caption = "Delete"
+        Me.BarButtonItem6.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem6.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem6.Id = 6
         Me.BarButtonItem6.ImageOptions.Image = CType(resources.GetObject("BarButtonItem6.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem6.Name = "BarButtonItem6"
@@ -128,6 +136,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem11
         '
         Me.BarButtonItem11.Caption = "Edit Loops"
+        Me.BarButtonItem11.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem11.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem11.Id = 11
         Me.BarButtonItem11.ImageOptions.Image = CType(resources.GetObject("BarButtonItem11.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem11.Name = "BarButtonItem11"
@@ -136,6 +146,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem9
         '
         Me.BarButtonItem9.Caption = "Filter"
+        Me.BarButtonItem9.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem9.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem9.Id = 12
         Me.BarButtonItem9.ImageOptions.Image = CType(resources.GetObject("BarButtonItem9.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem9.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem9.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -154,6 +166,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem12
         '
         Me.BarButtonItem12.Caption = "Show QR Code"
+        Me.BarButtonItem12.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem12.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem12.Id = 16
         Me.BarButtonItem12.ImageOptions.Image = CType(resources.GetObject("BarButtonItem12.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem12.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem12.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -199,6 +213,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem16
         '
         Me.BarButtonItem16.Caption = "Copy Loops"
+        Me.BarButtonItem16.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem16.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem16.Id = 21
         Me.BarButtonItem16.ImageOptions.Image = CType(resources.GetObject("BarButtonItem16.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem16.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem16.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -225,6 +241,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem19
         '
         Me.BarButtonItem19.Caption = "Open ILD"
+        Me.BarButtonItem19.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem19.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem19.Id = 24
         Me.BarButtonItem19.ImageOptions.Image = CType(resources.GetObject("BarButtonItem19.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem19.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem19.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -242,7 +260,9 @@ Partial Class frmEICALoopManagement
         '
         'BarButtonItem8
         '
-        Me.BarButtonItem8.Caption = "Deactivate Loop"
+        Me.BarButtonItem8.Caption = "Deactivate"
+        Me.BarButtonItem8.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem8.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem8.Id = 26
         Me.BarButtonItem8.ImageOptions.Image = CType(resources.GetObject("BarButtonItem8.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem8.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem8.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -252,6 +272,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem21
         '
         Me.BarButtonItem21.Caption = "Add New"
+        Me.BarButtonItem21.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem21.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem21.Id = 28
         Me.BarButtonItem21.ImageOptions.Image = CType(resources.GetObject("BarButtonItem21.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem21.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem21.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -261,6 +283,8 @@ Partial Class frmEICALoopManagement
         'btnShowChanges
         '
         Me.btnShowChanges.Caption = "Show Changes"
+        Me.btnShowChanges.CloseRadialMenuOnItemClick = True
+        Me.btnShowChanges.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.btnShowChanges.Id = 30
         Me.btnShowChanges.ImageOptions.Image = CType(resources.GetObject("btnShowChanges.ImageOptions.Image"), System.Drawing.Image)
         Me.btnShowChanges.ImageOptions.LargeImage = CType(resources.GetObject("btnShowChanges.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -271,6 +295,8 @@ Partial Class frmEICALoopManagement
         'BarButtonItem3
         '
         Me.BarButtonItem3.Caption = "Print Preview"
+        Me.BarButtonItem3.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem3.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem3.Id = 32
         Me.BarButtonItem3.ImageOptions.Image = CType(resources.GetObject("BarButtonItem3.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem3.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem3.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -294,6 +320,31 @@ Partial Class frmEICALoopManagement
         Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem2.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem2.Name = "BarButtonItem2"
+        '
+        'BarButtonItem10
+        '
+        Me.BarButtonItem10.Caption = "Clear All Loops Priority"
+        Me.BarButtonItem10.Id = 35
+        Me.BarButtonItem10.ImageOptions.Image = CType(resources.GetObject("BarButtonItem10.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem10.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem10.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem10.Name = "BarButtonItem10"
+        '
+        'BarButtonItem22
+        '
+        Me.BarButtonItem22.Caption = "Assign Priority to Selection"
+        Me.BarButtonItem22.Id = 36
+        Me.BarButtonItem22.ImageOptions.Image = CType(resources.GetObject("BarButtonItem22.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem22.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem22.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem22.Name = "BarButtonItem22"
+        '
+        'BarButtonItem23
+        '
+        Me.BarButtonItem23.Caption = "Activate"
+        Me.BarButtonItem23.Id = 37
+        Me.BarButtonItem23.ImageOptions.Image = CType(resources.GetObject("BarButtonItem23.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem23.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem23.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem23.Name = "BarButtonItem23"
+        Me.BarButtonItem23.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'RibbonPage2
         '
@@ -356,7 +407,7 @@ Partial Class frmEICALoopManagement
         Me.GRD.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GRD.MenuManager = Me.RibbonControl1
         Me.GRD.Name = "GRD"
-        Me.GRD.Size = New System.Drawing.Size(1200, 590)
+        Me.GRD.Size = New System.Drawing.Size(1202, 591)
         Me.GRD.TabIndex = 7
         Me.GRD.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -402,26 +453,25 @@ Partial Class frmEICALoopManagement
         '
         Me.opnFle.Filter = "Excel Workbook 2010|*.xlsx|Excel Workbook 2003|*.xls"
         '
-        'BarButtonItem10
+        'rMenu
         '
-        Me.BarButtonItem10.Caption = "Clear All Loops Priority"
-        Me.BarButtonItem10.Id = 35
-        Me.BarButtonItem10.ImageOptions.Image = CType(resources.GetObject("BarButtonItem10.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem10.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem10.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem10.Name = "BarButtonItem10"
-        '
-        'BarButtonItem22
-        '
-        Me.BarButtonItem22.Caption = "Assign Priority to Selection"
-        Me.BarButtonItem22.Id = 36
-        Me.BarButtonItem22.ImageOptions.Image = CType(resources.GetObject("BarButtonItem22.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem22.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem22.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem22.Name = "BarButtonItem22"
+        Me.rMenu.AutoExpand = True
+        Me.rMenu.Glyph = CType(resources.GetObject("rMenu.Glyph"), System.Drawing.Image)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem1)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem9)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem16)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem21)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem11)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem8)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem6)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem19)
+        Me.rMenu.Name = "rMenu"
+        Me.rMenu.Ribbon = Me.RibbonControl1
         '
         'frmEICALoopManagement
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1200, 700)
+        Me.ClientSize = New System.Drawing.Size(1202, 701)
         Me.Controls.Add(Me.GRD)
         Me.Controls.Add(Me.RibbonControl1)
         Me.IconOptions.Image = Global.EEICA.My.Resources.Resources.loop32
@@ -434,6 +484,7 @@ Partial Class frmEICALoopManagement
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GRD, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -476,4 +527,6 @@ Partial Class frmEICALoopManagement
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem10 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem22 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenu As DevExpress.XtraBars.Ribbon.RadialMenu
+    Friend WithEvents BarButtonItem23 As DevExpress.XtraBars.BarButtonItem
 End Class

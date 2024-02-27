@@ -1,0 +1,295 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsBasicData
+END
+GO
+CREATE PROC TEMPDATA.UpdateLoopsBasicData
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Not Exist)
+UPDATE V
+	SET Error = 'Loop Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblInsLoop.LoopName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblInsLoop.L_Description
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblInsLoop.Vendor AS L_Vendor
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblInsLoop.Subsystem AS L_Subsystem
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblInsLoop.Area AS L_Area
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblInsLoop.L_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblInsLoop.Sub_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblInsLoop.ACTIVITYID
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.StartDate AS StartDate,
+		tblInsLoop.Planning_START_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinishDate AS FinishDate,
+		tblInsLoop.Planning_FINISH_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblInsLoop.Active
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblInsLoop.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblInsLoop.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblInsLoop.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblInsLoop.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblInsLoop.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, StartDate, FinishDate, Active, ReportedBy,
+FolderPreparation, QCRelease, FolderReady, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO

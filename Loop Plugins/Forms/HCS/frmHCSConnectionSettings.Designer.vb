@@ -42,6 +42,10 @@ Partial Class frmHCSConnectionSettings
         Me.txtGroupsQuery = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.txtUpdateSubsystemQuery = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.txtFinalClean = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.txtSoloRunApprovedQuery = New System.Windows.Forms.TextBox()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -58,16 +62,16 @@ Partial Class frmHCSConnectionSettings
         'txtDBLocation
         '
         Me.txtDBLocation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtDBLocation.Location = New System.Drawing.Point(143, 112)
+        Me.txtDBLocation.Location = New System.Drawing.Point(152, 112)
         Me.txtDBLocation.Name = "txtDBLocation"
         Me.txtDBLocation.Size = New System.Drawing.Size(388, 21)
         Me.txtDBLocation.TabIndex = 0
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(24, 109)
+        Me.Label1.Location = New System.Drawing.Point(12, 109)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(104, 24)
+        Me.Label1.Size = New System.Drawing.Size(118, 24)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "DB Location:"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -87,13 +91,13 @@ Partial Class frmHCSConnectionSettings
         Me.txtDBName.Location = New System.Drawing.Point(719, 112)
         Me.txtDBName.Name = "txtDBName"
         Me.txtDBName.Size = New System.Drawing.Size(452, 21)
-        Me.txtDBName.TabIndex = 1
+        Me.txtDBName.TabIndex = 5
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(24, 146)
+        Me.Label3.Location = New System.Drawing.Point(12, 146)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(104, 24)
+        Me.Label3.Size = New System.Drawing.Size(118, 24)
         Me.Label3.TabIndex = 6
         Me.Label3.Text = "Elements Query:"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -101,12 +105,12 @@ Partial Class frmHCSConnectionSettings
         'txtElementsQuery
         '
         Me.txtElementsQuery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtElementsQuery.Location = New System.Drawing.Point(143, 149)
+        Me.txtElementsQuery.Location = New System.Drawing.Point(152, 149)
         Me.txtElementsQuery.Multiline = True
         Me.txtElementsQuery.Name = "txtElementsQuery"
         Me.txtElementsQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtElementsQuery.Size = New System.Drawing.Size(404, 149)
-        Me.txtElementsQuery.TabIndex = 2
+        Me.txtElementsQuery.Size = New System.Drawing.Size(404, 121)
+        Me.txtElementsQuery.TabIndex = 1
         '
         'Label4
         '
@@ -124,14 +128,14 @@ Partial Class frmHCSConnectionSettings
         Me.txtTasksQuery.Multiline = True
         Me.txtTasksQuery.Name = "txtTasksQuery"
         Me.txtTasksQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtTasksQuery.Size = New System.Drawing.Size(469, 150)
-        Me.txtTasksQuery.TabIndex = 3
+        Me.txtTasksQuery.Size = New System.Drawing.Size(469, 122)
+        Me.txtTasksQuery.TabIndex = 6
         '
         'Label5
         '
-        Me.Label5.Location = New System.Drawing.Point(24, 429)
+        Me.Label5.Location = New System.Drawing.Point(12, 385)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(117, 24)
+        Me.Label5.Size = New System.Drawing.Size(131, 24)
         Me.Label5.TabIndex = 10
         Me.Label5.Text = "Loop Approved Query:"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -139,12 +143,12 @@ Partial Class frmHCSConnectionSettings
         'txtLoopApprovedQuery
         '
         Me.txtLoopApprovedQuery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtLoopApprovedQuery.Location = New System.Drawing.Point(143, 429)
+        Me.txtLoopApprovedQuery.Location = New System.Drawing.Point(152, 385)
         Me.txtLoopApprovedQuery.Multiline = True
         Me.txtLoopApprovedQuery.Name = "txtLoopApprovedQuery"
         Me.txtLoopApprovedQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtLoopApprovedQuery.Size = New System.Drawing.Size(404, 172)
-        Me.txtLoopApprovedQuery.TabIndex = 6
+        Me.txtLoopApprovedQuery.Size = New System.Drawing.Size(404, 99)
+        Me.txtLoopApprovedQuery.TabIndex = 3
         '
         'SimpleButton2
         '
@@ -153,7 +157,7 @@ Partial Class frmHCSConnectionSettings
         Me.SimpleButton2.Location = New System.Drawing.Point(804, 639)
         Me.SimpleButton2.Name = "SimpleButton2"
         Me.SimpleButton2.Size = New System.Drawing.Size(189, 49)
-        Me.SimpleButton2.TabIndex = 8
+        Me.SimpleButton2.TabIndex = 10
         Me.SimpleButton2.Text = "Save"
         '
         'SimpleButton1
@@ -163,12 +167,12 @@ Partial Class frmHCSConnectionSettings
         Me.SimpleButton1.Location = New System.Drawing.Point(999, 639)
         Me.SimpleButton1.Name = "SimpleButton1"
         Me.SimpleButton1.Size = New System.Drawing.Size(189, 49)
-        Me.SimpleButton1.TabIndex = 9
-        Me.SimpleButton1.Text = "Cancel"
+        Me.SimpleButton1.TabIndex = 11
+        Me.SimpleButton1.Text = "Close"
         '
         'Label6
         '
-        Me.Label6.Location = New System.Drawing.Point(602, 300)
+        Me.Label6.Location = New System.Drawing.Point(602, 282)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(109, 24)
         Me.Label6.TabIndex = 13
@@ -178,18 +182,18 @@ Partial Class frmHCSConnectionSettings
         'txtCLosedItemsQuery
         '
         Me.txtCLosedItemsQuery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtCLosedItemsQuery.Location = New System.Drawing.Point(719, 304)
+        Me.txtCLosedItemsQuery.Location = New System.Drawing.Point(719, 282)
         Me.txtCLosedItemsQuery.Multiline = True
         Me.txtCLosedItemsQuery.Name = "txtCLosedItemsQuery"
         Me.txtCLosedItemsQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtCLosedItemsQuery.Size = New System.Drawing.Size(469, 115)
-        Me.txtCLosedItemsQuery.TabIndex = 5
+        Me.txtCLosedItemsQuery.Size = New System.Drawing.Size(469, 87)
+        Me.txtCLosedItemsQuery.TabIndex = 7
         '
         'Label7
         '
-        Me.Label7.Location = New System.Drawing.Point(24, 304)
+        Me.Label7.Location = New System.Drawing.Point(12, 282)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(117, 24)
+        Me.Label7.Size = New System.Drawing.Size(131, 24)
         Me.Label7.TabIndex = 16
         Me.Label7.Text = "Groups Query:"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -197,16 +201,16 @@ Partial Class frmHCSConnectionSettings
         'txtGroupsQuery
         '
         Me.txtGroupsQuery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtGroupsQuery.Location = New System.Drawing.Point(143, 304)
+        Me.txtGroupsQuery.Location = New System.Drawing.Point(152, 282)
         Me.txtGroupsQuery.Multiline = True
         Me.txtGroupsQuery.Name = "txtGroupsQuery"
         Me.txtGroupsQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtGroupsQuery.Size = New System.Drawing.Size(404, 119)
-        Me.txtGroupsQuery.TabIndex = 4
+        Me.txtGroupsQuery.Size = New System.Drawing.Size(404, 91)
+        Me.txtGroupsQuery.TabIndex = 2
         '
         'Label8
         '
-        Me.Label8.Location = New System.Drawing.Point(602, 425)
+        Me.Label8.Location = New System.Drawing.Point(602, 381)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(109, 24)
         Me.Label8.TabIndex = 19
@@ -216,12 +220,50 @@ Partial Class frmHCSConnectionSettings
         'txtUpdateSubsystemQuery
         '
         Me.txtUpdateSubsystemQuery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtUpdateSubsystemQuery.Location = New System.Drawing.Point(719, 425)
+        Me.txtUpdateSubsystemQuery.Location = New System.Drawing.Point(719, 381)
         Me.txtUpdateSubsystemQuery.Multiline = True
         Me.txtUpdateSubsystemQuery.Name = "txtUpdateSubsystemQuery"
         Me.txtUpdateSubsystemQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtUpdateSubsystemQuery.Size = New System.Drawing.Size(469, 168)
-        Me.txtUpdateSubsystemQuery.TabIndex = 7
+        Me.txtUpdateSubsystemQuery.Size = New System.Drawing.Size(469, 103)
+        Me.txtUpdateSubsystemQuery.TabIndex = 8
+        '
+        'Label9
+        '
+        Me.Label9.Location = New System.Drawing.Point(602, 496)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(117, 24)
+        Me.Label9.TabIndex = 21
+        Me.Label9.Text = "Final Clean:"
+        Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'txtFinalClean
+        '
+        Me.txtFinalClean.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtFinalClean.Location = New System.Drawing.Point(719, 496)
+        Me.txtFinalClean.Multiline = True
+        Me.txtFinalClean.Name = "txtFinalClean"
+        Me.txtFinalClean.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtFinalClean.Size = New System.Drawing.Size(469, 99)
+        Me.txtFinalClean.TabIndex = 9
+        '
+        'Label10
+        '
+        Me.Label10.Location = New System.Drawing.Point(12, 496)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(134, 24)
+        Me.Label10.TabIndex = 24
+        Me.Label10.Text = "SoloRun Approved Query:"
+        Me.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'txtSoloRunApprovedQuery
+        '
+        Me.txtSoloRunApprovedQuery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.txtSoloRunApprovedQuery.Location = New System.Drawing.Point(152, 496)
+        Me.txtSoloRunApprovedQuery.Multiline = True
+        Me.txtSoloRunApprovedQuery.Name = "txtSoloRunApprovedQuery"
+        Me.txtSoloRunApprovedQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtSoloRunApprovedQuery.Size = New System.Drawing.Size(404, 99)
+        Me.txtSoloRunApprovedQuery.TabIndex = 4
         '
         'frmHCSConnectionSettings
         '
@@ -229,6 +271,10 @@ Partial Class frmHCSConnectionSettings
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1200, 700)
         Me.ControlBox = False
+        Me.Controls.Add(Me.Label10)
+        Me.Controls.Add(Me.txtSoloRunApprovedQuery)
+        Me.Controls.Add(Me.txtFinalClean)
+        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.txtUpdateSubsystemQuery)
         Me.Controls.Add(Me.Label7)
@@ -279,4 +325,8 @@ Partial Class frmHCSConnectionSettings
     Friend WithEvents txtGroupsQuery As TextBox
     Friend WithEvents Label8 As Label
     Friend WithEvents txtUpdateSubsystemQuery As TextBox
+    Friend WithEvents Label9 As Label
+    Friend WithEvents txtFinalClean As TextBox
+    Friend WithEvents Label10 As Label
+    Friend WithEvents txtSoloRunApprovedQuery As TextBox
 End Class

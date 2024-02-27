@@ -18,7 +18,12 @@
                    Optional lSubtype As String = "",
                    Optional lActid As String = "",
                    Optional lSubmitToQC As Date = Nothing,
-                   Optional lReturnFromQC As Date = Nothing)
+                   Optional lReturnFromQC As Date = Nothing,
+                   Optional lSubsystem As String = "",
+                   Optional lPriority As Integer = 0,
+                   Optional lPDSModel As String = "",
+                   Optional lControllerLocation As String = ""
+                   )
 
         Me.Name = loopName
         Me.StartDate = actualStartDate
@@ -26,6 +31,7 @@
         Me.Progress = loopProgress
         Me.Vendors = loopVendor
         Me.Description = loopDescription
+        Me.ControllerLocation = lControllerLocation
 
         If Not IsNothing(lFolderPreparation) Then Me.FolderPreparation = lFolderPreparation
         If Not IsNothing(lConstrRelease) Then Me.ConstrRelease = lConstrRelease
@@ -41,6 +47,9 @@
         Me.Type = lType
         Me.Subtype = lSubtype
         Me.ActId = lActid
+        Me.Subsystem = lSubsystem
+        Me.Priority = lPriority
+        Me.PDSModel = lPDSModel
 
     End Sub
     Public Property Name() As String
@@ -62,5 +71,9 @@
     Public Property ActId() As String
     Public Property Type() As String
     Public Property Subtype() As String
+    Public Property Subsystem() As String
+    Public Property Priority() As Integer
+    Public Property PDSModel() As String
+    Public Property ControllerLocation() As String
 
 End Class

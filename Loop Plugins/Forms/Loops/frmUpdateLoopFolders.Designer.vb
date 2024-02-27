@@ -106,7 +106,7 @@ Partial Class frmUpdateLoopFolders
         Dim ReduceOperation1 As DevExpress.XtraBars.Ribbon.ReduceOperation = New DevExpress.XtraBars.Ribbon.ReduceOperation()
         Me.RepositoryItemProgressBar2 = New DevExpress.XtraEditors.Repository.RepositoryItemProgressBar()
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
-        Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
+        Me.btnUpdate = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
         Me.SpreadsheetCommandBarSubItem1 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarSubItem()
         Me.SpreadsheetCommandBarButtonItem1 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
@@ -333,6 +333,14 @@ Partial Class frmUpdateLoopFolders
         Me.BarButtonItem3 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem4 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem5 = New DevExpress.XtraBars.BarButtonItem()
+        Me.btnAddNew = New DevExpress.XtraBars.BarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem129 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem130 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem131 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem132 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem133 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem134 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
+        Me.SpreadsheetCommandBarButtonItem135 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem()
         Me.HomeRibbonPage1 = New DevExpress.XtraSpreadsheet.UI.HomeRibbonPage()
         Me.ClipboardRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.ClipboardRibbonPageGroup()
         Me.FontRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.FontRibbonPageGroup()
@@ -348,6 +356,8 @@ Partial Class frmUpdateLoopFolders
         Me.FormulaDefinedNamesRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.FormulaDefinedNamesRibbonPageGroup()
         Me.FormulaAuditingRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.FormulaAuditingRibbonPageGroup()
         Me.FormulaCalculationRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.FormulaCalculationRibbonPageGroup()
+        Me.DataRibbonPage1 = New DevExpress.XtraSpreadsheet.UI.DataRibbonPage()
+        Me.SortAndFilterRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.SortAndFilterRibbonPageGroup()
         Me.ViewRibbonPage1 = New DevExpress.XtraSpreadsheet.UI.ViewRibbonPage()
         Me.ShowRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.ShowRibbonPageGroup()
         Me.ZoomRibbonPageGroup1 = New DevExpress.XtraSpreadsheet.UI.ZoomRibbonPageGroup()
@@ -359,6 +369,10 @@ Partial Class frmUpdateLoopFolders
         Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonStatusBar1 = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
         Me.GroupControl1 = New DevExpress.XtraEditors.GroupControl()
+        Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
+        Me.tgAll = New DevExpress.XtraEditors.ToggleSwitch()
+        Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
+        Me.tgPDSModel = New DevExpress.XtraEditors.ToggleSwitch()
         Me.LabelControl10 = New DevExpress.XtraEditors.LabelControl()
         Me.tgPriority = New DevExpress.XtraEditors.ToggleSwitch()
         Me.LabelControl7 = New DevExpress.XtraEditors.LabelControl()
@@ -382,8 +396,8 @@ Partial Class frmUpdateLoopFolders
         Me.SpreadsheetBarController1 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetBarController(Me.components)
         Me.SpreadsheetFormulaBar1 = New DevExpress.XtraSpreadsheet.SpreadsheetFormulaBar()
         Me.SplitterControl1 = New DevExpress.XtraEditors.SplitterControl()
-        Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
-        Me.tgPDSModel = New DevExpress.XtraEditors.ToggleSwitch()
+        Me.LabelControl13 = New DevExpress.XtraEditors.LabelControl()
+        Me.tgControllerLocation = New DevExpress.XtraEditors.ToggleSwitch()
         CType(Me.RepositoryItemProgressBar2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemFontEdit1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -397,6 +411,8 @@ Partial Class frmUpdateLoopFolders
         CType(Me.RepositoryItemZoomTrackBar1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupControl1.SuspendLayout()
+        CType(Me.tgAll.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tgPDSModel.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgPriority.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgArea.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgSubsystem.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -408,7 +424,7 @@ Partial Class frmUpdateLoopFolders
         CType(Me.tgDescription.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgType.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SpreadsheetBarController1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.tgPDSModel.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tgControllerLocation.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RepositoryItemProgressBar2
@@ -418,24 +434,24 @@ Partial Class frmUpdateLoopFolders
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.SpreadsheetCommandBarSubItem1, Me.SpreadsheetCommandBarButtonItem1, Me.SpreadsheetCommandBarButtonItem2, Me.SpreadsheetCommandBarButtonItem3, Me.SpreadsheetCommandBarButtonItem4, Me.SpreadsheetCommandBarButtonItem5, Me.FunctionsFinancialItem1, Me.FunctionsLogicalItem1, Me.FunctionsTextItem1, Me.FunctionsDateAndTimeItem1, Me.FunctionsLookupAndReferenceItem1, Me.FunctionsMathAndTrigonometryItem1, Me.SpreadsheetCommandBarSubItem2, Me.FunctionsStatisticalItem1, Me.FunctionsEngineeringItem1, Me.FunctionsInformationItem1, Me.FunctionsCompatibilityItem1, Me.FunctionsWebItem1, Me.SpreadsheetCommandBarButtonItem6, Me.SpreadsheetCommandBarButtonItem7, Me.DefinedNameListItem1, Me.SpreadsheetCommandBarButtonItem8, Me.SpreadsheetCommandBarCheckItem1, Me.SpreadsheetCommandBarSubItem3, Me.SpreadsheetCommandBarCheckItem2, Me.SpreadsheetCommandBarCheckItem3, Me.SpreadsheetCommandBarButtonItem9, Me.SpreadsheetCommandBarButtonItem10, Me.SpreadsheetCommandBarCheckItem4, Me.SpreadsheetCommandBarCheckItem5, Me.SpreadsheetCommandBarButtonItem11, Me.SpreadsheetCommandBarButtonItem12, Me.SpreadsheetCommandBarButtonItem13, Me.SpreadsheetCommandBarButtonItem14, Me.SpreadsheetCommandBarSubItem4, Me.SpreadsheetCommandBarButtonItem15, Me.SpreadsheetCommandBarButtonItem16, Me.SpreadsheetCommandBarButtonItem17, Me.SpreadsheetCommandBarButtonItem18, Me.SpreadsheetCommandBarButtonItem19, Me.SpreadsheetCommandBarButtonItem20, Me.SpreadsheetCommandBarButtonItem21, Me.SpreadsheetCommandBarButtonItem22, Me.BarButtonGroup1, Me.ChangeFontNameItem1, Me.ChangeFontSizeItem1, Me.SpreadsheetCommandBarButtonItem23, Me.SpreadsheetCommandBarButtonItem24, Me.BarButtonGroup2, Me.SpreadsheetCommandBarCheckItem6, Me.SpreadsheetCommandBarCheckItem7, Me.SpreadsheetCommandBarCheckItem8, Me.SpreadsheetCommandBarCheckItem9, Me.BarButtonGroup3, Me.SpreadsheetCommandBarSubItem5, Me.SpreadsheetCommandBarButtonItem25, Me.SpreadsheetCommandBarButtonItem26, Me.SpreadsheetCommandBarButtonItem27, Me.SpreadsheetCommandBarButtonItem28, Me.SpreadsheetCommandBarButtonItem29, Me.SpreadsheetCommandBarButtonItem30, Me.SpreadsheetCommandBarButtonItem31, Me.SpreadsheetCommandBarButtonItem32, Me.SpreadsheetCommandBarButtonItem33, Me.SpreadsheetCommandBarButtonItem34, Me.SpreadsheetCommandBarButtonItem35, Me.SpreadsheetCommandBarButtonItem36, Me.SpreadsheetCommandBarButtonItem37, Me.ChangeBorderLineColorItem1, Me.ChangeBorderLineStyleItem1, Me.BarButtonGroup4, Me.ChangeCellFillColorItem1, Me.ChangeFontColorItem1, Me.BarButtonGroup5, Me.SpreadsheetCommandBarCheckItem10, Me.SpreadsheetCommandBarCheckItem11, Me.SpreadsheetCommandBarCheckItem12, Me.BarButtonGroup6, Me.SpreadsheetCommandBarCheckItem13, Me.SpreadsheetCommandBarCheckItem14, Me.SpreadsheetCommandBarCheckItem15, Me.BarButtonGroup7, Me.SpreadsheetCommandBarButtonItem38, Me.SpreadsheetCommandBarButtonItem39, Me.SpreadsheetCommandBarCheckItem16, Me.SpreadsheetCommandBarSubItem6, Me.SpreadsheetCommandBarCheckItem17, Me.SpreadsheetCommandBarButtonItem40, Me.SpreadsheetCommandBarButtonItem41, Me.SpreadsheetCommandBarButtonItem42, Me.BarButtonGroup8, Me.ChangeNumberFormatItem1, Me.BarButtonGroup9, Me.SpreadsheetCommandBarSubItem7, Me.SpreadsheetCommandBarButtonItem43, Me.SpreadsheetCommandBarButtonItem44, Me.SpreadsheetCommandBarButtonItem45, Me.SpreadsheetCommandBarButtonItem46, Me.SpreadsheetCommandBarButtonItem47, Me.SpreadsheetCommandBarButtonItem48, Me.SpreadsheetCommandBarButtonItem49, Me.SpreadsheetCommandBarButtonItem50, Me.BarButtonGroup10, Me.SpreadsheetCommandBarButtonItem51, Me.SpreadsheetCommandBarButtonItem52, Me.SpreadsheetCommandBarSubItem11, Me.SpreadsheetCommandBarButtonItem53, Me.SpreadsheetCommandBarButtonItem54, Me.SpreadsheetCommandBarButtonItem55, Me.SpreadsheetCommandBarButtonItem56, Me.SpreadsheetCommandBarButtonItem57, Me.SpreadsheetCommandBarButtonItem58, Me.SpreadsheetCommandBarButtonItem59, Me.SpreadsheetCommandBarSubItem8, Me.SpreadsheetCommandBarButtonItem60, Me.SpreadsheetCommandBarButtonItem61, Me.SpreadsheetCommandBarButtonItem62, Me.SpreadsheetCommandBarButtonItem63, Me.SpreadsheetCommandBarButtonItem64, Me.SpreadsheetCommandBarButtonItem65, Me.SpreadsheetCommandBarSubItem9, Me.SpreadsheetCommandBarButtonGalleryDropDownItem1, Me.SpreadsheetCommandBarButtonGalleryDropDownItem2, Me.SpreadsheetCommandBarButtonGalleryDropDownItem3, Me.SpreadsheetCommandBarButtonItem66, Me.SpreadsheetCommandBarButtonItem67, Me.SpreadsheetCommandBarButtonItem68, Me.SpreadsheetCommandBarSubItem10, Me.SpreadsheetCommandBarButtonItem69, Me.GalleryFormatAsTableItem1, Me.GalleryChangeStyleItem1, Me.SpreadsheetCommandBarSubItem12, Me.SpreadsheetCommandBarButtonItem70, Me.SpreadsheetCommandBarButtonItem71, Me.SpreadsheetCommandBarButtonItem72, Me.SpreadsheetCommandBarButtonItem73, Me.SpreadsheetCommandBarButtonItem74, Me.SpreadsheetCommandBarButtonItem75, Me.SpreadsheetCommandBarButtonItem76, Me.SpreadsheetCommandBarButtonItem77, Me.SpreadsheetCommandBarSubItem13, Me.SpreadsheetCommandBarButtonItem78, Me.SpreadsheetCommandBarButtonItem79, Me.SpreadsheetCommandBarButtonItem80, Me.SpreadsheetCommandBarButtonItem81, Me.SpreadsheetCommandBarButtonItem82, Me.SpreadsheetCommandBarButtonItem83, Me.SpreadsheetCommandBarSubItem15, Me.SpreadsheetCommandBarButtonItem84, Me.SpreadsheetCommandBarButtonItem85, Me.SpreadsheetCommandBarButtonItem86, Me.SpreadsheetCommandBarButtonItem87, Me.SpreadsheetCommandBarButtonItem88, Me.SpreadsheetCommandBarButtonItem89, Me.SpreadsheetCommandBarButtonItem90, Me.SpreadsheetCommandBarButtonItem91, Me.SpreadsheetCommandBarButtonItem92, Me.SpreadsheetCommandBarButtonItem93, Me.SpreadsheetCommandBarButtonItem94, Me.SpreadsheetCommandBarSubItem14, Me.SpreadsheetCommandBarButtonItem95, Me.SpreadsheetCommandBarButtonItem96, Me.ChangeSheetTabColorItem1, Me.SpreadsheetCommandBarButtonItem97, Me.SpreadsheetCommandBarCheckItem18, Me.SpreadsheetCommandBarButtonItem98, Me.SpreadsheetCommandBarSubItem16, Me.SpreadsheetCommandBarSubItem17, Me.SpreadsheetCommandBarButtonItem99, Me.SpreadsheetCommandBarButtonItem100, Me.SpreadsheetCommandBarButtonItem101, Me.SpreadsheetCommandBarButtonItem102, Me.SpreadsheetCommandBarSubItem18, Me.SpreadsheetCommandBarButtonItem103, Me.SpreadsheetCommandBarButtonItem104, Me.SpreadsheetCommandBarButtonItem105, Me.SpreadsheetCommandBarButtonItem106, Me.SpreadsheetCommandBarButtonItem107, Me.SpreadsheetCommandBarButtonItem108, Me.SpreadsheetCommandBarSubItem19, Me.SpreadsheetCommandBarButtonItem109, Me.SpreadsheetCommandBarButtonItem110, Me.SpreadsheetCommandBarCheckItem19, Me.SpreadsheetCommandBarButtonItem111, Me.SpreadsheetCommandBarButtonItem112, Me.SpreadsheetCommandBarSubItem20, Me.SpreadsheetCommandBarButtonItem113, Me.SpreadsheetCommandBarButtonItem114, Me.SpreadsheetCommandBarButtonItem115, Me.SpreadsheetCommandBarButtonItem116, Me.SpreadsheetCommandBarButtonItem117, Me.SpreadsheetCommandBarButtonItem118, Me.SpreadsheetCommandBarButtonItem119, Me.ProgressBarItem1, Me.EndModeInfoStaticItem1, Me.AverageInfoStaticItem1, Me.CountInfoStaticItem1, Me.NumericalCountInfoStaticItem1, Me.MinInfoStaticItem1, Me.MaxInfoStaticItem1, Me.SumInfoStaticItem1, Me.ZoomEditItem1, Me.ShowZoomButtonItem1, Me.SpreadsheetCommandBarButtonItem120, Me.SpreadsheetCommandBarButtonItem121, Me.SpreadsheetCommandBarButtonItem122, Me.SpreadsheetCommandBarButtonItem123, Me.SpreadsheetCommandBarButtonItem124, Me.SpreadsheetCommandBarButtonItem125, Me.SpreadsheetCommandBarButtonItem126, Me.SpreadsheetCommandBarButtonItem127, Me.SpreadsheetCommandBarButtonItem128, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem5})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.btnUpdate, Me.BarButtonItem2, Me.SpreadsheetCommandBarSubItem1, Me.SpreadsheetCommandBarButtonItem1, Me.SpreadsheetCommandBarButtonItem2, Me.SpreadsheetCommandBarButtonItem3, Me.SpreadsheetCommandBarButtonItem4, Me.SpreadsheetCommandBarButtonItem5, Me.FunctionsFinancialItem1, Me.FunctionsLogicalItem1, Me.FunctionsTextItem1, Me.FunctionsDateAndTimeItem1, Me.FunctionsLookupAndReferenceItem1, Me.FunctionsMathAndTrigonometryItem1, Me.SpreadsheetCommandBarSubItem2, Me.FunctionsStatisticalItem1, Me.FunctionsEngineeringItem1, Me.FunctionsInformationItem1, Me.FunctionsCompatibilityItem1, Me.FunctionsWebItem1, Me.SpreadsheetCommandBarButtonItem6, Me.SpreadsheetCommandBarButtonItem7, Me.DefinedNameListItem1, Me.SpreadsheetCommandBarButtonItem8, Me.SpreadsheetCommandBarCheckItem1, Me.SpreadsheetCommandBarSubItem3, Me.SpreadsheetCommandBarCheckItem2, Me.SpreadsheetCommandBarCheckItem3, Me.SpreadsheetCommandBarButtonItem9, Me.SpreadsheetCommandBarButtonItem10, Me.SpreadsheetCommandBarCheckItem4, Me.SpreadsheetCommandBarCheckItem5, Me.SpreadsheetCommandBarButtonItem11, Me.SpreadsheetCommandBarButtonItem12, Me.SpreadsheetCommandBarButtonItem13, Me.SpreadsheetCommandBarButtonItem14, Me.SpreadsheetCommandBarSubItem4, Me.SpreadsheetCommandBarButtonItem15, Me.SpreadsheetCommandBarButtonItem16, Me.SpreadsheetCommandBarButtonItem17, Me.SpreadsheetCommandBarButtonItem18, Me.SpreadsheetCommandBarButtonItem19, Me.SpreadsheetCommandBarButtonItem20, Me.SpreadsheetCommandBarButtonItem21, Me.SpreadsheetCommandBarButtonItem22, Me.BarButtonGroup1, Me.ChangeFontNameItem1, Me.ChangeFontSizeItem1, Me.SpreadsheetCommandBarButtonItem23, Me.SpreadsheetCommandBarButtonItem24, Me.BarButtonGroup2, Me.SpreadsheetCommandBarCheckItem6, Me.SpreadsheetCommandBarCheckItem7, Me.SpreadsheetCommandBarCheckItem8, Me.SpreadsheetCommandBarCheckItem9, Me.BarButtonGroup3, Me.SpreadsheetCommandBarSubItem5, Me.SpreadsheetCommandBarButtonItem25, Me.SpreadsheetCommandBarButtonItem26, Me.SpreadsheetCommandBarButtonItem27, Me.SpreadsheetCommandBarButtonItem28, Me.SpreadsheetCommandBarButtonItem29, Me.SpreadsheetCommandBarButtonItem30, Me.SpreadsheetCommandBarButtonItem31, Me.SpreadsheetCommandBarButtonItem32, Me.SpreadsheetCommandBarButtonItem33, Me.SpreadsheetCommandBarButtonItem34, Me.SpreadsheetCommandBarButtonItem35, Me.SpreadsheetCommandBarButtonItem36, Me.SpreadsheetCommandBarButtonItem37, Me.ChangeBorderLineColorItem1, Me.ChangeBorderLineStyleItem1, Me.BarButtonGroup4, Me.ChangeCellFillColorItem1, Me.ChangeFontColorItem1, Me.BarButtonGroup5, Me.SpreadsheetCommandBarCheckItem10, Me.SpreadsheetCommandBarCheckItem11, Me.SpreadsheetCommandBarCheckItem12, Me.BarButtonGroup6, Me.SpreadsheetCommandBarCheckItem13, Me.SpreadsheetCommandBarCheckItem14, Me.SpreadsheetCommandBarCheckItem15, Me.BarButtonGroup7, Me.SpreadsheetCommandBarButtonItem38, Me.SpreadsheetCommandBarButtonItem39, Me.SpreadsheetCommandBarCheckItem16, Me.SpreadsheetCommandBarSubItem6, Me.SpreadsheetCommandBarCheckItem17, Me.SpreadsheetCommandBarButtonItem40, Me.SpreadsheetCommandBarButtonItem41, Me.SpreadsheetCommandBarButtonItem42, Me.BarButtonGroup8, Me.ChangeNumberFormatItem1, Me.BarButtonGroup9, Me.SpreadsheetCommandBarSubItem7, Me.SpreadsheetCommandBarButtonItem43, Me.SpreadsheetCommandBarButtonItem44, Me.SpreadsheetCommandBarButtonItem45, Me.SpreadsheetCommandBarButtonItem46, Me.SpreadsheetCommandBarButtonItem47, Me.SpreadsheetCommandBarButtonItem48, Me.SpreadsheetCommandBarButtonItem49, Me.SpreadsheetCommandBarButtonItem50, Me.BarButtonGroup10, Me.SpreadsheetCommandBarButtonItem51, Me.SpreadsheetCommandBarButtonItem52, Me.SpreadsheetCommandBarSubItem11, Me.SpreadsheetCommandBarButtonItem53, Me.SpreadsheetCommandBarButtonItem54, Me.SpreadsheetCommandBarButtonItem55, Me.SpreadsheetCommandBarButtonItem56, Me.SpreadsheetCommandBarButtonItem57, Me.SpreadsheetCommandBarButtonItem58, Me.SpreadsheetCommandBarButtonItem59, Me.SpreadsheetCommandBarSubItem8, Me.SpreadsheetCommandBarButtonItem60, Me.SpreadsheetCommandBarButtonItem61, Me.SpreadsheetCommandBarButtonItem62, Me.SpreadsheetCommandBarButtonItem63, Me.SpreadsheetCommandBarButtonItem64, Me.SpreadsheetCommandBarButtonItem65, Me.SpreadsheetCommandBarSubItem9, Me.SpreadsheetCommandBarButtonGalleryDropDownItem1, Me.SpreadsheetCommandBarButtonGalleryDropDownItem2, Me.SpreadsheetCommandBarButtonGalleryDropDownItem3, Me.SpreadsheetCommandBarButtonItem66, Me.SpreadsheetCommandBarButtonItem67, Me.SpreadsheetCommandBarButtonItem68, Me.SpreadsheetCommandBarSubItem10, Me.SpreadsheetCommandBarButtonItem69, Me.GalleryFormatAsTableItem1, Me.GalleryChangeStyleItem1, Me.SpreadsheetCommandBarSubItem12, Me.SpreadsheetCommandBarButtonItem70, Me.SpreadsheetCommandBarButtonItem71, Me.SpreadsheetCommandBarButtonItem72, Me.SpreadsheetCommandBarButtonItem73, Me.SpreadsheetCommandBarButtonItem74, Me.SpreadsheetCommandBarButtonItem75, Me.SpreadsheetCommandBarButtonItem76, Me.SpreadsheetCommandBarButtonItem77, Me.SpreadsheetCommandBarSubItem13, Me.SpreadsheetCommandBarButtonItem78, Me.SpreadsheetCommandBarButtonItem79, Me.SpreadsheetCommandBarButtonItem80, Me.SpreadsheetCommandBarButtonItem81, Me.SpreadsheetCommandBarButtonItem82, Me.SpreadsheetCommandBarButtonItem83, Me.SpreadsheetCommandBarSubItem15, Me.SpreadsheetCommandBarButtonItem84, Me.SpreadsheetCommandBarButtonItem85, Me.SpreadsheetCommandBarButtonItem86, Me.SpreadsheetCommandBarButtonItem87, Me.SpreadsheetCommandBarButtonItem88, Me.SpreadsheetCommandBarButtonItem89, Me.SpreadsheetCommandBarButtonItem90, Me.SpreadsheetCommandBarButtonItem91, Me.SpreadsheetCommandBarButtonItem92, Me.SpreadsheetCommandBarButtonItem93, Me.SpreadsheetCommandBarButtonItem94, Me.SpreadsheetCommandBarSubItem14, Me.SpreadsheetCommandBarButtonItem95, Me.SpreadsheetCommandBarButtonItem96, Me.ChangeSheetTabColorItem1, Me.SpreadsheetCommandBarButtonItem97, Me.SpreadsheetCommandBarCheckItem18, Me.SpreadsheetCommandBarButtonItem98, Me.SpreadsheetCommandBarSubItem16, Me.SpreadsheetCommandBarSubItem17, Me.SpreadsheetCommandBarButtonItem99, Me.SpreadsheetCommandBarButtonItem100, Me.SpreadsheetCommandBarButtonItem101, Me.SpreadsheetCommandBarButtonItem102, Me.SpreadsheetCommandBarSubItem18, Me.SpreadsheetCommandBarButtonItem103, Me.SpreadsheetCommandBarButtonItem104, Me.SpreadsheetCommandBarButtonItem105, Me.SpreadsheetCommandBarButtonItem106, Me.SpreadsheetCommandBarButtonItem107, Me.SpreadsheetCommandBarButtonItem108, Me.SpreadsheetCommandBarSubItem19, Me.SpreadsheetCommandBarButtonItem109, Me.SpreadsheetCommandBarButtonItem110, Me.SpreadsheetCommandBarCheckItem19, Me.SpreadsheetCommandBarButtonItem111, Me.SpreadsheetCommandBarButtonItem112, Me.SpreadsheetCommandBarSubItem20, Me.SpreadsheetCommandBarButtonItem113, Me.SpreadsheetCommandBarButtonItem114, Me.SpreadsheetCommandBarButtonItem115, Me.SpreadsheetCommandBarButtonItem116, Me.SpreadsheetCommandBarButtonItem117, Me.SpreadsheetCommandBarButtonItem118, Me.SpreadsheetCommandBarButtonItem119, Me.ProgressBarItem1, Me.EndModeInfoStaticItem1, Me.AverageInfoStaticItem1, Me.CountInfoStaticItem1, Me.NumericalCountInfoStaticItem1, Me.MinInfoStaticItem1, Me.MaxInfoStaticItem1, Me.SumInfoStaticItem1, Me.ZoomEditItem1, Me.ShowZoomButtonItem1, Me.SpreadsheetCommandBarButtonItem120, Me.SpreadsheetCommandBarButtonItem121, Me.SpreadsheetCommandBarButtonItem122, Me.SpreadsheetCommandBarButtonItem123, Me.SpreadsheetCommandBarButtonItem124, Me.SpreadsheetCommandBarButtonItem125, Me.SpreadsheetCommandBarButtonItem126, Me.SpreadsheetCommandBarButtonItem127, Me.SpreadsheetCommandBarButtonItem128, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem5, Me.btnAddNew, Me.SpreadsheetCommandBarButtonItem129, Me.SpreadsheetCommandBarButtonItem130, Me.SpreadsheetCommandBarButtonItem131, Me.SpreadsheetCommandBarButtonItem132, Me.SpreadsheetCommandBarButtonItem133, Me.SpreadsheetCommandBarButtonItem134, Me.SpreadsheetCommandBarButtonItem135})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
-        Me.RibbonControl1.MaxItemId = 221
+        Me.RibbonControl1.MaxItemId = 235
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.HomeRibbonPage1, Me.FileRibbonPage1, Me.FormulasRibbonPage1, Me.ViewRibbonPage1, Me.RibbonPage1, Me.RibbonPage2})
+        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.HomeRibbonPage1, Me.FileRibbonPage1, Me.FormulasRibbonPage1, Me.DataRibbonPage1, Me.ViewRibbonPage1, Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemFontEdit1, Me.RepositoryItemSpreadsheetFontSizeEdit1, Me.RepositoryItemPopupGalleryEdit1, Me.RepositoryItemZoomTrackBar1})
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1304, 177)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1306, 181)
         Me.RibbonControl1.StatusBar = Me.RibbonStatusBar1
         '
-        'BarButtonItem1
+        'btnUpdate
         '
-        Me.BarButtonItem1.Caption = "Upload and Update"
-        Me.BarButtonItem1.Id = 1
-        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem1.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem1.Name = "BarButtonItem1"
-        Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.btnUpdate.Caption = "Update"
+        Me.btnUpdate.Id = 1
+        Me.btnUpdate.ImageOptions.Image = CType(resources.GetObject("btnUpdate.ImageOptions.Image"), System.Drawing.Image)
+        Me.btnUpdate.ImageOptions.LargeImage = CType(resources.GetObject("btnUpdate.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.btnUpdate.Name = "btnUpdate"
+        Me.btnUpdate.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem2
         '
@@ -745,16 +761,18 @@ Partial Class frmUpdateLoopFolders
         'ss
         '
         Me.ss.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ss.Location = New System.Drawing.Point(200, 211)
+        Me.ss.Location = New System.Drawing.Point(213, 215)
         Me.ss.MenuManager = Me.RibbonControl1
         Me.ss.Name = "ss"
+        Me.ss.Options.Behavior.CreateNew = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden
+        Me.ss.Options.Behavior.Open = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden
         Me.ss.Options.Behavior.Worksheet.Delete = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.Hide = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
         Me.ss.Options.Behavior.Worksheet.Insert = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.Rename = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.TabColor = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.Unhide = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
-        Me.ss.Size = New System.Drawing.Size(1104, 527)
+        Me.ss.Size = New System.Drawing.Size(1093, 522)
         Me.ss.TabIndex = 10
         Me.ss.Text = "Loop Folders"
         '
@@ -2135,6 +2153,58 @@ Partial Class frmUpdateLoopFolders
         Me.BarButtonItem5.Name = "BarButtonItem5"
         Me.BarButtonItem5.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
+        'btnAddNew
+        '
+        Me.btnAddNew.Caption = "Add New"
+        Me.btnAddNew.Id = 221
+        Me.btnAddNew.ImageOptions.Image = CType(resources.GetObject("btnAddNew.ImageOptions.Image"), System.Drawing.Image)
+        Me.btnAddNew.ImageOptions.LargeImage = CType(resources.GetObject("btnAddNew.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.btnAddNew.Name = "btnAddNew"
+        Me.btnAddNew.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.btnAddNew.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        '
+        'SpreadsheetCommandBarButtonItem129
+        '
+        Me.SpreadsheetCommandBarButtonItem129.CommandName = "DataToolsDataValidation"
+        Me.SpreadsheetCommandBarButtonItem129.Id = 223
+        Me.SpreadsheetCommandBarButtonItem129.Name = "SpreadsheetCommandBarButtonItem129"
+        '
+        'SpreadsheetCommandBarButtonItem130
+        '
+        Me.SpreadsheetCommandBarButtonItem130.CommandName = "DataToolsCircleInvalidData"
+        Me.SpreadsheetCommandBarButtonItem130.Id = 224
+        Me.SpreadsheetCommandBarButtonItem130.Name = "SpreadsheetCommandBarButtonItem130"
+        '
+        'SpreadsheetCommandBarButtonItem131
+        '
+        Me.SpreadsheetCommandBarButtonItem131.CommandName = "DataToolsClearValidationCircles"
+        Me.SpreadsheetCommandBarButtonItem131.Id = 225
+        Me.SpreadsheetCommandBarButtonItem131.Name = "SpreadsheetCommandBarButtonItem131"
+        '
+        'SpreadsheetCommandBarButtonItem132
+        '
+        Me.SpreadsheetCommandBarButtonItem132.CommandName = "GroupOutline"
+        Me.SpreadsheetCommandBarButtonItem132.Id = 227
+        Me.SpreadsheetCommandBarButtonItem132.Name = "SpreadsheetCommandBarButtonItem132"
+        '
+        'SpreadsheetCommandBarButtonItem133
+        '
+        Me.SpreadsheetCommandBarButtonItem133.CommandName = "AutoOutline"
+        Me.SpreadsheetCommandBarButtonItem133.Id = 228
+        Me.SpreadsheetCommandBarButtonItem133.Name = "SpreadsheetCommandBarButtonItem133"
+        '
+        'SpreadsheetCommandBarButtonItem134
+        '
+        Me.SpreadsheetCommandBarButtonItem134.CommandName = "UngroupOutline"
+        Me.SpreadsheetCommandBarButtonItem134.Id = 230
+        Me.SpreadsheetCommandBarButtonItem134.Name = "SpreadsheetCommandBarButtonItem134"
+        '
+        'SpreadsheetCommandBarButtonItem135
+        '
+        Me.SpreadsheetCommandBarButtonItem135.CommandName = "ClearOutline"
+        Me.SpreadsheetCommandBarButtonItem135.Id = 231
+        Me.SpreadsheetCommandBarButtonItem135.Name = "SpreadsheetCommandBarButtonItem135"
+        '
         'HomeRibbonPage1
         '
         Me.HomeRibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.ClipboardRibbonPageGroup1, Me.FontRibbonPageGroup1, Me.AlignmentRibbonPageGroup1, Me.NumberRibbonPageGroup1, Me.StylesRibbonPageGroup1, Me.CellsRibbonPageGroup1, Me.EditingRibbonPageGroup1})
@@ -2271,6 +2341,22 @@ Partial Class frmUpdateLoopFolders
         Me.FormulaCalculationRibbonPageGroup1.ItemLinks.Add(Me.SpreadsheetCommandBarButtonItem10)
         Me.FormulaCalculationRibbonPageGroup1.Name = "FormulaCalculationRibbonPageGroup1"
         '
+        'DataRibbonPage1
+        '
+        Me.DataRibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.SortAndFilterRibbonPageGroup1})
+        Me.DataRibbonPage1.ImageOptions.Image = CType(resources.GetObject("DataRibbonPage1.ImageOptions.Image"), System.Drawing.Image)
+        Me.DataRibbonPage1.Name = "DataRibbonPage1"
+        '
+        'SortAndFilterRibbonPageGroup1
+        '
+        Me.SortAndFilterRibbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.[False]
+        Me.SortAndFilterRibbonPageGroup1.ItemLinks.Add(Me.SpreadsheetCommandBarButtonItem109)
+        Me.SortAndFilterRibbonPageGroup1.ItemLinks.Add(Me.SpreadsheetCommandBarButtonItem110)
+        Me.SortAndFilterRibbonPageGroup1.ItemLinks.Add(Me.SpreadsheetCommandBarCheckItem19)
+        Me.SortAndFilterRibbonPageGroup1.ItemLinks.Add(Me.SpreadsheetCommandBarButtonItem111)
+        Me.SortAndFilterRibbonPageGroup1.ItemLinks.Add(Me.SpreadsheetCommandBarButtonItem112)
+        Me.SortAndFilterRibbonPageGroup1.Name = "SortAndFilterRibbonPageGroup1"
+        '
         'ViewRibbonPage1
         '
         Me.ViewRibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.ShowRibbonPageGroup1, Me.ZoomRibbonPageGroup1, Me.WindowRibbonPageGroup1, Me.RibbonPageGroup3})
@@ -2315,7 +2401,8 @@ Partial Class frmUpdateLoopFolders
         '
         'RibbonPageGroup1
         '
-        Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem1)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.btnUpdate)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.btnAddNew)
         Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
         Me.RibbonPageGroup1.Text = "Loop Folders"
         '
@@ -2345,13 +2432,17 @@ Partial Class frmUpdateLoopFolders
         Me.RibbonStatusBar1.ItemLinks.Add(Me.SumInfoStaticItem1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.ZoomEditItem1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.ShowZoomButtonItem1)
-        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 738)
+        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 737)
         Me.RibbonStatusBar1.Name = "RibbonStatusBar1"
         Me.RibbonStatusBar1.Ribbon = Me.RibbonControl1
-        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1304, 24)
+        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1306, 26)
         '
         'GroupControl1
         '
+        Me.GroupControl1.Controls.Add(Me.LabelControl13)
+        Me.GroupControl1.Controls.Add(Me.tgControllerLocation)
+        Me.GroupControl1.Controls.Add(Me.LabelControl12)
+        Me.GroupControl1.Controls.Add(Me.tgAll)
         Me.GroupControl1.Controls.Add(Me.LabelControl11)
         Me.GroupControl1.Controls.Add(Me.tgPDSModel)
         Me.GroupControl1.Controls.Add(Me.LabelControl10)
@@ -2375,11 +2466,53 @@ Partial Class frmUpdateLoopFolders
         Me.GroupControl1.Controls.Add(Me.LabelControl1)
         Me.GroupControl1.Controls.Add(Me.tgType)
         Me.GroupControl1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.GroupControl1.Location = New System.Drawing.Point(0, 211)
+        Me.GroupControl1.Location = New System.Drawing.Point(0, 215)
         Me.GroupControl1.Name = "GroupControl1"
-        Me.GroupControl1.Size = New System.Drawing.Size(200, 527)
+        Me.GroupControl1.Size = New System.Drawing.Size(213, 522)
         Me.GroupControl1.TabIndex = 1
         Me.GroupControl1.Text = "What To Update"
+        '
+        'LabelControl12
+        '
+        Me.LabelControl12.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.LabelControl12.Appearance.Options.UseFont = True
+        Me.LabelControl12.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl12.Location = New System.Drawing.Point(21, 390)
+        Me.LabelControl12.Name = "LabelControl12"
+        Me.LabelControl12.Size = New System.Drawing.Size(63, 20)
+        Me.LabelControl12.TabIndex = 29
+        Me.LabelControl12.Text = "All"
+        '
+        'tgAll
+        '
+        Me.tgAll.EditValue = True
+        Me.tgAll.Location = New System.Drawing.Point(120, 391)
+        Me.tgAll.MenuManager = Me.RibbonControl1
+        Me.tgAll.Name = "tgAll"
+        Me.tgAll.Properties.OffText = "Off"
+        Me.tgAll.Properties.OnText = "On"
+        Me.tgAll.Size = New System.Drawing.Size(87, 20)
+        Me.tgAll.TabIndex = 28
+        '
+        'LabelControl11
+        '
+        Me.LabelControl11.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl11.Location = New System.Drawing.Point(21, 307)
+        Me.LabelControl11.Name = "LabelControl11"
+        Me.LabelControl11.Size = New System.Drawing.Size(63, 20)
+        Me.LabelControl11.TabIndex = 25
+        Me.LabelControl11.Text = "PDSModel"
+        '
+        'tgPDSModel
+        '
+        Me.tgPDSModel.EditValue = True
+        Me.tgPDSModel.Location = New System.Drawing.Point(120, 309)
+        Me.tgPDSModel.MenuManager = Me.RibbonControl1
+        Me.tgPDSModel.Name = "tgPDSModel"
+        Me.tgPDSModel.Properties.OffText = "Off"
+        Me.tgPDSModel.Properties.OnText = "On"
+        Me.tgPDSModel.Size = New System.Drawing.Size(96, 20)
+        Me.tgPDSModel.TabIndex = 24
         '
         'LabelControl10
         '
@@ -2393,12 +2526,12 @@ Partial Class frmUpdateLoopFolders
         'tgPriority
         '
         Me.tgPriority.EditValue = True
-        Me.tgPriority.Location = New System.Drawing.Point(90, 283)
+        Me.tgPriority.Location = New System.Drawing.Point(120, 283)
         Me.tgPriority.MenuManager = Me.RibbonControl1
         Me.tgPriority.Name = "tgPriority"
         Me.tgPriority.Properties.OffText = "Off"
         Me.tgPriority.Properties.OnText = "On"
-        Me.tgPriority.Size = New System.Drawing.Size(96, 18)
+        Me.tgPriority.Size = New System.Drawing.Size(96, 20)
         Me.tgPriority.TabIndex = 22
         '
         'LabelControl7
@@ -2413,12 +2546,12 @@ Partial Class frmUpdateLoopFolders
         'tgArea
         '
         Me.tgArea.EditValue = True
-        Me.tgArea.Location = New System.Drawing.Point(90, 75)
+        Me.tgArea.Location = New System.Drawing.Point(120, 75)
         Me.tgArea.MenuManager = Me.RibbonControl1
         Me.tgArea.Name = "tgArea"
         Me.tgArea.Properties.OffText = "Off"
         Me.tgArea.Properties.OnText = "On"
-        Me.tgArea.Size = New System.Drawing.Size(96, 18)
+        Me.tgArea.Size = New System.Drawing.Size(96, 20)
         Me.tgArea.TabIndex = 1
         '
         'LabelControl6
@@ -2433,12 +2566,12 @@ Partial Class frmUpdateLoopFolders
         'tgSubsystem
         '
         Me.tgSubsystem.EditValue = True
-        Me.tgSubsystem.Location = New System.Drawing.Point(90, 257)
+        Me.tgSubsystem.Location = New System.Drawing.Point(120, 257)
         Me.tgSubsystem.MenuManager = Me.RibbonControl1
         Me.tgSubsystem.Name = "tgSubsystem"
         Me.tgSubsystem.Properties.OffText = "Off"
         Me.tgSubsystem.Properties.OnText = "On"
-        Me.tgSubsystem.Size = New System.Drawing.Size(96, 18)
+        Me.tgSubsystem.Size = New System.Drawing.Size(96, 20)
         Me.tgSubsystem.TabIndex = 8
         '
         'LabelControl9
@@ -2453,12 +2586,12 @@ Partial Class frmUpdateLoopFolders
         'tgFinishDate
         '
         Me.tgFinishDate.EditValue = True
-        Me.tgFinishDate.Location = New System.Drawing.Point(90, 231)
+        Me.tgFinishDate.Location = New System.Drawing.Point(120, 231)
         Me.tgFinishDate.MenuManager = Me.RibbonControl1
         Me.tgFinishDate.Name = "tgFinishDate"
         Me.tgFinishDate.Properties.OffText = "Off"
         Me.tgFinishDate.Properties.OnText = "On"
-        Me.tgFinishDate.Size = New System.Drawing.Size(96, 18)
+        Me.tgFinishDate.Size = New System.Drawing.Size(96, 20)
         Me.tgFinishDate.TabIndex = 7
         '
         'LabelControl5
@@ -2473,12 +2606,12 @@ Partial Class frmUpdateLoopFolders
         'tgStartDate
         '
         Me.tgStartDate.EditValue = True
-        Me.tgStartDate.Location = New System.Drawing.Point(90, 205)
+        Me.tgStartDate.Location = New System.Drawing.Point(120, 205)
         Me.tgStartDate.MenuManager = Me.RibbonControl1
         Me.tgStartDate.Name = "tgStartDate"
         Me.tgStartDate.Properties.OffText = "Off"
         Me.tgStartDate.Properties.OnText = "On"
-        Me.tgStartDate.Size = New System.Drawing.Size(96, 18)
+        Me.tgStartDate.Size = New System.Drawing.Size(96, 20)
         Me.tgStartDate.TabIndex = 6
         '
         'LabelControl8
@@ -2493,12 +2626,12 @@ Partial Class frmUpdateLoopFolders
         'tgVendor
         '
         Me.tgVendor.EditValue = True
-        Me.tgVendor.Location = New System.Drawing.Point(90, 179)
+        Me.tgVendor.Location = New System.Drawing.Point(120, 179)
         Me.tgVendor.MenuManager = Me.RibbonControl1
         Me.tgVendor.Name = "tgVendor"
         Me.tgVendor.Properties.OffText = "Off"
         Me.tgVendor.Properties.OnText = "On"
-        Me.tgVendor.Size = New System.Drawing.Size(96, 18)
+        Me.tgVendor.Size = New System.Drawing.Size(96, 20)
         Me.tgVendor.TabIndex = 5
         '
         'LabelControl3
@@ -2513,12 +2646,12 @@ Partial Class frmUpdateLoopFolders
         'tgActId
         '
         Me.tgActId.EditValue = True
-        Me.tgActId.Location = New System.Drawing.Point(90, 153)
+        Me.tgActId.Location = New System.Drawing.Point(120, 153)
         Me.tgActId.MenuManager = Me.RibbonControl1
         Me.tgActId.Name = "tgActId"
         Me.tgActId.Properties.OffText = "Off"
         Me.tgActId.Properties.OnText = "On"
-        Me.tgActId.Size = New System.Drawing.Size(96, 18)
+        Me.tgActId.Size = New System.Drawing.Size(96, 20)
         Me.tgActId.TabIndex = 4
         '
         'LabelControl4
@@ -2533,12 +2666,12 @@ Partial Class frmUpdateLoopFolders
         'tgSubtype
         '
         Me.tgSubtype.EditValue = True
-        Me.tgSubtype.Location = New System.Drawing.Point(90, 127)
+        Me.tgSubtype.Location = New System.Drawing.Point(120, 127)
         Me.tgSubtype.MenuManager = Me.RibbonControl1
         Me.tgSubtype.Name = "tgSubtype"
         Me.tgSubtype.Properties.OffText = "Off"
         Me.tgSubtype.Properties.OnText = "On"
-        Me.tgSubtype.Size = New System.Drawing.Size(96, 18)
+        Me.tgSubtype.Size = New System.Drawing.Size(96, 20)
         Me.tgSubtype.TabIndex = 3
         '
         'LabelControl2
@@ -2553,12 +2686,12 @@ Partial Class frmUpdateLoopFolders
         'tgDescription
         '
         Me.tgDescription.EditValue = True
-        Me.tgDescription.Location = New System.Drawing.Point(90, 101)
+        Me.tgDescription.Location = New System.Drawing.Point(120, 101)
         Me.tgDescription.MenuManager = Me.RibbonControl1
         Me.tgDescription.Name = "tgDescription"
         Me.tgDescription.Properties.OffText = "Off"
         Me.tgDescription.Properties.OnText = "On"
-        Me.tgDescription.Size = New System.Drawing.Size(96, 18)
+        Me.tgDescription.Size = New System.Drawing.Size(96, 20)
         Me.tgDescription.TabIndex = 2
         '
         'LabelControl1
@@ -2573,12 +2706,12 @@ Partial Class frmUpdateLoopFolders
         'tgType
         '
         Me.tgType.EditValue = True
-        Me.tgType.Location = New System.Drawing.Point(90, 49)
+        Me.tgType.Location = New System.Drawing.Point(120, 49)
         Me.tgType.MenuManager = Me.RibbonControl1
         Me.tgType.Name = "tgType"
         Me.tgType.Properties.OffText = "Off"
         Me.tgType.Properties.OnText = "On"
-        Me.tgType.Size = New System.Drawing.Size(96, 18)
+        Me.tgType.Size = New System.Drawing.Size(96, 20)
         Me.tgType.TabIndex = 0
         Me.tgType.Tag = "Type"
         '
@@ -2786,59 +2919,67 @@ Partial Class frmUpdateLoopFolders
         Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem126)
         Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem127)
         Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem128)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem129)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem130)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem131)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem132)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem133)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem134)
+        Me.SpreadsheetBarController1.BarItems.Add(Me.SpreadsheetCommandBarButtonItem135)
         Me.SpreadsheetBarController1.Control = Me.ss
         '
         'SpreadsheetFormulaBar1
         '
         Me.SpreadsheetFormulaBar1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.SpreadsheetFormulaBar1.Location = New System.Drawing.Point(0, 177)
+        Me.SpreadsheetFormulaBar1.Location = New System.Drawing.Point(0, 181)
         Me.SpreadsheetFormulaBar1.MinimumSize = New System.Drawing.Size(0, 24)
         Me.SpreadsheetFormulaBar1.Name = "SpreadsheetFormulaBar1"
-        Me.SpreadsheetFormulaBar1.Size = New System.Drawing.Size(1304, 24)
+        Me.SpreadsheetFormulaBar1.Size = New System.Drawing.Size(1306, 24)
         Me.SpreadsheetFormulaBar1.SpreadsheetControl = Me.ss
         Me.SpreadsheetFormulaBar1.TabIndex = 14
         '
         'SplitterControl1
         '
         Me.SplitterControl1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.SplitterControl1.Location = New System.Drawing.Point(0, 201)
+        Me.SplitterControl1.Location = New System.Drawing.Point(0, 205)
         Me.SplitterControl1.MinSize = 20
         Me.SplitterControl1.Name = "SplitterControl1"
-        Me.SplitterControl1.Size = New System.Drawing.Size(1304, 10)
+        Me.SplitterControl1.Size = New System.Drawing.Size(1306, 10)
         Me.SplitterControl1.TabIndex = 13
         Me.SplitterControl1.TabStop = False
         '
-        'LabelControl11
+        'LabelControl13
         '
-        Me.LabelControl11.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl11.Location = New System.Drawing.Point(21, 307)
-        Me.LabelControl11.Name = "LabelControl11"
-        Me.LabelControl11.Size = New System.Drawing.Size(63, 20)
-        Me.LabelControl11.TabIndex = 25
-        Me.LabelControl11.Text = "PDSModel"
+        Me.LabelControl13.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl13.Location = New System.Drawing.Point(21, 333)
+        Me.LabelControl13.Name = "LabelControl13"
+        Me.LabelControl13.Size = New System.Drawing.Size(93, 20)
+        Me.LabelControl13.TabIndex = 31
+        Me.LabelControl13.Text = "Controller Location"
         '
-        'tgPDSModel
+        'tgControllerLocation
         '
-        Me.tgPDSModel.EditValue = True
-        Me.tgPDSModel.Location = New System.Drawing.Point(90, 309)
-        Me.tgPDSModel.MenuManager = Me.RibbonControl1
-        Me.tgPDSModel.Name = "tgPDSModel"
-        Me.tgPDSModel.Properties.OffText = "Off"
-        Me.tgPDSModel.Properties.OnText = "On"
-        Me.tgPDSModel.Size = New System.Drawing.Size(96, 18)
-        Me.tgPDSModel.TabIndex = 24
+        Me.tgControllerLocation.EditValue = True
+        Me.tgControllerLocation.Location = New System.Drawing.Point(120, 335)
+        Me.tgControllerLocation.MenuManager = Me.RibbonControl1
+        Me.tgControllerLocation.Name = "tgControllerLocation"
+        Me.tgControllerLocation.Properties.OffText = "Off"
+        Me.tgControllerLocation.Properties.OnText = "On"
+        Me.tgControllerLocation.Size = New System.Drawing.Size(96, 20)
+        Me.tgControllerLocation.TabIndex = 30
         '
         'frmUpdateLoopFolders
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1304, 762)
+        Me.ClientSize = New System.Drawing.Size(1306, 763)
         Me.Controls.Add(Me.ss)
         Me.Controls.Add(Me.GroupControl1)
         Me.Controls.Add(Me.RibbonStatusBar1)
         Me.Controls.Add(Me.SplitterControl1)
         Me.Controls.Add(Me.SpreadsheetFormulaBar1)
         Me.Controls.Add(Me.RibbonControl1)
+        Me.IconOptions.Image = CType(resources.GetObject("frmUpdateLoopFolders.IconOptions.Image"), System.Drawing.Image)
         Me.IconOptions.LargeImage = CType(resources.GetObject("frmUpdateLoopFolders.IconOptions.LargeImage"), System.Drawing.Image)
         Me.Name = "frmUpdateLoopFolders"
         Me.Ribbon = Me.RibbonControl1
@@ -2859,6 +3000,8 @@ Partial Class frmUpdateLoopFolders
         CType(Me.RepositoryItemZoomTrackBar1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupControl1.ResumeLayout(False)
+        CType(Me.tgAll.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tgPDSModel.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgPriority.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgArea.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgSubsystem.Properties, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2870,7 +3013,7 @@ Partial Class frmUpdateLoopFolders
         CType(Me.tgDescription.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgType.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SpreadsheetBarController1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.tgPDSModel.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tgControllerLocation.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2895,7 +3038,7 @@ Partial Class frmUpdateLoopFolders
     Friend WithEvents tgDescription As DevExpress.XtraEditors.ToggleSwitch
     Friend WithEvents LabelControl9 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents tgFinishDate As DevExpress.XtraEditors.ToggleSwitch
-    Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents btnUpdate As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents LabelControl6 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents tgSubsystem As DevExpress.XtraEditors.ToggleSwitch
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
@@ -3156,4 +3299,18 @@ Partial Class frmUpdateLoopFolders
     Friend WithEvents tgPriority As DevExpress.XtraEditors.ToggleSwitch
     Friend WithEvents LabelControl11 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents tgPDSModel As DevExpress.XtraEditors.ToggleSwitch
+    Friend WithEvents btnAddNew As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem129 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem130 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem131 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem132 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem133 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem134 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents SpreadsheetCommandBarButtonItem135 As DevExpress.XtraSpreadsheet.UI.SpreadsheetCommandBarButtonItem
+    Friend WithEvents DataRibbonPage1 As DevExpress.XtraSpreadsheet.UI.DataRibbonPage
+    Friend WithEvents SortAndFilterRibbonPageGroup1 As DevExpress.XtraSpreadsheet.UI.SortAndFilterRibbonPageGroup
+    Friend WithEvents LabelControl12 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents tgAll As DevExpress.XtraEditors.ToggleSwitch
+    Friend WithEvents LabelControl13 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents tgControllerLocation As DevExpress.XtraEditors.ToggleSwitch
 End Class

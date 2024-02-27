@@ -1,0 +1,110 @@
+--version11.0.4
+UPDATE [dbo].[tblSettings] SET SetValue = '11.0.4' WHERE SetName = 'VERSION'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningSubsystemsSummary'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningSubsystemsSummary
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningSubsystemsSummary
+AS
+WITH SatTest AS (
+    SELECT DISTINCT 
+        CASE WHEN tblInsLoop.Subsystem IS NULL THEN 'No Subsystem' ELSE tblInsLoop.Subsystem END AS Subsystem,
+        Subsystem.Area,
+        tblInsLoop.loopName, Vendor, L_Done, Planning_START_Date, Planning_FINISH_Date,
+        tblEquipment.Tag AS Equipment,
+        tblEquipment.PrecomTestDate
+        FROM tblInsLoop
+        INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+        INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+        LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+        WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+), NoSatTest AS (
+    SELECT
+    CASE WHEN tblInsLoop.Subsystem IS NULL THEN 'No Subsystem' ELSE tblInsLoop.Subsystem END AS Subsystem,
+    Subsystem.Area,
+    tblInsLoop.LoopName, Vendor, L_Done, Planning_START_Date, Planning_FINISH_Date
+    FROM tblInsLoop
+    LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+    LEFT JOIN 
+            (
+            SELECT 
+            tblInsLoop.LoopName
+            FROM tblILD
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            INNER JOIN tblInsLoop ON tblILD.Loop_Name = tblInsLoop.loopName
+            WHERE tblEquipment.PrecomTestRequired = 1
+        ) AS SatLoop
+    ON tblInsLoop.LoopName = SatLoop.LoopName
+    WHERE SatLoop.LoopName IS NULL
+    AND tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+), SubsystemSumaries AS (
+    SELECT
+        2 AS ID,
+        1 AS ParentId,
+        'All Subsystems SAT Required' AS ItemType,
+        'SAT Required' AS Name, '-' AS [Description], '-' AS Area,
+        COUNT(DISTINCT LoopName) AS Loops, COUNT(DISTINCT Vendor) AS Vendors, 0 AS Sats, 0 AS [Sat Done],
+        CASE WHEN MIN(Planning_START_Date) IS NULL THEN NULL ELSE DATEADD(DAY,-2,MIN([Planning_START_Date])) END AS [Sat Late Finished],
+        MIN([Planning_START_Date]) AS [Actual Start], MAX([Planning_FINISH_Date]) AS [Actual Finished],
+        CASE WHEN MIN(Planning_START_Date) IS NULL THEN 0 ELSE DATEDIFF(DAY,MIN([Planning_START_Date]),MAX([Planning_FINISH_Date]))  + 1 END AS [Actual Duration],
+        COUNT(L_Done) AS LoopDone, 
+        CASE WHEN COUNT(LoopName) <> 0 THEN COUNT(L_Done) *100 / COUNT(LoopName) ELSE 0 END AS Progress,
+        CASE WHEN DATEDIFF(DAY,MIN([Planning_START_Date]),MAX([Planning_FINISH_Date])) IS NULL THEN 0 ELSE 
+        ROUND(CONVERT(FLOAT,COUNT(DISTINCT LoopName)) / CONVERT(FLOAT,(DATEDIFF(DAY,MIN([Planning_START_Date]),MAX([Planning_FINISH_Date]))  + 1)),1) 
+        END AS [Loop Per Day],
+        -1 AS PredecessorIds,
+        -1 AS SuccessorIds,
+        2 AS DependencyType,
+        0 AS DependencyLag
+    FROM SatTest
+
+UNION ALL
+
+    SELECT
+        3 AS ID,
+        1 AS ParentId,
+        'All Subsystems No SAT Required' AS ItemType,
+        'No SAT Required' AS Name, '-' AS [Description], '-' AS Area,
+        COUNT(DISTINCT LoopName) AS Loops, COUNT(DISTINCT Vendor) AS Vendors, 0 AS Sats, 0 AS [Sat Done],
+        MIN([Planning_START_Date]) AS [Sat Late Finished],
+        MIN([Planning_START_Date]) AS [Actual Start], MAX([Planning_FINISH_Date]) AS [Actual Finished],
+        DATEDIFF(DAY,MIN([Planning_START_Date]),MAX([Planning_FINISH_Date]))  + 1 AS [Actual Duration],
+        COUNT(L_Done) AS LoopDone, 
+        CASE WHEN COUNT(LoopName) <> 0 THEN COUNT(L_Done) *100 / COUNT(LoopName) ELSE 0 END AS Progress,
+        ROUND(CONVERT(FLOAT,COUNT(DISTINCT LoopName)) / CONVERT(FLOAT,(DATEDIFF(DAY,MIN([Planning_START_Date]),MAX([Planning_FINISH_Date]))  + 1)),1) AS [Loop Per Day],
+        -1 AS PredecessorIds,
+        -1 AS SuccessorIds,
+        2 AS DependencyType,
+        0 AS DependencyLag
+    FROM NoSatTest
+)
+
+SELECT
+1 AS ID, -1 AS ParentId,
+'All Subsystem' AS ItemType, 'All Subsystem' AS Name, '-' AS [Description], '-' AS Area,
+SUM(Loops) AS Loops, SUM(Vendors) AS Vendors, SUM(Sats) AS Sats, SUM([Sat Done]) AS [Sat Done], 
+MIN([Sat Late Finished]) AS [Sat Late Finished], MIN([Actual Start]) AS [Actual Start], MAX([Actual Finished]) AS [Actual Finished],
+SUM([Actual Duration]) AS [Actual Duration], SUM(LoopDone) AS LoopDone, AVG(Progress) AS Progress,
+SUM([Loop Per Day]) AS [Loop Per Day],
+-1 AS PredecessorIds,
+-1 AS SuccessorIds,
+2 AS DependencyType,
+0 AS DependencyLag
+FROM SubsystemSumaries 
+
+UNION ALL
+
+SELECT
+*
+FROM SubsystemSumaries
+
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO

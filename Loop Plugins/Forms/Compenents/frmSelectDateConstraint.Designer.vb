@@ -31,6 +31,7 @@ Partial Class frmSelectDateConstraint
         Me.dte = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton4 = New DevExpress.XtraEditors.SimpleButton()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -44,7 +45,8 @@ Partial Class frmSelectDateConstraint
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
-        Me.RibbonControl1.Size = New System.Drawing.Size(543, 62)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(658, 58)
         '
         'lblInfo1
         '
@@ -69,20 +71,20 @@ Partial Class frmSelectDateConstraint
         '
         Me.SimpleButton2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(281, 214)
+        Me.SimpleButton2.Location = New System.Drawing.Point(349, 214)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(123, 43)
-        Me.SimpleButton2.TabIndex = 14
+        Me.SimpleButton2.Size = New System.Drawing.Size(147, 43)
+        Me.SimpleButton2.TabIndex = 3
         Me.SimpleButton2.Text = "Apply"
         '
         'SimpleButton1
         '
         Me.SimpleButton1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(411, 214)
+        Me.SimpleButton1.Location = New System.Drawing.Point(502, 214)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(123, 43)
-        Me.SimpleButton1.TabIndex = 13
+        Me.SimpleButton1.Size = New System.Drawing.Size(147, 43)
+        Me.SimpleButton1.TabIndex = 4
         Me.SimpleButton1.Text = "Cancel"
         '
         'dte
@@ -90,7 +92,7 @@ Partial Class frmSelectDateConstraint
         Me.dte.Location = New System.Drawing.Point(117, 154)
         Me.dte.Name = "dte"
         Me.dte.Size = New System.Drawing.Size(315, 21)
-        Me.dte.TabIndex = 12
+        Me.dte.TabIndex = 0
         '
         'Label1
         '
@@ -105,18 +107,29 @@ Partial Class frmSelectDateConstraint
         '
         Me.SimpleButton3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton3.Location = New System.Drawing.Point(152, 214)
+        Me.SimpleButton3.Location = New System.Drawing.Point(43, 214)
         Me.SimpleButton3.Name = "SimpleButton3"
-        Me.SimpleButton3.Size = New System.Drawing.Size(123, 43)
-        Me.SimpleButton3.TabIndex = 18
+        Me.SimpleButton3.Size = New System.Drawing.Size(147, 43)
+        Me.SimpleButton3.TabIndex = 1
         Me.SimpleButton3.Text = "Clear Date"
+        '
+        'SimpleButton4
+        '
+        Me.SimpleButton4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SimpleButton4.ImageOptions.Image = CType(resources.GetObject("SimpleButton4.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton4.Location = New System.Drawing.Point(196, 214)
+        Me.SimpleButton4.Name = "SimpleButton4"
+        Me.SimpleButton4.Size = New System.Drawing.Size(147, 43)
+        Me.SimpleButton4.TabIndex = 2
+        Me.SimpleButton4.Text = "Apply with Today"
         '
         'frmSelectDateConstraint
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(543, 267)
+        Me.ClientSize = New System.Drawing.Size(658, 267)
         Me.ControlBox = False
+        Me.Controls.Add(Me.SimpleButton4)
         Me.Controls.Add(Me.SimpleButton3)
         Me.Controls.Add(Me.lblInfo1)
         Me.Controls.Add(Me.lblCuttoffDate)
@@ -146,4 +159,5 @@ Partial Class frmSelectDateConstraint
     Friend WithEvents dte As DateTimePicker
     Friend WithEvents Label1 As Label
     Friend WithEvents SimpleButton3 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents SimpleButton4 As DevExpress.XtraEditors.SimpleButton
 End Class

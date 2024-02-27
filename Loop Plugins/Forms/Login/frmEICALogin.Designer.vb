@@ -178,14 +178,15 @@ Partial Class frmEICALogin
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(657, 60)
+        Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
+        Me.RibbonControl1.Size = New System.Drawing.Size(659, 60)
         '
         'frmEICALogin
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackgroundImageLayoutStore = System.Windows.Forms.ImageLayout.Tile
         Me.BackgroundImageStore = Global.EEICA.My.Resources.Resources.LoginbackgroundTrans2
-        Me.ClientSize = New System.Drawing.Size(657, 423)
+        Me.ClientSize = New System.Drawing.Size(659, 424)
         Me.ControlBox = False
         Me.Controls.Add(Me.SimpleButton3)
         Me.Controls.Add(Me.SimpleButton2)
@@ -206,7 +207,7 @@ Partial Class frmEICALogin
         Me.Name = "frmEICALogin"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Loop App Login"
+        Me.Text = "EEICA Login"
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

@@ -146,7 +146,10 @@
         Try
             DB.ExcuteNoneResult(String.Format("EXEC LOOPS.AddBlockage '{0}', {1}, '{2}', {3},{4}", catName, loopId, Replace(description, "'", "''",,, CompareMethod.Text), issuedById, issuedToId))
             'Call API for folder Approved
-            loopAPI.AddBlockage(loopName, loopArea, loopDesc, description, issuedToName, issuedToEmail, issuedByName, issuedByEmail, loopStatus)
+            'loopAPI.AddBlockage(loopName, loopArea, loopDesc, description, issuedToName, issuedToEmail, issuedByName, issuedByEmail, loopStatus)
+
+            'Register Notification
+            DB.ExcuteNoneResult("TEMPDATA.PushNotification '" & issuedByName & "'," & issuedToId & ",'Loop Blockage','" & loopName & "','" & description & "'")
             '------------------------------
         Catch ex As Exception
             Return False
@@ -167,7 +170,7 @@
         Try
             DB.ExcuteNoneResult(String.Format("EXEC LOOPS.ReassignBlockage {0}, '{1}', {2}, '{3}', {4},{5}", consId, catName, loopId, Replace(description, "'", "''",,, CompareMethod.Text), issuedById, issuedToId))
             'Call API for folder Approved
-            loopAPI.AddBlockage(loopName, loopArea, loopDesc, description, issuedToName, issuedToEmail, issuedByName, issuedByEmail, loopStatus)
+            'loopAPI.AddBlockage(loopName, loopArea, loopDesc, description, issuedToName, issuedToEmail, issuedByName, issuedByEmail, loopStatus)
             '-----------------------------
         Catch ex As Exception
             Return False

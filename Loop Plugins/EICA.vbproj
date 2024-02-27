@@ -13,6 +13,8 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,10 +27,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -185,6 +185,8 @@
     <Compile Include="Classes\Loops\LoopsAPI.vb" />
     <Compile Include="Classes\Loops\LoopsSteps.vb" />
     <Compile Include="Classes\Loops\LoopTask.vb" />
+    <Compile Include="Classes\Backgrounds\EICANotifications.vb" />
+    <Compile Include="Classes\Notofications\Notifications.vb" />
     <Compile Include="Classes\Planning.vb" />
     <Compile Include="Classes\Production.vb" />
     <Compile Include="Classes\PublicErrors.vb" />
@@ -193,6 +195,9 @@
     <Compile Include="Classes\Reports.vb" />
     <Compile Include="Classes\ResourcesMan.vb" />
     <Compile Include="Classes\ResourcesManItem.vb" />
+    <Compile Include="Classes\Solorun\Solorun.vb" />
+    <Compile Include="Classes\Solorun\Soloruns.vb" />
+    <Compile Include="Classes\Solorun\SolorunSteps.vb" />
     <Compile Include="Classes\Tooles.vb" />
     <Compile Include="Classes\Construction\Trays.vb" />
     <Compile Include="Classes\Users\Users.vb" />
@@ -208,10 +213,28 @@
     <Compile Include="Forms\Common\frmEditText.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Common\frmNotifications.Designer.vb">
+      <DependentUpon>frmNotifications.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\frmNotifications.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Common\frmNotificationsMaping.Designer.vb">
+      <DependentUpon>frmNotificationsMaping.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\frmNotificationsMaping.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Common\frmSelectRFIPath.Designer.vb">
       <DependentUpon>frmSelectRFIPath.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\Common\frmSelectRFIPath.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Common\frmSelectShareMessageUser.Designer.vb">
+      <DependentUpon>frmSelectShareMessageUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Common\frmSelectShareMessageUser.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Compenents\frmAddComment.Designer.vb">
@@ -364,6 +387,12 @@
     <Compile Include="Forms\Loops\frmEditLoopBProgress.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Loops\frmLoopLogs.Designer.vb">
+      <DependentUpon>frmLoopLogs.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Loops\frmLoopLogs.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Loops\frmNewLoopProgress.Designer.vb">
       <DependentUpon>frmNewLoopProgress.vb</DependentUpon>
     </Compile>
@@ -508,10 +537,10 @@
     <Compile Include="Forms\EICA\Summaries\frmLoopStepStatus.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\HCS\frmHCSSetSteps.Designer.vb">
-      <DependentUpon>frmHCSSetSteps.vb</DependentUpon>
+    <Compile Include="Forms\Loops\frmLoopFolders.Designer.vb">
+      <DependentUpon>frmLoopFolders.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\HCS\frmHCSSetSteps.vb">
+    <Compile Include="Forms\Loops\frmLoopFolders.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\HCS\frmUploadHCSData.Designer.vb">
@@ -689,6 +718,36 @@
     <Compile Include="Forms\Settings\frmSet.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\SoloRun\Constraints\frmSoloRunConstraints.designer.vb">
+      <DependentUpon>frmSoloRunConstraints.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SoloRun\Constraints\frmSoloRunConstraints.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SoloRun\frmSolorunFolders.designer.vb">
+      <DependentUpon>frmSolorunFolders.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SoloRun\frmSolorunFolders.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SoloRun\frmSolorunManagement.Designer.vb">
+      <DependentUpon>frmSolorunManagement.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SoloRun\frmSolorunManagement.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SoloRun\frmUpdateSoloRunFolders.designer.vb">
+      <DependentUpon>frmUpdateSoloRunFolders.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SoloRun\frmUpdateSoloRunFolders.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Tests\frmTests.Designer.vb">
+      <DependentUpon>frmTests.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Tests\frmTests.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Users\frmAddUser.Designer.vb">
       <DependentUpon>frmAddUser.vb</DependentUpon>
     </Compile>
@@ -750,8 +809,17 @@
     <EmbeddedResource Include="Forms\Common\frmEditText.resx">
       <DependentUpon>frmEditText.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\frmNotifications.resx">
+      <DependentUpon>frmNotifications.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\frmNotificationsMaping.resx">
+      <DependentUpon>frmNotificationsMaping.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Common\frmSelectRFIPath.resx">
       <DependentUpon>frmSelectRFIPath.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Common\frmSelectShareMessageUser.resx">
+      <DependentUpon>frmSelectShareMessageUser.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Compenents\frmAddComment.resx">
       <DependentUpon>frmAddComment.vb</DependentUpon>
@@ -828,6 +896,9 @@
     <EmbeddedResource Include="Forms\Loops\frmEditLoopBProgress.resx">
       <DependentUpon>frmEditLoopBProgress.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Loops\frmLoopLogs.resx">
+      <DependentUpon>frmLoopLogs.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Loops\frmNewLoopProgress.resx">
       <DependentUpon>frmNewLoopProgress.vb</DependentUpon>
     </EmbeddedResource>
@@ -900,8 +971,8 @@
     <EmbeddedResource Include="Forms\EICA\Summaries\frmLoopStepStatus.resx">
       <DependentUpon>frmLoopStepStatus.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\HCS\frmHCSSetSteps.resx">
-      <DependentUpon>frmHCSSetSteps.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\Loops\frmLoopFolders.resx">
+      <DependentUpon>frmLoopFolders.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\HCS\frmUploadHCSData.resx">
       <DependentUpon>frmUploadHCSData.vb</DependentUpon>
@@ -990,6 +1061,21 @@
     <EmbeddedResource Include="Forms\Settings\frmSet.resx">
       <DependentUpon>frmSet.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SoloRun\Constraints\frmSoloRunConstraints.resx">
+      <DependentUpon>frmSoloRunConstraints.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SoloRun\frmSolorunFolders.resx">
+      <DependentUpon>frmSolorunFolders.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SoloRun\frmSolorunManagement.resx">
+      <DependentUpon>frmSolorunManagement.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SoloRun\frmUpdateSoloRunFolders.resx">
+      <DependentUpon>frmUpdateSoloRunFolders.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Tests\frmTests.resx">
+      <DependentUpon>frmTests.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Users\frmAddUser.resx">
       <DependentUpon>frmAddUser.vb</DependentUpon>
     </EmbeddedResource>
@@ -1035,6 +1121,8 @@
     <Content Include="EICA Blue Trans.ico" />
     <Content Include="Life_Cycle_Loop.ico" />
     <Content Include="logo.ico" />
+    <None Include="Resources\icons8-motor-32.png" />
+    <None Include="Resources\icons8-motor-16.png" />
     <None Include="Resources\ok-svgrepo-com.png" />
     <None Include="Resources\icons8-plug-32.png" />
     <None Include="Resources\inst32.png" />
@@ -1137,9 +1225,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\Tests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

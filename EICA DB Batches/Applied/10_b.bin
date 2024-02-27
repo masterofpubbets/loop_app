@@ -1,0 +1,72 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningSubsystemSAT'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningSubsystemSAT
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningSubsystemSAT
+AS
+WITH SatTest AS (
+    SELECT
+        Subsystem, Area, [Description],
+        COUNT(Loops) AS Loops, COUNT(DISTINCT Vendors) AS Vendors, COUNT(Done) AS Done,
+        MIN([Actual Start]) AS [Actual Start], MAX([Actual Finished]) AS [Actual Finished]
+    FROM (
+        SELECT DISTINCT
+            CASE WHEN tblInsLoop.Subsystem IS NULL THEN 'No Subsystem' ELSE tblInsLoop.Subsystem END AS Subsystem,
+            CASE WHEN Subsystem.Area IS NULL THEN '-' ELSE Subsystem.Area END AS Area,
+            CASE WHEN Subsystem.[Description] IS NULL THEN '-' ELSE Subsystem.[Description] END AS [Description],
+            tblInsLoop.loopName AS Loops, Vendor AS Vendors, L_Done AS Done, 
+            Planning_START_Date AS [Actual Start], Planning_FINISH_Date AS [Actual Finished]
+            FROM tblInsLoop
+            INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+            WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+    ) AS v
+        GROUP BY Subsystem, Area, [Description]
+), SatEquipmentSubsystem AS (
+    SELECT
+        Subsystem,
+        COUNT(Tag) AS Sats,
+        COUNT(PrecomTestDate) AS [Sat Done]
+    FROM(
+        SELECT DISTINCT
+            CASE WHEN tblInsLoop.Subsystem IS NULL THEN 'No Subsystem' ELSE tblInsLoop.Subsystem END AS Subsystem,
+            tblEquipment.Tag, tblEquipment.PrecomTestDate
+            FROM tblInsLoop
+            INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+            WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+    ) AS SysEquipment
+    GROUP BY Subsystem
+)
+
+
+
+SELECT
+CONVERT(INT, '3' + CONVERT(NVARCHAR(50), ROW_NUMBER() OVER(ORDER BY SatTest.Subsystem))) AS ID,
+2 AS ParentId,
+'Subsystem' AS ItemType, SatTest.Subsystem AS Name, [Description], Area,
+SatTest.Loops, SatTest.Vendors, SatEquipmentSubsystem.Sats, SatEquipmentSubsystem.[Sat Done], 
+DATEADD(DAY,-2,SatTest.[Actual Start]) AS [Sat Late Finished], 
+SatTest.[Actual Start], SatTest.[Actual Finished],
+DATEDIFF(DAY,SatTest.[Actual Start], SatTest.[Actual Finished]) AS [Actual Duration], 
+SatTest.Done AS [LoopDone], 
+ROUND(CONVERT(FLOAT,SatTest.Done) * 100 / CONVERT(FLOAT,SatTest.Loops), 0) AS Progress,
+ROUND(CONVERT(FLOAT,SatTest.Loops) / CONVERT(FLOAT,DATEDIFF(DAY,SatTest.[Actual Start], SatTest.[Actual Finished])), 0) AS [Loop Per Day],
+-1 AS PredecessorIds,
+-1 AS SuccessorIds,
+2 AS DependencyType,
+0 AS DependencyLag
+FROM SatTest
+INNER JOIN SatEquipmentSubsystem ON SatEquipmentSubsystem.Subsystem = SatTest.Subsystem
+
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO

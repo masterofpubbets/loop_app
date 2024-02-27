@@ -10,6 +10,8 @@
         txtCLosedItemsQuery.Text = hcs.HCSClosedItemsQuery
         txtGroupsQuery.Text = hcs.HCSGroupsQuery
         txtUpdateSubsystemQuery.Text = hcs.HCSUpdateSubsystemQuery
+        txtFinalClean.Text = hcs.HCSFinalClean
+        txtSoloRunApprovedQuery.Text = hcs.HCSSoloRunApprovedQuery
     End Sub
     Private Function IsValide() As Boolean
         If Trim(txtDBLocation.Text) = "" Then
@@ -42,6 +44,11 @@
             txtLoopApprovedQuery.Focus()
             Return False
         End If
+        If Trim(txtSoloRunApprovedQuery.Text) = "" Then
+            MsgBox("Solor Run Approved Query cannot be null!", MsgBoxStyle.Exclamation, Me.Text)
+            txtSoloRunApprovedQuery.Focus()
+            Return False
+        End If
         Return True
     End Function
     Private Sub frmHCSConnectionSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -67,6 +74,8 @@
             hcs.HCSClosedItemsQuery = txtCLosedItemsQuery.Text
             hcs.HCSGroupsQuery = txtGroupsQuery.Text
             hcs.HCSUpdateSubsystemQuery = txtUpdateSubsystemQuery.Text
+            hcs.HCSFinalClean = txtFinalClean.Text
+            hcs.HCSSoloRunApprovedQuery = txtSoloRunApprovedQuery.Text
             MsgBox("Settings Saved.", MsgBoxStyle.Information, Me.Text)
         End If
     End Sub

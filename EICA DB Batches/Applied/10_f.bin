@@ -1,0 +1,49 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningLoopsSAT'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningLoopsSAT
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningLoopsSAT
+AS
+WITH SatLoop AS (
+    SELECT DISTINCT
+        CASE WHEN tblInsLoop.Area IS NULL THEN '-' ELSE tblInsLoop.Area END AS Area,
+        CASE WHEN tblInsLoop.[L_Description] IS NULL THEN '-' ELSE tblInsLoop.[L_Description] END AS [Description],
+        tblInsLoop.loopName AS Tag, 
+        CASE WHEN Vendor IS NULL THEN '-' ELSE Vendor END AS Vendors, L_Done AS Done, 
+        Planning_START_Date AS [Actual Start], Planning_FINISH_Date AS [Actual Finished],
+        tblEquipment.Tag AS Equipment
+        FROM tblInsLoop
+        INNER JOIN tblILD ON tblInsLoop.loopName = tblILD.Loop_Name
+        INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+        LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+        WHERE tblEquipment.PrecomTestRequired = 1 AND tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+)
+
+SELECT
+CONVERT(INT, '5' + CONVERT(NVARCHAR(50), ROW_NUMBER() OVER(ORDER BY SatLoop.Tag))) AS ID,
+4 AS ParentId,
+'Loop Test' AS ItemType, SatLoop.Tag AS Name, SatLoop.[Description], SatLoop.Area,
+1 AS Loops, SatLoop.Vendors, 0 AS Sats, 0 AS [Sat Done], 
+DATEADD(DAY,-2,SatLoop.[Actual Start]) AS [Sat Late Finished], 
+SatLoop.[Actual Start], SatLoop.[Actual Finished],
+DATEDIFF(DAY,SatLoop.[Actual Start], SatLoop.[Actual Finished]) AS [Actual Duration], 
+CASE WHEN Done IS NOT NULL THEN 1 ELSE 0 END AS [LoopDone], 
+CASE WHEN Done IS NOT NULL THEN 100 ELSE 0 END AS Progress,
+1 AS [Loop Per Day],
+-1 AS PredecessorIds,
+-1 AS SuccessorIds,
+2 AS DependencyType,
+0 AS DependencyLag,
+Equipment
+FROM SatLoop
+
+
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO

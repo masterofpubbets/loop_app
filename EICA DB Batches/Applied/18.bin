@@ -1,0 +1,774 @@
+--version11.0.2
+UPDATE [dbo].[tblSettings] SET SetValue = '11.0.2' WHERE SetName = 'VERSION'
+GO
+CREATE SCHEMA PRECOMM
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetEquipment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetEquipment
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetEquipment]
+AS
+
+SELECT
+VALL.Discipline,VALL.[Type],VALL.Subtype,VALL.Area,VALL.Subsystem,VALL.Tag,VALL.[Description],
+VALL.ActId,tblActIDS.ActName,tblActIDS.SubCon AS [Act Subcon],
+VALL.PrecomTestActID,ActIDPrecomm.ActName AS [Precomm Act Name],
+VALL.[Installed Date],VALL.[QC Released Date],VALL.RFINumber,VALL.[Installation Scope],
+VALL.[Precom Test Required], VALL.[Precom Test Date],
+VALL.PDSModel,VALL.Team,VALL.[Status],VALL.Id,
+CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM (
+    SELECT 
+    Discipline,[Type],Subtype,
+    [Area],[Subsystem],Tag
+    ,[Description]
+    ,[ActId]
+    ,[PrecomTestActID]
+    ,InstalledDate AS [Installed Date]
+    ,QCDate AS [QC Released Date]
+    ,RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,eqId AS Id
+    ,CASE WHEN PrecomTestRequired =1 THEN 'Yes' ELSE 'No' END AS [Precom Test Required]
+    ,PrecomTestDate AS [Precom Test Date]
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblEquipment WITH (NOLOCK)
+) AS VALL
+LEFT JOIN tblActIDS ON VALL.ActId = tblActIDS.ActID
+LEFT JOIN tblActIDS AS ActIDPrecomm ON VALL.PrecomTestActID = ActIDPrecomm.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 500) AS Res ON VALL.Id = Res.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLighting'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetLighting
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetLighting]
+AS
+SELECT tblLightingFixture.[TBL_ID] AS Id
+      ,[Tag]
+      ,[Area]
+      ,[LF_Ref_Desc] AS [Type]
+      ,[IC_Plan_P6_ActID_Install] As [ActId]
+      ,tblActIDS.ActName
+      ,tblActIDS.SubCon AS [Act Subcon]
+      ,[LF_Dwg] AS [Drawing Number]
+      ,[Subsystem]
+      ,[Arrival_Date] AS [Received Date]
+      ,[LF_Installed] AS [Installed Date]
+	  ,reportedBy AS [Reported By]
+	  ,tblLightingFixture.PDSModel
+      ,tblLightingFixture.[Team]
+	  ,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+      ,CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+      ,CASE WHEN Active = 1 AND LF_Installed IS NOT NULL THEN 1 ELSE 0 END AS IfInstalled
+  FROM [tblLightingFixture] WITH (NOLOCK)
+  LEFT JOIN tblActIDS on tblLightingFixture.IC_Plan_P6_ActID_Install = tblActIDS.ActID
+  LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 900) AS Res ON tblLightingFixture.TBL_ID = Res.ItemId
+  OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetEquipment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetEquipment
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetEquipment]
+AS
+
+SELECT
+VALL.Discipline,VALL.[Type],VALL.Subtype,VALL.Area,VALL.Subsystem,VALL.Tag,VALL.[Description],
+VALL.ActId,tblActIDS.ActName,tblActIDS.SubCon AS [Act Subcon],
+VALL.PrecomTestActID,ActIDPrecomm.ActName AS [Precomm Act Name],
+VALL.[Installed Date],VALL.[QC Released Date],VALL.RFINumber,VALL.[Installation Scope],
+VALL.[Precom Test Required], VALL.[Precom Test Date],
+VALL.PDSModel,VALL.Team,VALL.[Status],VALL.Id,
+CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource],
+VALL.IfInstalled
+FROM (
+    SELECT 
+    Discipline,[Type],Subtype,
+    [Area],[Subsystem],Tag
+    ,[Description]
+    ,[ActId]
+    ,[PrecomTestActID]
+    ,InstalledDate AS [Installed Date]
+    ,QCDate AS [QC Released Date]
+    ,RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,eqId AS Id
+    ,CASE WHEN PrecomTestRequired =1 THEN 'Yes' ELSE 'No' END AS [Precom Test Required]
+    ,PrecomTestDate AS [Precom Test Date]
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    ,CASE WHEN Active = 1 AND [InstalledDate] IS NOT NULL THEN 1 ELSE 0 END AS IfInstalled
+    FROM tblEquipment WITH (NOLOCK)
+) AS VALL
+LEFT JOIN tblActIDS ON VALL.ActId = tblActIDS.ActID
+LEFT JOIN tblActIDS AS ActIDPrecomm ON VALL.PrecomTestActID = ActIDPrecomm.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 500) AS Res ON VALL.Id = Res.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+
+
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningLoop'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningLoop
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningLoop
+AS
+
+
+    SELECT
+    CONVERT(INT,'3' + CONVERT(NVARCHAR(100),ROW_NUMBER() OVER (ORDER BY Tag) + 1)) AS ID,
+    'Loop' AS ItemType, Subsystem,
+    Tag AS Name, LoopName, [Description], Area,
+    Loops, Vendors, [Sats], [Sat Done],
+    [Sat Late Finished],
+    [Actual Start], [Actual Finished],
+    DATEDIFF(DAY,[Actual Start],[Actual Finished])  + 1 AS [Actual Duration],
+    LoopDone, Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    -1 AS DependencyType,
+    -1 AS DependencyLag
+
+    FROM (
+        SELECT
+        tblInsLoop.Subsystem,
+        tblEquipment.Tag, 
+        CASE WHEN [L_Description] IS NULL THEN 'None' ELSE 'L_Description' END AS [Description], tblInsLoop.Area,
+        LoopName,
+        1 AS Loops,
+        CASE WHEN Vendor IS NULL THEN 'None' ELSE Vendor END AS Vendors,
+        0 AS [Sats],
+        0 AS [Sat Done],
+        DATEADD(DAY, -2, Planning_START_Date) AS [Sat Late Finished],
+        Planning_START_Date AS [Actual Start],
+        Planning_FINISH_Date AS [Actual Finished],
+        CASE WHEN l_done IS NOT NULL THEN 1 ELSE 0 END AS LoopDone,
+        CASE WHEN l_done IS NOT NULL THEN 100 ELSE 0 END AS Progress
+        FROM tblInsLoop
+        INNER JOIN tblILD ON tblInsLoop.LoopName = tblILD.Loop_Name
+        INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+        WHERE 
+        tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+        AND tblEquipment.PrecomTestRequired = 1
+
+     ) AS LoopInfo
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningSubsystem'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningSubsystem
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningSubsystem
+AS
+WITH SatTest AS (
+    SELECT
+    Subsystem,
+    COUNT(Tag) AS [Test Required],
+    COUNT(PrecomTestDate) AS [Sat Done]
+    FROM (
+        SELECT DISTINCT 
+            tblInsLoop.Subsystem,
+            tblEquipment.Tag,
+            tblEquipment.PrecomTestDate
+            FROM tblILD
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            INNER JOIN tblInsLoop ON tblILD.Loop_Name = tblInsLoop.loopName
+            WHERE tblEquipment.PrecomTestRequired = 1
+    ) AS SatEq
+    GROUP BY Subsystem
+), NoSatTest AS (
+    SELECT
+    Subsystem, Area,
+    tblInsLoop.LoopName, Vendor, L_Done, Planning_START_Date, Planning_FINISH_Date
+    FROM tblInsLoop
+    LEFT JOIN 
+            (
+            SELECT DISTINCT 
+                tblILD.Loop_Name AS LoopName
+                FROM tblEquipment
+                INNER JOIN tblILD ON tblEquipment.Tag = tblILD.Item
+                WHERE tblEquipment.PrecomTestRequired = 1
+        ) AS SatLoop
+    ON tblInsLoop.LoopName = SatLoop.LoopName
+    WHERE SatLoop.LoopName IS NULL AND tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+)
+
+
+
+    SELECT
+    11 AS ID,
+    -1 AS ParentId,
+    'Subsystems Summary' AS ItemType,
+    'SAT Required' AS Name, '-' AS [Description], '-' AS Area,
+    SUM(Loops) AS Loops, SUM(Vendors) AS Vendors, SUM([Sats]) AS Sats, SUM([Sat Done]) AS [Sat Done],
+    MIN([Sat Late Finished]) AS [Sat Late Finished],
+    MIN([Actual Start]) AS [Actual Start], MAX([Actual Finished]) AS [Actual Finished],
+    DATEDIFF(DAY,MIN([Actual Start]),MAX([Actual Finished]))  + 1 AS [Actual Duration],
+    SUM(LoopDone) AS LoopDone, AVG(Progress) AS Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    2 AS DependencyType,
+    0 AS DependencyLag
+
+    FROM (
+        SELECT
+        Subsystem, [Description], Area,
+        COUNT(LoopName) AS Loops,
+        COUNT(Vendor) AS Vendors,
+        [Test Required] AS [Sats], [Sat Done],
+        DATEADD(DAY, -2, MIN(Planning_START_Date)) AS [Sat Late Finished],
+        MIN(Planning_START_Date) AS [Actual Start], 
+        MAX(Planning_FINISH_Date) AS [Actual Finished],
+        COUNT(l_done) AS LoopDone,
+        COUNT(l_done) * 100 / COUNT(LoopName) AS Progress
+        FROM (
+            SELECT
+            CASE WHEN Subsystem.[Description] IS NULL THEN 'None' ELSE Subsystem.[Description] END AS [Description], 
+            CASE WHEN Subsystem.Area IS NULL THEN 'None' ELSE Subsystem.Area END AS Area,
+            tblInsLoop.LoopName, tblInsLoop.Subsystem, tblInsLoop.Planning_START_Date, tblInsLoop.Planning_FINISH_Date, tblInsLoop.Vendor,
+            tblInsLoop.l_done,
+            CASE WHEN SatTest.[Test Required] IS NULL THEN 0 ELSE SatTest.[Test Required] END AS [Test Required],
+            CASE WHEN SatTest.[Sat Done] IS NULL THEN 0 ELSE SatTest.[Sat Done] END AS [Sat Done]
+            FROM tblInsLoop
+            LEFT JOIN SatTest ON tblInsLoop.Subsystem = SatTest.Subsystem
+            LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+            WHERE tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+        ) AS LoopInfo
+        GROUP BY [Description], Subsystem, Area, [Test Required], [Sat Done]
+    ) AS SubsystemSummary
+
+    UNION ALL
+
+    SELECT
+    CONVERT(INT,'1' + CONVERT(NVARCHAR(100),ROW_NUMBER() OVER (ORDER BY Subsystem) + 10)) AS ID,
+    11 AS ParentId,
+    'Subsystem' AS ItemType,
+    Subsystem AS Name, [Description], Area,
+    Loops, Vendors, [Sats], [Sat Done],
+    [Sat Late Finished],
+    [Actual Start], [Actual Finished],
+    DATEDIFF(DAY,[Actual Start],[Actual Finished])  + 1 AS [Actual Duration],
+    LoopDone, Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    2 AS DependencyType,
+    0 AS DependencyLag
+
+    FROM (
+        SELECT
+        Subsystem, [Description], Area,
+        COUNT(LoopName) AS Loops,
+        COUNT(Vendor) AS Vendors,
+        [Test Required] AS [Sats], [Sat Done],
+        DATEADD(DAY, -2, MIN(Planning_START_Date)) AS [Sat Late Finished],
+        MIN(Planning_START_Date) AS [Actual Start],
+        MAX(Planning_FINISH_Date) AS [Actual Finished],
+        COUNT(l_done) AS LoopDone,
+        COUNT(l_done) * 100 / COUNT(LoopName) AS Progress
+        FROM (
+            SELECT
+            CASE WHEN Subsystem.[Description] IS NULL THEN 'None' ELSE Subsystem.[Description] END AS [Description], 
+            CASE WHEN Subsystem.Area IS NULL THEN 'None' ELSE Subsystem.Area END AS Area,
+            tblInsLoop.LoopName, tblInsLoop.Subsystem, tblInsLoop.Planning_START_Date, tblInsLoop.Planning_FINISH_Date, tblInsLoop.Vendor,
+            tblInsLoop.l_done,
+            CASE WHEN SatTest.[Test Required] IS NULL THEN 0 ELSE SatTest.[Test Required] END AS [Test Required],
+            CASE WHEN SatTest.[Sat Done] IS NULL THEN 0 ELSE SatTest.[Sat Done] END AS [Sat Done]
+            FROM tblInsLoop
+            LEFT JOIN SatTest ON tblInsLoop.Subsystem = SatTest.Subsystem
+            LEFT JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+            WHERE tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+        ) AS LoopInfo
+        GROUP BY [Description], Subsystem, Area, [Test Required], [Sat Done]
+    ) AS LoopSummary
+
+UNION ALL
+
+    SELECT
+            12 AS ID,
+            -1 AS ParentId,
+            'Subsystems Summary' AS ItemType,
+            'No SAT Required' AS Name, '-' AS [Description], '-' AS Area,
+            COUNT(DISTINCT LoopName) AS Loops, COUNT(DISTINCT Vendor) AS Vendors, 0 AS Sats, 0 AS [Sat Done],
+            MIN([Planning_START_Date]) AS [Sat Late Finished],
+            MIN([Planning_START_Date]) AS [Actual Start], MAX([Planning_FINISH_Date]) AS [Actual Finished],
+            DATEDIFF(DAY,MIN([Planning_START_Date]),MAX([Planning_FINISH_Date]))  + 1 AS [Actual Duration],
+            COUNT(L_Done) AS LoopDone, 
+            COUNT(L_Done) *100 / COUNT(LoopName) AS Progress,
+            -1 AS PredecessorIds,
+            -1 AS SuccessorIds,
+            2 AS DependencyType,
+            0 AS DependencyLag
+        FROM NoSatTest
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningEquipment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningEquipment
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningEquipment
+AS
+WITH SatItem AS (
+    SELECT DISTINCT
+    tblInsLoop.Subsystem,
+    ILDItem.Item AS Equipment, [Description], ILDItem.Area, PrecomTestDate
+    FROM tblInsLoop
+    LEFT JOIN (
+            SELECT DISTINCT 
+                tblILD.Loop_Name, tblILD.Item, tblEquipment.[Type], tblEquipment.PrecomTestDate,tblEquipment.[Description], tblEquipment.Area
+            FROM tblILD
+            INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+            WHERE tblEquipment.PrecomTestRequired = 1
+        ) AS ILDItem ON tblInsLoop.LoopName = ILDItem.Loop_Name
+    WHERE tblInsLoop.Active = 1
+)
+
+
+    SELECT
+    CONVERT(INT,'2' + CONVERT(NVARCHAR(100),ROW_NUMBER() OVER (ORDER BY Subsystem) + 1)) AS ID,
+    'Sat Equipment' AS ItemType,
+    Subsystem AS Name, Equipment, [Description], Area,
+    Loops, Vendors, [Sats], [Sat Done],
+    [Sat Late Finished],
+    [Actual Start], [Actual Finished],
+    DATEDIFF(DAY,[Actual Start],[Actual Finished])  + 1 AS [Actual Duration],
+    LoopDone, Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    2 AS DependencyType,
+    0 AS DependencyLag
+
+    FROM (
+        SELECT
+        Subsystem, [Description], Area,
+        Equipment,
+        COUNT(LoopName) AS Loops,
+        COUNT(Vendor) AS Vendors,
+        [Test Required] AS [Sats],
+        PrecomTestDate AS [Sat Done],
+        DATEADD(DAY, -2, MIN(Planning_START_Date)) AS [Sat Late Finished],
+        MIN(Planning_START_Date) AS [Actual Start],
+        MAX(Planning_FINISH_Date) AS [Actual Finished],
+        COUNT(l_done) AS LoopDone,
+        COUNT(l_done) * 100 / COUNT(LoopName) AS Progress
+        FROM (
+            SELECT
+            CASE WHEN SatItem.[Description] IS NULL THEN 'None' ELSE Subsystem.[Description] END AS [Description], 
+            SatItem.Equipment,
+            SatItem.Area AS Area,CASE WHEN SatItem.PrecomTestDate IS NOT NULL THEN 1 ELSE 0 END AS PrecomTestDate,
+            tblInsLoop.LoopName, tblInsLoop.Subsystem, tblInsLoop.Planning_START_Date, tblInsLoop.Planning_FINISH_Date, tblInsLoop.Vendor,
+            tblInsLoop.l_done,
+            1 AS [Test Required]
+            FROM tblInsLoop
+            INNER JOIN Subsystem ON tblInsLoop.Subsystem = Subsystem.Subsystem
+            INNER JOIN SatItem ON Subsystem.SubSystem = SatItem.Subsystem
+            WHERE tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+        ) AS LoopInfo
+        WHERE Equipment IS NOT NULL
+        GROUP BY [Description], Subsystem,Equipment, Area, [Test Required],PrecomTestDate
+    ) AS LoopSummary
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningLoop'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningLoop
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningLoop
+AS
+
+
+    SELECT
+    'Loop' AS ItemType, Subsystem,
+    Tag AS Name, LoopName, [Description], Area,
+    Loops, Vendors, [Sats], [Sat Done],
+    [Sat Late Finished],
+    [Actual Start], [Actual Finished],
+    DATEDIFF(DAY,[Actual Start],[Actual Finished])  + 1 AS [Actual Duration],
+    LoopDone, Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    2 AS DependencyType,
+    0 AS DependencyLag
+
+    FROM (
+        SELECT
+        tblInsLoop.Subsystem,
+        tblEquipment.Tag, 
+        CASE WHEN [L_Description] IS NULL THEN 'None' ELSE 'L_Description' END AS [Description], tblInsLoop.Area,
+        LoopName,
+        1 AS Loops,
+        CASE WHEN Vendor IS NULL THEN 'None' ELSE Vendor END AS Vendors,
+        0 AS [Sats],
+        0 AS [Sat Done],
+        DATEADD(DAY, -2, Planning_START_Date) AS [Sat Late Finished],
+        Planning_START_Date AS [Actual Start],
+        Planning_FINISH_Date AS [Actual Finished],
+        CASE WHEN l_done IS NOT NULL THEN 1 ELSE 0 END AS LoopDone,
+        CASE WHEN l_done IS NOT NULL THEN 100 ELSE 0 END AS Progress
+        FROM tblInsLoop
+        INNER JOIN tblILD ON tblInsLoop.LoopName = tblILD.Loop_Name
+        INNER JOIN tblEquipment ON tblILD.Item = tblEquipment.Tag
+        WHERE 
+        tblInsLoop.Active = 1 AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+        AND tblEquipment.PrecomTestRequired = 1
+
+     ) AS LoopInfo
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningLoopNoSAT'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningLoopNoSAT
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningLoopNoSAT
+AS
+
+
+    WITH NoSatTest AS (
+        SELECT
+        Subsystem, Area,
+        tblInsLoop.LoopName, 
+        CASE WHEN Vendor IS NULL THEN 'None' ELSE Vendor END AS Vendors, L_Done AS LoopDone, Planning_START_Date AS [Actual Start], Planning_FINISH_Date AS [Actual Finished], 
+        CASE WHEN tblInsLoop.L_Description IS NULL THEN 'None' ELSE tblInsLoop.L_Description END AS [Description]
+        FROM tblInsLoop
+        LEFT JOIN 
+                (
+                SELECT DISTINCT 
+                    tblILD.Loop_Name AS LoopName
+                    FROM tblEquipment
+                    INNER JOIN tblILD ON tblEquipment.Tag = tblILD.Item
+                    WHERE tblEquipment.PrecomTestRequired = 1
+            ) AS SatLoop
+        ON tblInsLoop.LoopName = SatLoop.LoopName
+        WHERE SatLoop.LoopName IS NULL AND tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+    )
+
+
+SELECT
+    0 AS ID,
+    0 AS ParentId,
+    'Loop' AS ItemType, Subsystem,
+    NULL AS Name, LoopName , [Description], Area,
+    1 AS Loops, Vendors, 0 AS [Sats], 0 AS [Sat Done],
+    [Actual Start] AS [Sat Late Finished], [Actual Start], [Actual Finished],
+    DATEDIFF(DAY,[Actual Start],[Actual Finished])  + 1 AS [Actual Duration],
+    CASE WHEN LoopDone IS NOT NULL THEN 1 ELSE 0 END AS LoopDone,
+    CASE WHEN LoopDone IS NOT NULL THEN 100 ELSE 0 END AS Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    2 AS DependencyType,
+    0 AS DependencyLag
+
+    FROM NoSatTest
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'LoopPlanningSubsystemNoSAT'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.LoopPlanningSubsystemNoSAT
+END
+GO
+CREATE PROC PRECOMM.LoopPlanningSubsystemNoSAT
+AS
+
+
+    WITH NoSatTest AS (
+        SELECT
+        Subsystem, Area,
+        tblInsLoop.LoopName, 
+        CASE WHEN Vendor IS NULL THEN 'None' ELSE Vendor END AS Vendors, L_Done AS LoopDone, Planning_START_Date AS [Actual Start], Planning_FINISH_Date AS [Actual Finished], 
+        CASE WHEN tblInsLoop.L_Description IS NULL THEN 'None' ELSE tblInsLoop.L_Description END AS [Description]
+        FROM tblInsLoop
+        LEFT JOIN 
+                (
+                SELECT DISTINCT 
+                    tblILD.Loop_Name AS LoopName
+                    FROM tblEquipment
+                    INNER JOIN tblILD ON tblEquipment.Tag = tblILD.Item
+                    WHERE tblEquipment.PrecomTestRequired = 1
+            ) AS SatLoop
+        ON tblInsLoop.LoopName = SatLoop.LoopName
+        WHERE SatLoop.LoopName IS NULL AND tblInsLoop.Active = 1 AND tblInsLoop.subsystem IS NOT NULL AND (NOT (tblInsLoop.Planning_START_Date IS NULL OR tblInsLoop.Planning_FINISH_Date IS NULL))
+    )
+
+
+SELECT
+    CONVERT(INT,'4' + CONVERT(NVARCHAR(100),ROW_NUMBER() OVER (ORDER BY SubSystem.Subsystem) + 10)) AS ID,
+    12 AS ParentId,
+    'Subsystem' AS ItemType, 
+    CASE WHEN SubSystem.Subsystem IS NULL THEN 'None' ELSE SubSystem.Subsystem END AS Subsystem, 
+    NULL AS Name, NULL AS LoopName, SubSystem.[Description], SubSystem.Area,
+    COUNT(LoopName) AS Loops, CONVERT(NVARCHAR(50),COUNT(DISTINCT Vendors)) AS Vendors, 0 AS [Sats], 0 AS [Sat Done],
+    MIN([Actual Start]) AS [Sat Late Finished], MIN([Actual Start]) AS [Actual Start], MAX([Actual Finished]) AS [Actual Finished],
+    DATEDIFF(DAY,MIN([Actual Start]),MAX([Actual Finished]))  + 1 AS [Actual Duration],
+    COUNT(LoopDone) AS LoopDone,
+    COUNT(LoopDone) * 100 / COUNT(LoopName) AS Progress,
+    -1 AS PredecessorIds,
+    -1 AS SuccessorIds,
+    2 AS DependencyType,
+    0 AS DependencyLag
+
+    FROM NoSatTest
+    INNER JOIN Subsystem ON NoSatTest.Subsystem = SubSystem.SubSystem
+    GROUP BY SubSystem.SubSystem, SubSystem.[Description], SubSystem.Area
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopSummary'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PRECOMM')
+			)
+BEGIN
+	DROP PROC PRECOMM.GetLoopSummary
+END
+GO
+CREATE PROC PRECOMM.GetLoopSummary WITH ENCRYPTION
+AS
+declare @wk date
+select @wk=tmp_date from [tblTMP] where tmp_id=1
+SELECT
+vloop.Area as Unit
+,area.Description
+,sum(scope) as scope
+,sum([Loop Test Technical Folder Ready]) as [Loop Test Technical Folder Ready]
+,sum([Loop Test Technical Folder Ready wk]) as [Loop Test Technical Folder Ready wk]
+,sum([Loop Test Construction Finished Cumm]) as [Loop Test Construction Finished Cumm]
+,sum([Loop Test Construction Finished WK]) as [Loop Test Construction Finished WK]
+,sum([Loop Test TR QC Punched Cumm]) as [Loop Test TR QC Punched Cumm]
+,sum([Loop Test TR QC Punched WK]) as [Loop Test TR QC Punched WK]
+,sum([Loop Test HCS Folder Ready Cumm]) as [Loop Test HCS Folder Ready Cumm]
+,sum([Loop Test HCS Folder Ready WK]) as [Loop Test HCS Folder Ready WK]
+,sum([Tested Loop Test Cumm]) as [Tested Loop Test Cumm]
+,sum([Tested Loop Test WK]) as [Tested Loop Test WK]
+,convert(float,sum([Tested Loop Test Cumm])) / convert(float,sum(scope)) as [LOOP TEST %]
+,sum([Loop Test Certified Cumm]) as [Loop Test Certified Cumm]
+,sum([Loop Test Certified WK]) as [Loop Test Certified WK]
+,convert(float,sum([Loop Test Certified Cumm])) / convert(float,sum(scope)) as [LOOP Certificate %]
+,sum([Ready For Loop Cumm]) as [Ready For Loop Cumm]
+,sum([Ready For Loop WK]) as [Ready For Loop WK]
+FROM
+(
+select
+Area
+,count(loopname) as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,count(L_Constr_Release) as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+UNION All
+select
+Area
+,0 as scope
+,count(Folder_Preparation) as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,count(TR_Loop_Folder_QC_Release) as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,count(HCS_Folder_Ready) as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,count(l_done) as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,count(L_FinalApproval) as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,count(Submitted_to_Precom) as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+---Weekly
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,count(L_Constr_Release) as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+and L_Constr_Release between DATEADD(DAY,-6,@wk) and @wk
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,count(Folder_Preparation) as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,sum(case when TR_Loop_Folder_QC_Release between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+and Folder_Preparation between DATEADD(DAY,-6,@wk) and @wk
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,sum(case when HCS_Folder_Ready between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,sum(case when l_done between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,sum(case when L_FinalApproval between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,sum(case when Submitted_to_Precom between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+) as vloop
+inner join Area
+on area.Area=vloop.Area
+group by vloop.Area,Priority,area.description
+order by Area.Priority
+GO

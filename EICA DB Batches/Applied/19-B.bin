@@ -1,0 +1,227 @@
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsNoOverwrite'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsNoOverwrite
+END
+GO
+CREATE PROC TEMPDATA.UpdateLoopsNoOverwrite
+@opKey NVARCHAR(250),
+@date DATE = NULL
+
+AS
+
+--CHECK ERRORs
+UPDATE V
+    SET Error = 'Loop Not Exists'
+FROM (
+    SELECT
+    Tag, temp.Error
+    FROM TEMPDATA.LoopTemp AS temp
+    LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+    WHERE UpdateType = 'UPDATEPROGRESS' AND tblInsLoop.LoopName IS NULL
+    AND temp.OpKey = @opKey
+) AS V
+--
+
+IF @date IS NOT NULL
+    BEGIN
+        --FolderPreparation
+        UPDATE V
+                SET Folder_Preparation = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.Folder_Preparation
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.Folder_Preparation IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --ConstrRelease
+        UPDATE V
+                SET L_Constr_Release = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.L_Constr_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.L_Constr_Release IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --QCRelease
+        UPDATE V
+                SET TR_Loop_Folder_QC_Release = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.TR_Loop_Folder_QC_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --FolderReady
+        UPDATE V
+                SET HCS_Folder_Ready = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.HCS_Folder_Ready
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.HCS_Folder_Ready IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --SubmittedToPrecom
+        UPDATE V
+                SET Submitted_to_Precom = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.Submitted_to_Precom
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.Submitted_to_Precom IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --Done
+        UPDATE V
+                SET L_Done = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.L_Done
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.L_Done IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --FinalApproval
+        UPDATE V
+                SET L_FinalApproval = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.L_FinalApproval
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.L_FinalApproval IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+
+
+    END
+ELSE
+    BEGIN
+        --FolderPreparation
+        UPDATE V
+                SET Folder_Preparation = FolderPreparation
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN FolderPreparation IS NOT NULL THEN @date ELSE NULL END AS FolderPreparation, 
+            tblInsLoop.Folder_Preparation
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.Folder_Preparation IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --ConstrRelease
+        UPDATE V
+                SET L_Constr_Release = ConstrRelease
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN ConstrRelease IS NOT NULL THEN @date ELSE NULL END AS ConstrRelease, 
+            tblInsLoop.L_Constr_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.L_Constr_Release IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --QCRelease
+        UPDATE V
+                SET TR_Loop_Folder_QC_Release = QCRelease
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN QCRelease IS NOT NULL THEN @date ELSE NULL END AS QCRelease, 
+            tblInsLoop.TR_Loop_Folder_QC_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --FolderReady
+        UPDATE V
+                SET HCS_Folder_Ready = FolderReady
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN FolderReady IS NOT NULL THEN @date ELSE NULL END AS FolderReady, 
+            tblInsLoop.HCS_Folder_Ready
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.HCS_Folder_Ready IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --SubmittedToPrecom
+        UPDATE V
+                SET Submitted_to_Precom = SubmittedToPrecom
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN SubmittedToPrecom IS NOT NULL THEN @date ELSE NULL END AS SubmittedToPrecom, 
+            tblInsLoop.Submitted_to_Precom
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.Submitted_to_Precom IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --Done
+        UPDATE V
+                SET l_Done = Done
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN ((Done IS NOT NULL) OR (Progress > 0)) THEN @date ELSE NULL END AS Done, 
+            tblInsLoop.l_Done
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.l_Done IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --FinalApproval
+        UPDATE V
+                SET L_FinalApproval = FinalApproval
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN FinalApproval IS NOT NULL THEN @date ELSE NULL END AS FinalApproval,
+            tblInsLoop.L_FinalApproval
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.L_FinalApproval IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+    END
+
+GO

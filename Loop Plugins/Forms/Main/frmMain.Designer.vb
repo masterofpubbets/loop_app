@@ -40,6 +40,12 @@ Partial Class frmMain
         Dim SuperToolTip3 As DevExpress.Utils.SuperToolTip = New DevExpress.Utils.SuperToolTip()
         Dim ToolTipTitleItem5 As DevExpress.Utils.ToolTipTitleItem = New DevExpress.Utils.ToolTipTitleItem()
         Dim ToolTipItem5 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
+        Dim SuperToolTip4 As DevExpress.Utils.SuperToolTip = New DevExpress.Utils.SuperToolTip()
+        Dim ToolTipItem6 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
+        Dim ToolTipItem7 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
+        Dim SuperToolTip5 As DevExpress.Utils.SuperToolTip = New DevExpress.Utils.SuperToolTip()
+        Dim ToolTipItem8 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
+        Dim ToolTipItem9 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
         Dim SnapOptions1 As DevExpress.Utils.Controls.SnapOptions = New DevExpress.Utils.Controls.SnapOptions()
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.BackstageViewControl1 = New DevExpress.XtraBars.Ribbon.BackstageViewControl()
@@ -55,16 +61,14 @@ Partial Class frmMain
         Me.BackstageViewClientControl3 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
         Me.BackstageViewClientControl2 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
         Me.BackstageViewClientControl6 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
-        Me.LabelControl13 = New DevExpress.XtraEditors.LabelControl()
+        Me.SimpleButton9 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton5 = New DevExpress.XtraEditors.SimpleButton()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.LabelControl14 = New DevExpress.XtraEditors.LabelControl()
-        Me.LabelControl4 = New DevExpress.XtraEditors.LabelControl()
         Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
         Me.LabelControl1 = New DevExpress.XtraEditors.LabelControl()
         Me.BackstageViewClientControl4 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
@@ -81,7 +85,7 @@ Partial Class frmMain
         Me.tgInstrumentsIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
         Me.tgEquipmentIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
         Me.tgCableIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
-        Me.ToggleSwitch1 = New DevExpress.XtraEditors.ToggleSwitch()
+        Me.tgSolorunIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
         Me.tgMotorIntegrity = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl8 = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl7 = New DevExpress.XtraEditors.LabelControl()
@@ -145,6 +149,18 @@ Partial Class frmMain
         Me.BarButtonItem25 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem3 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem39 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem6 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem7 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem10 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem13 = New DevExpress.XtraBars.BarButtonItem()
+        Me.SkinDropDownButtonItem = New DevExpress.XtraBars.SkinDropDownButtonItem()
+        Me.SkinPaletteRibbonGalleryBarItem = New DevExpress.XtraBars.SkinPaletteRibbonGalleryBarItem()
+        Me.BarButtonItem17 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonGroup1 = New DevExpress.XtraBars.BarButtonGroup()
+        Me.BarButtonGroup2 = New DevExpress.XtraBars.BarButtonGroup()
+        Me.BarMdiChildrenListItem1 = New DevExpress.XtraBars.BarMdiChildrenListItem()
+        Me.lblLoopBlockages = New DevExpress.XtraBars.BarStaticItem()
+        Me.lblSolorunBlockages = New DevExpress.XtraBars.BarStaticItem()
         Me.rpHome = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup13 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
@@ -168,9 +184,12 @@ Partial Class frmMain
         Me.rpPC = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup7 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
+        Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPageGroup5 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpBlockage = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup3 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonStatusBar1 = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
         Me.DefaultLookAndFeel1 = New DevExpress.LookAndFeel.DefaultLookAndFeel(Me.components)
         Me.BarButtonItem8 = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPageGroup6 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
@@ -181,6 +200,8 @@ Partial Class frmMain
         Me.dpQuickAccess = New DevExpress.XtraBars.Docking.DockPanel()
         Me.DockPanel1_Container = New DevExpress.XtraBars.Docking.ControlContainer()
         Me.stackPanel = New DevExpress.Utils.Layout.StackPanel()
+        Me.notificationsTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.sveFle = New System.Windows.Forms.SaveFileDialog()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BackstageViewControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.BackstageViewControl1.SuspendLayout()
@@ -203,7 +224,7 @@ Partial Class frmMain
         CType(Me.tgInstrumentsIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgEquipmentIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgCableIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ToggleSwitch1.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tgSolorunIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ToastNotificationsManager, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BehaviorManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dm, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -223,16 +244,17 @@ Partial Class frmMain
         Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.EEICA.My.Resources.Resources.EEICA_Logo
         Me.RibbonControl1.CaptionBarItemLinks.Add(Me.lblUserName)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblUserName, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem2, Me.BarButtonItem9, Me.BarButtonItem11, Me.BarButtonItem14, Me.BarButtonItem16, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem27, Me.BarButtonItem24, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem41, Me.barBtnHandoverData, Me.BarButtonItem38, Me.BarButtonItem23, Me.BarButtonItem26, Me.BarButtonItem48, Me.BarButtonItem45, Me.BarButtonItem47, Me.BarButtonItem50, Me.BarSubItem1, Me.BarButtonItem52, Me.BarButtonItem53, Me.BarButtonItem1, Me.lblDBName, Me.lblServer, Me.BarButtonItem5, Me.BarSubItem2, Me.BarButtonItem12, Me.BarButtonItem15, Me.BarButtonItem54, Me.BarButtonItem46, Me.BarSubItem3, Me.BarButtonItem51, Me.BarButtonItem55, Me.BarSubItem4, Me.BarButtonItem49, Me.BarButtonItem56, Me.BarButtonItem4, Me.BarButtonItem25, Me.BarButtonItem3, Me.BarButtonItem39})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblUserName, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem2, Me.BarButtonItem9, Me.BarButtonItem11, Me.BarButtonItem14, Me.BarButtonItem16, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem27, Me.BarButtonItem24, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem41, Me.barBtnHandoverData, Me.BarButtonItem38, Me.BarButtonItem23, Me.BarButtonItem26, Me.BarButtonItem48, Me.BarButtonItem45, Me.BarButtonItem47, Me.BarButtonItem50, Me.BarSubItem1, Me.BarButtonItem52, Me.BarButtonItem53, Me.BarButtonItem1, Me.lblDBName, Me.lblServer, Me.BarButtonItem5, Me.BarSubItem2, Me.BarButtonItem12, Me.BarButtonItem15, Me.BarButtonItem54, Me.BarButtonItem46, Me.BarSubItem3, Me.BarButtonItem51, Me.BarButtonItem55, Me.BarSubItem4, Me.BarButtonItem49, Me.BarButtonItem56, Me.BarButtonItem4, Me.BarButtonItem25, Me.BarButtonItem3, Me.BarButtonItem39, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem10, Me.BarButtonItem13, Me.SkinDropDownButtonItem, Me.SkinPaletteRibbonGalleryBarItem, Me.BarButtonItem17, Me.BarButtonGroup1, Me.BarButtonGroup2, Me.BarMdiChildrenListItem1, Me.lblLoopBlockages, Me.lblSolorunBlockages})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.RibbonControl1.MaxItemId = 111
+        Me.RibbonControl1.MaxItemId = 129
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpHome, Me.RibbonPage2, Me.rpEng, Me.rpPlanning, Me.rpHandover, Me.rpSupportTeam, Me.rpConstruction, Me.rpQC, Me.rpPrecom, Me.rpPC, Me.RibbonPage1, Me.rpBlockage})
         Me.RibbonControl1.QuickToolbarItemLinks.Add(Me.lblDBName)
         Me.RibbonControl1.QuickToolbarItemLinks.Add(Me.lblServer)
         Me.RibbonControl1.QuickToolbarItemLinks.Add(Me.BarButtonItem25)
         Me.RibbonControl1.Size = New System.Drawing.Size(1536, 181)
+        Me.RibbonControl1.StatusBar = Me.RibbonStatusBar1
         '
         'BackstageViewControl1
         '
@@ -250,7 +272,7 @@ Partial Class frmMain
         Me.BackstageViewControl1.Items.Add(Me.BackstageViewTabItem4)
         Me.BackstageViewControl1.Items.Add(Me.BackstageViewButtonItem1)
         Me.BackstageViewControl1.Items.Add(Me.BackstageViewTabItem5)
-        Me.BackstageViewControl1.Location = New System.Drawing.Point(32, 212)
+        Me.BackstageViewControl1.Location = New System.Drawing.Point(32, 198)
         Me.BackstageViewControl1.Name = "BackstageViewControl1"
         Me.BackstageViewControl1.OwnerControl = Me.RibbonControl1
         Me.BackstageViewControl1.SelectedTab = Me.BackstageViewTabItem5
@@ -288,7 +310,7 @@ Partial Class frmMain
         Me.LabelControl11.Name = "LabelControl11"
         Me.LabelControl11.Size = New System.Drawing.Size(399, 39)
         Me.LabelControl11.TabIndex = 2
-        Me.LabelControl11.Text = "7.0"
+        Me.LabelControl11.Text = "8.7"
         '
         'lblDBVersion
         '
@@ -364,16 +386,14 @@ Partial Class frmMain
         '
         'BackstageViewClientControl6
         '
-        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl13)
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton9)
         Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton5)
         Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox3)
         Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl14)
-        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl4)
         Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton2)
         Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox2)
         Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl3)
         Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox1)
-        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl2)
         Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton1)
         Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl1)
         Me.BackstageViewClientControl6.Location = New System.Drawing.Point(207, 63)
@@ -381,16 +401,14 @@ Partial Class frmMain
         Me.BackstageViewClientControl6.Size = New System.Drawing.Size(814, 517)
         Me.BackstageViewClientControl6.TabIndex = 6
         '
-        'LabelControl13
+        'SimpleButton9
         '
-        Me.LabelControl13.Appearance.Options.UseTextOptions = True
-        Me.LabelControl13.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center
-        Me.LabelControl13.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl13.Location = New System.Drawing.Point(271, 426)
-        Me.LabelControl13.Name = "LabelControl13"
-        Me.LabelControl13.Size = New System.Drawing.Size(316, 53)
-        Me.LabelControl13.TabIndex = 11
-        Me.LabelControl13.Text = "Full Summary for Loop Folders Steps"
+        Me.SimpleButton9.ImageOptions.Image = CType(resources.GetObject("SimpleButton9.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton9.Location = New System.Drawing.Point(271, 426)
+        Me.SimpleButton9.Name = "SimpleButton9"
+        Me.SimpleButton9.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton9.TabIndex = 11
+        Me.SimpleButton9.Text = "Loop Blockages Responisble"
         '
         'SimpleButton5
         '
@@ -425,17 +443,6 @@ Partial Class frmMain
         Me.LabelControl14.Size = New System.Drawing.Size(717, 53)
         Me.LabelControl14.TabIndex = 8
         Me.LabelControl14.Text = "Pre Commissioning"
-        '
-        'LabelControl4
-        '
-        Me.LabelControl4.Appearance.Options.UseTextOptions = True
-        Me.LabelControl4.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center
-        Me.LabelControl4.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl4.Location = New System.Drawing.Point(271, 226)
-        Me.LabelControl4.Name = "LabelControl4"
-        Me.LabelControl4.Size = New System.Drawing.Size(316, 53)
-        Me.LabelControl4.TabIndex = 7
-        Me.LabelControl4.Text = "Daily tracking for instrumentation resources up to cutoff date."
         '
         'SimpleButton2
         '
@@ -480,17 +487,6 @@ Partial Class frmMain
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 3
         Me.PictureBox1.TabStop = False
-        '
-        'LabelControl2
-        '
-        Me.LabelControl2.Appearance.Options.UseTextOptions = True
-        Me.LabelControl2.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center
-        Me.LabelControl2.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl2.Location = New System.Drawing.Point(271, 60)
-        Me.LabelControl2.Name = "LabelControl2"
-        Me.LabelControl2.Size = New System.Drawing.Size(266, 53)
-        Me.LabelControl2.TabIndex = 2
-        Me.LabelControl2.Text = "Daily tracking for electrical resources up to cutoff date."
         '
         'SimpleButton1
         '
@@ -576,7 +572,6 @@ Partial Class frmMain
         Me.gpAdmin.Controls.Add(Me.SeparatorControl1)
         Me.gpAdmin.Controls.Add(Me.GroupBox1)
         Me.gpAdmin.Dock = System.Windows.Forms.DockStyle.Top
-        Me.gpAdmin.Enabled = False
         Me.gpAdmin.Location = New System.Drawing.Point(0, 0)
         Me.gpAdmin.Name = "gpAdmin"
         Me.gpAdmin.Size = New System.Drawing.Size(814, 290)
@@ -619,7 +614,7 @@ Partial Class frmMain
         Me.GroupBox1.Controls.Add(Me.tgInstrumentsIntegrity)
         Me.GroupBox1.Controls.Add(Me.tgEquipmentIntegrity)
         Me.GroupBox1.Controls.Add(Me.tgCableIntegrity)
-        Me.GroupBox1.Controls.Add(Me.ToggleSwitch1)
+        Me.GroupBox1.Controls.Add(Me.tgSolorunIntegrity)
         Me.GroupBox1.Controls.Add(Me.tgMotorIntegrity)
         Me.GroupBox1.Controls.Add(Me.LabelControl8)
         Me.GroupBox1.Controls.Add(Me.LabelControl7)
@@ -714,15 +709,15 @@ Partial Class frmMain
         Me.tgCableIntegrity.SuperTip = SuperToolTip2
         Me.tgCableIntegrity.TabIndex = 3
         '
-        'ToggleSwitch1
+        'tgSolorunIntegrity
         '
-        Me.ToggleSwitch1.Location = New System.Drawing.Point(275, 74)
-        Me.ToggleSwitch1.MenuManager = Me.RibbonControl1
-        Me.ToggleSwitch1.Name = "ToggleSwitch1"
-        Me.ToggleSwitch1.Properties.OffText = "No"
-        Me.ToggleSwitch1.Properties.OnText = "Yes"
-        Me.ToggleSwitch1.Size = New System.Drawing.Size(114, 20)
-        Me.ToggleSwitch1.TabIndex = 9
+        Me.tgSolorunIntegrity.Location = New System.Drawing.Point(275, 74)
+        Me.tgSolorunIntegrity.MenuManager = Me.RibbonControl1
+        Me.tgSolorunIntegrity.Name = "tgSolorunIntegrity"
+        Me.tgSolorunIntegrity.Properties.OffText = "No"
+        Me.tgSolorunIntegrity.Properties.OnText = "Yes"
+        Me.tgSolorunIntegrity.Size = New System.Drawing.Size(114, 20)
+        Me.tgSolorunIntegrity.TabIndex = 9
         '
         'tgMotorIntegrity
         '
@@ -731,7 +726,7 @@ Partial Class frmMain
         Me.tgMotorIntegrity.Name = "tgMotorIntegrity"
         Me.tgMotorIntegrity.Size = New System.Drawing.Size(72, 25)
         Me.tgMotorIntegrity.TabIndex = 8
-        Me.tgMotorIntegrity.Text = "Motors:"
+        Me.tgMotorIntegrity.Text = "Solorun:"
         '
         'LabelControl8
         '
@@ -899,7 +894,7 @@ Partial Class frmMain
         '
         'BarButtonItem27
         '
-        Me.BarButtonItem27.Caption = "Folders Blockage"
+        Me.BarButtonItem27.Caption = "Loop Folders Blockage"
         Me.BarButtonItem27.Id = 36
         Me.BarButtonItem27.ImageOptions.Image = CType(resources.GetObject("BarButtonItem27.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem27.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem27.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -1241,6 +1236,113 @@ Partial Class frmMain
         Me.BarButtonItem39.Name = "BarButtonItem39"
         Me.BarButtonItem39.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
+        'BarButtonItem6
+        '
+        Me.BarButtonItem6.Caption = "Loop Folders Log"
+        Me.BarButtonItem6.Id = 111
+        Me.BarButtonItem6.ImageOptions.Image = CType(resources.GetObject("BarButtonItem6.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem6.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem6.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem6.Name = "BarButtonItem6"
+        Me.BarButtonItem6.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem7
+        '
+        Me.BarButtonItem7.Caption = "Solo Run Manangement"
+        Me.BarButtonItem7.Id = 112
+        Me.BarButtonItem7.ImageOptions.Image = Global.EEICA.My.Resources.Resources.icons8_motor_32
+        Me.BarButtonItem7.Name = "BarButtonItem7"
+        Me.BarButtonItem7.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem10
+        '
+        Me.BarButtonItem10.Caption = "Solo Run"
+        Me.BarButtonItem10.Id = 113
+        Me.BarButtonItem10.ImageOptions.Image = Global.EEICA.My.Resources.Resources.icons8_motor_32
+        Me.BarButtonItem10.Name = "BarButtonItem10"
+        Me.BarButtonItem10.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem13
+        '
+        Me.BarButtonItem13.Caption = "Solo Run Folders Blockage"
+        Me.BarButtonItem13.Id = 114
+        Me.BarButtonItem13.ImageOptions.Image = CType(resources.GetObject("BarButtonItem13.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem13.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem13.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem13.Name = "BarButtonItem13"
+        Me.BarButtonItem13.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'SkinDropDownButtonItem
+        '
+        Me.SkinDropDownButtonItem.Id = 116
+        Me.SkinDropDownButtonItem.Name = "SkinDropDownButtonItem"
+        '
+        'SkinPaletteRibbonGalleryBarItem
+        '
+        Me.SkinPaletteRibbonGalleryBarItem.Caption = "Skin Color"
+        Me.SkinPaletteRibbonGalleryBarItem.Id = 117
+        Me.SkinPaletteRibbonGalleryBarItem.Name = "SkinPaletteRibbonGalleryBarItem"
+        '
+        'BarButtonItem17
+        '
+        Me.BarButtonItem17.Caption = "Save Skin"
+        Me.BarButtonItem17.Id = 120
+        Me.BarButtonItem17.ImageOptions.Image = CType(resources.GetObject("BarButtonItem17.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem17.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem17.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem17.Name = "BarButtonItem17"
+        Me.BarButtonItem17.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large
+        '
+        'BarButtonGroup1
+        '
+        Me.BarButtonGroup1.Caption = "BarButtonGroup1"
+        Me.BarButtonGroup1.Id = 121
+        Me.BarButtonGroup1.ItemLinks.Add(Me.SkinPaletteRibbonGalleryBarItem)
+        Me.BarButtonGroup1.ItemLinks.Add(Me.BarButtonItem17)
+        Me.BarButtonGroup1.Name = "BarButtonGroup1"
+        '
+        'BarButtonGroup2
+        '
+        Me.BarButtonGroup2.Caption = "BarButtonGroup2"
+        Me.BarButtonGroup2.Id = 122
+        Me.BarButtonGroup2.Name = "BarButtonGroup2"
+        '
+        'BarMdiChildrenListItem1
+        '
+        Me.BarMdiChildrenListItem1.Caption = "Quick Access"
+        Me.BarMdiChildrenListItem1.Id = 125
+        Me.BarMdiChildrenListItem1.Name = "BarMdiChildrenListItem1"
+        '
+        'lblLoopBlockages
+        '
+        Me.lblLoopBlockages.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right
+        Me.lblLoopBlockages.Caption = "Loop Blockages: 0"
+        Me.lblLoopBlockages.Id = 126
+        Me.lblLoopBlockages.ImageOptions.Image = CType(resources.GetObject("lblLoopBlockages.ImageOptions.Image"), System.Drawing.Image)
+        Me.lblLoopBlockages.ImageOptions.LargeImage = CType(resources.GetObject("lblLoopBlockages.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.lblLoopBlockages.Name = "lblLoopBlockages"
+        Me.lblLoopBlockages.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
+        Me.lblLoopBlockages.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        ToolTipItem6.ImageOptions.Image = CType(resources.GetObject("resource.Image3"), System.Drawing.Image)
+        ToolTipItem6.Text = "Loop Blockages"
+        ToolTipItem7.Text = "All blockages for the Loop Folders assigned to be resolved by me."
+        SuperToolTip4.Items.Add(ToolTipItem6)
+        SuperToolTip4.Items.Add(ToolTipItem7)
+        Me.lblLoopBlockages.SuperTip = SuperToolTip4
+        '
+        'lblSolorunBlockages
+        '
+        Me.lblSolorunBlockages.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right
+        Me.lblSolorunBlockages.Caption = "Solo Run Blockages: 0"
+        Me.lblSolorunBlockages.Id = 127
+        Me.lblSolorunBlockages.ImageOptions.Image = CType(resources.GetObject("lblSolorunBlockages.ImageOptions.Image"), System.Drawing.Image)
+        Me.lblSolorunBlockages.ImageOptions.LargeImage = CType(resources.GetObject("lblSolorunBlockages.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.lblSolorunBlockages.Name = "lblSolorunBlockages"
+        Me.lblSolorunBlockages.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
+        ToolTipItem8.ImageOptions.Image = CType(resources.GetObject("resource.Image4"), System.Drawing.Image)
+        ToolTipItem8.Text = "Solo Run Blockages"
+        ToolTipItem9.Text = "All blockages for the Solo Run folders assigned to be resolved by me."
+        SuperToolTip5.Items.Add(ToolTipItem8)
+        SuperToolTip5.Items.Add(ToolTipItem9)
+        Me.lblSolorunBlockages.SuperTip = SuperToolTip5
+        '
         'rpHome
         '
         Me.rpHome.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup13})
@@ -1390,24 +1492,37 @@ Partial Class frmMain
         'RibbonPageGroup7
         '
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem1)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem7)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem16)
         Me.RibbonPageGroup7.Name = "RibbonPageGroup7"
-        Me.RibbonPageGroup7.Text = "Loop Folders"
+        Me.RibbonPageGroup7.Text = "Folders"
         '
         'RibbonPage1
         '
-        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup5})
+        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4, Me.RibbonPageGroup5, Me.RibbonPageGroup2})
         Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
-        Me.RibbonPage1.Text = "Loop Folders"
+        Me.RibbonPage1.Text = "Folders"
+        '
+        'RibbonPageGroup4
+        '
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.barBtnHandoverData)
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem6)
+        Me.RibbonPageGroup4.Name = "RibbonPageGroup4"
+        Me.RibbonPageGroup4.Text = "Folders Options"
         '
         'RibbonPageGroup5
         '
         Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem38)
         Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem9)
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.barBtnHandoverData)
         Me.RibbonPageGroup5.Name = "RibbonPageGroup5"
-        Me.RibbonPageGroup5.Text = "Folders Tools"
+        Me.RibbonPageGroup5.Text = "Loops"
+        '
+        'RibbonPageGroup2
+        '
+        Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem10)
+        Me.RibbonPageGroup2.Name = "RibbonPageGroup2"
+        Me.RibbonPageGroup2.Text = "Solo Run"
         '
         'rpBlockage
         '
@@ -1419,8 +1534,22 @@ Partial Class frmMain
         'RibbonPageGroup3
         '
         Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem27)
+        Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem13)
         Me.RibbonPageGroup3.Name = "RibbonPageGroup3"
-        Me.RibbonPageGroup3.Text = "Loop Folders Blockage"
+        Me.RibbonPageGroup3.Text = "Folders Blockage"
+        '
+        'RibbonStatusBar1
+        '
+        Me.RibbonStatusBar1.ItemLinks.Add(Me.SkinDropDownButtonItem)
+        Me.RibbonStatusBar1.ItemLinks.Add(Me.BarButtonGroup1)
+        Me.RibbonStatusBar1.ItemLinks.Add(Me.BarButtonGroup2)
+        Me.RibbonStatusBar1.ItemLinks.Add(Me.BarMdiChildrenListItem1)
+        Me.RibbonStatusBar1.ItemLinks.Add(Me.lblLoopBlockages)
+        Me.RibbonStatusBar1.ItemLinks.Add(Me.lblSolorunBlockages)
+        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 792)
+        Me.RibbonStatusBar1.Name = "RibbonStatusBar1"
+        Me.RibbonStatusBar1.Ribbon = Me.RibbonControl1
+        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1536, 24)
         '
         'DefaultLookAndFeel1
         '
@@ -1459,7 +1588,7 @@ Partial Class frmMain
         Me.hideContainerRight.Dock = System.Windows.Forms.DockStyle.Right
         Me.hideContainerRight.Location = New System.Drawing.Point(1492, 181)
         Me.hideContainerRight.Name = "hideContainerRight"
-        Me.hideContainerRight.Size = New System.Drawing.Size(44, 724)
+        Me.hideContainerRight.Size = New System.Drawing.Size(44, 611)
         '
         'dpQuickAccess
         '
@@ -1496,13 +1625,22 @@ Partial Class frmMain
         Me.stackPanel.TabIndex = 0
         Me.stackPanel.UseSkinIndents = True
         '
+        'notificationsTimer
+        '
+        Me.notificationsTimer.Interval = 30000
+        '
+        'sveFle
+        '
+        Me.sveFle.Filter = "Excel File|*.xlsx"
+        '
         'frmMain
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BehaviorManager1.SetBehaviors(Me, New DevExpress.Utils.Behaviors.Behavior() {CType(DevExpress.Utils.Behaviors.Common.SnapWindowBehavior.Create(GetType(DevExpress.Utils.BehaviorSource.SnapWindowBehaviorSourceForForm), SnapOptions1), DevExpress.Utils.Behaviors.Behavior)})
-        Me.ClientSize = New System.Drawing.Size(1536, 905)
+        Me.ClientSize = New System.Drawing.Size(1536, 816)
         Me.Controls.Add(Me.BackstageViewControl1)
         Me.Controls.Add(Me.hideContainerRight)
+        Me.Controls.Add(Me.RibbonStatusBar1)
         Me.Controls.Add(Me.RibbonControl1)
         Me.FormBorderEffect = DevExpress.XtraEditors.FormBorderEffect.Shadow
         Me.IconOptions.Icon = CType(resources.GetObject("frmMain.IconOptions.Icon"), System.Drawing.Icon)
@@ -1512,6 +1650,7 @@ Partial Class frmMain
         Me.Name = "frmMain"
         Me.Ribbon = Me.RibbonControl1
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.StatusBar = Me.RibbonStatusBar1
         Me.Text = "Enterprise EICA"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1536,7 +1675,7 @@ Partial Class frmMain
         CType(Me.tgInstrumentsIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgEquipmentIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgCableIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ToggleSwitch1.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tgSolorunIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ToastNotificationsManager, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.BehaviorManager1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dm, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1641,11 +1780,9 @@ Partial Class frmMain
     Friend WithEvents BackstageViewTabItem6 As DevExpress.XtraBars.Ribbon.BackstageViewTabItem
     Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents LabelControl1 As DevExpress.XtraEditors.LabelControl
-    Friend WithEvents LabelControl2 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl
-    Friend WithEvents LabelControl4 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents SimpleButton2 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents BarButtonItem56 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
@@ -1657,7 +1794,7 @@ Partial Class frmMain
     Friend WithEvents tgInstrumentsIntegrity As DevExpress.XtraEditors.ToggleSwitch
     Friend WithEvents tgEquipmentIntegrity As DevExpress.XtraEditors.ToggleSwitch
     Friend WithEvents tgCableIntegrity As DevExpress.XtraEditors.ToggleSwitch
-    Friend WithEvents ToggleSwitch1 As DevExpress.XtraEditors.ToggleSwitch
+    Friend WithEvents tgSolorunIntegrity As DevExpress.XtraEditors.ToggleSwitch
     Friend WithEvents tgMotorIntegrity As DevExpress.XtraEditors.LabelControl
     Friend WithEvents LabelControl8 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents LabelControl7 As DevExpress.XtraEditors.LabelControl
@@ -1679,7 +1816,6 @@ Partial Class frmMain
     Friend WithEvents BarButtonItem25 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents rpSupportTeam As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents LabelControl13 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents SimpleButton5 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents PictureBox3 As PictureBox
     Friend WithEvents LabelControl14 As DevExpress.XtraEditors.LabelControl
@@ -1690,4 +1826,22 @@ Partial Class frmMain
     Friend WithEvents SimpleButton7 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents SimpleButton8 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents hideContainerRight As DevExpress.XtraBars.Docking.AutoHideContainer
+    Friend WithEvents RibbonPageGroup2 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents RibbonPageGroup4 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem6 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem7 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem10 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonItem13 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents SimpleButton9 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents RibbonStatusBar1 As DevExpress.XtraBars.Ribbon.RibbonStatusBar
+    Friend WithEvents SkinDropDownButtonItem As DevExpress.XtraBars.SkinDropDownButtonItem
+    Friend WithEvents SkinPaletteRibbonGalleryBarItem As DevExpress.XtraBars.SkinPaletteRibbonGalleryBarItem
+    Friend WithEvents BarButtonItem17 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents BarButtonGroup1 As DevExpress.XtraBars.BarButtonGroup
+    Friend WithEvents BarButtonGroup2 As DevExpress.XtraBars.BarButtonGroup
+    Friend WithEvents BarMdiChildrenListItem1 As DevExpress.XtraBars.BarMdiChildrenListItem
+    Friend WithEvents notificationsTimer As Timer
+    Friend WithEvents lblLoopBlockages As DevExpress.XtraBars.BarStaticItem
+    Friend WithEvents lblSolorunBlockages As DevExpress.XtraBars.BarStaticItem
+    Friend WithEvents sveFle As SaveFileDialog
 End Class

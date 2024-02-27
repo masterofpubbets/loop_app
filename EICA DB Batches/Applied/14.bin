@@ -1,0 +1,520 @@
+--version10.5
+UPDATE [dbo].[tblSettings] SET SetValue = 10.6 WHERE SetName = 'VERSION'
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetResourceItem'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.GetResourceItem
+END
+GO
+CREATE PROC dbo.GetResourceItem
+@itemId INT,
+@groupId INT
+AS
+SELECT
+dbo.tblResourcesItem.Id, tblResources.id AS [ResId], ResourcesName AS [Resources Name], [Resource],Suffix,Remarks,CreatedDate AS [Created Date]
+FROM dbo.tblResources
+INNER JOIN tblResourcesItem WITH (NOLOCK) ON tblResources.id = tblResourcesItem.ResId
+WHERE tblResourcesItem.ItemId = @itemId AND tblResourcesItem.GroupId = @groupId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetCablesFull'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetCablesFull
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetCablesFull]
+AS
+
+If(OBJECT_ID('tempdb..#Equipment') Is Not Null)
+Begin
+    Drop Table #Equipment
+End
+
+If(OBJECT_ID('tempdb..#ElePro') Is Not Null)
+Begin
+    Drop Table #ElePro
+End
+
+If(OBJECT_ID('tempdb..#InsPro') Is Not Null)
+Begin
+    Drop Table #InsPro
+End
+
+If(OBJECT_ID('tempdb..#ActId') Is Not Null)
+Begin
+    Drop Table #ActId
+End
+
+DECLARE @cutoff DATE
+SELECT @cutoff = tblTMP.tmp_date FROM tblTmp WHERE tblTMP.tmp_id = 1
+
+CREATE TABLE #Equipment (
+Discipline NVARCHAR(250) NOT NULL,
+Type NVARCHAR(250) NULL,
+SubType NVARCHAR(250) NULL,
+Area NVARCHAR(250) NULL,
+Subsystem NVARCHAR(250) NULL,
+Tag NVARCHAR(250) NOT NULL,
+Description NVARCHAR(250) NULL,
+ActId NVARCHAR(250) NULL,
+InstallationDate DATE NULL,
+QCReleasedDate DATE NULL,
+InstallationScope NVARCHAR(250) NULL,
+RFI NVARCHAR(250) NULL,
+PDSModel NVARCHAR(250) NULL,
+Team NVARCHAR(250) NULL,
+Status NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE #ElePro (
+Tag NVARCHAR(250) NOT NULL,
+TotalPercentage FLOAT NOT NULL DEFAULT 0,
+LastUpdated DATE NOT NULL,
+Weekly FLOAT NOT NULL DEFAULT 0
+)
+
+CREATE TABLE #InsPro (
+Tag NVARCHAR(250) NOT NULL,
+TotalPercentage FLOAT NOT NULL DEFAULT 0,
+LastUpdated DATE NOT NULL,
+Weekly FLOAT NOT NULL DEFAULT 0
+)
+
+CREATE TABLE #ActId (
+[ActID] NVARCHAR(250) NOT NULL,
+[ActName] NVARCHAR(250) NULL,
+[SubCon] NVARCHAR(250) NULL,
+[Family] NVARCHAR(250) NULL,
+[EICA_Area] NVARCHAR(250) NULL,
+[Team] NVARCHAR(250) NULL,
+[StartDate] DATE NULL,
+[EndDate] DATE NULL
+)
+
+INSERT INTO #ElePro 
+SELECT 
+      [Tag]
+      ,SUM([Per_Qnty]) AS TotalPercentage
+      ,MAX([Pro_Date]) AS LastUpdated
+      ,SUM(CASE WHEN pro_Date BETWEEN DATEADD(DAY, -6, @cutoff) AND @cutoff THEN Per_Qnty ELSE 0 END) AS Weekly
+FROM [tblEleCableProduction] WITH (NOLOCK)
+GROUP BY Tag
+
+
+
+INSERT INTO #InsPro
+SELECT 
+      [Tag]
+      ,SUM([Per_Qnty]) AS TotalPercentage
+      ,MAX([Pro_Date]) AS LastUpdated
+      ,SUM(CASE WHEN pro_Date BETWEEN DATEADD(DAY, -6, @cutoff) AND @cutoff THEN Per_Qnty ELSE 0 END) AS Weekly
+FROM [tblInsCableProduction] WITH (NOLOCK)
+GROUP BY Tag
+
+
+INSERT INTO #Equipment
+EXEC CONSTRUCTION.GetEquipmentMini
+
+INSERT INTO #Equipment
+SELECT 
+'Instrumentation' AS Discipline,Ins_Type AS [Type],[Furnished_By] AS SubType,Area,[Subsystem]
+,Instrument_Tag AS Tag
+,[Instrument_Type_Desc] AS [Description]
+,[IC_Plan_P6_ActID_Install] AS [ActId]
+,Installation_Date AS [Installed Date]
+,Final_Installed_Date AS [QC Released Date]
+,RFINumberInstallation AS RFI
+,NULL AS [Installation Scope]
+,PDSModel
+,[Team]
+,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+FROM tblInstruments WITH (NOLOCK)
+
+INSERT INTO #Equipment
+SELECT 
+'Lighting' AS Discipline,LF_Ref_Desc AS [Type],NULL AS SubType,Area,[Subsystem]
+,TAG
+,[LF_Ref_Desc] AS [Description]
+,[IC_Plan_P6_ActID_Install] AS [ActId]
+,LF_Installed AS [Installed Date]
+,NULL AS [QC Released Date]
+,NULL AS RFI
+,NULL AS [Installation Scope]
+,PDSModel
+,[Team]
+,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+FROM tblLightingFixture WITH (NOLOCK)
+
+
+INSERT INTO #ActId
+SELECT [ActID],[ActName],[SubCon],[Family],[EICA_Area],[Team],[StartDate],[EndDate] FROM [tblActIDS] WITH (NOLOCK)
+
+SELECT DISTINCT
+EC.Discipline,EC.[Area],[EC_Type] AS [Type],[EC_ID] AS Tag,[EC_Length] AS [Length],[EC_Description] AS [Description],Routing
+,EC.[SubSystem]
+,[EC_From] AS [From],[From_Description] AS [From Description], EqFrom.Area AS [Eq From Area], EqFrom.PDSModel AS [Eq From PDSModel], EqFrom.Team AS [Eq From Team], EqFrom.[Status] AS [Eq From Status]
+,[EC_To] AS [To],[To_Description] AS [To Description], EqTo.Area AS [Eq To Area], EqTo.PDSModel AS [Eq To PDSModel], EqTo.Team AS [Eq To Team], EqTo.[Status] AS [Eq To Status]
+,Drawing
+
+,[EC_Plan_P6_ActID_Pulling] AS [Pulling ActId], PullAct.ActName AS [Pulling ActName],PullAct.EICA_Area AS [Pulling Act Area],PullAct.Family AS [Pulling Act Family],PullAct.SubCon AS [Pulling Act Subcon],PullAct.Team AS [Pulling Act Team],PullAct.StartDate AS [Pulling Act StartDate],PullAct.EndDate AS [Pulling Act EndDate]
+,[EC_Plan_P6_ActID_Connect] AS [Con From ActId], ConFromAct.ActName AS [ConFrom ActName],ConFromAct.EICA_Area AS [ConFrom Act Area],ConFromAct.Family AS [ConFrom Act Family],ConFromAct.SubCon AS [ConFrom Act Subcon],ConFromAct.Team AS [ConFrom Act Team],ConFromAct.StartDate AS [ConFrom Act StartDate],ConFromAct.EndDate AS [ConFrom Act EndDate]
+,[EC_Plan_P6_ActID_Connect_2] AS [Con To ActId], ConToAct.ActName AS [ConTo ActName],ConToAct.EICA_Area AS [ConTo Act Area],ConToAct.Family AS [ConTo Act Family],ConToAct.SubCon AS [ConTo Act Subcon],ConToAct.Team AS [ConTo Act Team],ConToAct.StartDate AS [ConTo Act StartDate],ConToAct.EndDate AS [ConTo Act EndDate]
+,[EC_Plan_P6_ActID_Test] AS [Test ActId]
+
+,PullingWorkfront AS [Pulling Workfront]
+,#ElePro.TotalPercentage * EC.EC_Length / 100 AS [Pulled Lm]
+,#ElePro.LastUpdated [Pulled Date]
+,#ElePro.TotalPercentage
+,#ElePro.Weekly * EC.EC_Length / 100 AS [Weekly Pulled Lm]
+
+,GlandFromWorkfront AS [Gland From Workfront]
+,EC_Cable_Gland_From AS [Gland From Date]
+
+,GlandToWorkfront AS [Gland To Workfront]
+,EC_Cable_Gland_To AS [Gland To Date]
+
+,ConnFromWorkfront AS [Conn From Workfront]
+,[EC_Plan_Connected_Date_From] AS [Con From Date]
+
+,ConnToWorkfront AS [Conn To Workfront]
+,[EC_Plan_Connected_Date_To] AS [Con To Date]
+
+,[EC_Megger] AS [Test Date]
+,[TR_QC_Released] AS [QC Released Date]
+,RFINumber
+,EC.PDSModel
+,[Remarks]
+,EC.[Team], tbl_id AS Id
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+,CASE WHEN EleRes.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM [tblEleCableList] AS EC WITH (NOLOCK)
+LEFT JOIN #ElePro ON EC.EC_ID = #ElePro.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #Equipment AS EqFrom ON EC.EC_From = EqFrom.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #Equipment AS EqTo ON EC.EC_To = EqTo.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #ActId AS PullAct ON EC.EC_Plan_P6_ActID_Pulling = PullAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #ActId AS ConFromAct ON EC.EC_Plan_P6_ActID_Connect = ConFromAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #ActId AS ConToAct ON EC.EC_Plan_P6_ActID_Connect_2 = ConToAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 100) AS EleRes ON EC.TBL_ID = EleRes.ItemId
+
+
+UNION ALL
+
+SELECT DISTINCT
+IC.Discipline,IC.[Area],[IC_Type] AS [Type],[IC_ID] AS Tag,[IC_Length] AS [Length],[IC_Description] AS [Description],Routing
+,IC.[SubSystem]
+,[IC_From] AS [From],[From_Description] AS [From Description], EqFrom.Area AS [Eq From Area], EqFrom.PDSModel AS [Eq From PDSModel], EqFrom.Team AS [Eq From Team], EqFrom.[Status] AS [Eq From Status]
+,[IC_To] AS [To],[To_Description] AS [To Description], EqTo.Area AS [Eq To Area], EqTo.PDSModel AS [Eq To PDSModel], EqTo.Team AS [Eq To Team], EqTo.[Status] AS [Eq To Status]
+,Drawing
+
+,[IC_Plan_P6_ActID_Pulling] AS [Pulling ActId], PullAct.ActName AS [Pulling ActName],PullAct.EICA_Area AS [Pulling Act Area],PullAct.Family AS [Pulling Act Family],PullAct.SubCon AS [Pulling Act Subcon],PullAct.Team AS [Pulling Act Team],PullAct.StartDate AS [Pulling Act StartDate],PullAct.EndDate AS [Pulling Act EndDate]
+,[IC_Plan_P6_ActID_Connect] AS [Con From ActId], ConFromAct.ActName AS [ConFrom ActName],ConFromAct.EICA_Area AS [ConFrom Act Area],ConFromAct.Family AS [ConFrom Act Family],ConFromAct.SubCon AS [ConFrom Act Subcon],ConFromAct.Team AS [ConFrom Act Team],ConFromAct.StartDate AS [ConFrom Act StartDate],ConFromAct.EndDate AS [ConFrom Act EndDate]
+,[IC_Plan_P6_ActID_Connect_2] AS [Con To ActId], ConToAct.ActName AS [ConTo ActName],ConToAct.EICA_Area AS [ConTo Act Area],ConToAct.Family AS [ConTo Act Family],ConToAct.SubCon AS [ConTo Act Subcon],ConToAct.Team AS [ConTo Act Team],ConToAct.StartDate AS [ConTo Act StartDate],ConToAct.EndDate AS [ConTo Act EndDate]
+,[IC_Plan_P6_ActID_Test] AS [Test ActId]
+
+,PullingWorkfront AS [Pulling Workfront]
+,#InsPro.TotalPercentage * IC.IC_Length / 100 AS [Pulled Lm]
+,#InsPro.LastUpdated [Pulled Date]
+,#InsPro.TotalPercentage
+,#InsPro.Weekly * IC.IC_Length / 100 AS [Weekly Pulled Lm]
+
+,GlandFromWorkfront AS [Gland From Workfront]
+,IC_Cable_Gland_From AS [Gland From Date]
+
+,GlandToWorkfront AS [Gland To Workfront]
+,IC_Cable_Gland_To AS [Gland To Date]
+
+,ConnFromWorkfront AS [Conn From Workfront]
+,[IC_Plan_Connected_Date_From] AS [Con From Date]
+
+,ConnToWorkfront AS [Conn To Workfront]
+,[IC_Plan_Connected_Date_To] AS [Con To Date]
+
+,[IC_Megger] AS [Test Date]
+,[TR_QC_Released] AS [QC Released Date]
+,RFINumber
+,IC.PDSModel
+,[Remarks]
+,IC.[Team], tbl_id AS Id
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+,CASE WHEN InsRes.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM [tblInsCableList] AS IC WITH (NOLOCK)
+LEFT JOIN #InsPro ON IC.IC_ID = #InsPro.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #Equipment AS EqFrom ON IC.IC_From = EqFrom.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #Equipment AS EqTo ON IC.IC_To = EqTo.Tag COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #ActId AS PullAct ON IC.IC_Plan_P6_ActID_Pulling = PullAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #ActId AS ConFromAct ON IC.IC_Plan_P6_ActID_Connect = ConFromAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN #ActId AS ConToAct ON IC.IC_Plan_P6_ActID_Connect_2 = ConToAct.ActID COLLATE SQL_Latin1_General_CP1_CI_AS
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 200) AS InsRes ON IC.TBL_ID = InsRes.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetEquipment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetEquipment
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetEquipment]
+AS
+
+SELECT
+VALL.Discipline,VALL.[Type],VALL.Subtype,VALL.Area,VALL.Subsystem,VALL.Tag,VALL.[Description],
+VALL.ActId,tblActIDS.ActName,tblActIDS.SubCon AS [Act Subcon],
+VALL.[Installed Date],VALL.[QC Released Date],VALL.RFINumber,VALL.[Installation Scope],
+VALL.PDSModel,VALL.Team,VALL.[Status],VALL.Id,
+CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM (
+    SELECT 
+    'Instrumentation' AS Discipline,[JI_Type] AS [Type],NULL AS Subtype,
+    [Area],[Subsystem],[JunctionBox] AS Tag
+    ,[JI_Description] AS [Description]
+    ,[IC_Plan_P6_ActID_Install] AS [ActId]
+    ,[JI_Installed] AS [Installed Date]
+    ,[JI_TRQC] AS [QC Released Date]
+    ,NULL AS RFINumber
+    ,[Furnished_By] AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,tbl_id AS Id
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM [JunctionBox] WITH (NOLOCK)
+
+    UNION ALL
+
+    SELECT 
+    'Instrumentation' AS Discipline,[Type],Type_Description AS Subtype,
+    [Area],[Subsystem],Tag AS Tag
+    ,[des] AS [Description]
+    ,[IC_Plan_P6_ActID_Install] AS [ActId]
+    ,Installed_Date AS [Installed Date]
+    ,TR_QC_Released AS [QC Released Date]
+    ,NULL AS RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,tbl_id AS Id
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblInsEquipment WITH (NOLOCK)
+
+    UNION ALL
+
+    SELECT 
+    'Electrical' AS Discipline,[JE_Type] AS [Type],NULL AS Subtype,
+    [Area],[Subsystem],Tag AS Tag
+    ,JE_Description AS [Description]
+    ,[IC_Plan_P6_ActID_Install] AS [ActId]
+    ,JE_Installed AS [Installed Date]
+    ,JE_TRQC AS [QC Released Date]
+    ,NULL AS RFINumber
+    ,[Furnished_By] AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,tbl_id AS Id
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblEleJunctionBox WITH (NOLOCK)
+
+    UNION ALL
+
+    SELECT 
+    'Electrical' AS Discipline,[Type],Type_Description AS Subtype,
+    [Area],[Subsystem],Tag AS Tag
+    ,[des] AS [Description]
+    ,[IC_Plan_P6_ActID_Install] AS [ActId]
+    ,Installed_Date AS [Installed Date]
+    ,TR_QC_Released AS [QC Released Date]
+    ,NULL AS RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,tbl_id AS Id
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblElectricalEquipment WITH (NOLOCK)
+
+    UNION ALL
+
+    SELECT 
+    Discipline,[Type],Subtype,
+    [Area],[Subsystem],Tag
+    ,[Description]
+    ,[ActId]
+    ,InstalledDate AS [Installed Date]
+    ,QCDate AS [QC Released Date]
+    ,RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,eqId AS Id
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    FROM tblEquipment WITH (NOLOCK)
+) AS VALL
+LEFT JOIN tblActIDS ON VALL.ActId = tblActIDS.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 500) AS Res ON VALL.Id = Res.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetInstrumentsFull'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetInstrumentsFull
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetInstrumentsFull]
+AS
+
+WITH ActIds AS (
+    SELECT ActId, ActName, SubCon
+    FROM tblActIDS
+)
+
+SELECT [TBL_ID] AS Id, [Area]
+      ,[Instrument_Tag] AS Tag
+      ,[Loop_type] AS [Signal Type]
+      ,CASE WHEN [Instrument] ='Instrument' THEN 'Device' 
+      ELSE [Instrument] END AS Device
+      ,[Ins_Type] AS [Type]
+      ,[Instrument_Type_Desc] AS [Description]
+      ,[Equipment_Name] AS [Mounted Equipment]
+      ,[P_ID] AS [PID]
+      ,[Line_Number] AS [Line Number]
+      ,[Location]
+      ,[Subsystem]
+      ,PDSModel
+      ,[P6_Precalibration_ActID] AS [ActId Calibration]
+      ,ActCalib.ActName AS [Calibration Act Name], ActCalib.SubCon AS [Calibration Subcon]
+      ,[IC_Plan_P6_ActID_Install] AS [ActId Installation]
+      ,ActInst.ActName AS [Installation Act Name], ActInst.SubCon AS [Installation Subcon]
+      ,[IC_Plan_P6_ActID_Hookup] AS [ActId Hookup]
+      ,ActHookup.ActName AS [Hookup Act Name], ActHookup.SubCon AS [Hookup Subcon]
+      ,[Calibration_Type] AS [Calibration Scope]
+      ,[Calibration_Date] AS [Calibration Date]
+      ,[Installation_Date] AS [Installation Date]
+      ,CASE WHEN [hookup_name] IS NULL THEN 'N/A' ELSE hookup_name END AS [Hookup]
+      ,[HookUp_Date] AS [Hookup Date]
+      ,[Final_Installed_Date] AS [Re-Instated]
+      ,Installed_QC AS [Installation QC Released]
+      ,RFINumberInstallation
+      ,Calibration_QC_Date AS [Calibration QC Released]
+      ,RFINumberCalibration
+      ,Hookup_QC_Date AS [Hookup QC Released]
+      ,RFINumberHookup
+      ,[tp_name] AS [TP Name]
+      ,CASE WHEN [Furnished_By] IS NULL THEN 'TR' ELSE [Furnished_By] END AS [Furnished By]
+      ,[Team]
+      ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS [Status]
+      ,CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+  FROM [tblInstruments] WITH (NOLOCK)
+  LEFT JOIN ActIds AS ActInst ON tblInstruments.IC_Plan_P6_ActID_Install = ActInst.ActID
+  LEFT JOIN ActIds AS ActCalib ON tblInstruments.P6_Precalibration_ActID = ActCalib.ActID
+  LEFT JOIN ActIds AS ActHookup ON tblInstruments.IC_Plan_P6_ActID_Hookup = ActHookup.ActID
+  LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 800) AS Res ON tblInstruments.TBL_ID = Res.ItemId
+  OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLighting'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetLighting
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetLighting]
+AS
+SELECT tblLightingFixture.[TBL_ID] AS Id
+      ,[Tag]
+      ,[Area]
+      ,[LF_Ref_Desc] AS [Type]
+      ,[IC_Plan_P6_ActID_Install] As [ActId]
+      ,tblActIDS.ActName
+      ,tblActIDS.SubCon AS [Act Subcon]
+      ,[LF_Dwg] AS [Drawing Number]
+      ,[Subsystem]
+      ,[Arrival_Date] AS [Received Date]
+      ,[LF_Installed] AS [Installed Date]
+	  ,reportedBy AS [Reported By]
+	  ,PDSModel
+      ,tblLightingFixture.[Team]
+	  ,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+      ,CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+  FROM [tblLightingFixture] WITH (NOLOCK)
+  LEFT JOIN tblActIDS on tblLightingFixture.IC_Plan_P6_ActID_Install = tblActIDS.ActID
+  LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 900) AS Res ON tblLightingFixture.TBL_ID = Res.ItemId
+  OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [CONSTRUCTION].[GetTrays]
+AS
+WITH InsCblTray AS (
+	SELECT [Tag]
+		,SUM([Production_Qnty]) AS [Total Qnty]
+		,MAX([Production_Date]) AS [Last Update]
+	FROM [tblInsCableTrayProduction] WITH (NOLOCK)
+	GROUP BY Tag
+),
+EleCblTray AS (
+	SELECT [Tag]
+		,SUM([Production_Qnty]) AS [Total Qnty]
+		,MAX([Production_Date]) AS [Last Update]
+	FROM [tblEleCableTrayProduction] WITH (NOLOCK)
+	GROUP BY Tag
+), ActIds AS (
+    SELECT ActId, ActName, SubCon
+    FROM tblActIDS
+)
+
+SELECT 
+'Instrumentation' AS Discipline
+,[tbl_id] AS Id,[Area],[tblInsCableTray].[Tag],[IN_Tray_Type] AS [Type]
+,[IN_Tray_Description] AS [Description],[IN_Tray_Length] AS [Length]
+,[Subsystem]
+,[IC_Plan_P6_ActID_Install] AS [ActId]
+,ActIds.ActName AS [Activity Name], ActIds.SubCon AS [Activity Subcontractor]
+,InsCblTray.[Total Qnty]
+,ROUND(CONVERT(FLOAT,InsCblTray.[Total Qnty]) * 100 / CONVERT(FLOAT,[IN_Tray_Length]),2) AS [Percentage]
+,InsCblTray.[Last Update]
+,PDSModel
+,[Team]
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+,CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM [tblInsCableTray] WITH (NOLOCK)
+LEFT JOIN InsCblTray ON [tblInsCableTray].Tag = InsCblTray.Tag
+LEFT JOIN ActIds ON tblInsCableTray.IC_Plan_P6_ActID_Install = ActIds.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 700) AS Res ON tblInsCableTray.TBL_ID = Res.ItemId
+UNION ALL
+
+
+SELECT 
+'Electrical' AS Discipline
+,[tbl_id] AS Id,[Area],[tblEleCableTray].[Tag],[EL_Tray_Type] AS [Type]
+,[EL_Tray_Description] AS [Description],[EL_Tray_Length] AS [Length]
+,[Subsystem]
+,[IC_Plan_P6_ActID_Install] AS [ActId]
+,ActIds.ActName AS [Activity Name], ActIds.SubCon AS [Activity Subcontractor]
+,EleCblTray.[Total Qnty]
+,ROUND(CONVERT(FLOAT,EleCblTray.[Total Qnty]) * 100 / CONVERT(FLOAT,[EL_Tray_Length]),2) AS [Percentage]
+,EleCblTray.[Last Update]
+,PDSModel
+,[Team]
+,CASE WHEN Active = 1 THEN 'Active' ELSE 'DELETED' END AS Status
+,CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+FROM [tblEleCableTray] WITH (NOLOCK)
+LEFT JOIN EleCblTray ON [tblEleCableTray].Tag = EleCblTray.Tag
+LEFT JOIN ActIds ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIds.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 600) AS Res ON tblEleCableTray.TBL_ID = Res.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO

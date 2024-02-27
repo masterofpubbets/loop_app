@@ -1,0 +1,2521 @@
+--version11.0.5
+UPDATE [dbo].[tblSettings] SET SetValue = '11.0.5' WHERE SetName = 'VERSION'
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'DeleteCable'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PLANNING')
+			)
+BEGIN
+	DROP PROC PLANNING.DeleteCable
+END
+GO
+CREATE PROC PLANNING.DeleteCable
+@Tag NVARCHAR(200),
+@Discipline NVARCHAR(50)
+AS
+IF @Discipline = 'Electrical'
+	BEGIN
+		DELETE FROM tblEleCableProduction WHERE TAG = @Tag
+		DELETE FROM tblEleCableList WHERE EC_ID = @Tag
+	END
+ELSE
+	BEGIN
+		DELETE FROM tblInsCableProduction WHERE TAG = @Tag
+		DELETE FROM tblInsCableList WHERE IC_ID = @Tag
+	END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetInstrumentsFull'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetInstrumentsFull
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetInstrumentsFull]
+AS
+WITH ActIds AS (
+    SELECT ActId, ActName, SubCon
+    FROM tblActIDS
+)
+
+SELECT [TBL_ID] AS Id, [Area]
+      ,[Instrument_Tag] AS Tag
+      ,[Loop_type] AS [Signal Type]
+      ,CASE WHEN [Instrument] ='Instrument' THEN 'Device' 
+      ELSE [Instrument] END AS Device
+      ,[Ins_Type] AS [Type]
+      ,[Instrument_Type_Desc] AS [Description]
+      ,[Equipment_Name] AS [Mounted Equipment]
+      ,[P_ID] AS [PID]
+      ,[Line_Number] AS [Line Number]
+      ,[Location]
+      ,[Subsystem]
+      ,PDSModel
+      ,[P6_Precalibration_ActID] AS [ActId Calibration]
+      ,ActCalib.ActName AS [Calibration Act Name], ActCalib.SubCon AS [Calibration Subcon]
+      ,[IC_Plan_P6_ActID_Install] AS [ActId Installation]
+      ,ActInst.ActName AS [Installation Act Name], ActInst.SubCon AS [Installation Subcon]
+      ,[IC_Plan_P6_ActID_Hookup] AS [ActId Hookup]
+      ,ActHookup.ActName AS [Hookup Act Name], ActHookup.SubCon AS [Hookup Subcon]
+      ,[Calibration_Type] AS [Calibration Scope]
+      ,[Calibration_Date] AS [Calibration Date]
+      ,[Installation_Date] AS [Installation Date]
+      ,CASE WHEN [hookup_name] IS NULL THEN 'N/A' ELSE hookup_name END AS [Hookup]
+      ,[HookUp_Date] AS [Hookup Date]
+      ,[Final_Installed_Date] AS [Re-Instated]
+      ,Installed_QC AS [Installation QC Released]
+      ,RFINumberInstallation
+      ,Calibration_QC_Date AS [Calibration QC Released]
+      ,RFINumberCalibration
+      ,Hookup_QC_Date AS [Hookup QC Released]
+      ,RFINumberHookup
+      ,[tp_name] AS [TP Name]
+      ,CASE WHEN [Furnished_By] IS NULL THEN 'TR' ELSE [Furnished_By] END AS [Furnished By]
+      ,[Team]
+      ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS [Status]
+      ,CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource]
+      ,po AS PO
+  FROM [tblInstruments] WITH (NOLOCK)
+  LEFT JOIN ActIds AS ActInst ON tblInstruments.IC_Plan_P6_ActID_Install = ActInst.ActID
+  LEFT JOIN ActIds AS ActCalib ON tblInstruments.P6_Precalibration_ActID = ActCalib.ActID
+  LEFT JOIN ActIds AS ActHookup ON tblInstruments.IC_Plan_P6_ActID_Hookup = ActHookup.ActID
+  LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 800) AS Res ON tblInstruments.TBL_ID = Res.ItemId
+  OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+  GO
+  IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetEquipment'
+			AND schema_id = (select schema_id from sys.schemas where name = 'CONSTRUCTION')
+			)
+BEGIN
+	DROP PROC CONSTRUCTION.GetEquipment
+END
+GO
+CREATE PROC [CONSTRUCTION].[GetEquipment]
+AS
+
+SELECT
+VALL.Discipline,VALL.Family,VALL.[Type],VALL.Subtype,VALL.Area,VALL.Subsystem,VALL.Tag,VALL.[Description],
+VALL.ActId,tblActIDS.ActName,tblActIDS.SubCon AS [Act Subcon],
+VALL.PrecomTestActID,ActIDPrecomm.ActName AS [Precomm Act Name],
+VALL.[Installed Date],VALL.[QC Released Date],VALL.RFINumber,VALL.[Installation Scope],
+VALL.[Precom Test Required], VALL.[Precom Test Date],
+VALL.PDSModel,VALL.Team,VALL.[Status],VALL.Id,
+CASE WHEN Res.ItemId IS NOT NULL THEN 'Yes' ELSE 'No' END AS [Resource],
+VALL.PO
+FROM (
+    SELECT 
+    Discipline,Family,[Type],Subtype,
+    [Area],[Subsystem],Tag
+    ,[Description]
+    ,[ActId]
+    ,[PrecomTestActID]
+    ,InstalledDate AS [Installed Date]
+    ,QCDate AS [QC Released Date]
+    ,RFINumber
+    ,NULL AS [Installation Scope]
+    ,PDSModel
+    ,[Team]
+    ,eqId AS Id
+    ,CASE WHEN PrecomTestRequired =1 THEN 'Yes' ELSE 'No' END AS [Precom Test Required]
+    ,PrecomTestDate AS [Precom Test Date]
+    ,CASE WHEN Active = 0 THEN 'DELETED' ELSE 'Active' END AS Status
+    ,PO
+    FROM tblEquipment WITH (NOLOCK)
+) AS VALL
+LEFT JOIN tblActIDS ON VALL.ActId = tblActIDS.ActID
+LEFT JOIN tblActIDS AS ActIDPrecomm ON VALL.PrecomTestActID = ActIDPrecomm.ActID
+LEFT JOIN (SELECT [ItemId] FROM [dbo].[tblResourcesItem] WITH (NOLOCK) WHERE GroupId = 500) AS Res ON VALL.Id = Res.ItemId
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'SubmitToQC'
+          AND Object_ID = Object_ID(N'dbo.tblInsLoop'))
+BEGIN
+    ALTER TABLE tblInsLoop
+    ADD SubmitToQC DATE NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ReturnFromQC'
+          AND Object_ID = Object_ID(N'dbo.tblInsLoop'))
+BEGIN
+    ALTER TABLE tblInsLoop
+    ADD ReturnFromQC DATE NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetLoopsHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetLoopsHCS
+END
+GO
+CREATE PROC [LOOPS].[GetLoopsHCS]
+AS
+WITH LoopsData AS (
+
+SELECT DISTINCT [TBL_ID] AS Id
+	  ,Area
+      ,[LoopName] As [Loop Name]
+	  ,L_Description AS [Description]
+      ,[L_Type] As [Type]
+      ,[Sub_Type] AS [Sub Type]
+	  ,[Subsystem]
+	  ,[Subcontractor]
+      ,[Vendor]
+	  
+	  ,L_Constr_Release AS [Cons Complete]
+	  ,TR_Loop_Folder_QC_Release AS [QC Released]
+      ,[Folder_Preparation] AS [Folder Printed]
+      ,SubmitToQC AS [Submitted To QC]
+	  ,HCS_Folder_Ready AS [Folder Ready QC]
+      ,ReturnFromQC AS [Return From QC]
+	  ,Submitted_to_Precom AS [Submitted To Precomm]
+	  ,L_Done AS [Done]
+	  ,L_FinalApproval AS [Final Approval]
+      
+	  ,CASE WHEN L_FinalApproval IS NOT NULL THEN 'Loop Done'
+		WHEN L_Done IS NOT NULL THEN 'Loop Done'
+		WHEN Submitted_to_Precom IS NOT NULL THEN 'Submitted To Pre-Comm'
+		WHEN ReturnFromQC IS NOT NULL THEN 'Returned From QC'
+		WHEN HCS_Folder_Ready IS NOT NULL THEN 'Folder Ready'
+		WHEN SubmitToQC IS NOT NULL THEN 'Submitted To QC'
+        WHEN [Folder_Preparation] IS NOT NULL THEN 'Folder Printed'
+		WHEN TR_Loop_Folder_QC_Release IS NOT NULL THEN 'QC Released'
+		WHEN L_Constr_Release IS NOT NULL THEN 'Construction Complete'
+		ELSE 'Not Ready'
+		END AS [Folder Status]
+		,LoopPriority
+		,tblProject.Pro_Title AS [Project]
+		--,[qrCode] AS QRCode
+		,tblInsLoop.ProUUID 
+  FROM [tblInsLoop] WITH (NOLOCK)
+  INNER JOIN tblProject ON [tblInsLoop].ProUUID = tblProject.UUID
+  WHERE [tblInsLoop].Active = 1
+)
+
+SELECT DISTINCT
+CASE WHEN LOOPS.tblLoopsCons.isClosed = 0 THEN 'Yes' ELSE 'No' END AS [Has Blockage]
+,LoopsData.*
+
+FROM LoopsData
+LEFT JOIN LOOPS.tblLoopsCons WITH (NOLOCK) ON LoopsData.Id = LOOPS.tblLoopsCons.loopId
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblInsLoop_Log_SubmitToQC'
+			)
+BEGIN
+	DROP TRIGGER dbo.tr_tblInsLoop_Log_SubmitToQC
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblInsLoop_Log_SubmitToQC]
+   ON [dbo].[tblInsLoop]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE ([SubmitToQC]) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.LoopName as Tag,inserted.SubmitToQC from inserted
+		inner join deleted on inserted.TBL_ID = deleted.TBL_ID
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @SubmitToQC DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@SubmitToQC
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@SubmitToQC
+				insert into tblInsLoop_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Submit To QC',system_user,getdate(),@SubmitToQC)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblInsLoop] ENABLE TRIGGER [tr_tblInsLoop_Log_SubmitToQC]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblInsLoop_Log_ReturnFromQC'
+			)
+BEGIN
+	DROP TRIGGER dbo.tr_tblInsLoop_Log_ReturnFromQC
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblInsLoop_Log_ReturnFromQC]
+   ON [dbo].[tblInsLoop]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE ([ReturnFromQC]) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.LoopName as Tag,inserted.ReturnFromQC from inserted
+		inner join deleted on inserted.TBL_ID = deleted.TBL_ID
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @ReturnFromQC DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@ReturnFromQC
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@ReturnFromQC
+				insert into tblInsLoop_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Return From QC',system_user,getdate(),@ReturnFromQC)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblInsLoop] ENABLE TRIGGER [tr_tblInsLoop_Log_ReturnFromQC]
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ReturnFromQC'
+          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.LoopTemp
+    ADD ReturnFromQC DATE NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'SubmitToQC'
+          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.LoopTemp
+    ADD SubmitToQC DATE NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsNoOverwrite'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsNoOverwrite
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateLoopsNoOverwrite]
+@opKey NVARCHAR(250),
+@date DATE = NULL
+
+AS
+
+--CHECK ERRORs
+UPDATE V
+    SET Error = 'Loop Not Exists'
+FROM (
+    SELECT
+    Tag, temp.Error
+    FROM TEMPDATA.LoopTemp AS temp
+    LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+    WHERE UpdateType = 'UPDATEPROGRESS' AND tblInsLoop.LoopName IS NULL
+    AND temp.OpKey = @opKey
+) AS V
+--
+
+IF @date IS NOT NULL
+    BEGIN
+        --FolderPreparation
+        UPDATE V
+                SET Folder_Preparation = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.Folder_Preparation
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.Folder_Preparation IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --ConstrRelease
+        UPDATE V
+                SET L_Constr_Release = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.L_Constr_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.L_Constr_Release IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --QCRelease
+        UPDATE V
+                SET TR_Loop_Folder_QC_Release = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.TR_Loop_Folder_QC_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --FolderReady
+        UPDATE V
+                SET HCS_Folder_Ready = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.HCS_Folder_Ready
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.HCS_Folder_Ready IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --SubmittedToPrecom
+        UPDATE V
+                SET Submitted_to_Precom = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.Submitted_to_Precom
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.Submitted_to_Precom IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --Done
+        UPDATE V
+                SET L_Done = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.L_Done
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.L_Done IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --FinalApproval
+        UPDATE V
+                SET L_FinalApproval = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.L_FinalApproval
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.L_FinalApproval IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --FolderPreparation
+        UPDATE V
+                SET SubmitToQC = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.SubmitToQC
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.SubmitToQC IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+        --Return From QC
+        UPDATE V
+                SET ReturnFromQC = @date
+        FROM (
+            SELECT
+            Tag, tblInsLoop.ReturnFromQC
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE 
+                UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+                AND tblInsLoop.ReturnFromQC IS NULL
+                AND temp.OpKey = @opKey
+        ) AS V
+
+    END
+ELSE
+    BEGIN
+        --FolderPreparation
+        UPDATE V
+                SET Folder_Preparation = FolderPreparation
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN FolderPreparation IS NOT NULL THEN @date ELSE NULL END AS FolderPreparation, 
+            tblInsLoop.Folder_Preparation
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.Folder_Preparation IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --ConstrRelease
+        UPDATE V
+                SET L_Constr_Release = ConstrRelease
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN ConstrRelease IS NOT NULL THEN @date ELSE NULL END AS ConstrRelease, 
+            tblInsLoop.L_Constr_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.L_Constr_Release IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --QCRelease
+        UPDATE V
+                SET TR_Loop_Folder_QC_Release = QCRelease
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN QCRelease IS NOT NULL THEN @date ELSE NULL END AS QCRelease, 
+            tblInsLoop.TR_Loop_Folder_QC_Release
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --FolderReady
+        UPDATE V
+                SET HCS_Folder_Ready = FolderReady
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN FolderReady IS NOT NULL THEN @date ELSE NULL END AS FolderReady, 
+            tblInsLoop.HCS_Folder_Ready
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.HCS_Folder_Ready IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --SubmittedToPrecom
+        UPDATE V
+                SET Submitted_to_Precom = SubmittedToPrecom
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN SubmittedToPrecom IS NOT NULL THEN @date ELSE NULL END AS SubmittedToPrecom, 
+            tblInsLoop.Submitted_to_Precom
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.Submitted_to_Precom IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --Done
+        UPDATE V
+                SET l_Done = Done
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN ((Done IS NOT NULL) OR (Progress > 0)) THEN @date ELSE NULL END AS Done, 
+            tblInsLoop.l_Done
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.l_Done IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --FinalApproval
+        UPDATE V
+                SET L_FinalApproval = FinalApproval
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN FinalApproval IS NOT NULL THEN @date ELSE NULL END AS FinalApproval,
+            tblInsLoop.L_FinalApproval
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.L_FinalApproval IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --Submit To QC
+        UPDATE V
+                SET lSubmitToQC = SubmitToQC
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN temp.SubmitToQC IS NOT NULL THEN @date ELSE NULL END AS SubmitToQC,
+            tblInsLoop.SubmitToQC AS lSubmitToQC
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.SubmitToQC IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+        --Return From QC
+        UPDATE V
+                SET lReturnFromQC = ReturnFromQC
+        FROM (
+            SELECT
+            Tag, 
+            CASE WHEN temp.ReturnFromQC IS NOT NULL THEN @date ELSE NULL END AS ReturnFromQC,
+            tblInsLoop.ReturnFromQC AS lReturnFromQC
+            FROM TEMPDATA.LoopTemp AS temp
+            INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+            WHERE UpdateType = 'UPDATEPROGRESS' AND Error IS NULL
+            AND tblInsLoop.ReturnFromQC IS NULL
+            AND temp.OpKey = @opKey
+        ) AS V
+    END
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateLoopsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Not Exist)
+UPDATE V
+	SET Error = 'Loop Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblInsLoop.LoopName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblInsLoop.L_Description
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblInsLoop.Vendor AS L_Vendor
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblInsLoop.Subsystem AS L_Subsystem
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblInsLoop.Area AS L_Area
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblInsLoop.L_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblInsLoop.Sub_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblInsLoop.ACTIVITYID
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.StartDate AS StartDate,
+		tblInsLoop.Planning_START_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinishDate AS FinishDate,
+		tblInsLoop.Planning_FINISH_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblInsLoop.Active
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblInsLoop.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblInsLoop.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblInsLoop.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblInsLoop.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblInsLoop.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblInsLoop.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblInsLoop.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblInsLoop.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblInsLoop.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, StartDate, FinishDate, Active, ReportedBy,
+FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckLoopIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckLoopIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckLoopIntgerity]
+AS
+IF (SELECT LoopIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblInsLoop
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET TR_Loop_Folder_QC_Release = HCS_Folder_Ready
+        WHERE TR_Loop_Folder_QC_Release IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET L_Constr_Release = TR_Loop_Folder_QC_Release
+        WHERE L_Constr_Release IS NULL AND TR_Loop_Folder_QC_Release IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblInsLoop
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblInsLoop
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+    END
+
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'ProjectElements'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP TABLE [HCS].[ProjectElements]
+END
+GO
+CREATE TABLE [HCS].[ProjectElements](
+	[Active] [nvarchar](max) NULL,
+	[ElementTag] [nvarchar](max) NULL,
+	[NodeLevel] [nvarchar](max) NULL,
+	[Location] [nvarchar](max) NULL,
+	[Type] [nvarchar](max) NULL,
+	[Class] [nvarchar](max) NULL,
+	[Subcontract] [nvarchar](max) NULL,
+	[Discipline] [nvarchar](max) NULL,
+	[Description] [nvarchar](max) NULL,
+	[Area] [nvarchar](max) NULL,
+	[Unit] [nvarchar](max) NULL,
+	[System] [nvarchar](max) NULL,
+	[Subsystem] [nvarchar](max) NULL,
+	[Group] [nvarchar](max) NULL,
+	[GroupType] [nvarchar](max) NULL,
+	[GroupClass] [nvarchar](max) NULL,
+	[GroupActive] [nvarchar](max) NULL,
+	[ActivityId] [nvarchar](max) NULL,
+	[WorkItem] [nvarchar](max) NULL,
+	[Module] [nvarchar](max) NULL,
+	[Pmcc] [nvarchar](max) NULL,
+	[TestPackageNames] [nvarchar](max) NULL,
+	[DossierDocNumber] [nvarchar](max) NULL,
+	[Priority] [nvarchar](max) NULL,
+	[Remarks] [nvarchar](max) NULL,
+	[TestPackage] [nvarchar](max) NULL,
+	[Revision] [nvarchar](max) NULL,
+	[LinkedEquipment] [nvarchar](max) NULL,
+	[ReTest] [nvarchar](max) NULL,
+	[ReTestScope] [nvarchar](max) NULL,
+	[PONumber] [nvarchar](max) NULL,
+	[Diagram] [nvarchar](max) NULL,
+	[DrawingLocation] [nvarchar](max) NULL,
+	[Vendor] [nvarchar](max) NULL,
+	[DataSheet] [nvarchar](max) NULL,
+	[Skid] [nvarchar](max) NULL,
+	[RequisitionNumber] [nvarchar](max) NULL,
+	[ImportSource] [nvarchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+IF EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'MasterTask'
+          AND Object_ID = Object_ID(N'HCS.ProjectTasks'))
+BEGIN
+    ALTER TABLE HCS.ProjectTasks
+    DROP Column MasterTask
+END
+GO
+IF EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'FolderTask'
+          AND Object_ID = Object_ID(N'HCS.ProjectTasks'))
+BEGIN
+    ALTER TABLE HCS.ProjectTasks
+    DROP Column FolderTask
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'GroupFilter'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	CREATE TABLE TEMPDATA.GroupFilter (
+        Id INT IDENTITY(1, 1) NOT NULL,
+        GroupName NVARCHAR(250) NOT NULL,
+        UserName NVARCHAR(100) NOT NULL,
+        PRIMARY KEY (Id)
+    )
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetSummary'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.GetSummary
+END
+GO
+CREATE PROC LOOPS.GetSummary
+AS
+declare @wk date
+select @wk=tmp_date from [tblTMP] where tmp_id=1
+SELECT
+vloop.Area as Unit
+,area.Description
+,sum(scope) as scope
+,sum([Loop Test Technical Folder Ready]) as [Loop Test Technical Folder Ready]
+,sum([Loop Test Technical Folder Ready wk]) as [Loop Test Technical Folder Ready wk]
+,sum([Loop Test Construction Finished Cumm]) as [Loop Test Construction Finished Cumm]
+,sum([Loop Test Construction Finished WK]) as [Loop Test Construction Finished WK]
+,sum([Loop Test TR QC Punched Cumm]) as [Loop Test TR QC Punched Cumm]
+,sum([Loop Test TR QC Punched WK]) as [Loop Test TR QC Punched WK]
+,sum([Loop Test HCS Folder Ready Cumm]) as [Loop Test HCS Folder Ready Cumm]
+,sum([Loop Test HCS Folder Ready WK]) as [Loop Test HCS Folder Ready WK]
+,sum([Tested Loop Test Cumm]) as [Tested Loop Test Cumm]
+,sum([Tested Loop Test WK]) as [Tested Loop Test WK]
+,convert(float,sum([Tested Loop Test Cumm])) / convert(float,sum(scope)) as [LOOP TEST %]
+,sum([Loop Test Certified Cumm]) as [Loop Test Certified Cumm]
+,sum([Loop Test Certified WK]) as [Loop Test Certified WK]
+,convert(float,sum([Loop Test Certified Cumm])) / convert(float,sum(scope)) as [LOOP Certificate %]
+,sum([Ready For Loop Cumm]) as [Ready For Loop Cumm]
+,sum([Ready For Loop WK]) as [Ready For Loop WK]
+FROM
+(
+select
+Area
+,count(loopname) as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,count(L_Constr_Release) as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+UNION All
+select
+Area
+,0 as scope
+,count(Folder_Preparation) as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,count(TR_Loop_Folder_QC_Release) as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,count(HCS_Folder_Ready) as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,count(l_done) as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,count(L_FinalApproval) as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,count(Submitted_to_Precom) as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+---Weekly
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,count(L_Constr_Release) as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+and L_Constr_Release between DATEADD(DAY,-6,@wk) and @wk
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,count(Folder_Preparation) as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,sum(case when TR_Loop_Folder_QC_Release between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,0 as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,0 as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,0 as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,0 as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+and Folder_Preparation between DATEADD(DAY,-6,@wk) and @wk
+group by area
+UNION All
+select
+Area
+,0 as scope
+,0 as [Loop Test Technical Folder Ready]
+,0 as [Loop Test Technical Folder Ready wk]
+,0 as [Loop Test Construction Finished Cumm]
+,0 as [Loop Test Construction Finished WK]
+,0 as [Loop Test TR QC Punched Cumm]
+,0 as [Loop Test TR QC Punched WK]
+,0 as [Loop Test HCS Folder Ready Cumm]
+,sum(case when HCS_Folder_Ready between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Loop Test HCS Folder Ready WK]
+,0 as [Tested Loop Test Cumm]
+,sum(case when l_done between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Tested Loop Test WK]
+,0 AS [LOOP TEST %]
+,0 as [Loop Test Certified Cumm]
+,sum(case when L_FinalApproval between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as [Loop Test Certified WK]
+,0 AS [LOOP Certificate %]
+,0 as  [Ready For Loop Cumm]
+,sum(case when Submitted_to_Precom between DATEADD(DAY,-6,@wk) and @wk then 1 else 0 end) as  [Ready For Loop WK]
+from tblInsLoop
+where Active=1
+group by area
+) as vloop
+inner join Area
+on area.Area=vloop.Area
+group by vloop.Area,Priority,area.description
+order by Area.Priority
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetGroupTasks'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP PROC HCS.GetGroupTasks
+END
+GO
+CREATE PROC HCS.GetGroupTasks
+@UserName NVARCHAR(100)
+AS
+
+WITH HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Type]
+        ,[Discipline]
+        ,[Description]
+        ,[Subsystem]
+        ,[Group]
+        ,[GroupActive]
+        ,GroupType
+    FROM [HCS].[ProjectElements]
+    INNER JOIN TEMPDATA.GroupFilter ON [HCS].[ProjectElements].[Group] = TEMPDATA.GroupFilter.GroupName
+    WHERE TEMPDATA.GroupFilter.UserName = @UserName
+)
+
+SELECT 
+      HCSGroups.[Group],HCSGroups.GroupType,
+      [Module]
+      ,Tasks.[SubSystem]
+      ,[ElementCode] AS Tag
+      ,HCSGroups.[Type] AS [Item Type]
+      ,[Subcontractor]
+      ,[DocName]
+      ,Tasks.[Description]
+      ,[ClosingDate]
+      ,[ClosingRemarks]
+FROM [HCS].[ProjectTasks] AS Tasks
+INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateQCReleasedFromHCS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'LOOPS')
+			)
+BEGIN
+	DROP PROC LOOPS.UpdateQCReleasedFromHCS
+END
+GO
+CREATE PROC LOOPS.UpdateQCReleasedFromHCS
+AS
+WITH HCSGroups AS (
+    SELECT [ElementTag]
+        ,[Type]
+        ,[Discipline]
+        ,[Description]
+        ,[Subsystem]
+        ,[Group]
+        ,[GroupActive]
+        ,GroupType
+    FROM [HCS].[ProjectElements]
+)
+
+UPDATE v
+    SET v.TR_Loop_Folder_QC_Release = GETDATE()
+FROM (
+    SELECT
+    tblInsLoop.LoopName, tblInsLoop.TR_Loop_Folder_QC_Release,
+    TaskStatus.TaskCount, TaskStatus.TaskClosed
+    FROM tblInsLoop
+    INNER JOIN (
+        SELECT 
+            HCSGroups.[Group],HCSGroups.GroupType
+            ,COUNT([ElementCode]) AS TaskCount
+            ,COUNT([ClosingDate]) AS TaskClosed
+        FROM [HCS].[ProjectTasks] AS Tasks
+        INNER JOIN HCSGroups ON Tasks.ElementCode = HCSGroups.ElementTag
+        GROUP BY HCSGroups.[Group],HCSGroups.GroupType
+        HAVING COUNT([ElementCode]) = COUNT([ClosingDate])
+    ) AS TaskStatus
+    ON tblInsLoop.LoopName = TaskStatus.[Group]
+) AS v
+WHERE v.TR_Loop_Folder_QC_Release IS NULL
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'LongValue'
+          AND Object_ID = Object_ID(N'dbo.tblSettings'))
+BEGIN
+    ALTER TABLE [dbo].[tblSettings]
+    ADD LongValue TEXT NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Subcontract'
+          AND Object_ID = Object_ID(N'HCS.ProjectElements'))
+BEGIN
+    ALTER TABLE HCS.ProjectElements
+    ADD Subcontract NVARCHAR(100) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Priority'
+          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.LoopTemp
+    ADD [Priority] NVARCHAR(50) NULL
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetPDSModelSummary'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PLANNING')
+			)
+BEGIN
+	DROP PROC PLANNING.GetPDSModelSummary
+END
+GO
+CREATE PROC [PLANNING].[GetPDSModelSummary]
+
+
+AS
+
+
+WITH ActIDS AS (
+    SELECT
+        ActID, Package, PDSModel, EICA_Area AS Area, SubCon
+        FROM tblActIDS
+), ECPro AS (
+    SELECT
+        Tag, SUM(Per_Qnty) AS TotalPer
+    FROM tblEleCableProduction
+    GROUP BY Tag
+), ICPro AS (
+    SELECT
+        Tag, SUM(Per_Qnty) AS TotalPer
+    FROM tblInsCableProduction
+    GROUP BY Tag
+), EleTrayPro AS (
+    SELECT
+    Tag,
+    SUM(Production_Qnty) AS Done
+    FROM tblEleCableTrayProduction
+    GROUP BY Tag
+), InsTrayPro AS (
+    SELECT
+    Tag,
+    SUM(Production_Qnty) AS Done
+    FROM tblInsCableTrayProduction
+    GROUP BY Tag
+)
+
+SELECT
+    CASE WHEN Package IS NULL THEN 'UNDEFINED' ELSE Package END AS Package,
+    Area,
+    PDSModel,
+    
+    ROUND(([Ele. Pulling Progress] + [Ele. Termination Progress] + [LC. Pulling Progress] + [LC. Termination Progress] + [Ele. Equipment Progress] + [Ele. Tray Progress] + [Light. Tray Progress] +
+    [Ins. Pulling Progress] + [Ins. Termination Progress] + [Inst. Installation Progress] + [Inst. Calibration Progress] + [Inst. Hookup Progress] +
+    [Ins. Equipment Progress] + [Ins. Tray Progress]) / 14,0) AS [PDSModel Progress],
+
+    [Ele. Pulling Scope], [Ele. Pulling Done], [Ele. Pulling Pending], [Ele. Pulling Progress],
+    [Ele. Termination Scope], [Ele. Termination Done], [Ele. Termination Pending], [Ele. Termination Progress],
+    [LC. Pulling Scope], [LC. Pulling Done], [LC. Pulling Pending], [LC. Pulling Progress],
+    [LC. Termination Scope], [LC. Termination Done], [LC. Termination Pending], [LC. Termination Progress],
+    [Ele. Equipment Scope], [Ele. Equipment Done], [Ele. Equipment Pending], [Ele. Equipment Progress],
+    [Ele. Tray Scope], [Ele. Tray Done], [Ele. Tray Pending], [Ele. Tray Progress],
+    [Light. Tray Scope], [Light. Tray Done], [Light. Tray Pending], [Light. Tray Progress],
+    [Ins. Pulling Scope], [Ins. Pulling Done], [Ins. Pulling Pending], [Ins. Pulling Progress],
+    [Ins. Termination Scope], [Ins. Termination Done], [Ins. Termination Pending], [Ins. Termination Progress],
+    [Inst. Installation Scope], [Inst. Installation Done], [Inst. Installation Pending], [Inst. Installation Progress],
+    [Inst. Calibration Scope], [Inst. Calibration Done], [Inst. Calibration Pending], [Inst. Calibration Progress],
+    [Inst. Hookup Scope], [Inst. Hookup Done], [Inst. Hookup Pending], [Inst. Hookup Progress],
+    [Inst. Equipment Scope], [Inst. Equipment Done], [Ins. Equipment Pending], [Ins. Equipment Progress],
+    [Inst. Tray Scope], [Inst. Tray Done], [Ins. Tray Pending], [Ins. Tray Progress]
+
+
+FROM (
+    
+    SELECT
+        Package, Area,
+        CASE WHEN PDSModel IS NULL THEN 'UNDEFINED' ELSE PDSModel END AS PDSModel,
+
+        CASE WHEN [Ele. Pulling Scope] IS NULL THEN 0 ELSE [Ele. Pulling Scope] END AS [Ele. Pulling Scope],
+        CASE WHEN [Ele. Pulling Done] IS NULL THEN 0 ELSE [Ele. Pulling Done] END AS [Ele. Pulling Done],
+        CASE WHEN [Ele. Pulling Pending] IS NULL THEN 0 ELSE [Ele. Pulling Pending] END AS [Ele. Pulling Pending],
+        CASE WHEN (([Ele. Pulling Scope] IS NULL) OR ([Ele. Pulling Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Pulling Done] * 100 / [Ele. Pulling Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Pulling Done] * 100 / [Ele. Pulling Scope],0) END
+            ) END AS [Ele. Pulling Progress],
+
+        CASE WHEN [Ele. Termination Scope] IS NULL THEN 0 ELSE [Ele. Termination Scope] END AS [Ele. Termination Scope],
+        CASE WHEN [Ele. Termination Done] IS NULL THEN 0 ELSE [Ele. Termination Done] END AS [Ele. Termination Done],
+        CASE WHEN [Ele. Termination Pending] IS NULL THEN 0 ELSE [Ele. Termination Pending] END AS [Ele. Termination Pending],
+        CASE WHEN (([Ele. Termination Scope] IS NULL) OR ([Ele. Termination Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Termination Done] * 100 / [Ele. Termination Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Termination Done] * 100 / [Ele. Termination Scope],0) END
+            ) END AS [Ele. Termination Progress],
+
+        CASE WHEN [LC. Pulling Scope] IS NULL THEN 0 ELSE [LC. Pulling Scope] END AS [LC. Pulling Scope],
+        CASE WHEN [LC. Pulling Done] IS NULL THEN 0 ELSE [LC. Pulling Done] END AS [LC. Pulling Done],
+        CASE WHEN [LC. Pulling Pending] IS NULL THEN 0 ELSE [LC. Pulling Pending] END AS [LC. Pulling Pending],
+        CASE WHEN (([LC. Pulling Scope] IS NULL) OR ([LC. Pulling Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([LC. Pulling Done] * 100 / [LC. Pulling Scope]) IS NULL THEN 0 ELSE ROUND([LC. Pulling Done] * 100 / [LC. Pulling Scope],0) END
+            ) END AS [LC. Pulling Progress],
+
+        CASE WHEN [LC. Termination Scope] IS NULL THEN 0 ELSE [LC. Termination Scope] END AS [LC. Termination Scope],
+        CASE WHEN [LC. Termination Done] IS NULL THEN 0 ELSE [LC. Termination Done] END AS [LC. Termination Done],
+        CASE WHEN [LC. Termination Pending] IS NULL THEN 0 ELSE [LC. Termination Pending] END AS [LC. Termination Pending],
+        CASE WHEN (([LC. Termination Scope] IS NULL) OR ([LC. Termination Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([LC. Termination Done] * 100 / [LC. Termination Scope]) IS NULL THEN 0 ELSE ROUND([LC. Termination Done] * 100 / [LC. Termination Scope],0) END
+            ) END AS [LC. Termination Progress],
+
+        CASE WHEN [Ele. Equipment Scope] IS NULL THEN 0 ELSE [Ele. Equipment Scope] END AS [Ele. Equipment Scope],
+        CASE WHEN [Ele. Equipment Done] IS NULL THEN 0 ELSE [Ele. Equipment Done] END AS [Ele. Equipment Done],
+        CASE WHEN [Ele. Equipment Pending] IS NULL THEN 0 ELSE [Ele. Equipment Pending] END AS [Ele. Equipment Pending],
+        CASE WHEN (([Ele. Equipment Scope] IS NULL) OR ([Ele. Equipment Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Equipment Done] * 100 / [Ele. Equipment Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Equipment Done] * 100 / [Ele. Equipment Scope],0) END
+            )  END AS [Ele. Equipment Progress],
+
+        CASE WHEN [Ele. Tray Scope] IS NULL THEN 0 ELSE [Ele. Tray Scope] END AS [Ele. Tray Scope],
+        CASE WHEN [Ele. Tray Done] IS NULL THEN 0 ELSE [Ele. Tray Done] END AS [Ele. Tray Done],
+        CASE WHEN [Ele. Tray Pending] IS NULL THEN 0 ELSE [Ele. Tray Pending] END AS [Ele. Tray Pending],
+        CASE WHEN (([Ele. Tray Scope] IS NULL) OR ([Ele. Tray Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ele. Tray Done] * 100 / [Ele. Tray Scope]) IS NULL THEN 0 ELSE ROUND([Ele. Tray Done] * 100 / [Ele. Tray Scope],0) END
+        ) END AS [Ele. Tray Progress],
+        
+        CASE WHEN [Light. Tray Scope] IS NULL THEN 0 ELSE [Light. Tray Scope] END AS [Light. Tray Scope],
+        CASE WHEN [Light. Tray Done] IS NULL THEN 0 ELSE [Light. Tray Done] END AS [Light. Tray Done],
+        CASE WHEN [Light. Tray Pending] IS NULL THEN 0 ELSE [Light. Tray Pending] END AS [Light. Tray Pending],
+        CASE WHEN (([Light. Tray Scope] IS NULL) OR ([Light. Tray Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Light. Tray Done] * 100 / [Light. Tray Scope]) IS NULL THEN 0 ELSE ROUND([Light. Tray Done] * 100 / [Light. Tray Scope],0) END
+        ) END AS [Light. Tray Progress],
+
+        CASE WHEN [Ins. Pulling Scope] IS NULL THEN 0 ELSE [Ins. Pulling Scope] END AS [Ins. Pulling Scope],
+        CASE WHEN [Ins. Pulling Done] IS NULL THEN 0 ELSE [Ins. Pulling Done] END AS [Ins. Pulling Done],
+        CASE WHEN [Ins. Pulling Pending] IS NULL THEN 0 ELSE [Ins. Pulling Pending] END AS [Ins. Pulling Pending],
+        CASE WHEN (([Ins. Pulling Scope] IS NULL) OR ([Ins. Pulling Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ins. Pulling Done] * 100 / [Ins. Pulling Scope]) IS NULL THEN 0 ELSE ROUND([Ins. Pulling Done] * 100 / [Ins. Pulling Scope],0) END
+        ) END AS [Ins. Pulling Progress],
+
+        CASE WHEN [Ins. Termination Scope] IS NULL THEN 0 ELSE [Ins. Termination Scope] END AS [Ins. Termination Scope],
+        CASE WHEN [Ins. Termination Done] IS NULL THEN 0 ELSE [Ins. Termination Done] END AS [Ins. Termination Done],
+        CASE WHEN [Ins. Termination Pending] IS NULL THEN 0 ELSE [Ins. Termination Pending] END AS [Ins. Termination Pending],
+        CASE WHEN (([Ins. Termination Scope] IS NULL) OR ([Ins. Termination Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Ins. Termination Done] * 100 / [Ins. Termination Scope]) IS NULL THEN 0 ELSE ROUND([Ins. Termination Done] * 100 / [Ins. Termination Scope],0) END
+        ) END AS [Ins. Termination Progress],
+
+        CASE WHEN [Inst. Installation Scope] IS NULL THEN 0 ELSE [Inst. Installation Scope] END AS [Inst. Installation Scope],
+        CASE WHEN [Inst. Installation Done] IS NULL THEN 0 ELSE [Inst. Installation Done] END AS [Inst. Installation Done],
+        CASE WHEN [Inst. Installation Pending] IS NULL THEN 0 ELSE [Inst. Installation Pending] END AS [Inst. Installation Pending],
+        CASE WHEN (([Inst. Installation Scope] IS NULL) OR ([Inst. Installation Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Installation Done] * 100 / [Inst. Installation Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Installation Done] * 100 / [Inst. Installation Scope],0) END
+        ) END AS [Inst. Installation Progress],
+
+        CASE WHEN [Inst. Calibration Scope] IS NULL THEN 0 ELSE [Inst. Calibration Scope] END AS [Inst. Calibration Scope],
+        CASE WHEN [Inst. Calibration Done] IS NULL THEN 0 ELSE [Inst. Calibration Done] END AS [Inst. Calibration Done],
+        CASE WHEN [Inst. Calibration Pending] IS NULL THEN 0 ELSE [Inst. Calibration Pending] END AS [Inst. Calibration Pending],
+        CASE WHEN (([Inst. Calibration Scope] IS NULL) OR ([Inst. Calibration Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Calibration Done] * 100 / [Inst. Calibration Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Calibration Done] * 100 / [Inst. Calibration Scope],0) END 
+        ) END AS [Inst. Calibration Progress],
+
+        CASE WHEN [Inst. Hookup Scope] IS NULL THEN 0 ELSE [Inst. Hookup Scope] END AS [Inst. Hookup Scope],
+        CASE WHEN [Inst. Hookup Done] IS NULL THEN 0 ELSE [Inst. Hookup Done] END AS [Inst. Hookup Done],
+        CASE WHEN [Inst. Hookup Pending] IS NULL THEN 0 ELSE [Inst. Hookup Pending] END AS [Inst. Hookup Pending],
+        CASE WHEN (([Inst. Hookup Scope] IS NULL) OR ([Inst. Hookup Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Hookup Done] * 100 / [Inst. Hookup Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Hookup Done] * 100 / [Inst. Hookup Scope],0) END
+        ) END AS [Inst. Hookup Progress],
+
+        CASE WHEN [Inst. Equipment Scope] IS NULL THEN 0 ELSE [Inst. Equipment Scope] END AS [Inst. Equipment Scope],
+        CASE WHEN [Inst. Equipment Done] IS NULL THEN 0 ELSE [Inst. Equipment Done] END AS [Inst. Equipment Done],
+        CASE WHEN [Ins. Equipment Pending] IS NULL THEN 0 ELSE [Ins. Equipment Pending] END AS [Ins. Equipment Pending],
+        CASE WHEN (([Inst. Equipment Scope] IS NULL) OR ([Inst. Equipment Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Equipment Done] * 100 / [Inst. Equipment Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Equipment Done] * 100 / [Inst. Equipment Scope],0) END
+        ) END AS [Ins. Equipment Progress],
+
+        CASE WHEN [Inst. Tray Scope] IS NULL THEN 0 ELSE [Inst. Tray Scope] END AS [Inst. Tray Scope],
+        CASE WHEN [Inst. Tray Done] IS NULL THEN 0 ELSE [Inst. Tray Done] END AS [Inst. Tray Done],
+        CASE WHEN [Ins. Tray Pending] IS NULL THEN 0 ELSE [Ins. Tray Pending] END AS [Ins. Tray Pending],
+        CASE WHEN (([Inst. Tray Scope] IS NULL) OR ([Inst. Tray Scope] = 0)) THEN 100 ELSE (
+            CASE WHEN ([Inst. Tray Done] * 100 / [Inst. Tray Scope]) IS NULL THEN 0 ELSE ROUND([Inst. Tray Done] * 100 / [Inst. Tray Scope],0) END 
+        ) END AS [Ins. Tray Progress]
+
+
+
+    FROM (
+
+        SELECT
+            Package, Area, PDSModel,
+            SUM([Ele. Pulling Scope]) AS [Ele. Pulling Scope], SUM([Ele. Pulling Done]) AS [Ele. Pulling Done], SUM([Ele. Pulling Pending]) AS [Ele. Pulling Pending],
+            SUM([Ele. Termination Scope]) AS [Ele. Termination Scope], SUM([Ele. Termination Done]) AS [Ele. Termination Done], SUM([Ele. Termination Pending]) AS [Ele. Termination Pending],
+            SUM([LC. Scope]) AS [LC. Pulling Scope], SUM([LC. Done]) AS [LC. Pulling Done], SUM([LC. Pending]) AS [LC. Pulling Pending],
+            SUM([LC. Termination Scope]) AS [LC. Termination Scope], SUM([LC. Termination Done]) AS [LC. Termination Done], SUM([LC. Termination Pending]) AS [LC. Termination Pending],
+            SUM([Ele. Equipment Scope]) AS [Ele. Equipment Scope], SUM([Ele. Equipment Done]) AS [Ele. Equipment Done], SUM([Ele. Equipment Pending]) AS [Ele. Equipment Pending],
+            SUM([Ins. Pulling Scope]) AS [Ins. Pulling Scope], SUM([Ins. Pulling Done]) AS [Ins. Pulling Done], SUM([Ins. Pulling Pending]) AS [Ins. Pulling Pending],
+            SUM([Ins. Termination Scope]) AS [Ins. Termination Scope], SUM([Ins. Termination Done]) AS [Ins. Termination Done], SUM([Ins. Termination Pending]) AS [Ins. Termination Pending],
+            SUM([Inst. Installation Scope]) AS [Inst. Installation Scope], SUM([Inst. Installation Done]) AS [Inst. Installation Done], SUM([Inst. Installation Pending]) AS [Inst. Installation Pending],
+            SUM([Inst. Calibration Scope]) AS [Inst. Calibration Scope], SUM([Inst. Calibration Done]) AS [Inst. Calibration Done], SUM([Inst. Calibration Pending]) AS [Inst. Calibration Pending],
+            SUM([Inst. Hookup Scope]) AS [Inst. Hookup Scope], SUM([Inst. Hookup Done]) AS [Inst. Hookup Done], SUM([Inst. Hookup Pending]) AS [Inst. Hookup Pending],
+            SUM([Inst. Equipment Scope]) AS [Inst. Equipment Scope], SUM([Inst. Equipment Done]) AS [Inst. Equipment Done], SUM([Ins. Equipment Pending]) AS [Ins. Equipment Pending],
+            SUM([Ele. Tray Scope]) AS [Ele. Tray Scope], SUM([Ele. Tray Done]) AS [Ele. Tray Done], SUM([Ele. Tray Pending]) AS [Ele. Tray Pending],
+            SUM([Inst. Tray Scope]) AS [Inst. Tray Scope], SUM([Inst. Tray Done]) AS [Inst. Tray Done], SUM([Ins. Tray Pending]) AS [Ins. Tray Pending],
+            SUM([Light. Tray Scope]) AS [Light. Tray Scope], SUM([Light. Tray Done]) AS [Light. Tray Done], SUM([Light. Tray Pending]) AS [Light. Tray Pending]
+
+
+
+        FROM (
+
+            --Ele Pulling
+
+            SELECT
+            Package, Area, PDSModel, 
+            SUM(ScopePulled) AS [Ele. Pulling Scope], SUM(DonePulled) AS [Ele. Pulling Done], SUM(ScopePulled) - SUM(DonePulled) AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(tblEleCableList.EC_Length) AS ScopePulled,
+                SUM(ECPRO.TotalPer / 100 * tblEleCableList.EC_Length) AS DonePulled
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                LEFT JOIN ECPro ON tblEleCableList.EC_ID = ECPro.Tag
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ele Termination
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            SUM(ScopeCon) AS [Ele. Termination Scope], SUM(DoneCon) AS [Ele. Termination Done], SUM(ScopeCon) - SUM(DoneCon) AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_From) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect_2) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_To) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+             --Lighting Pulling
+
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            SUM(ScopePulled) AS [LC. Scope], SUM(DonePulled) AS [LC. Done], SUM(ScopePulled) - SUM(DonePulled) AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(tblEleCableList.EC_Length) AS ScopePulled,
+                SUM(ECPRO.TotalPer / 100 * tblEleCableList.EC_Length) AS DonePulled
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                LEFT JOIN ECPro ON tblEleCableList.EC_ID = ECPro.Tag
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Lighting Termination
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            SUM(ScopeCon) AS [LC. Termination Scope], SUM(DoneCon) AS [LC. Termination Done], SUM(ScopeCon) - SUM(DoneCon) AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_From) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(EC_Plan_P6_ActID_Connect_2) AS ScopeCon,
+                COUNT(EC_Plan_Connected_Date_To) AS DoneCon
+                FROM tblEleCableList
+                INNER JOIN ActIDS ON tblEleCableList.EC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblEleCableList.Active = 1 AND EC_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ele Equipment
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            SUM(Scope) AS [Ele. Equipment Scope], SUM(Done) AS [Ele. Equipment Done], SUM(Scope) - SUM(Done) AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Tag) AS Scope,
+                COUNT(InstalledDate) AS Done
+                FROM tblEquipment
+                INNER JOIN ActIDS ON tblEquipment.ActId = ActIDS.ActID
+                WHERE tblEquipment.Active = 1 AND tblEquipment.Discipline = 'Electrical'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            --Ins Pulling
+            UNION ALL
+
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            SUM(ScopePulled) AS [Ins. Pulling Scope], SUM(DonePulled) AS [Ins. Pulling Done], SUM(ScopePulled) - SUM(DonePulled) AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipmen.t Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+               ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(tblInsCableList.IC_Length) AS ScopePulled,
+                SUM(ICPRO.TotalPer / 100 * tblInsCableList.IC_Length) AS DonePulled
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Pulling = ActIDS.ActID
+                LEFT JOIN ICPro ON tblInsCableList.IC_ID = ICPro.Tag
+                WHERE tblInsCableList.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            --Ins Termination
+            UNION ALL
+
+            SELECT
+            Package, Area, PDSModel,
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            SUM(ScopeCon) AS [Ins. Termination Scope], SUM(DoneCon) AS [Ins. Termination Done], SUM(ScopeCon) - SUM(DoneCon) AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(IC_Plan_P6_ActID_Connect) AS ScopeCon,
+                COUNT(IC_Plan_Connected_Date_From) AS DoneCon
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Connect = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+                UNION ALL
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(IC_Plan_P6_ActID_Connect_2) AS ScopeCon,
+                COUNT(IC_Plan_Connected_Date_To) AS DoneCon
+                FROM tblInsCableList
+                INNER JOIN ActIDS ON tblInsCableList.IC_Plan_P6_ActID_Connect_2 = ActIDS.ActID
+                WHERE tblInsCableList.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Inst INstallation
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            SUM(Scope) AS [Inst. Installation Scope], SUM(Done) AS [Inst. Installation Done], SUM(Scope) - SUM(Done) AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Instrument_Tag) AS Scope,
+                COUNT(Installation_Date) AS Done
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND ((tblInstruments.Furnished_By <> 'Vendor') OR (tblInstruments.Furnished_By IS NULL)) AND tblInstruments.Instrument  = 'Instrument'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Inst Calibration
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            SUM(Scope) AS [Inst. Calibration Scope], SUM(Done) AS [Inst. Calibration Done], SUM(Scope) - SUM(Done) AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Instrument_Tag) AS Scope,
+                COUNT(Calibration_Date) AS Done
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.P6_Precalibration_ActID = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND tblInstruments.Calibration_Type  = 'yes'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Inst Hookup
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            SUM(Scope) AS [Inst. Hookup Scope], SUM(Done) AS [Inst. Hookup Done], SUM(Scope) - SUM(Done) AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Instrument_Tag) AS Scope,
+                COUNT(HookUp_Date) AS Done
+                FROM tblInstruments
+                INNER JOIN ActIDS ON tblInstruments.IC_Plan_P6_ActID_Hookup = ActIDS.ActID
+                WHERE tblInstruments.Active = 1 AND tblInstruments.hookup_name  IS NOT NULL
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ins Equipment
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            SUM(Scope) AS [Inst. Equipment Scope], SUM(Done) AS [Inst. Equipment Done], SUM(Scope) - SUM(Done) AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                COUNT(Tag) AS Scope,
+                COUNT(InstalledDate) AS Done
+                FROM tblEquipment
+                INNER JOIN ActIDS ON tblEquipment.ActId = ActIDS.ActID
+                WHERE tblEquipment.Active = 1 AND tblEquipment.Discipline <> 'Electrical'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ele Tray
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            SUM(Scope) AS [Ele. Tray Scope], SUM(Done) AS [Ele. Tray Done], SUM(Scope) - SUM(Done) AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(EL_Tray_Length) AS Scope,
+                SUM(EleTrayPro.Done) AS Done
+                FROM tblEleCableTray
+                INNER JOIN ActIDS ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                LEFT JOIN EleTrayPro ON tblEleCableTray.Tag = EleTrayPro.Tag
+                WHERE tblEleCableTray.Active = 1 AND EL_Tray_Type NOT LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Light Tray
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            0 AS [Inst. Tray Scope], 0 AS [Inst. Tray Done], 0 AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            SUM(Scope) AS [Light. Tray Scope], SUM(Done) AS [Light. Tray Done], SUM(Scope) - SUM(Done) AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(EL_Tray_Length) AS Scope,
+                SUM(EleTrayPro.Done) AS Done
+                FROM tblEleCableTray
+                INNER JOIN ActIDS ON tblEleCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                LEFT JOIN EleTrayPro ON tblEleCableTray.Tag = EleTrayPro.Tag
+                WHERE tblEleCableTray.Active = 1 AND EL_Tray_Type LIKE '%light%'
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+
+            UNION ALL
+
+            --Ins Tray
+            SELECT
+            Package, Area, PDSModel, 
+            0 AS [Ele. Pulling Scope], 0 AS [Ele. Pulling Done], 0 AS [Ele. Pulling Pending],
+            0 AS [Ele. Termination Scope], 0 AS [Ele. Termination Done], 0 AS [Ele. Termination Pending],
+            0 AS [Ele. Equipment Scope], 0 AS [Ele. Equipment Done], 0 AS [Ele. Equipment Pending],
+            0 AS [Ins. Pulling Scope], 0 AS [Ins. Pulling Done], 0 AS [Ins. Pulling Pending],
+            0 AS [Ins. Termination Scope], 0 AS [Ins. Termination Done], 0 AS [Ins. Termination Pending],
+            0 AS [Inst. Installation Scope], 0 AS [Inst. Installation Done], 0 AS [Inst. Installation Pending],
+            0 AS [Inst. Calibration Scope], 0 AS [Inst. Calibration Done], 0 AS [Inst. Calibration Pending],
+            0 AS [Inst. Hookup Scope], 0 AS [Inst. Hookup Done], 0 AS [Inst. Hookup Pending],
+            0 AS [Inst. Equipment Scope], 0 AS [Inst. Equipment Done], 0 AS [Ins. Equipment Pending],
+            0 AS [Ele. Tray Scope], 0 AS [Ele. Tray Done], 0 AS [Ele. Tray Pending],
+            SUM(Scope) AS [Inst. Tray Scope], SUM(Done) AS [Inst. Tray Done], SUM(Scope) - SUM(Done) AS [Ins. Tray Pending],
+            0 AS [LC. Scope], 0 AS [LC. Done], 0 AS [LC. Pending],
+            0 AS [LC. Termination Scope], 0 AS [LC. Termination Done], 0 AS [LC. Termination Pending],
+            0 AS [Light. Tray Scope], 0 AS [Light. Tray Done], 0 AS [Light. Tray Pending]
+
+            FROM (
+                SELECT
+                ActIDS.Package, ActIDS.Area, ActIDS.PDSModel,
+                SUM(in_Tray_Length) AS Scope,
+                SUM(InsTrayPro.Done) AS Done
+                FROM tblInsCableTray
+                INNER JOIN ActIDS ON tblInsCableTray.IC_Plan_P6_ActID_Install = ActIDS.ActID
+                LEFT JOIN InsTrayPro ON tblInsCableTray.Tag = InsTrayPro.Tag
+                WHERE tblInsCableTray.Active = 1
+                GROUP BY ActIDS.Package, ActIDS.Area, ActIDS.PDSModel
+            ) AS CableTer
+            GROUP BY Package, Area, PDSModel
+            
+        ) AS VAll
+        GROUP BY Package, Area, PDSModel
+    ) AS VRefined
+) AS VSummaryProgress
+
+
+OPTION (USE HINT ('DISABLE_ROW_MODE_MEMORY_GRANT_FEEDBACK'))
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'UpdateLoopsBasicData'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP PROC TEMPDATA.UpdateLoopsBasicData
+END
+GO
+CREATE PROC [TEMPDATA].[UpdateLoopsBasicData]
+@opKey NVARCHAR(250)
+
+AS
+
+--Clean
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag IS NULL
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = ''
+DELETE FROM TEMPDATA.LoopTemp WHERE Tag = 'SETASNULL'
+
+--UPDATE Errors (Loop Does Not Exist)
+UPDATE V
+	SET Error = 'Loop Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND tblInsLoop.LoopName IS NULL
+) AS V
+
+--UPDATE Errors (Area Does Not Exist)
+UPDATE V
+	SET Error = 'Area Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN Area ON temp.Area = Area.Area
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.Area <> 'NOUPDATE' AND Area.Area IS NULL
+) AS V
+
+--UPDATE Errors (Activitiy ID Does Not Exist)
+UPDATE V
+	SET Error = 'Activitiy ID Does Not Exist'
+FROM (
+	SELECT
+		temp.Tag, temp.Error
+		FROM TEMPDATA.LoopTemp AS temp
+		LEFT JOIN tblActIDS ON temp.ActId = tblActIDS.ActID
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL
+		AND temp.OpKey = @opKey AND temp.ActId NOT IN ('NOUPDATE', 'SETASNULL') AND tblActIDS.ActID IS NULL
+) AS V
+
+--UPDATE DESCRIPTION
+UPDATE V
+	SET L_Description = DESCRIPTION
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.DESCRIPTION = 'SETASNULL' THEN NULL ELSE temp.DESCRIPTION END AS DESCRIPTION,
+		tblInsLoop.L_Description
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.DESCRIPTION <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Vendor
+UPDATE V
+	SET L_Vendor = Vendor
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Vendor = 'SETASNULL' THEN NULL ELSE temp.Vendor END AS Vendor,
+		tblInsLoop.Vendor AS L_Vendor
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Vendor <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subsystem
+UPDATE V
+	SET L_Subsystem = Subsystem
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subsystem = 'SETASNULL' THEN NULL ELSE temp.Subsystem END AS Subsystem,
+		tblInsLoop.Subsystem AS L_Subsystem
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subsystem <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Area
+UPDATE V
+	SET L_Area = Area
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Area = 'SETASNULL' THEN NULL ELSE temp.Area END AS Area,
+		tblInsLoop.Area AS L_Area
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Area <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Type
+UPDATE V
+	SET L_Type = Type
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Type = 'SETASNULL' THEN NULL ELSE temp.Type END AS Type,
+		tblInsLoop.L_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.[Type] <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+
+--UPDATE Subtype
+UPDATE V
+	SET Sub_Type = Subtype
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Subtype = 'SETASNULL' THEN NULL ELSE temp.Subtype END AS Subtype,
+		tblInsLoop.Sub_Type
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Subtype <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE ActId
+UPDATE V
+	SET ACTIVITYID = ActId
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.ActId = 'SETASNULL' THEN NULL ELSE temp.ActId END AS ActId,
+		tblInsLoop.ACTIVITYID
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.ActId <> 'NOUPDATE'
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Start Date
+UPDATE V
+	SET Planning_START_Date = StartDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.StartDate AS StartDate,
+		tblInsLoop.Planning_START_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.StartDate <> '1/1/1900') OR (temp.StartDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Finish Date
+UPDATE V
+	SET Planning_FINISH_Date = FinishDate
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinishDate AS FinishDate,
+		tblInsLoop.Planning_FINISH_Date
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND ((temp.FinishDate <> '1/1/1900') OR (temp.FinishDate IS NULL))
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Active
+UPDATE V
+	SET Active = TempActive
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Active AS [TempActive],
+		tblInsLoop.Active
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Active IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--UPDATE Priority
+UPDATE V
+	SET LoopPriority = CONVERT(INT,TempPriority)
+FROM (
+	SELECT
+		temp.Tag,
+		CASE WHEN temp.Priority = 'SETASNULL' THEN NULL ELSE temp.Priority END AS TempPriority,
+		tblInsLoop.LoopPriority
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATEDATA' AND Error IS NULL AND temp.Priority IS NOT NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--------------------------------------------------------------------------------------------------------------------------
+
+--UPDATE Loop Printed
+UPDATE V
+	SET Folder_Preparation = FolderPreparation
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPPRINTED' AND Error IS NULL AND temp.FolderPreparation IS NOT NULL AND tblInsLoop.Folder_Preparation IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--CLear Loop Printed
+UPDATE V
+	SET Folder_Preparation = NULL,
+        SubmitToQC = NULL,
+        ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderPreparation,
+		tblInsLoop.Folder_Preparation, tblInsLoop.SubmitToQC, tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPPRINTED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--====================================================================
+
+--UPDATE QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = QCRelease
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPQCRELEASED' AND Error IS NULL AND temp.QCRelease IS NOT NULL AND tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear QC Release
+UPDATE V
+	SET TR_Loop_Folder_QC_Release = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.QCRelease,
+		tblInsLoop.TR_Loop_Folder_QC_Release
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPQCRELEASED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = FolderReady
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERREADY' AND Error IS NULL AND temp.FolderReady IS NOT NULL AND tblInsLoop.HCS_Folder_Ready IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Folder Ready
+UPDATE V
+	SET HCS_Folder_Ready = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FolderReady,
+		tblInsLoop.HCS_Folder_Ready
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERREADY' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+
+--UPDATE Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = SubmittedToPrecom
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL AND temp.SubmittedToPrecom IS NOT NULL AND tblInsLoop.Submitted_to_Precom IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submitted to Precom
+UPDATE V
+	SET Submitted_to_Precom = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmittedToPrecom,
+		tblInsLoop.Submitted_to_Precom
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERSUBMITTEDTPPRECOMM' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Done
+UPDATE V
+	SET L_Done = Done
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERDONE' AND Error IS NULL AND temp.Done IS NOT NULL AND tblInsLoop.L_Done IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Loop Done
+UPDATE V
+	SET L_Done = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.Done,
+		tblInsLoop.L_Done
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERDONE' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Loop Approved
+UPDATE V
+	SET L_FinalApproval = FinalApproval
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERAPPROVED' AND Error IS NULL AND temp.FinalApproval IS NOT NULL AND tblInsLoop.L_FinalApproval IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--Clear Loop Approved
+UPDATE V
+	SET L_FinalApproval = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		temp.FinalApproval,
+		tblInsLoop.L_FinalApproval
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERAPPROVED' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Submit to QC
+UPDATE V
+	SET lSubmitToQC = SubmitToQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.SubmitToQC,
+		tblInsLoop.SubmitToQC AS lSubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDESUBMITTOQC' AND Error IS NULL AND temp.SubmitToQC IS NOT NULL AND tblInsLoop.SubmitToQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Submit to QC
+UPDATE V
+	SET SubmitToQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.SubmitToQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDESUBMITTOQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+--UPDATE Return from QC
+UPDATE V
+	SET lReturnFromQC = ReturnFromQC
+FROM (
+	SELECT
+		temp.Tag,
+		temp.ReturnFromQC,
+		tblInsLoop.ReturnFromQC AS lReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'UPDATELOOPFOLDERRETURNFROMQC' AND Error IS NULL AND temp.ReturnFromQC IS NOT NULL AND tblInsLoop.ReturnFromQC IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+
+--Clear Return from QC
+UPDATE V
+	SET ReturnFromQC = NULL
+FROM (
+	SELECT
+		temp.Tag,
+		tblInsLoop.ReturnFromQC
+		FROM TEMPDATA.LoopTemp AS temp
+		INNER JOIN tblInsLoop ON temp.Tag = tblInsLoop.LoopName
+		WHERE UpdateType = 'CLEARLOOPFOLDERRETURNFROMQC' AND Error IS NULL
+		AND temp.OpKey = @opKey
+) AS V
+--====================================================================
+
+SELECT
+CASE WHEN [Error] IS NULL THEN 'Updated With No Error' ELSE [Error] END AS [Error], 
+Id, Tag, Type, Subtype, Area, [Description], Vendor, Subsystem, ActId, StartDate, FinishDate, Active, Priority, PDSModel, ReportedBy
+FolderPreparation, QCRelease, SubmitToQC, FolderReady, ReturnFromQC, SubmittedToPrecom, Done, FinalApproval
+FROM TEMPDATA.LoopTemp
+WHERE OpKey = @opKey
+
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'PDSModel'
+          AND Object_ID = Object_ID(N'dbo.tblInsLoop'))
+BEGIN
+    ALTER TABLE tblInsLoop
+    ADD PDSModel NVARCHAR(100) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'PDSModel'
+          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.LoopTemp
+    ADD PDSModel NVARCHAR(100) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Description'
+          AND Object_ID = Object_ID(N'HCS.ProjectGroups'))
+BEGIN
+    ALTER TABLE HCS.ProjectGroups
+    ADD [Description] NVARCHAR(100) NULL
+END
+GO
+IF EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Active'
+          AND Object_ID = Object_ID(N'HCS.ProjectGroups'))
+BEGIN
+    ALTER TABLE HCS.ProjectGroups
+    DROP COLUMN Active
+END
+GO
+IF EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Folder'
+          AND Object_ID = Object_ID(N'HCS.ProjectGroups'))
+BEGIN
+    ALTER TABLE HCS.ProjectGroups
+    DROP COLUMN Folder
+END
+GO

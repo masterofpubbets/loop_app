@@ -5,6 +5,7 @@
         EICADAILYTRACKINGINSResources = 2
         LOOPSUMMARY = 3
         EICAITRCLOSED = 4
+        LOOPBLOCKAGERESPONSIBLE = 5
     End Enum
 
     Public Overloads Function GetItems(ByVal reportType As ReportTypes) As DataTable
@@ -18,6 +19,8 @@
                     Return (DB.ReturnDataTable("EXEC LOOPS.GetSummary"))
                 Case ReportTypes.EICAITRCLOSED
                     Return (DB.ReturnDataTableExcuteFromFile(Application.StartupPath & "\sqries\PendingItems.txt"))
+                Case ReportTypes.LOOPBLOCKAGERESPONSIBLE
+                    Return (DB.ReturnDataTableExcuteFromFile(Application.StartupPath & "\sqries\LoopFolderBlockageRespSummary.txt"))
             End Select
 
         Catch ex As Exception

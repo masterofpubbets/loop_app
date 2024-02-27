@@ -12,22 +12,23 @@
         LoopColumns.Add(New ColumnObject(4, "E1", "Subtype", False, ColumnObject.en_SystemType.DataStrings, True))
         LoopColumns.Add(New ColumnObject(5, "F1", "ActId", False, ColumnObject.en_SystemType.DataStrings, True))
         LoopColumns.Add(New ColumnObject(6, "G1", "Vendor", False, ColumnObject.en_SystemType.DataStrings, True))
-        LoopColumns.Add(New ColumnObject(9, "H1", "StartDate", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopColumns.Add(New ColumnObject(10, "I1", "FinishDate", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopColumns.Add(New ColumnObject(6, "J1", "Subsystem", False, ColumnObject.en_SystemType.DataStrings, True))
-        LoopColumns.Add(New ColumnObject(6, "K1", "Priority", False, ColumnObject.en_SystemType.Int16, True))
-        LoopColumns.Add(New ColumnObject(6, "L1", "PDSModel", False, ColumnObject.en_SystemType.DataStrings, True))
+        LoopColumns.Add(New ColumnObject(7, "H1", "StartDate", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopColumns.Add(New ColumnObject(8, "I1", "FinishDate", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopColumns.Add(New ColumnObject(9, "J1", "Subsystem", False, ColumnObject.en_SystemType.DataStrings, True))
+        LoopColumns.Add(New ColumnObject(10, "K1", "Priority", False, ColumnObject.en_SystemType.Int16, True))
+        LoopColumns.Add(New ColumnObject(11, "L1", "PDSModel", False, ColumnObject.en_SystemType.DataStrings, True))
+        LoopColumns.Add(New ColumnObject(6, "M1", "ControllerLocation", False, ColumnObject.en_SystemType.DataStrings, True))
 
-        LoopProgressColumns.Add(New ColumnObject(6, "A1", "Tag", False, ColumnObject.en_SystemType.DataStrings, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "B1", "ConstrRelease", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "C1", "QCRelease", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "D1", "FolderPreparation", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "E1", "SubmitToQC", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "F1", "FolderReady", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(0, "A1", "Tag", False, ColumnObject.en_SystemType.DataStrings, True))
+        LoopProgressColumns.Add(New ColumnObject(1, "B1", "ConstrRelease", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(2, "C1", "QCRelease", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(3, "D1", "FolderPreparation", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(4, "E1", "SubmitToQC", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(5, "F1", "FolderReady", False, ColumnObject.en_SystemType.DataDate, True))
         LoopProgressColumns.Add(New ColumnObject(6, "G1", "ReturnFromQC", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "H1", "SubmittedToPrecom", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "I1", "Done", False, ColumnObject.en_SystemType.DataDate, True))
-        LoopProgressColumns.Add(New ColumnObject(6, "J1", "FinalApproval", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(7, "H1", "SubmittedToPrecom", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(8, "I1", "Done", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(9, "J1", "FinalApproval", False, ColumnObject.en_SystemType.DataDate, True))
 
 
     End Sub
@@ -83,6 +84,14 @@
     Public Function LoopMap(Optional subsystem As String = "", Optional loopName As String = "") As DataTable
         Try
 
+        Catch ex As Exception
+            pe.RaiseDataExecuteError(ex.Message)
+        End Try
+        Return Nothing
+    End Function
+    Public Function GetFoldersLog() As DataTable
+        Try
+            Return (DB.ReturnDataTable("EXEC [LOOPS].[GetLog]"))
         Catch ex As Exception
             pe.RaiseDataExecuteError(ex.Message)
         End Try
@@ -158,11 +167,11 @@
     Private Sub CleanDatatable(ByRef dt As DataTable)
         For Each col As DataColumn In dt.Columns
             If col.ColumnName.Contains("Date") Then
-                'For Each row As DataRow In dt.Rows
-                '    If row.IsNull(col) Then
-                '        row(col) = "1/1/1900"
-                '    End If
-                'Next
+                For Each row As DataRow In dt.Rows
+                    If row.IsNull(col) Then
+                        row(col) = "1/1/0001"
+                    End If
+                Next
             Else
                 For Each row As DataRow In dt.Rows
                     If row.IsNull(col) Then
@@ -265,6 +274,33 @@
         End Try
         Return False
     End Function
+    Public Function AddNewData(opKey As String, Optional ByRef results As DataTable = Nothing) As Boolean
+        Try
+            results = DB.ReturnDataTable("EXEC TEMPDATA.UploadLoopsBasicData '" & opKey & "'", 0)
+            Return True
+        Catch ex As Exception
+            pe.RaiseDataExecuteError(ex.Message)
+        End Try
+        Return False
+    End Function
+    Public Function ChangeStatus(opKey As String, Optional ByRef results As DataTable = Nothing, Optional status As Byte = 0) As Boolean
+        Try
+            results = DB.ReturnDataTable("EXEC TEMPDATA.ChangeLoopStatus '" & opKey & "'," & status, 0)
+            Return True
+        Catch ex As Exception
+            pe.RaiseDataExecuteError(ex.Message)
+        End Try
+        Return False
+    End Function
+    Public Function Delete(opKey As String, Optional ByRef results As DataTable = Nothing) As Boolean
+        Try
+            results = DB.ReturnDataTable("EXEC TEMPDATA.DeleteLoop '" & opKey & "'", 0)
+            Return True
+        Catch ex As Exception
+            pe.RaiseDataExecuteError(ex.Message)
+        End Try
+        Return False
+    End Function
     Public Function DeleteTempData(opKey As String) As Boolean
         Try
             DB.ExcuteNoneResult("DELETE FROM TEMPDATA.LoopTemp WHERE OpKey ='" & opKey & "'")
@@ -321,6 +357,40 @@
             End Using
 
             Return (DB.ReturnDataTable("EXEC HCS.GetGroupTasks '" & Users.userName & "'"))
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+            Return Nothing
+        End Try
+        Return Nothing
+    End Function
+    Public Function HCSPendingTasks(ByRef LoopFolders As List(Of String)) As DataTable
+        Try
+            Dim dt As New DataTable
+            Dim dtTemp As New DataTable
+
+            DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
+
+            dtTemp.Columns.Add("GroupName", System.Type.GetType("System.String"))
+            dtTemp.Columns.Add("UserName", System.Type.GetType("System.String"), "'" & Users.userName & "'")
+
+            For Each gName As String In LoopFolders
+                dtTemp.Rows.Add(gName)
+            Next
+
+
+            Using bcp As New SqlClient.SqlBulkCopy((DB.DBConnection))
+                bcp.BulkCopyTimeout = 0
+                bcp.DestinationTableName = "TEMPDATA.GroupFilter"
+                bcp.BatchSize = 1000
+                bcp.ColumnMappings.Clear()
+                bcp.ColumnMappings.Add("GroupName", "GroupName")
+                bcp.ColumnMappings.Add("UserName", "UserName")
+
+                bcp.WriteToServer(dtTemp)
+            End Using
+
+            Return (DB.ReturnDataTable("EXEC HCS.GetGroupPendingUniqueTasks '" & Users.userName & "'"))
 
         Catch ex As Exception
             pe.RaiseUnknownError(ex.Message)

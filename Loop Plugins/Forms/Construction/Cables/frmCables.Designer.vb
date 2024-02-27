@@ -76,9 +76,10 @@ Partial Class frmCables
         Me.BarButtonItem38 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem39 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem26 = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenuShare = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenuIsolate = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup1 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup3 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpProduction = New DevExpress.XtraBars.Ribbon.RibbonPage()
@@ -106,18 +107,20 @@ Partial Class frmCables
         'RibbonControl1
         '
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarSubItem1, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem8, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.rMenuSetProduction, Me.BarButtonItem12, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarSubItem3, Me.BarButtonItem15, Me.BarButtonItem16, Me.rMenuAssignActIDs, Me.BarSubItem5, Me.BarSubItem6, Me.BarSubItem7, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarButtonItem19, Me.BarSubItem8, Me.BarSubItem9, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem24, Me.BarButtonItem25, Me.rMenuChangeRoute, Me.rMenuChangeType, Me.rMenuChangeTeam, Me.BarSubItem10, Me.BarButtonItem29, Me.BarSubItem11, Me.BarSubItem12, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarButtonItem39, Me.BarButtonItem26})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarSubItem1, Me.BarButtonItem5, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem8, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.rMenuSetProduction, Me.BarButtonItem12, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarSubItem3, Me.BarButtonItem15, Me.BarButtonItem16, Me.rMenuAssignActIDs, Me.BarSubItem5, Me.BarSubItem6, Me.BarSubItem7, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarButtonItem19, Me.BarSubItem8, Me.BarSubItem9, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem24, Me.BarButtonItem25, Me.rMenuChangeRoute, Me.rMenuChangeType, Me.rMenuChangeTeam, Me.BarSubItem10, Me.BarButtonItem29, Me.BarSubItem11, Me.BarSubItem12, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarButtonItem39, Me.BarButtonItem26, Me.rMenuShare, Me.rMenuIsolate})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
-        Me.RibbonControl1.MaxItemId = 56
+        Me.RibbonControl1.MaxItemId = 58
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.RibbonPage2, Me.rpProduction, Me.rpEngineering, Me.rpPlanning, Me.rpQC, Me.rpProductionControl})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 110)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1202, 108)
         '
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Refresh"
+        Me.BarButtonItem1.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem1.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem1.Id = 1
         Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem1.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -127,6 +130,8 @@ Partial Class frmCables
         'BarButtonItem2
         '
         Me.BarButtonItem2.Caption = "Filter"
+        Me.BarButtonItem2.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem2.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem2.Id = 2
         Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem2.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -145,6 +150,8 @@ Partial Class frmCables
         'BarButtonItem4
         '
         Me.BarButtonItem4.Caption = "Show Resources"
+        Me.BarButtonItem4.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem4.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem4.Id = 4
         Me.BarButtonItem4.ImageOptions.Image = CType(resources.GetObject("BarButtonItem4.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem4.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem4.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -164,6 +171,8 @@ Partial Class frmCables
         'BarButtonItem5
         '
         Me.BarButtonItem5.Caption = "Copy Tag"
+        Me.BarButtonItem5.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem5.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem5.Id = 6
         Me.BarButtonItem5.ImageOptions.Image = CType(resources.GetObject("BarButtonItem5.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem5.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem5.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -172,6 +181,8 @@ Partial Class frmCables
         'BarButtonItem6
         '
         Me.BarButtonItem6.Caption = "Show RFI"
+        Me.BarButtonItem6.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem6.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem6.Id = 7
         Me.BarButtonItem6.ImageOptions.Image = CType(resources.GetObject("BarButtonItem6.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem6.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem6.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -181,6 +192,8 @@ Partial Class frmCables
         'BarButtonItem7
         '
         Me.BarButtonItem7.Caption = "Print Preview"
+        Me.BarButtonItem7.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem7.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem7.Id = 8
         Me.BarButtonItem7.ImageOptions.Image = CType(resources.GetObject("BarButtonItem7.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem7.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem7.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -236,6 +249,8 @@ Partial Class frmCables
         'BarButtonItem12
         '
         Me.BarButtonItem12.Caption = "Set Pulled"
+        Me.BarButtonItem12.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem12.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem12.Id = 14
         Me.BarButtonItem12.ImageOptions.Image = CType(resources.GetObject("BarButtonItem12.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem12.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem12.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -244,6 +259,8 @@ Partial Class frmCables
         'BarButtonItem13
         '
         Me.BarButtonItem13.Caption = "Set Connected From"
+        Me.BarButtonItem13.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem13.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem13.Id = 15
         Me.BarButtonItem13.ImageOptions.Image = CType(resources.GetObject("BarButtonItem13.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem13.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem13.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -252,6 +269,8 @@ Partial Class frmCables
         'BarButtonItem14
         '
         Me.BarButtonItem14.Caption = "Set Connected To"
+        Me.BarButtonItem14.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem14.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem14.Id = 16
         Me.BarButtonItem14.ImageOptions.Image = CType(resources.GetObject("BarButtonItem14.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem14.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem14.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -305,6 +324,8 @@ Partial Class frmCables
         'BarButtonItem17
         '
         Me.BarButtonItem17.Caption = "Assign Pulling ActID"
+        Me.BarButtonItem17.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem17.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem17.Id = 25
         Me.BarButtonItem17.ImageOptions.Image = CType(resources.GetObject("BarButtonItem17.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem17.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem17.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -323,6 +344,8 @@ Partial Class frmCables
         'BarButtonItem19
         '
         Me.BarButtonItem19.Caption = "Clear ActID"
+        Me.BarButtonItem19.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem19.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem19.Id = 27
         Me.BarButtonItem19.ImageOptions.Image = CType(resources.GetObject("BarButtonItem19.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem19.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem19.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -349,6 +372,8 @@ Partial Class frmCables
         'BarButtonItem20
         '
         Me.BarButtonItem20.Caption = "Assign From ActID"
+        Me.BarButtonItem20.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem20.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem20.Id = 30
         Me.BarButtonItem20.ImageOptions.Image = CType(resources.GetObject("BarButtonItem20.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem20.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem20.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -357,6 +382,8 @@ Partial Class frmCables
         'BarButtonItem21
         '
         Me.BarButtonItem21.Caption = "Clear From ActID"
+        Me.BarButtonItem21.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem21.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem21.Id = 31
         Me.BarButtonItem21.ImageOptions.Image = CType(resources.GetObject("BarButtonItem21.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem21.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem21.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -374,6 +401,8 @@ Partial Class frmCables
         'BarButtonItem22
         '
         Me.BarButtonItem22.Caption = "Assign To ActID"
+        Me.BarButtonItem22.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem22.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem22.Id = 32
         Me.BarButtonItem22.ImageOptions.Image = CType(resources.GetObject("BarButtonItem22.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem22.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem22.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -382,6 +411,8 @@ Partial Class frmCables
         'BarButtonItem23
         '
         Me.BarButtonItem23.Caption = "Clear To ActID"
+        Me.BarButtonItem23.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem23.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem23.Id = 33
         Me.BarButtonItem23.ImageOptions.Image = CType(resources.GetObject("BarButtonItem23.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem23.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem23.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -399,6 +430,8 @@ Partial Class frmCables
         'BarButtonItem24
         '
         Me.BarButtonItem24.Caption = "Assign Testing ActID"
+        Me.BarButtonItem24.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem24.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem24.Id = 34
         Me.BarButtonItem24.ImageOptions.Image = CType(resources.GetObject("BarButtonItem24.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem24.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem24.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -407,6 +440,8 @@ Partial Class frmCables
         'BarButtonItem25
         '
         Me.BarButtonItem25.Caption = "Clear Testing ActID"
+        Me.BarButtonItem25.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem25.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem25.Id = 35
         Me.BarButtonItem25.ImageOptions.Image = CType(resources.GetObject("BarButtonItem25.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem25.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem25.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -415,6 +450,8 @@ Partial Class frmCables
         'rMenuChangeRoute
         '
         Me.rMenuChangeRoute.Caption = "Change Route"
+        Me.rMenuChangeRoute.CloseRadialMenuOnItemClick = True
+        Me.rMenuChangeRoute.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.rMenuChangeRoute.Id = 36
         Me.rMenuChangeRoute.ImageOptions.Image = CType(resources.GetObject("rMenuChangeRoute.ImageOptions.Image"), System.Drawing.Image)
         Me.rMenuChangeRoute.ImageOptions.LargeImage = CType(resources.GetObject("rMenuChangeRoute.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -424,6 +461,8 @@ Partial Class frmCables
         'rMenuChangeType
         '
         Me.rMenuChangeType.Caption = "Change Type"
+        Me.rMenuChangeType.CloseRadialMenuOnItemClick = True
+        Me.rMenuChangeType.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.rMenuChangeType.Id = 37
         Me.rMenuChangeType.ImageOptions.Image = CType(resources.GetObject("rMenuChangeType.ImageOptions.Image"), System.Drawing.Image)
         Me.rMenuChangeType.ImageOptions.LargeImage = CType(resources.GetObject("rMenuChangeType.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -433,6 +472,8 @@ Partial Class frmCables
         'rMenuChangeTeam
         '
         Me.rMenuChangeTeam.Caption = "Change Team"
+        Me.rMenuChangeTeam.CloseRadialMenuOnItemClick = True
+        Me.rMenuChangeTeam.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.rMenuChangeTeam.Id = 38
         Me.rMenuChangeTeam.ImageOptions.Image = CType(resources.GetObject("rMenuChangeTeam.ImageOptions.Image"), System.Drawing.Image)
         Me.rMenuChangeTeam.ImageOptions.LargeImage = CType(resources.GetObject("rMenuChangeTeam.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -452,6 +493,8 @@ Partial Class frmCables
         'BarButtonItem29
         '
         Me.BarButtonItem29.Caption = "Set Pulling Workfront"
+        Me.BarButtonItem29.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem29.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem29.Id = 41
         Me.BarButtonItem29.ImageOptions.Image = CType(resources.GetObject("BarButtonItem29.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem29.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem29.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -469,6 +512,8 @@ Partial Class frmCables
         'BarButtonItem30
         '
         Me.BarButtonItem30.Caption = "Set Glanding From Workfront"
+        Me.BarButtonItem30.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem30.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem30.Id = 44
         Me.BarButtonItem30.ImageOptions.Image = CType(resources.GetObject("BarButtonItem30.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem30.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem30.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -477,6 +522,8 @@ Partial Class frmCables
         'BarButtonItem31
         '
         Me.BarButtonItem31.Caption = "Set Glanding To Workfront"
+        Me.BarButtonItem31.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem31.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem31.Id = 45
         Me.BarButtonItem31.ImageOptions.Image = CType(resources.GetObject("BarButtonItem31.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem31.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem31.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -494,6 +541,8 @@ Partial Class frmCables
         'BarButtonItem32
         '
         Me.BarButtonItem32.Caption = "Set Connection From Workfront"
+        Me.BarButtonItem32.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem32.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem32.Id = 46
         Me.BarButtonItem32.ImageOptions.Image = CType(resources.GetObject("BarButtonItem32.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem32.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem32.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -502,6 +551,8 @@ Partial Class frmCables
         'BarButtonItem33
         '
         Me.BarButtonItem33.Caption = "Set Connection From Workfront"
+        Me.BarButtonItem33.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem33.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem33.Id = 47
         Me.BarButtonItem33.ImageOptions.Image = CType(resources.GetObject("BarButtonItem33.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem33.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem33.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -510,6 +561,8 @@ Partial Class frmCables
         'BarButtonItem34
         '
         Me.BarButtonItem34.Caption = "Change Discipline"
+        Me.BarButtonItem34.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem34.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem34.Id = 48
         Me.BarButtonItem34.ImageOptions.Image = CType(resources.GetObject("BarButtonItem34.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem34.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem34.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -519,6 +572,8 @@ Partial Class frmCables
         'BarButtonItem35
         '
         Me.BarButtonItem35.Caption = "Set Cable As Released"
+        Me.BarButtonItem35.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem35.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem35.Id = 49
         Me.BarButtonItem35.ImageOptions.Image = CType(resources.GetObject("BarButtonItem35.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem35.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem35.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -546,15 +601,39 @@ Partial Class frmCables
         'BarButtonItem26
         '
         Me.BarButtonItem26.Caption = "Delete"
+        Me.BarButtonItem26.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem26.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem26.Id = 55
         Me.BarButtonItem26.ImageOptions.Image = CType(resources.GetObject("BarButtonItem26.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem26.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem26.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem26.Name = "BarButtonItem26"
         Me.BarButtonItem26.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
+        'rMenuShare
+        '
+        Me.rMenuShare.Caption = "Share"
+        Me.rMenuShare.CloseRadialMenuOnItemClick = True
+        Me.rMenuShare.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.rMenuShare.Id = 56
+        Me.rMenuShare.ImageOptions.Image = CType(resources.GetObject("BarButtonItem27.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuShare.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem27.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuShare.Name = "rMenuShare"
+        Me.rMenuShare.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'rMenuIsolate
+        '
+        Me.rMenuIsolate.Caption = "Isolate"
+        Me.rMenuIsolate.CloseRadialMenuOnItemClick = True
+        Me.rMenuIsolate.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.rMenuIsolate.Id = 57
+        Me.rMenuIsolate.ImageOptions.Image = CType(resources.GetObject("BarButtonItem28.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuIsolate.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem28.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuIsolate.Name = "rMenuIsolate"
+        Me.rMenuIsolate.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
         'RibbonPage1
         '
-        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1, Me.RibbonPageGroup2})
+        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
         Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
         Me.RibbonPage1.Text = "Home"
@@ -563,18 +642,15 @@ Partial Class frmCables
         '
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem1)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem2)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.rMenuIsolate)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem3)
+        Me.RibbonPageGroup1.ItemLinks.Add(Me.rMenuShare)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarSubItem1)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem4)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem6)
         Me.RibbonPageGroup1.ItemLinks.Add(Me.BarButtonItem7)
         Me.RibbonPageGroup1.Name = "RibbonPageGroup1"
         Me.RibbonPageGroup1.Text = "Cables Options"
-        '
-        'RibbonPageGroup2
-        '
-        Me.RibbonPageGroup2.Name = "RibbonPageGroup2"
-        Me.RibbonPageGroup2.Text = "RibbonPageGroup2"
         '
         'RibbonPage2
         '
@@ -678,10 +754,10 @@ Partial Class frmCables
         'grd
         '
         Me.grd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.grd.Location = New System.Drawing.Point(0, 110)
+        Me.grd.Location = New System.Drawing.Point(0, 108)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1200, 590)
+        Me.grd.Size = New System.Drawing.Size(1202, 593)
         Me.grd.TabIndex = 71
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -728,6 +804,7 @@ Partial Class frmCables
         Me.rMenu.Glyph = CType(resources.GetObject("rMenu.Glyph"), System.Drawing.Image)
         Me.rMenu.ItemLinks.Add(Me.BarButtonItem1)
         Me.rMenu.ItemLinks.Add(Me.BarButtonItem2)
+        Me.rMenu.ItemLinks.Add(Me.rMenuIsolate)
         Me.rMenu.ItemLinks.Add(Me.rMenuChangeRoute)
         Me.rMenu.ItemLinks.Add(Me.rMenuChangeTeam)
         Me.rMenu.ItemLinks.Add(Me.rMenuChangeType)
@@ -735,6 +812,7 @@ Partial Class frmCables
         Me.rMenu.ItemLinks.Add(Me.BarButtonItem4)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetProduction)
         Me.rMenu.ItemLinks.Add(Me.BarButtonItem5)
+        Me.rMenu.ItemLinks.Add(Me.rMenuShare)
         Me.rMenu.Name = "rMenu"
         Me.rMenu.Ribbon = Me.RibbonControl1
         '
@@ -742,7 +820,7 @@ Partial Class frmCables
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1200, 700)
+        Me.ClientSize = New System.Drawing.Size(1202, 701)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
         Me.IconOptions.Image = Global.EEICA.My.Resources.Resources.icons8_plug_32
@@ -763,7 +841,6 @@ Partial Class frmCables
     Friend WithEvents RibbonControl1 As DevExpress.XtraBars.Ribbon.RibbonControl
     Friend WithEvents RibbonPage1 As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents RibbonPageGroup2 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem3 As DevExpress.XtraBars.BarButtonItem
@@ -833,4 +910,6 @@ Partial Class frmCables
     Friend WithEvents BarButtonItem38 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem39 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem26 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenuShare As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenuIsolate As DevExpress.XtraBars.BarButtonItem
 End Class
