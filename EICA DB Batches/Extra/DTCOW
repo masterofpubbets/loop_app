@@ -1,0 +1,1605 @@
+create PROCEDURE  [dbo].[DTCOW] 
+
+AS
+
+---- DAILY EICA PRODUCTION
+
+declare @col as nvarchar(max)
+declare @colSUM as nvarchar(max)
+declare @result as nvarchar(max)
+declare @startdate as char(10)
+declare @enddate as char(10)
+declare @startdate0 as date
+declare @enddate0 as date
+
+select @enddate0 =  [tmp_date] from [tblTMP] where [tmp_id]=1--convert(char(10),cast(getdate() as smalldatetime),111)
+select @startdate0 = dateadd(d,-6,@enddate0) --'04/11/2015'
+set @enddate =  convert(char(10),cast(@enddate0 as smalldatetime),111)
+set @startdate = convert(char(10),cast(@startdate0 as smalldatetime),111)
+
+
+select @col = STUFF((select distinct ',' + quotename(x.Date)
+FROM (select DATE FROM (select convert(char(10),dateadd(d,(x.a + (10 * x.b) + (100 * x.c) + (1000 * x.d)),cast(@startdate as smalldatetime)),111) as Date
+FROM (select * FROM (select 0 as a UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as a CROSS JOIN
+(select 0 as b UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as b CROSS JOIN
+(select 0 as c UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as c CROSS JOIN
+(select 0 as d UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as d) as x) as x1
+where date between @startdate and @enddate) as x for xml path (''),TYPE).value('.' ,'NVARCHAR(MAX)'),1,1,'')
+
+select @colSUM =  STUFF((select distinct ',' + 'SUM(' + quotename(x.Date) + ') as ' + quotename(x.Date)
+FROM (select DATE FROM (select convert(char(10),dateadd(d,(x.a + (10 * x.b) + (100 * x.c) + (1000 * x.d)),cast(@startdate as smalldatetime)),111) as Date
+FROM (select * FROM (select 0 as a UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as a CROSS JOIN
+(select 0 as b UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as b CROSS JOIN
+(select 0 as c UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as c CROSS JOIN
+(select 0 as d UNION ALL select 1 UNION ALL select 2 UNION ALL select 3 UNION ALL select 4 UNION ALL select 5 UNION ALL select 6 UNION ALL select 7 UNION ALL select 8 UNION ALL select 9) as d) as x) as x1
+where date between @startdate and @enddate) as x for xml path (''),TYPE).value('.' ,'NVARCHAR(MAX)'),1,1,'')
+
+
+set @result = '
+
+
+SELECT
+tblActIDS.Package, tblActIDS.ResourceId, tblActIDS.ResourceName, tblActIDS.UOM,tblActIDS.Location,
+SUM(EICAItems.Scope) AS Scope,
+SUM(EICAItems.Done) AS Done,
+SUM(EICAItems.Pending) AS Pending,
+SUM(EICAItems.[Last 4 Weekly]) AS [Last 4 Weekly],
+SUM(EICAItems.[Last 3 Weekly]) AS [Last 4 Weekly],
+SUM(EICAItems.[Last 2 Weekly]) AS [Last 4 Weekly],
+SUM(EICAItems.[Last 1 Weekly]) AS [Last 4 Weekly],
+SUM(EICAItems.Weekly) AS Weekly,
+'+ @colSUM +'
+
+FROM (
+
+
+
+select 
+ACTID,
+SUM(X2.SCOPE) AS Scope
+,sum(x2.Cummulative) as Done
+,SUM(X2.SCOPE) - sum(x2.Cummulative) AS Pending
+
+,sum(x2.[Last 4 Weekly]) as [Last 4 Weekly]
+,sum(x2.[Last 3 Weekly]) as [Last 3 Weekly]
+,sum(x2.[Last 2 Weekly]) as [Last 2 Weekly]
+,sum(x2.[Last 1 Weekly]) as [Last 1 Weekly]
+,sum(x2.Weekly) as Weekly
+,'+ @colSUM +'
+
+
+FROM
+(
+select Type,ActID
+,Scope
+,case when Cummulative is null then 0 else Cummulative end as Cummulative
+,CASE WHEN [Last 4 Weekly] IS NULL THEN 0 ELSE [Last 4 Weekly] END AS [Last 4 Weekly]
+,CASE WHEN [Last 3 Weekly] IS NULL THEN 0 ELSE [Last 3 Weekly] END AS [Last 3 Weekly]
+,CASE WHEN [Last 2 Weekly] IS NULL THEN 0 ELSE [Last 2 Weekly] END AS [Last 2 Weekly]
+,CASE WHEN [Last 1 Weekly] IS NULL THEN 0 ELSE [Last 1 Weekly] END AS [Last 1 Weekly]
+,CASE WHEN Weekly IS NULL THEN 0 ELSE WEEKLY END AS Weekly
+,'+ @col +' FROM 
+
+--******************************************************************
+(---Electrical Cable Pulling	 
+select convert(char(10),cast([EC_Plan_Pulled_Date] as smalldatetime),111) as Daily,
+''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[EC_Plan_P6_ActID_Pulling] as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo
+where active = 1 AND Team LIKE ''%COW%PULL%''
+AND [EC_Plan_Pulled_Date] is not null
+group by EC_TYPE,[EC_Plan_Pulled_Date],EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Cummulative'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+AND Pro_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 1 Weekly'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+AND [EC_Plan_Pulled_Date] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 2 Weekly'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+AND [EC_Plan_Pulled_Date] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 3 Weekly'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+AND [EC_Plan_Pulled_Date] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 4 Weekly'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+AND [EC_Plan_Pulled_Date] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Weekly'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblEleCableList.ec_id,tblEleCableList.Active,tblEleCableList.EC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblEleCableList.EC_Plan_P6_ActID_Pulling,EC_TYPE,Team
+from tblEleCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''Ele Cable''
+) as vEleParPro
+on tblEleCableList.EC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+AND [EC_Plan_Pulled_Date] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Scope'' as Daily,''Electrical Cable Pulling - '' + EC_TYPE as [Activity Name]
+,sum([EC_Length]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],EC_Plan_P6_ActID_Pulling as ActID FROM 
+tblEleCableList
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by EC_TYPE,EC_Plan_P6_ActID_Pulling
+--******************************************************************
+UNION ALL
+--******************************************************************
+---Instrument Cable Pulling	 
+select convert(char(10),cast([EC_Plan_Pulled_Date] as smalldatetime),111) as Daily,
+''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Pulling] as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND Pro_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,[EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Cummulative'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND Pro_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 1 Weekly'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND Pro_Date between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 2 Weekly'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND [Pro_Date] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 3 Weekly'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND [Pro_Date] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,[EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Last 4 Weekly'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND [Pro_Date] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Weekly'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblInsCableList.IC_ID,tblInsCableList.Active,tblInsCableList.IC_Length
+
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblInsCableList.IC_Plan_P6_ActID_Pulling
+,IC_TYPE,Team
+from tblInsCableList
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''IC Cable''
+AND [Pro_Date] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vEleParPro
+on tblInsCableList.IC_ID=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,[EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling
+UNION ALL
+select ''Scope'' as Daily,''Instrument Cable Pulling '' + IC_TYPE as [Activity Name]
+,sum([IC_Length]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+tblInsCableList
+where active = 1 AND Team LIKE ''%COW%PULL%''
+group by IC_TYPE,IC_Plan_P6_ActID_Pulling
+--******************************************************************
+UNION ALL
+---Electrical Cable Connections 01
+select convert(char(10),cast([Conn_Date] as smalldatetime),111) as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by Conn_Date,[EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Cummulative'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by Conn_Date,[EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by Conn_Date,[EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by Conn_Date,[EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Weekly'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID FROM 
+(select EC_Plan_Connected_Date_From as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect]
+FROM tblEleCableList where [EC_Plan_Connected_Date_From] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by EC_Plan_Connected_Date_From,[EC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Scope'' as Daily,
+''Electrical Cable Connection 01'' as [Activity Name]
+,count([EC_id]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect] as ActID 
+FROM tblEleCableList
+where active = 1 AND Team LIKE ''%COW%CONFROM%''
+group by [EC_Plan_P6_ActID_Connect]
+--*********************************************************************************
+UNION ALL
+---Electrical Cable Connections 02
+select convert(char(10),cast([Conn_Date] as smalldatetime),111) as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] is not null
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by Conn_Date,[EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Cummulative'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Weekly'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,sum([EC_Conn1]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select EC_Plan_Connected_Date_To as [Conn_Date]
+,count([EC_ID]) as [EC_Conn1] ,[EC_Plan_P6_ActID_Connect_2]
+FROM tblEleCableList where [EC_Plan_Connected_Date_To] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONTO% ''
+group by EC_Plan_Connected_Date_To,[EC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by [EC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Scope'' as Daily,
+''Electrical Cable Connection 02'' as [Activity Name]
+,count([EC_id]) as ''Conn'',''Electrical'' as [Type],''Each'' as [Unit],[EC_Plan_P6_ActID_Connect_2] as ActID 
+FROM tblEleCableList
+where active = 1 AND Team LIKE ''%COW%CONTO%''
+group by [EC_Plan_P6_ActID_Connect_2]
+--*********************************************************************************
+UNION ALL
+---Electrical Cable Tray 
+select convert(char(10),cast([EL_Tray_Installed_date] as smalldatetime),111) as Daily,
+''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+where [Production_Date] is not null
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by EL_Tray_Type,[EL_Tray_Installed_date],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Cummulative'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+WHERE Production_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by EL_Tray_Type,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 1 Weekly'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+WHERE Production_Date between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by EL_Tray_Type,[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 2 Weekly'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+WHERE [Production_Date] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by EL_Tray_Type,[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 3 Weekly'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+WHERE [Production_Date] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by [EL_Tray_Type],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 4 Weekly'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+WHERE [Production_Date] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by [EL_Tray_Type],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Weekly'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblEleCableTray.Tag,tblEleCableTray.IC_Plan_P6_ActID_Install,tblEleCableTray.Active
+,tblEleCableTray.EL_Tray_Length
+,[tblEleCableTrayProduction].Production_Qnty,[tblEleCableTrayProduction].Production_Date as EL_Tray_Installed_date,EL_Tray_Type,Team
+from tblEleCableTray
+left join [tblEleCableTrayProduction]
+on tblEleCableTray.Tag=[tblEleCableTrayProduction].Tag
+WHERE [Production_Date] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by [EL_Tray_Type],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Scope'' as Daily,''Cable Tray Erected - '' + EL_Tray_Type as [Activity Name]
+,sum([EL_Tray_Length]) as ''Pulled'',''Electrical'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM tblEleCableTray 
+where active = 1 AND Team LIKE ''%COW%''
+group by EL_Tray_Type,[IC_Plan_P6_ActID_Install]
+--******************************************************************
+UNION ALL
+---Instrument Cable Connections 01
+select convert(char(10),cast([Conn_Date] as smalldatetime),111) as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_Type
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] is not null
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by  IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Cummulative'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by  IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by  IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by  IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Weekly'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID FROM 
+(select IC_Plan_Connected_Date_From as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_From] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by IC_TYPE,IC_Plan_Connected_Date_From,[IC_Plan_P6_ActID_Connect]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect]
+UNION ALL
+select ''Scope'' as Daily,
+''Instrument Cable Connection 01 '' + IC_TYPE as [Activity Name]
+,count([IC_ID]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect] as ActID
+FROM tblInsCableList
+where active = 1 AND Team LIKE ''%COW%CONFROM%''
+group by IC_TYPE,[IC_Plan_P6_ActID_Connect]
+--*********************************************************************************
+UNION ALL
+---Instrument Cable Connections 02
+select convert(char(10),cast([Conn_Date] as smalldatetime),111) as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] is not null
+and active=1 AND Team LIKE ''%COW%CONFROM%''
+group by  IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Cummulative'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by  IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by  IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by  IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Weekly'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,sum([IC_Conn1]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID FROM 
+(select IC_Plan_Connected_Date_To as [Conn_Date]
+,count([IC_ID]) as [IC_Conn1] ,[IC_Plan_P6_ActID_Connect_2],IC_TYPE
+FROM tblInsCableList where [IC_Plan_Connected_Date_To] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and active=1 AND Team LIKE ''%COW%CONTO%''
+group by IC_TYPE,IC_Plan_Connected_Date_To,[IC_Plan_P6_ActID_Connect_2]
+)
+as vELECon1
+group by IC_TYPE,Conn_Date,[IC_Plan_P6_ActID_Connect_2]
+UNION ALL
+select ''Scope'' as Daily,
+''Instrument Cable Connection 02 '' + IC_TYPE as [Activity Name]
+,count([IC_ID]) as ''Conn'',''Instrumentation'' as [Type],''Each'' as [Unit],[IC_Plan_P6_ActID_Connect_2] as ActID
+FROM tblInsCableList
+where active = 1 AND Team LIKE ''%COW%CONTO%''
+group by IC_TYPE,[IC_Plan_P6_ActID_Connect_2]
+--*********************************************************************************
+
+UNION ALL
+---Instrument Installation - Stand Alone/Field
+select convert(char(10),cast([Installation_Date] as smalldatetime),111) as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and Installation_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Cummulative'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and Installation_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Weekly'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Scope'' as Daily,
+''Instrument Installation - Stand Alone/Field'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments 
+where instrument=''Instrument''
+AND ((Furnished_By is null) OR ([Furnished_By]=''VENDOR LOOSE''))
+AND Location =''Field''
+and active=1 AND Team LIKE ''%COW%''
+group by IC_Plan_P6_ActID_Install
+--*********************************************************
+UNION ALL
+---Instrument Installation - In Line
+select convert(char(10),cast([Installation_Date] as smalldatetime),111) as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and Installation_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Cummulative'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Weekly'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+and [Installation_Date] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by [Installation_Date],IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Scope'' as Daily,
+''Instrument Installation - In Line'' as [Activity Name]
+,count([Instrument_Tag]) as ''Installed Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblInstruments where Instrument =''Instrument''
+and Location <> ''Field''
+and (([Furnished_By] is null) or (Furnished_By = ''vendor loose''))
+and active=1 AND Team LIKE ''%COW%''
+group by IC_Plan_P6_ActID_Install
+--*********************************************************
+
+UNION ALL
+---Hook Ups
+select convert(char(10),cast(HookUp_Date as smalldatetime),111) as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+group by IC_Plan_P6_ActID_Hookup,hookup_date
+UNION ALL
+select ''Cummulative'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and HookUp_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+and hookup_name is not null
+group by IC_Plan_P6_ActID_Hookup
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+and hookup_date between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by IC_Plan_P6_ActID_Hookup
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+and hookup_date between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by IC_Plan_P6_ActID_Hookup
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+and hookup_date between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by IC_Plan_P6_ActID_Hookup
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+and hookup_date between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by IC_Plan_P6_ActID_Hookup
+UNION ALL
+select ''Weekly'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([HookUp_Date]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+and hookup_date between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by IC_Plan_P6_ActID_Hookup
+UNION ALL
+select ''Scope'' as Daily,
+''Hook Ups'' as [Activity Name]
+,count([Instrument_Tag]) as ''Hookup Count'',''Instrumentation'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Hookup as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and hookup_name is not null
+group by IC_Plan_P6_ActID_Hookup
+--*********************************************************
+UNION ALL
+---Calibration
+select convert(char(10),cast(Calibration_Date as smalldatetime),111) as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+group by P6_Precalibration_ActID,Calibration_Date
+UNION ALL
+select ''Cummulative'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+and Calibration_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by P6_Precalibration_ActID
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+and Calibration_Date between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by P6_Precalibration_ActID
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+and Calibration_Date between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by P6_Precalibration_ActID
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+and Calibration_Date between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by P6_Precalibration_ActID
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+and Calibration_Date between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by P6_Precalibration_ActID
+UNION ALL
+select ''Weekly'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Calibration_Date]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+and Calibration_Date between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by P6_Precalibration_ActID
+UNION ALL
+select ''Scope'' as Daily,
+''Calibration'' as [Activity Name]
+,count([Instrument_Tag]) as ''Calibration Count'',''Instrumentation'' as [Type],''Each'' as [Unit],P6_Precalibration_ActID as ActID FROM tblInstruments where active = 1 AND Team LIKE ''%COW%''
+and Calibration_Type = ''Yes''
+group by P6_Precalibration_ActID
+--*********************************************************
+UNION ALL
+---Lighting Fixtures
+select convert(char(10),cast(LF_Installed as smalldatetime),111) as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed is not null
+group by lf_ref_desc,LF_Installed,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Cummulative'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by lf_ref_desc,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by lf_ref_desc,LF_Installed,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by lf_ref_desc,LF_Installed,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by lf_ref_desc,LF_Installed,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by lf_ref_desc,LF_Installed,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Weekly'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([LF_Installed]) as ''Installed Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+and LF_Installed between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by lf_ref_desc,LF_Installed,IC_Plan_P6_ActID_Install
+UNION ALL
+select ''Scope'' as Daily,
+''Lighting - '' + lf_ref_desc as [Activity Name]
+,count([TAG]) as ''Fixture Count'',''EL. LIGTHING'' as [Type],''Each'' as [Unit],IC_Plan_P6_ActID_Install as ActID FROM tblLightingFixture where active = 1 AND Team LIKE ''%COW%''
+group by lf_ref_desc,IC_Plan_P6_ActID_Install
+--*********************************************************
+UNION ALL
+---Equipment
+select convert(char(10),cast(InstalledDate as smalldatetime),111) as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate is not null
+group by Discipline,[Type],InstalledDate,ActId
+UNION ALL
+select ''Cummulative'' as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by Discipline,[Type],ActId
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by Discipline,[Type],InstalledDate,ActId
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by Discipline,[Type],InstalledDate,ActId
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by Discipline,[Type],InstalledDate,ActId
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by Discipline,[Type],InstalledDate,ActId
+UNION ALL
+select ''Weekly'' as Daily,
+Discipline as [Activity Name]
+,count([InstalledDate]) as ''Installed Count'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+and InstalledDate between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by Discipline,[Type],InstalledDate,ActId
+UNION ALL
+select ''Scope'' as Daily,
+Discipline as [Activity Name]
+,count(Tag) as ''Scope'',[Type],''Each'' as [Unit],ActId as ActID FROM tblEquipment where active = 1 AND Team LIKE ''%COW%''
+group by Discipline,[Type],ActId
+--*********************************************************
+UNION ALL
+---Instrument Cable Tray 
+select convert(char(10),cast([IN_Tray_Installed] as smalldatetime),111) as Daily,
+''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+and [IN_Tray_Installed] is not null
+group by [IN_Tray_Installed],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Cummulative'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+AND Production_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+group by [IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 1 Weekly'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+and [IN_Tray_Installed] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [IN_Tray_Installed],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 2 Weekly'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+and [IN_Tray_Installed] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [IN_Tray_Installed],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 3 Weekly'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+and [IN_Tray_Installed] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [IN_Tray_Installed],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Last 4 Weekly'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+and [IN_Tray_Installed] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [IN_Tray_Installed],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Weekly'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([Production_Qnty]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM 
+(
+select tblInsCableTray.Tag,tblInsCableTray.IC_Plan_P6_ActID_Install,tblInsCableTray.Active
+,tblInsCableTray.IN_Tray_Length
+,tblInsCableTrayProduction.Production_Qnty,tblInsCableTrayProduction.Production_Date as IN_Tray_Installed,Team
+from tblInsCableTray
+left join tblInsCableTrayProduction
+on tblInsCableTray.Tag=tblInsCableTrayProduction.Tag
+where tblInsCableTray.IN_Tray_Type <>''F&G''
+) as vETrayPro 
+where active = 1 AND Team LIKE ''%COW%''
+and [IN_Tray_Installed] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by [IN_Tray_Installed],[IC_Plan_P6_ActID_Install]
+UNION ALL
+select ''Scope'' as Daily,''Cable Tray Erected'' as [Activity Name]
+,sum([IN_Tray_Length]) as ''Pulled'',''Instrumentation'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Install] as ActID FROM tblINSCableTray 
+where active = 1 AND Team LIKE ''%COW%''
+AND tblInsCableTray.IN_Tray_Type <>''F&G''
+group by [IC_Plan_P6_ActID_Install]
+--******************************************************************
+UNION ALL
+---MSC Cable Pulling
+select convert(char(10),cast([EC_Plan_Pulled_Date] as smalldatetime),111) as Daily,
+''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum(Qnty) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],[IC_Plan_P6_ActID_Pulling] as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo
+where active = 1 AND Team LIKE ''%COW%''
+and [EC_Plan_Pulled_Date] is not null
+group by [EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Cummulative'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum(Qnty) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+AND Pro_Date <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%''
+group by IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Last 1 Weekly'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum(Qnty) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%''
+and [EC_Plan_Pulled_Date] between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Last 2 Weekly'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum(Qnty) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%''
+and [EC_Plan_Pulled_Date] between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Last 3 Weekly'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%''
+and [EC_Plan_Pulled_Date] between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Last 4 Weekly'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%''
+and [EC_Plan_Pulled_Date] between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by [EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Weekly'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum([Qnty]) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+(
+select tblMSCCable.Tag,tblMSCCable.Active,tblMSCCable.Length
+,tblMSCCable.type
+,[Qnty],Pro_Date as [EC_Plan_Pulled_Date],tblMSCCable.IC_Plan_P6_ActID_Pulling,Team
+from tblMSCCable
+left join
+(
+SELECT [Discipline],[Type],[Unit],[Tag]
+,[Qnty]
+,Pro_Date
+,[PullingActID]
+FROM [vCblParProduction]
+where Discipline=''MSC Cable''
+) as vEleParPro
+on tblMSCCable.Tag=vEleParPro.Tag
+) as vECPRo 
+where active = 1 AND Team LIKE ''%COW%''
+and [EC_Plan_Pulled_Date] between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by [EC_Plan_Pulled_Date],IC_Plan_P6_ActID_Pulling,type
+UNION ALL
+select ''Scope'' as Daily,''MSC Cable Pulling''+''-''+type as [Activity Name]
+,sum([Length]) as ''Pulled'',''MSC Cable'' as [Type],''LM'' as [Unit],IC_Plan_P6_ActID_Pulling as ActID FROM 
+tblMSCCable
+where active = 1 AND Team LIKE ''%COW%''
+group by IC_Plan_P6_ActID_Pulling,type
+--******************************************************************
+UNION ALL
+---Loop
+select convert(char(10),cast(L_Done as smalldatetime),111) as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+group by L_Done,ACTIVITYID
+UNION ALL
+select ''Cummulative'' as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+and L_Done <= (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by ACTIVITYID
+UNION ALL
+select ''Last 1 Weekly'' as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+and L_Done between dateadd(d,-13,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by L_Done,ACTIVITYID
+UNION ALL
+select ''Last 2 Weekly'' as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+and L_Done between dateadd(d,-13-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-7,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by L_Done,ACTIVITYID
+UNION ALL
+select ''Last 3 Weekly'' as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+and L_Done between dateadd(d,-13-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-14,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by L_Done,ACTIVITYID
+UNION ALL
+select ''Last 4 Weekly'' as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+and L_Done between dateadd(d,-13-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and dateadd(d,-7-21,(select [tmp_date] from [tblTMP] where [tmp_id]=1))
+group by L_Done,ACTIVITYID
+UNION ALL
+select ''Weekly'' as Daily,
+''Loop'' as [Activity Name]
+,count([L_Done]) as ''Installed Count'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+and L_Done between dateadd(d,-6,(select [tmp_date] from [tblTMP] where [tmp_id]=1)) and (select [tmp_date] from [tblTMP] where [tmp_id]=1)
+group by L_Done,ACTIVITYID
+UNION ALL
+select ''Scope'' as Daily,
+''Loop'' as [Activity Name]
+,count(loopname) as ''Scope'',''Loop Test'' as [Type],''Each'' as [Unit],ACTIVITYID as ActID FROM tblInsLoop where active = 1 AND Team LIKE ''%COW%''
+group by ACTIVITYID
+--*********************************************************
+
+
+--******************************************************************
+) as X
+
+PIVOT 
+(sum (Pulled) for Daily in ('+ @col +',Scope,[Cummulative],[Last 1 Weekly],[Last 2 Weekly],[Last 3 Weekly],[Last 4 Weekly],weekly)
+)as X1
+) as X2
+group by X2.ActID
+) AS EICAItems
+INNER JOIN tblActIDS ON EICAItems.ACTID = tblActIDS.ActId
+GROUP BY tblActIDS.Package, tblActIDS.ResourceId, tblActIDS.ResourceName, tblActIDS.UOM,tblActIDS.Location
+'  
+
+
+
+
+execute(@result)
+GO

@@ -1,0 +1,82 @@
+IF OBJECT_ID('tempdb..#LoopTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #LoopTasks
+    END
+CREATE TABLE  #LoopTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    Source NVARCHAR(100) NULL,
+    ItemType NVARCHAR(100) NULL
+)
+
+IF OBJECT_ID('tempdb..#Tasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #Tasks
+    END
+CREATE TABLE  #Tasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NOT NULL,
+    ClosedDate NVARCHAR(50) NULL,
+    ItemType NVARCHAR(250) NULL,
+    Subcontractor NVARCHAR(250) NULL,
+    ClosingRemarks NVARCHAR(MAX) NULL,
+    DocType NVARCHAR(250) NULL
+)
+
+IF OBJECT_ID('tempdb..#LoopSQMSTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #LoopSQMSTasks
+    END
+CREATE TABLE  #LoopSQMSTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NULL,
+    ClosingDate NVARCHAR(50) NULL,
+    Source NVARCHAR(50) NULL,
+    ItemType NVARCHAR(250) NULL,
+    Subcontractor NVARCHAR(250) NULL,
+    ClosingRemarks NVARCHAR(MAX) NULL,
+    DocType NVARCHAR(250) NULL
+)
+
+INSERT INTO #LoopTasks
+SELECT DISTINCT
+    tblInsLoop.LoopName AS FolderName,
+    [HCS].[ProjectElements].[ElementTag],
+    HCS.ProjectElements.ImportSource,
+    HCS.ProjectElements.[Type]
+FROM [HCS].[ProjectElements]
+INNER JOIN tblInsLoop ON [HCS].[ProjectElements].[Group] = tblInsLoop.LoopName
+
+INSERT INTO #Tasks
+SELECT
+    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormDescription
+FROM HCS.SQMSTasks
+--WHERE (NodeLevel <> 'Gr' AND Phase = 'Construction' AND FormName NOT IN ('10160-CON-INS-26', '10160-CON-INS-26_Double','10160-CON-INS-11', '10160-CON-ROT-10', '10160-PACKAGE-INS-01', '10160-PACKAGE-ELE-01', '10160-CON-PIP-02'))
+--OR (FormName IN ('10160-CON-ELE-28', '10160-CON-ELE-29'))
+XXFilterXX
+
+
+INSERT INTO #LoopSQMSTasks
+SELECT DISTINCT
+#LoopTasks.FolderName,
+#Tasks.ElementTag, #Tasks.FormName, #Tasks.ClosedDate, #LoopTasks.Source,
+#LoopTasks.ItemType, #Tasks.Subcontractor, #Tasks.ClosingRemarks,#Tasks.DocType
+FROM #LoopTasks
+INNER JOIN #Tasks ON #LoopTasks.ElementTag = #Tasks.ElementTag COLLATE Modern_Spanish_CI_AS
+
+
+SELECT
+    FolderName,
+    #LoopSQMSTasks.ElementTag AS Tag,
+    #LoopSQMSTasks.ItemType AS [Item Type],
+    #LoopSQMSTasks.FormName,
+    DocType AS Description,
+    [Subcontractor],
+    [ClosingDate],
+    [ClosingRemarks]
+
+FROM #LoopSQMSTasks
+INNER JOIN TEMPDATA.GroupFilter ON #LoopSQMSTasks.FolderName = TEMPDATA.GroupFilter.GroupName COLLATE Modern_Spanish_CI_AS
+WHERE TEMPDATA.GroupFilter.UserName = XXXUserXXX

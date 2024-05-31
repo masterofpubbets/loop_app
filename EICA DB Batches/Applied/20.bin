@@ -1,6 +1,14 @@
 --version11.0.5
 UPDATE [dbo].[tblSettings] SET SetValue = '11.0.5' WHERE SetName = 'VERSION'
 GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'PDSModel'
+          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
+BEGIN
+    ALTER TABLE TEMPDATA.LoopTemp
+    ADD PDSModel NVARCHAR(100) NULL
+END
+GO
 IF EXISTS (SELECT 1 FROM sys.objects 
 			WHERE type = 'P' 
 			AND name = 'DeleteCable'
@@ -2484,14 +2492,6 @@ IF NOT EXISTS(SELECT 1 FROM sys.columns
           AND Object_ID = Object_ID(N'dbo.tblInsLoop'))
 BEGIN
     ALTER TABLE tblInsLoop
-    ADD PDSModel NVARCHAR(100) NULL
-END
-GO
-IF NOT EXISTS(SELECT 1 FROM sys.columns 
-          WHERE Name = N'PDSModel'
-          AND Object_ID = Object_ID(N'TEMPDATA.LoopTemp'))
-BEGIN
-    ALTER TABLE TEMPDATA.LoopTemp
     ADD PDSModel NVARCHAR(100) NULL
 END
 GO

@@ -1,0 +1,89 @@
+
+IF OBJECT_ID('tempdb..#SoloRunTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #SoloRunTasks
+    END
+CREATE TABLE  #SoloRunTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    Source NVARCHAR(100) NULL
+)
+
+IF OBJECT_ID('tempdb..#Tasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #Tasks
+    END
+CREATE TABLE  #Tasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NOT NULL,
+    ClosedDate NVARCHAR(50) NULL
+)
+
+IF OBJECT_ID('tempdb..#SoloRunSQMSTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #SoloRunSQMSTasks
+    END
+CREATE TABLE  #SoloRunSQMSTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NULL,
+    ClosingDate NVARCHAR(50) NULL
+)
+
+TRUNCATE TABLE HCS.SoloRunSQMSTasksS
+
+INSERT INTO #SoloRunTasks
+SELECT DISTINCT
+    tblSolorun.FolderName,
+    [HCS].[ProjectElements].[ElementTag],
+    HCS.ProjectElements.ImportSource
+FROM [HCS].[ProjectElements]
+INNER JOIN tblSolorun ON [HCS].[ProjectElements].[Group] = tblSolorun.FolderName
+
+INSERT INTO #Tasks
+SELECT
+    [Group], ElementTag, FormName, ClosingDate
+FROM HCS.SQMSTasks
+--WHERE (NodeLevel <> 'Gr' AND Phase = 'Construction' AND FormName NOT IN ('10160-CON-INS-26', '10160-CON-INS-26_Double','10160-CON-INS-11', '10160-CON-ROT-10', '10160-PACKAGE-INS-01', '10160-PACKAGE-ELE-01', '10160-CON-PIP-02'))
+--OR (FormName IN ('10160-CON-ELE-28', '10160-CON-ELE-29'))
+XXFilterXX
+
+
+INSERT INTO #SoloRunSQMSTasks
+SELECT DISTINCT
+#SoloRunTasks.FolderName,
+#Tasks.ElementTag, #Tasks.FormName, #Tasks.ClosedDate
+FROM #SoloRunTasks
+INNER JOIN #Tasks ON #SoloRunTasks.ElementTag = #Tasks.ElementTag COLLATE Modern_Spanish_CI_AS
+
+
+INSERT INTO HCS.SoloRunSQMSTasksS
+SELECT
+    FolderName,
+    COUNT(ElementTag) AS [Task Count],
+    COUNT(ClosingDate) AS [Task Closed]
+    FROM #SoloRunSQMSTasks
+    GROUP BY FolderName
+
+UPDATE V
+    SET V.TR_Loop_Folder_QC_Release = GETDATE()
+FROM (
+    SELECT
+    tblSolorun.FolderName, TR_Loop_Folder_QC_Release
+    FROM tblSolorun
+    INNER JOIN (
+        SELECT
+        FolderName,
+        TaskCount AS [Task Count],
+        TaskClosed AS [Task Closed]
+        FROM HCS.SoloRunSQMSTasksS
+        WHERE TaskCount = TaskClosed
+    ) AS LQCReleased
+    ON tblSolorun.FolderName = LQCReleased.FolderName COLLATE SQL_Latin1_General_CP1_CI_AS
+    WHERE tblSolorun.TR_Loop_Folder_QC_Release IS NULL
+) AS V
+
+DROP TABLE #SoloRunTasks
+DROP TABLE #Tasks
+DROP TABLE #SoloRunSQMSTasks

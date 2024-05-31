@@ -1,0 +1,15 @@
+WITH SQMS AS (
+SELECT [Group] FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-INS-19' AND ClosingDate IS NOT NULL
+XXXFilterXXX
+)
+
+UPDATE V
+    SET V.L_FinalApproval = GETDATE()
+FROM (
+    SELECT
+    tblInsLoop.LoopName, L_FinalApproval
+    FROM tblInsLoop
+    INNER JOIN SQMS ON tblInsLoop.LoopName = SQMS.[Group]
+    WHERE tblInsLoop.L_FinalApproval IS NULL
+) AS V

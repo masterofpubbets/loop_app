@@ -1,0 +1,15 @@
+WITH SQMS AS (
+SELECT [Group] FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-ELE-49' AND ClosingDate IS NOT NULL
+XXXFilterXXX
+)
+
+UPDATE V
+    SET V.L_FinalApproval = GETDATE()
+FROM (
+    SELECT
+    tblSolorun.FolderName, L_FinalApproval
+    FROM tblSolorun
+    INNER JOIN SQMS ON tblSolorun.FolderName = SQMS.[Group]
+    WHERE tblSolorun.L_FinalApproval IS NULL
+) AS V

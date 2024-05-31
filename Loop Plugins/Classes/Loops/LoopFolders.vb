@@ -1,4 +1,7 @@
-﻿Public Class LoopFolders
+﻿Imports CrystalDecisions.Shared.Json
+Imports QRCoder.PayloadGenerator
+
+Public Class LoopFolders
     Private LoopFolderUpdate As New List(Of LoopFolder)
     Private pe As New PublicErrors
     Public LoopColumns As New List(Of ColumnObject)
@@ -29,7 +32,8 @@
         LoopProgressColumns.Add(New ColumnObject(7, "H1", "SubmittedToPrecom", False, ColumnObject.en_SystemType.DataDate, True))
         LoopProgressColumns.Add(New ColumnObject(8, "I1", "Done", False, ColumnObject.en_SystemType.DataDate, True))
         LoopProgressColumns.Add(New ColumnObject(9, "J1", "FinalApproval", False, ColumnObject.en_SystemType.DataDate, True))
-
+        LoopProgressColumns.Add(New ColumnObject(6, "K1", "ConsTargetDate", False, ColumnObject.en_SystemType.DataDate, True))
+        LoopProgressColumns.Add(New ColumnObject(6, "L1", "FailedDate", False, ColumnObject.en_SystemType.DataDate, True))
 
     End Sub
     Public Function GetLoopsFoldersForPlanning() As DataTable
@@ -334,6 +338,7 @@
         Try
             Dim dt As New DataTable
             Dim dtTemp As New DataTable
+            Dim sqms As New SQMSTransaction
 
             DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
 
@@ -356,8 +361,18 @@
                 bcp.WriteToServer(dtTemp)
             End Using
 
-            Return (DB.ReturnDataTable("EXEC HCS.GetGroupTasks '" & Users.userName & "'"))
+            dt =
+            DB.ReturnDataTable(
+            Replace(
+            My.Resources.LoopSQMSTasks,
+            "XXXUserXXX", Users.userName,,, CompareMethod.Text
+)
+            )
 
+            DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
+
+
+            Return (dt)
         Catch ex As Exception
             pe.RaiseUnknownError(ex.Message)
             Return Nothing
@@ -368,6 +383,7 @@
         Try
             Dim dt As New DataTable
             Dim dtTemp As New DataTable
+            Dim sqms As New SQMSTransaction
 
             DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
 
@@ -390,8 +406,18 @@
                 bcp.WriteToServer(dtTemp)
             End Using
 
-            Return (DB.ReturnDataTable("EXEC HCS.GetGroupPendingUniqueTasks '" & Users.userName & "'"))
+            dt =
+            DB.ReturnDataTable(
+            Replace(
+            My.Resources.LoopSQMSTasks,
+            "'XXXUserXXX'", "'" & Users.userName & "' AND ClosingDate IS NULL OR ClosingDate = ''",,, CompareMethod.Text
+            )
+            )
 
+            DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
+
+
+            Return (dt)
         Catch ex As Exception
             pe.RaiseUnknownError(ex.Message)
             Return Nothing

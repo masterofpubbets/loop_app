@@ -176,7 +176,7 @@ Public Class frmLoopConstraints2
                 ElseIf gv.GetDataRow(row_handle).Item("Issued By") = Users.userFullName Then
                     If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
                     End If
-                ElseIf Users.userType = "admin" Then
+                ElseIf instr(Users.userType, "admin", CompareMethod.Text) > 0 Then
                     If loops.reassignResponsible(gv.GetDataRow(row_handle).Item("Constraint Category"), gv.GetDataRow(row_handle).Item("ID"), gv.GetDataRow(row_handle).Item("LoopID"), gv.GetDataRow(row_handle).Item("Loop Name"), desc, gv.GetDataRow(row_handle).Item("Area"), desc, Users.userFullName, Users.mail, Users.id, frm.selectedUserName, frm.selectedUsermail, frm.selectedUserId, gv.GetDataRow(row_handle).Item("Folder Status")) Then
                     End If
                 Else

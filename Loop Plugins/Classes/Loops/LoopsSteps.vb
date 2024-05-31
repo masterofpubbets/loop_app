@@ -158,7 +158,7 @@
     End Function
     Public Function closeBlockage(ByVal loopId As Integer) As Boolean
         Try
-            DB.ExcuteNoneResult(String.Format("EXEC LOOPS.CloseBlockage {0}", loopId))
+            DB.ExcuteNoneResult(String.Format("EXEC LOOPS.CloseBlockage {0},{1}", loopId, Users.id))
             Return True
             'Call API for folder Approved
         Catch ex As Exception
@@ -168,7 +168,7 @@
     End Function
     Public Function reassignResponsible(ByVal catName As String, ByVal consId As Integer, ByVal loopId As Integer, ByVal loopName As String, ByVal loopDesc As String, ByVal loopArea As String, ByVal description As String, ByVal issuedByName As String, ByVal issuedByEmail As String, ByVal issuedById As Integer, ByVal issuedToName As String, ByVal issuedToEmail As String, ByVal issuedToId As Integer, ByVal loopStatus As String) As Boolean
         Try
-            DB.ExcuteNoneResult(String.Format("EXEC LOOPS.ReassignBlockage {0}, '{1}', {2}, '{3}', {4},{5}", consId, catName, loopId, Replace(description, "'", "''",,, CompareMethod.Text), issuedById, issuedToId))
+            DB.ExcuteNoneResult(String.Format("EXEC LOOPS.ReassignBlockage {0}, '{1}', {2}, '{3}', {4},{5},{6}", consId, catName, loopId, Replace(description, "'", "''",,, CompareMethod.Text), issuedById, issuedToId, Users.id))
             'Call API for folder Approved
             'loopAPI.AddBlockage(loopName, loopArea, loopDesc, description, issuedToName, issuedToEmail, issuedByName, issuedByEmail, loopStatus)
             '-----------------------------

@@ -8,18 +8,10 @@ else vLog.uvalue end as [New Update]
 from (
 select 'Electrical Cable' as Discipline,tblEleCableList_Log.* from tblEleCableList_Log
 UNION ALL
-select 'Electrical Equipment' as Discipline,tblElectricalEquipment_Log.* from tblElectricalEquipment_Log
-UNION ALL
 select 'Instrument Cable' as Discipline,tblInsCableList_Log.* from tblInsCableList_Log
-UNION ALL
-select 'Instrument Equipment' as Discipline,tblInsEquipment_Log.* from tblInsEquipment_Log
 UNION ALL
 select 'Loop' as Discipline,tblInsLoop_Log.* from tblInsLoop_Log
 UNION ALL
 select 'Instruments' as Discipline,tblInstruments_Log.* from tblInstruments_Log
-UNION ALL
-select 'Instrument JB' as Discipline,tblJunctionbox_Log.* from tblJunctionbox_Log
-UNION ALL
-select 'Electrical JB' as Discipline,tblEleJunctionBox_Log.* from tblEleJunctionBox_Log
 ) as vLog
 order by vLog.udate

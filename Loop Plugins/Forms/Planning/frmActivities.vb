@@ -14,6 +14,21 @@ Public Class frmActivities
     Private StandardRulesAdded As Boolean = False
 
 
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles grd.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
+    End Sub
     Private Sub CheckAuth()
 
     End Sub
@@ -195,7 +210,6 @@ Public Class frmActivities
         Dim EICA_Area As String = If(IsDBNull(gv.GetDataRow(row_handle).Item("EICA Area")), "", gv.GetDataRow(row_handle).Item("EICA Area"))
         Dim EICA_Budget As Double = If(IsDBNull(gv.GetDataRow(row_handle).Item("EICA Budget")), 0, gv.GetDataRow(row_handle).Item("EICA Budget"))
         Dim Package As String = If(IsDBNull(gv.GetDataRow(row_handle).Item("Package")), "", gv.GetDataRow(row_handle).Item("Package"))
-        Dim EstimatedScope As Double = If(IsDBNull(gv.GetDataRow(row_handle).Item("EstimatedScope")), 0, gv.GetDataRow(row_handle).Item("EstimatedScope"))
         Dim KeyQnty As Byte = If(IsDBNull(gv.GetDataRow(row_handle).Item("KeyQnty")), 0, gv.GetDataRow(row_handle).Item("KeyQnty"))
         Dim wps As String = If(IsDBNull(gv.GetDataRow(row_handle).Item("wps")), "", gv.GetDataRow(row_handle).Item("wps"))
         Dim ResourceId As String = If(IsDBNull(gv.GetDataRow(row_handle).Item("ResourceId")), "", gv.GetDataRow(row_handle).Item("ResourceId"))
@@ -208,12 +222,10 @@ Public Class frmActivities
 
         Dim frm As New frmAddActivity
         frm.txtEICABudget.Text = EICA_Budget
-        frm.txtEstBudget.Text = EstimatedScope
         frm.txtFamily.Text = Family
         frm.txtLocation.Text = Location
         frm.txtPackage.Text = Package
         frm.txtEICABudget.Text = EICA_Budget
-        frm.txtEstBudget.Text = EstimatedScope
         frm.txtPCSArea.Text = PCS_Area
         frm.txtPCSBudget.Text = PCS_Budget
         frm.txtResourceId.Text = ResourceId

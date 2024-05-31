@@ -1,0 +1,259 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Work\\Programming\\Loop Plugins\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|d:\\work\\programming\\loop plugins\\loop plugins\\forms\\main\\frmmain.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\main\\frmmain.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\classes\\sqms\\sqmstransaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\classes\\sqms\\sqmstransaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\sqms\\frmupdatewithsqms.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\sqms\\frmupdatewithsqms.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\main\\frmmain.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\main\\frmmain.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\classes\\boxup\\boxups.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\classes\\boxup\\boxups.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\boxup\\frmboxupfolders.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\boxup\\frmboxupfolders.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\boxup\\frmboxupfolders.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\boxup\\frmboxupfolders.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\sqms\\frmupdatewithsqms.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\sqms\\frmupdatewithsqms.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\classes\\boxup\\boxup.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\classes\\boxup\\boxup.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\classes\\solorun\\soloruns.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\classes\\solorun\\soloruns.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|EICA||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\classes\\appsettings\\appsettings.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\classes\\appsettings\\appsettings.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\resources\\uploadtoelements.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:resources\\uploadtoelements.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\sqms\\frmsqmssyncsettings.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\sqms\\frmsqmssyncsettings.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|D:\\Work\\Programming\\Loop Plugins\\loop plugins\\forms\\sqms\\frmsqmssyncsettings.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{346CF222-DF71-4648-8195-C83C312CDE1E}|Loop Plugins\\EICA.vbproj|solutionrelative:loop plugins\\forms\\sqms\\frmsqmssyncsettings.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "frmMain.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Main\\frmMain.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\Main\\frmMain.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Main\\frmMain.vb",
+              "RelativeToolTip": "Loop Plugins\\Forms\\Main\\frmMain.vb",
+              "ViewState": "AQIAALkAAAAAAAAAAAAqwN0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-01-05T10:03:33.98Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SQMSTransaction.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\SQMS\\SQMSTransaction.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Classes\\SQMS\\SQMSTransaction.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\SQMS\\SQMSTransaction.vb",
+              "RelativeToolTip": "Loop Plugins\\Classes\\SQMS\\SQMSTransaction.vb",
+              "ViewState": "AQIAAJcBAAAAAAAAAAAYwLEBAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-03-10T05:34:55.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "frmBoxupFolders.vb [Design]",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb [Design]",
+              "RelativeToolTip": "Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-05-03T08:03:48.644Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "frmBoxupFolders.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb",
+              "RelativeToolTip": "Loop Plugins\\Forms\\Boxup\\frmBoxupFolders.vb",
+              "ViewState": "AQIAAO4BAAAAAAAAAADwvxECAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-05-03T08:03:51.056Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AppSettings.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\AppSettings\\AppSettings.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Classes\\AppSettings\\AppSettings.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\AppSettings\\AppSettings.vb",
+              "RelativeToolTip": "Loop Plugins\\Classes\\AppSettings\\AppSettings.vb",
+              "ViewState": "AQIAACcAAAAAAAAAAAAAwD8AAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-05-03T07:44:31.372Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Boxups.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\BoxUp\\Boxups.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Classes\\BoxUp\\Boxups.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\BoxUp\\Boxups.vb",
+              "RelativeToolTip": "Loop Plugins\\Classes\\BoxUp\\Boxups.vb",
+              "ViewState": "AQIAALwAAAAAAAAAAADwv88AAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-04-29T02:57:28.601Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Boxup.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\BoxUp\\Boxup.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Classes\\BoxUp\\Boxup.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\BoxUp\\Boxup.vb",
+              "RelativeToolTip": "Loop Plugins\\Classes\\BoxUp\\Boxup.vb",
+              "ViewState": "AQIAAEUAAAAAAAAAAAA2wD0AAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-04-29T02:56:16.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "frmSQMSSyncSettings.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb",
+              "RelativeToolTip": "Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-04-25T07:12:13.293Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "frmSQMSSyncSettings.vb [Design]",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb [Design]",
+              "RelativeToolTip": "Loop Plugins\\Forms\\SQMS\\frmSQMSSyncSettings.vb [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-04-25T05:33:31.214Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "frmMain.vb [Design]",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Main\\frmMain.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\Main\\frmMain.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\Main\\frmMain.vb [Design]",
+              "RelativeToolTip": "Loop Plugins\\Forms\\Main\\frmMain.vb [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-01-05T01:09:46.457Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "frmUpdateWithSQMS.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb",
+              "RelativeToolTip": "Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb",
+              "ViewState": "AQIAAGYAAAAAAAAAAAAgwIcAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-03-10T05:36:36.797Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "frmUpdateWithSQMS.vb [Design]",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb [Design]",
+              "RelativeToolTip": "Loop Plugins\\Forms\\SQMS\\frmUpdateWithSQMS.vb [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-04-22T08:53:50.472Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "UploadToElements.txt",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\RESOURCES\\UploadToElements.txt",
+              "RelativeDocumentMoniker": "RESOURCES\\UploadToElements.txt",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\RESOURCES\\UploadToElements.txt",
+              "RelativeToolTip": "RESOURCES\\UploadToElements.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-03-13T02:33:28.638Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EICA",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\EICA.vbproj",
+              "RelativeDocumentMoniker": "Loop Plugins\\EICA.vbproj",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\EICA.vbproj",
+              "RelativeToolTip": "Loop Plugins\\EICA.vbproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-03-10T05:34:17.669Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Soloruns.vb",
+              "DocumentMoniker": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\Solorun\\Soloruns.vb",
+              "RelativeDocumentMoniker": "Loop Plugins\\Classes\\Solorun\\Soloruns.vb",
+              "ToolTip": "D:\\Work\\Programming\\Loop Plugins\\Loop Plugins\\Classes\\Solorun\\Soloruns.vb",
+              "RelativeToolTip": "Loop Plugins\\Classes\\Solorun\\Soloruns.vb",
+              "ViewState": "AQIAABMBAAAAAAAAAAAqwFwBAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-03-08T03:26:07.109Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

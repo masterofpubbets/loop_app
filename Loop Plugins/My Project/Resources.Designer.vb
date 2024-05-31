@@ -63,6 +63,46 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property _2093() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("2093", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property _20932() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("20932", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property _20933() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("20933", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property _20934() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("20934", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property AdobeAcrobatReader5() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("AdobeAcrobatReader5", resourceCulture)
@@ -77,6 +117,90 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("backgroundTrans", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to INSERT INTO TEMPDATA.BoxupTasks
+        '''SELECT DISTINCT
+        '''    tblBoxup.FolderName,
+        '''    [HCS].[ProjectElements].[ElementTag],
+        '''    HCS.ProjectElements.ImportSource,
+        '''    HCS.ProjectElements.[Type],
+        '''    &apos;XXXUUIDXXX&apos; AS [UUID]
+        '''FROM [HCS].[ProjectElements]
+        '''INNER JOIN tblBoxup ON [HCS].[ProjectElements].[Group] = tblBoxup.FolderName
+        '''
+        '''INSERT INTO TEMPDATA.Tasks
+        '''SELECT
+        '''    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormDescription, &apos;XX [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property BoxupSQMSTasks() As String
+            Get
+                Return ResourceManager.GetString("BoxupSQMSTasks", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to INSERT INTO TEMPDATA.BoxupTasks
+        '''SELECT DISTINCT
+        '''    tblBoxup.FolderName,
+        '''    [HCS].[ProjectElements].[ElementTag],
+        '''    HCS.ProjectElements.ImportSource,
+        '''    HCS.ProjectElements.[Type],
+        '''    &apos;XXXUUIDXXX&apos; AS [UUID]
+        '''FROM [HCS].[ProjectElements]
+        '''INNER JOIN tblBoxup ON [HCS].[ProjectElements].[Group] = tblBoxup.FolderName
+        '''
+        '''INSERT INTO TEMPDATA.Tasks
+        '''SELECT
+        '''    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormDescription, &apos;XX [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CashBoxupSQMSTasks() As String
+            Get
+                Return ResourceManager.GetString("CashBoxupSQMSTasks", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to INSERT INTO TEMPDATA.LoopTasks
+        '''SELECT DISTINCT
+        '''    tblInsLoop.LoopName AS FolderName,
+        '''    [HCS].[ProjectElements].[ElementTag],
+        '''    HCS.ProjectElements.ImportSource,
+        '''    HCS.ProjectElements.[Type],
+        '''    &apos;XXXUUIDXXX&apos; AS [UUID]
+        '''FROM [HCS].[ProjectElements]
+        '''INNER JOIN tblInsLoop ON [HCS].[ProjectElements].[Group] = tblInsLoop.LoopName
+        '''
+        '''INSERT INTO TEMPDATA.Tasks
+        '''SELECT
+        '''    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormD [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CashLoopSQMSTasks() As String
+            Get
+                Return ResourceManager.GetString("CashLoopSQMSTasks", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to INSERT INTO TEMPDATA.SoloRunTasks
+        '''SELECT DISTINCT
+        '''    tblSolorun.FolderName,
+        '''    [HCS].[ProjectElements].[ElementTag],
+        '''    HCS.ProjectElements.ImportSource,
+        '''    HCS.ProjectElements.[Type],
+        '''    &apos;XXXUUIDXXX&apos; AS [UUID]
+        '''FROM [HCS].[ProjectElements]
+        '''INNER JOIN tblSolorun ON [HCS].[ProjectElements].[Group] = tblSolorun.FolderName
+        '''
+        '''INSERT INTO TEMPDATA.Tasks
+        '''SELECT
+        '''    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormDescript [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property CashSoloRunSQMSTasks() As String
+            Get
+                Return ResourceManager.GetString("CashSoloRunSQMSTasks", resourceCulture)
             End Get
         End Property
         
@@ -922,9 +1046,9 @@ Namespace My.Resources
         '''from (
         '''select &apos;Electrical Cable&apos; as Discipline,tblEleCableList_Log.* from tblEleCableList_Log
         '''UNION ALL
-        '''select &apos;Electrical Equipment&apos; as Discipline,tblElectricalEquipment_Log.* from tblElectricalEquipment_Log
+        '''select &apos;Instrument Cable&apos; as Discipline,tblInsCableList_Log.* from tblInsCableList_Log
         '''UNION ALL
-        '''select &apos;Instrument  [rest of string was truncated]&quot;;.
+        '''select &apos;Loop&apos; as Discipline,tblInsLoo [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Logs() As String
             Get
@@ -1087,6 +1211,28 @@ Namespace My.Resources
         Friend ReadOnly Property LoopsCons() As String
             Get
                 Return ResourceManager.GetString("LoopsCons", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to SELECT DISTINCT
+        '''    FolderName,
+        '''    TEMPDATA.LoopSQMSTasks.ElementTag AS Tag,
+        '''    TEMPDATA.LoopSQMSTasks.ItemType AS [Item Type],
+        '''    TEMPDATA.LoopSQMSTasks.FormName,
+        '''    DocType AS Description,
+        '''    [Subcontractor],
+        '''    [ClosingDate],
+        '''    Source,
+        '''    [ClosingRemarks]
+        '''
+        '''FROM TEMPDATA.LoopSQMSTasks
+        '''INNER JOIN TEMPDATA.GroupFilter ON TEMPDATA.LoopSQMSTasks.FolderName = TEMPDATA.GroupFilter.GroupName COLLATE Modern_Spanish_CI_AS
+        '''WHERE TEMPDATA.GroupFilter.UserName = &apos;XXXUserXXX&apos;.
+        '''</summary>
+        Friend ReadOnly Property LoopSQMSTasks() As String
+            Get
+                Return ResourceManager.GetString("LoopSQMSTasks", resourceCulture)
             End Get
         End Property
         
@@ -1260,6 +1406,28 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to SELECT DISTINCT
+        '''    FolderName,
+        '''    TEMPDATA.SoloRunSQMSTasks.ElementTag AS Tag,
+        '''    TEMPDATA.SoloRunSQMSTasks.ItemType AS [Item Type],
+        '''    TEMPDATA.SoloRunSQMSTasks.FormName,
+        '''    DocType AS Description,
+        '''    [Subcontractor],
+        '''    [ClosingDate],
+        '''    Source,
+        '''    [ClosingRemarks]
+        '''
+        '''FROM TEMPDATA.SoloRunSQMSTasks
+        '''INNER JOIN TEMPDATA.GroupFilter ON TEMPDATA.SoloRunSQMSTasks.FolderName = TEMPDATA.GroupFilter.GroupName COLLATE Modern_Spanish_CI_AS
+        '''WHERE TEMPDATA.GroupFilter.UserName = &apos;XXXUserXXX&apos;.
+        '''</summary>
+        Friend ReadOnly Property SoloRunSQMSTasks() As String
+            Get
+                Return ResourceManager.GetString("SoloRunSQMSTasks", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property trays32() As System.Drawing.Bitmap
@@ -1287,6 +1455,57 @@ Namespace My.Resources
         Friend ReadOnly Property TruncateHCSs() As String
             Get
                 Return ResourceManager.GetString("TruncateHCSs", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to 
+        '''IF OBJECT_ID(&apos;tempdb..#BoxupTasks&apos;) IS NOT NULL
+        '''    BEGIN
+        '''        DROP TABLE #BoxupTasks
+        '''    END
+        '''CREATE TABLE  #BoxupTasks (
+        '''    FolderName NVARCHAR(250) NOT NULL,
+        '''    ElementTag NVARCHAR(250) NOT NULL,
+        '''    Source NVARCHAR(100) NULL
+        ''')
+        '''
+        '''IF OBJECT_ID(&apos;tempdb..#Tasks&apos;) IS NOT NULL
+        '''    BEGIN
+        '''        DROP TABLE #Tasks
+        '''    END
+        '''CREATE TABLE  #Tasks (
+        '''    FolderName NVARCHAR(250) NOT NULL,
+        '''    ElementTag NVARCHAR(250) NOT NULL,
+        '''    FormName NVARCHAR(250) NOT NULL,
+        '''    ClosedDate NVARCHAR(50) NUL [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateBoxupQCRealeasedFromSQMS() As String
+            Get
+                Return ResourceManager.GetString("UpdateBoxupQCRealeasedFromSQMS", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''--WHERE HCS.SQMSTasks.FormName = &apos;10160-CON-ELE-49&apos; AND ClosingDate IS NOT NULL
+        '''XXXFilterXXX
+        ''')
+        '''
+        '''UPDATE V
+        '''    SET V.L_FinalApproval = GETDATE()
+        '''FROM (
+        '''    SELECT
+        '''    tblBoxup.FolderName, L_FinalApproval
+        '''    FROM tblBoxup
+        '''    INNER JOIN SQMS ON tblBoxup.FolderName = SQMS.[Group]
+        '''    WHERE tblBoxup.L_FinalApproval IS NULL
+        ''') AS V.
+        '''</summary>
+        Friend ReadOnly Property UpdateBoxupQSMSApproved() As String
+            Get
+                Return ResourceManager.GetString("UpdateBoxupQSMSApproved", resourceCulture)
             End Get
         End Property
         
@@ -1330,6 +1549,98 @@ Namespace My.Resources
         Friend ReadOnly Property UpdateEICA() As String
             Get
                 Return ResourceManager.GetString("UpdateEICA", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to DECLARE @proID NVARCHAR(255)
+        '''SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1;
+        '''
+        '''WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''XXXFilterXXX
+        ''')
+        '''
+        '''--Update Deactivated
+        '''UPDATE V
+        '''    SET Active = 0
+        '''FROM (
+        '''    SELECT
+        '''    tblBoxup.FolderName, tblBoxup.Active
+        '''    FROM tblBoxup
+        '''    LEFT JOIN SQMS AS H ON tblBoxup.FolderName = H.[Group]
+        '''    WHERE tblBoxup.Active = 1 
+        '''    AND H.[Group] IS NULL
+        ''') AS V;
+        '''
+        '''WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''--WHERE HCS.SQMSTasks.Form [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateEICABoxUpWithSQMS() As String
+            Get
+                Return ResourceManager.GetString("UpdateEICABoxUpWithSQMS", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to DECLARE @proID NVARCHAR(255)
+        '''SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1;
+        '''
+        '''WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''--WHERE HCS.SQMSTasks.FormName = &apos;10160-CON-INS-19&apos;
+        '''XXXFilterXXX
+        ''')
+        '''
+        '''--Update Deactivated
+        '''UPDATE V
+        '''    SET Active = 0
+        '''FROM (
+        '''    SELECT
+        '''    tblInsLoop.LoopName, tblInsLoop.Active
+        '''    FROM tblInsLoop
+        '''    LEFT JOIN SQMS AS H ON tblInsLoop.LoopName = H.[Group]
+        '''    WHERE tblInsLoop.Active = 1 
+        '''    AND H.[Group] IS NULL
+        ''') AS V;
+        '''
+        '''WITH SQMS AS (
+        '''SEL [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateEICALoopWithSQMS() As String
+            Get
+                Return ResourceManager.GetString("UpdateEICALoopWithSQMS", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to DECLARE @proID NVARCHAR(255)
+        '''SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1;
+        '''
+        '''WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''--WHERE HCS.SQMSTasks.FormName = &apos;10160-CON-ELE-49&apos;
+        '''XXXFilterXXX
+        ''')
+        '''
+        '''--Update Deactivated
+        '''UPDATE V
+        '''    SET Active = 0
+        '''FROM (
+        '''    SELECT
+        '''    tblSolorun.FolderName, tblSolorun.Active
+        '''    FROM tblSolorun
+        '''    LEFT JOIN SQMS AS H ON tblSolorun.FolderName = H.[Group]
+        '''    WHERE tblSolorun.Active = 1 
+        '''    AND H.[Group] IS NULL
+        ''') AS V;
+        '''
+        '''WITH SQMS AS (        ''' [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateEICASoloRunWithSQMS() As String
+            Get
+                Return ResourceManager.GetString("UpdateEICASoloRunWithSQMS", resourceCulture)
             End Get
         End Property
         
@@ -1400,6 +1711,58 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to 
+        '''IF OBJECT_ID(&apos;tempdb..#LoopTasks&apos;) IS NOT NULL
+        '''    BEGIN
+        '''        DROP TABLE #LoopTasks
+        '''    END
+        '''CREATE TABLE  #LoopTasks (
+        '''    FolderName NVARCHAR(250) NOT NULL,
+        '''    ElementTag NVARCHAR(250) NOT NULL,
+        '''    Source NVARCHAR(100) NULL
+        ''')
+        '''
+        '''IF OBJECT_ID(&apos;tempdb..#Tasks&apos;) IS NOT NULL
+        '''    BEGIN
+        '''        DROP TABLE #Tasks
+        '''    END
+        '''CREATE TABLE  #Tasks (
+        '''    FolderName NVARCHAR(250) NOT NULL,
+        '''    ElementTag NVARCHAR(250) NOT NULL,
+        '''    FormName NVARCHAR(250) NOT NULL,
+        '''    ClosedDate NVARCHAR(50) NULL
+        ''' [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateLoopQCRealeasedFromSQMS() As String
+            Get
+                Return ResourceManager.GetString("UpdateLoopQCRealeasedFromSQMS", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''--WHERE HCS.SQMSTasks.FormName = &apos;10160-CON-INS-19&apos; AND ClosingDate IS NOT NULL
+        '''XXXFilterXXX
+        ''')
+        '''
+        '''UPDATE V
+        '''    SET V.L_FinalApproval = GETDATE()
+        '''FROM (
+        '''    SELECT
+        '''    tblInsLoop.LoopName, L_FinalApproval
+        '''    FROM tblInsLoop
+        '''    INNER JOIN SQMS ON tblInsLoop.LoopName = SQMS.[Group]
+        '''    WHERE tblInsLoop.L_FinalApproval IS NULL
+        ''') AS V.
+        '''</summary>
+        Friend ReadOnly Property UpdateLoopQSMSApproved() As String
+            Get
+                Return ResourceManager.GetString("UpdateLoopQSMSApproved", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to UPDATE V
         '''SET [Planning_FINISH_Date]=TargetDate
         '''FROM
@@ -1415,6 +1778,57 @@ Namespace My.Resources
         Friend ReadOnly Property UpdateLoopTargetDate() As String
             Get
                 Return ResourceManager.GetString("UpdateLoopTargetDate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to 
+        '''IF OBJECT_ID(&apos;tempdb..#SoloRunTasks&apos;) IS NOT NULL
+        '''    BEGIN
+        '''        DROP TABLE #SoloRunTasks
+        '''    END
+        '''CREATE TABLE  #SoloRunTasks (
+        '''    FolderName NVARCHAR(250) NOT NULL,
+        '''    ElementTag NVARCHAR(250) NOT NULL,
+        '''    Source NVARCHAR(100) NULL
+        ''')
+        '''
+        '''IF OBJECT_ID(&apos;tempdb..#Tasks&apos;) IS NOT NULL
+        '''    BEGIN
+        '''        DROP TABLE #Tasks
+        '''    END
+        '''CREATE TABLE  #Tasks (
+        '''    FolderName NVARCHAR(250) NOT NULL,
+        '''    ElementTag NVARCHAR(250) NOT NULL,
+        '''    FormName NVARCHAR(250) NOT NULL,
+        '''    ClosedDate NVARCHAR(5 [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateSoloRunQCRealeasedFromSQMS() As String
+            Get
+                Return ResourceManager.GetString("UpdateSoloRunQCRealeasedFromSQMS", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to WITH SQMS AS (
+        '''SELECT [Group] FROM HCS.SQMSTasks 
+        '''--WHERE HCS.SQMSTasks.FormName = &apos;10160-CON-ELE-49&apos; AND ClosingDate IS NOT NULL
+        '''XXXFilterXXX
+        ''')
+        '''
+        '''UPDATE V
+        '''    SET V.L_FinalApproval = GETDATE()
+        '''FROM (
+        '''    SELECT
+        '''    tblSolorun.FolderName, L_FinalApproval
+        '''    FROM tblSolorun
+        '''    INNER JOIN SQMS ON tblSolorun.FolderName = SQMS.[Group]
+        '''    WHERE tblSolorun.L_FinalApproval IS NULL
+        ''') AS V.
+        '''</summary>
+        Friend ReadOnly Property UpdateSoloRunQSMSApproved() As String
+            Get
+                Return ResourceManager.GetString("UpdateSoloRunQSMSApproved", resourceCulture)
             End Get
         End Property
         
@@ -1436,6 +1850,56 @@ Namespace My.Resources
         Friend ReadOnly Property UpdateSubmitForCert() As String
             Get
                 Return ResourceManager.GetString("UpdateSubmitForCert", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to --Loop
+        '''UPDATE V
+        '''    SET Subsystem = [NewSubsystem]
+        '''FROM (
+        '''    SELECT 
+        '''        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        '''        tblInsLoop.LoopName, tblInsLoop.Subsystem
+        '''    FROM [HCS].[SQMSTasks] AS Tasks
+        '''    INNER JOIN tblInsLoop ON tblInsLoop.LoopName = Tasks.ElementTag
+        ''') AS V
+        '''
+        '''--Solo RUN
+        '''UPDATE V
+        '''    SET Subsystem = [NewSubsystem]
+        '''FROM (
+        '''    SELECT 
+        '''        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        '''        tblSolorun.FolderName, tblSolorun.Subsystem
+        '''    FROM [HCS].[SQ [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UpdateSubsystem() As String
+            Get
+                Return ResourceManager.GetString("UpdateSubsystem", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to TRUNCATE TABLE HCS.ProjectElements
+        '''INSERT INTO HCS.ProjectElements (Active, ElementTag, NodeLevel, Location, [Type], [Class], Subcontract, [Discipline], Area, Unit, Subsystem, [Group], [GroupType], [GroupClass], [Module], [ImportSource])
+        '''SELECT DISTINCT [Active]
+        '''      ,[ElementTag]
+        '''      ,[NodeLevel]
+        '''      ,[Location]
+        '''      ,[Type]
+        '''      ,[Class]
+        '''      ,[TaskSubcontract] AS Subcontract
+        '''      ,[Discipline]
+        '''      ,[Area]
+        '''      ,[Unit]
+        '''      ,[Subsystem]
+        '''      ,[Group]
+        '''      ,[TestPackageType] AS [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property UploadToElements() As String
+            Get
+                Return ResourceManager.GetString("UploadToElements", resourceCulture)
             End Get
         End Property
         

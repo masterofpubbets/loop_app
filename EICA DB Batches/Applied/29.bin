@@ -1,0 +1,59 @@
+--version12.0.7
+UPDATE [dbo].[tblSettings] SET SetValue = '12.0.7' WHERE SetName = 'VERSION'
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'Discipline'
+          AND Object_ID = Object_ID(N'dbo.tblActIDS'))
+BEGIN
+    ALTER TABLE dbo.tblActIDS
+    ADD Discipline NVARCHAR(100) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'SubDiscipline'
+          AND Object_ID = Object_ID(N'dbo.tblActIDS'))
+BEGIN
+    ALTER TABLE dbo.tblActIDS
+    ADD SubDiscipline NVARCHAR(100) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'FamilyName'
+          AND Object_ID = Object_ID(N'dbo.tblActIDS'))
+BEGIN
+    ALTER TABLE dbo.tblActIDS
+    ADD FamilyName NVARCHAR(100) NULL
+END
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE Name = N'ShowinDT'
+          AND Object_ID = Object_ID(N'dbo.tblActIDS'))
+BEGIN
+    ALTER TABLE dbo.tblActIDS
+    ADD ShowinDT BIT NOT NULL DEFAULT 1
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'GetActivities'
+			AND schema_id = (select schema_id from sys.schemas where name = 'PLANNING')
+			)
+BEGIN
+	DROP PROC PLANNING.GetActivities
+END
+GO
+CREATE PROC [PLANNING].[GetActivities]
+AS
+SELECT
+CASE WHEN [EICA_Budget] <> [Last_EICABudget] THEN 'Changed' END AS 'Budget Status',
+CASE WHEN [EICA_Done] <> [Last_EICADone] THEN 'Changed' END AS 'Qnty Done Status',
+CASE WHEN [EICA_Done] > [PCS_Budget] THEN 'PCS Less Budget' END AS 'Error',
+[TBL_ID] AS Id,
+Discipline,SubDiscipline,FamilyName,
+[ActID],[ActName],[PCS_Area] AS [PCS Area],[SubCon],[PCS_Budget] AS [PCS Budget],[Family],[EICA_Area] AS [EICA Area],[EICA_Budget] AS [EICA Budget],
+[EICA_Done] AS [Done],[Package],[Last_EICABudget],[Last_EICADone],[KeyQnty],[wps],
+[ResourceId],[ResourceName],[Location],[StartDate],[EndDate],[UOM],[Team], PDSModel,
+ShowinDT
+FROM tblActIDs
+GO
+
+

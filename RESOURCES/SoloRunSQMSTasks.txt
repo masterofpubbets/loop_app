@@ -1,0 +1,82 @@
+IF OBJECT_ID('tempdb..#SoloRunTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #SoloRunTasks
+    END
+CREATE TABLE  #SoloRunTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    Source NVARCHAR(100) NULL,
+    ItemType NVARCHAR(100) NULL
+)
+
+IF OBJECT_ID('tempdb..#Tasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #Tasks
+    END
+CREATE TABLE  #Tasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NOT NULL,
+    ClosedDate NVARCHAR(50) NULL,
+    ItemType NVARCHAR(250) NULL,
+    Subcontractor NVARCHAR(250) NULL,
+    ClosingRemarks NVARCHAR(MAX) NULL,
+    DocType NVARCHAR(250) NULL
+)
+
+IF OBJECT_ID('tempdb..#SoloRunSQMSTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #SoloRunSQMSTasks
+    END
+CREATE TABLE  #SoloRunSQMSTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NULL,
+    ClosingDate NVARCHAR(50) NULL,
+    Source NVARCHAR(50) NULL,
+    ItemType NVARCHAR(250) NULL,
+    Subcontractor NVARCHAR(250) NULL,
+    ClosingRemarks NVARCHAR(MAX) NULL,
+    DocType NVARCHAR(250) NULL
+)
+
+INSERT INTO #SoloRunTasks
+SELECT DISTINCT
+    tblSolorun.FolderName,
+    [HCS].[ProjectElements].[ElementTag],
+    HCS.ProjectElements.ImportSource,
+    HCS.ProjectElements.[Type]
+FROM [HCS].[ProjectElements]
+INNER JOIN tblSolorun ON [HCS].[ProjectElements].[Group] = tblSolorun.FolderName
+
+INSERT INTO #Tasks
+SELECT
+    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormDescription
+FROM HCS.SQMSTasks
+--WHERE (NodeLevel <> 'Gr' AND Phase = 'Construction' AND FormName NOT IN ('10160-CON-INS-26', '10160-CON-INS-26_Double','10160-CON-INS-11', '10160-CON-ROT-10', '10160-PACKAGE-INS-01', '10160-PACKAGE-ELE-01', '10160-CON-PIP-02'))
+--OR (FormName IN ('10160-CON-ELE-28', '10160-CON-ELE-29'))
+XXFilterXX
+
+
+INSERT INTO #SoloRunSQMSTasks
+SELECT DISTINCT
+#SoloRunTasks.FolderName,
+#Tasks.ElementTag, #Tasks.FormName, #Tasks.ClosedDate, #SoloRunTasks.Source,
+#SoloRunTasks.ItemType, #Tasks.Subcontractor, #Tasks.ClosingRemarks,#Tasks.DocType
+FROM #SoloRunTasks
+INNER JOIN #Tasks ON #SoloRunTasks.ElementTag = #Tasks.ElementTag COLLATE Modern_Spanish_CI_AS
+
+
+SELECT
+    FolderName,
+    #SoloRunSQMSTasks.ElementTag AS Tag,
+    #SoloRunSQMSTasks.ItemType AS [Item Type],
+    #SoloRunSQMSTasks.FormName,
+    DocType AS Description,
+    [Subcontractor],
+    [ClosingDate],
+    [ClosingRemarks]
+
+FROM #SoloRunSQMSTasks
+INNER JOIN TEMPDATA.GroupFilter ON #SoloRunSQMSTasks.FolderName = TEMPDATA.GroupFilter.GroupName
+WHERE TEMPDATA.GroupFilter.UserName = XXXUserXXX

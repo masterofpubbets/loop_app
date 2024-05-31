@@ -6,7 +6,7 @@ Imports DevExpress.XtraGrid.Views.Base
 Imports DevExpress.XtraGrid.Views.Grid
 Imports DevExpress.XtraSplashScreen
 
-Public Class frmSolorunFolders
+Public Class frmSoloRunFolders
     Private fd As New SolorunSteps
     Public _filter As String = ""
     Public _filterColumn As String = ""
@@ -59,9 +59,24 @@ Public Class frmSolorunFolders
             pe.RaiseUnknownError(ex.Message)
         End Try
     End Sub
+    Private Sub GetHCSPendingTasks()
+        Try
+            Dim gNames As New List(Of String)
+            For Each row_handle As Integer In gv.GetSelectedRows
+                gNames.Add(gv.GetDataRow(row_handle).Item("Folder Name"))
+            Next
+            If gNames.Count > 0 Then
+                Dim frm As New frmDataResult("", frmDataResult.en_ResultType.ItemTasks, lf.HCSPendingTasks(gNames))
+                frm.Show()
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
     Private Sub UpdateConstructionComplete()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Construction Complete?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -129,7 +144,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopPrinted()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Printed?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -188,8 +203,8 @@ Public Class frmSolorunFolders
                     getData()
                 Else
                     MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
-                    End If
                 End If
+            End If
 
         Catch ex As Exception
             pe.RaiseUnknownError(ex.Message)
@@ -197,7 +212,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopQCReleased()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as QC Released?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -264,7 +279,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopFolderReady()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Ready?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -331,7 +346,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopSubmittedToPrecomm()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Submitted to Precomm?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -398,7 +413,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopDone()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Done?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -465,7 +480,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopApproved()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Folder Approved?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -530,7 +545,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopSubmitToQC()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Submit to QC?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -595,7 +610,7 @@ Public Class frmSolorunFolders
     End Sub
     Private Sub UpdateLoopReturnFromQC()
         Try
-            lblInfo.Caption = "Updating...."
+
             If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Return from QC to Support Team?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             Dim frm As New frmSelectDateConstraint
             Dim solo As New Soloruns
@@ -658,6 +673,154 @@ Public Class frmSolorunFolders
             pe.RaiseUnknownError(ex.Message)
         End Try
     End Sub
+    Private Sub UpdateConstructionTargetDate()
+        Try
+
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Construction Target Date?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDate
+            Dim solo As New Soloruns
+            frm.ShowDialog(Me)
+            If frm.IsSelect Then
+
+                Dim dt As New DataTable
+                dt.TableName = "FolderData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("ConsTargetDate", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                       gv.GetDataRow(row_handle).Item("Folder Name"),
+                       gv.GetDataRow(row_handle).Item("Area"),
+                       IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                       frm.SelectedDate
+                    )
+                    solo.Add(New Solorun(
+                                 gv.GetDataRow(row_handle).Item("Folder Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Area")), "", gv.GetDataRow(row_handle).Item("Area")),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001",    'Return From QC
+                                 "",
+                                 0,
+                                 "",
+                                 "",
+                                 frm.SelectedDate,    'Cons Target Date
+                                 "1/1/0001"    'Failed Date
+                                ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERCONSTARGET
+                If frm.IsClear Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERCONSTARGET
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    If MsgBox(String.Format("Folders Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
+    Private Sub UpdateFailedtDate()
+        Try
+
+            If MsgBox(String.Format("Do You Want To Set All {0}{1} Selected as Failed?", vbCrLf, gv.GetSelectedRows.Count), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
+            Dim frm As New frmSelectDate
+            Dim solo As New Soloruns
+            frm.ShowDialog(Me)
+            If frm.IsSelect Then
+
+                Dim dt As New DataTable
+                dt.TableName = "FolderData"
+                dt.Columns.Add("Tag", Type.GetType("System.String"))
+                dt.Columns.Add("Area", Type.GetType("System.String"))
+                dt.Columns.Add("Description", Type.GetType("System.String"))
+                dt.Columns.Add("FailedDate", Type.GetType("System.DateTime"))
+
+                For Each row_handle As Integer In gv.GetSelectedRows
+                    dt.Rows.Add(
+                       gv.GetDataRow(row_handle).Item("Folder Name"),
+                       gv.GetDataRow(row_handle).Item("Area"),
+                       IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Description")), "", gv.GetDataRow(row_handle).Item("Description")),
+                       frm.SelectedDate
+                    )
+                    solo.Add(New Solorun(
+                                 gv.GetDataRow(row_handle).Item("Folder Name"),
+                                 "1/1/0001",
+                                 "1/1/0001",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'FolderPrinted
+                                 "1/1/0001",    'Cons Complete
+                                 "1/1/0001",    'QC Released
+                                 "1/1/0001",    'Folder Ready
+                                 "1/1/0001",    'Submit to precomm
+                                 "1/1/0001", 'done
+                                 "1/1/0001", 'Final approved
+                                 IIf(IsDBNull(gv.GetDataRow(row_handle).Item("Area")), "", gv.GetDataRow(row_handle).Item("Area")),
+                                 "",
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Submit to QC,
+                                 "1/1/0001",    'Return From QC
+                                 "",
+                                 0,
+                                 "",
+                                 "",
+                                 "1/1/0001",    'Cons Target Date
+                                 frm.SelectedDate    'Failed Date
+                                ))
+                Next
+
+                Dim updateType As Enumerations.UpdateType = Enumerations.UpdateType.UPDATELOOPFOLDERFAILED
+                If frm.IsClear Then updateType = Enumerations.UpdateType.CLEARLOOPFOLDERFAILED
+
+                Dim opKey As String = lf.UploadTempProgress(updateType, dt)
+                If opKey <> "" Then
+                    Dim dtResult As New DataTable
+                    If lf.UpdateData(opKey, dtResult) Then
+                        Dim frm2 As New frmDataResult(opKey, frmDataResult.en_ResultType.LoopFolders, dtResult)
+                        frm2.ShowDialog(Me)
+                        lf.DeleteTempData(opKey)
+                    End If
+                    If MsgBox(String.Format("Folders Have Been Updated {0} Do You Want To Refresh ?", vbCrLf), MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Exit Sub
+                    getData()
+                Else
+                    MsgBox("Something is wrong. Nothing to update.", MsgBoxStyle.Exclamation, Me.Text)
+                End If
+            End If
+
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+        End Try
+    End Sub
     Private Sub CheckAuth()
         rpHandover.Visible = False
         rpQC.Visible = False
@@ -674,6 +837,8 @@ Public Class frmSolorunFolders
         rMenuSetFolderSubmitToSupportTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
         rMenuSetFolderSubmitToQC.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
         rMenuSetFolderConsComplete.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderConsTargetDate.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuSetFolderFailed.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
 
         If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
             rpHandover.Visible = True
@@ -691,6 +856,8 @@ Public Class frmSolorunFolders
             rMenuSetFolderSubmitToSupportTeam.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             rMenuSetFolderSubmitToQC.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             rMenuSetFolderConsComplete.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderConsTargetDate.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderFailed.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "handover", CompareMethod.Text) > 0 Then
             rpHandover.Visible = True
@@ -710,6 +877,7 @@ Public Class frmSolorunFolders
             rpBlockage.Visible = True
             rMenuSetFolderDone.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             rMenuSetFolderSubmitToPrecomm.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderFailed.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "support team", CompareMethod.Text) > 0 Then
             rpSupportTeam.Visible = True
@@ -724,6 +892,7 @@ Public Class frmSolorunFolders
             rpConstruction.Visible = True
             rpBlockage.Visible = True
             rMenuSetFolderConsComplete.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuSetFolderConsTargetDate.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
     End Sub
     Private Sub formatColumnsWidth()
@@ -816,6 +985,9 @@ Public Class frmSolorunFolders
         gv.Columns("Folder Printed").AppearanceCell.ForeColor = Color.White
 
         gv.Columns("Cons Complete").AppearanceCell.BackColor = Color.FromArgb(199, 249, 204)
+        gv.Columns("Failed Date").AppearanceCell.BackColor = Color.FromArgb(255, 229, 236)
+        gv.Columns("Construction Target Date").AppearanceCell.BackColor = Color.FromArgb(0, 150, 199)
+        gv.Columns("Construction Target Date").AppearanceCell.ForeColor = Color.AntiqueWhite
 
         gv.Columns("ProUUID").Visible = False
         gv.Columns("Id").Visible = False
@@ -909,7 +1081,7 @@ Public Class frmSolorunFolders
     End Sub
 
     Private Sub BarButtonItem10_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderSubmitToSupportTeam.ItemClick, rMenuSetFolderSubmitToPrecomm.ItemClick
-        UpdateLoopReturnFromQC()
+        UpdateLoopSubmittedToPrecomm()
     End Sub
 
     Private Sub BarButtonItem14_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderDone.ItemClick
@@ -1113,5 +1285,17 @@ Public Class frmSolorunFolders
             Notifications.PushMappedNotification(Users.userFullName, frm.selectedUserId, "Solo Run", frm.description, Replace(_filter, "'", "''",,, CompareMethod.Text))
 
         End If
+    End Sub
+
+    Private Sub BarButtonItem2_ItemClick_2(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderConsTargetDate.ItemClick
+        UpdateConstructionTargetDate()
+    End Sub
+
+    Private Sub rMenuSetFolderFailed_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSetFolderFailed.ItemClick
+        UpdateFailedtDate()
+    End Sub
+
+    Private Sub rMenuSoloRunPendingTasks_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuSoloRunPendingTasks.ItemClick
+        GetHCSPendingTasks()
     End Sub
 End Class

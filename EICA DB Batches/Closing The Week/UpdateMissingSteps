@@ -1,0 +1,17 @@
+--ELectrical Cale Glanding
+UPDATE tblEleCableList SET EC_Cable_Gland_From = EC_Plan_Connected_Date_From
+WHERE EC_Plan_Connected_Date_From IS NOT NULL AND EC_Cable_Gland_From IS NULL
+
+UPDATE tblEleCableList SET EC_Cable_Gland_To = EC_Plan_Connected_Date_To
+WHERE EC_Plan_Connected_Date_To IS NOT NULL AND EC_Cable_Gland_To IS NULL
+
+--Instrument Cale Glanding
+UPDATE tblInsCableList SET IC_Cable_Gland_From = IC_Plan_Connected_Date_From
+WHERE IC_Plan_Connected_Date_From IS NOT NULL AND IC_Cable_Gland_From IS NULL
+
+UPDATE tblInsCableList SET IC_Cable_Gland_To = IC_Plan_Connected_Date_To
+WHERE IC_Plan_Connected_Date_To IS NOT NULL AND IC_Cable_Gland_To IS NULL
+
+--Equipment
+UPDATE tblEquipment SET QCDate = PrecomTestDate
+WHERE PrecomTestDate IS NOT NULL AND QCDate IS NULL

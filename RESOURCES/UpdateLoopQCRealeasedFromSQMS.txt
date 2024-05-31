@@ -1,0 +1,76 @@
+
+IF OBJECT_ID('tempdb..#LoopTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #LoopTasks
+    END
+CREATE TABLE  #LoopTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    Source NVARCHAR(100) NULL
+)
+
+IF OBJECT_ID('tempdb..#Tasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #Tasks
+    END
+CREATE TABLE  #Tasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NOT NULL,
+    ClosedDate NVARCHAR(50) NULL
+)
+
+IF OBJECT_ID('tempdb..#LoopSQMSTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #LoopSQMSTasks
+    END
+CREATE TABLE  #LoopSQMSTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NULL,
+    ClosingDate NVARCHAR(50) NULL
+)
+
+INSERT INTO #LoopTasks
+SELECT DISTINCT
+    tblInsLoop.LoopName,
+    [HCS].[ProjectElements].[ElementTag],
+    HCS.ProjectElements.ImportSource
+FROM [HCS].[ProjectElements]
+INNER JOIN tblInsLoop ON [HCS].[ProjectElements].[Group] = tblInsLoop.LoopName
+
+INSERT INTO #Tasks
+SELECT
+    [Group], ElementTag, FormName, ClosingDate
+FROM HCS.SQMSTasks
+--WHERE NodeLevel <> 'Gr' AND Phase = 'Construction' AND FormName NOT IN ('10160-CON-INS-26', '10160-CON-INS-26_Double','10160-CON-INS-11', '10160-CON-ROT-10', '10160-PACKAGE-INS-01', '10160-PACKAGE-ELE-01', '10160-CON-PIP-02')
+XXFilterXX
+
+
+
+INSERT INTO #LoopSQMSTasks
+SELECT DISTINCT
+#LoopTasks.FolderName,
+#Tasks.ElementTag, #Tasks.FormName, #Tasks.ClosedDate
+FROM #LoopTasks
+INNER JOIN #Tasks ON #LoopTasks.ElementTag = #Tasks.ElementTag COLLATE Modern_Spanish_CI_AS
+
+
+UPDATE V
+    SET V.TR_Loop_Folder_QC_Release = GETDATE()
+FROM (
+    SELECT
+    tblInsLoop.LoopName, TR_Loop_Folder_QC_Release
+    FROM tblInsLoop
+    INNER JOIN (
+        SELECT
+        FolderName,
+        COUNT(ElementTag) AS [Task Count],
+        COUNT(ClosingDate) AS [Task Closed]
+        FROM #LoopSQMSTasks
+        GROUP BY FolderName
+        HAVING COUNT(ElementTag) = COUNT(ClosingDate)
+    ) AS LQCReleased
+    ON tblInsLoop.LoopName = LQCReleased.FolderName COLLATE SQL_Latin1_General_CP1_CI_AS
+    WHERE tblInsLoop.TR_Loop_Folder_QC_Release IS NULL
+) AS V

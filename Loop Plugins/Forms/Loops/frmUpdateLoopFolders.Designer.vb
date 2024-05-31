@@ -369,6 +369,8 @@ Partial Class frmUpdateLoopFolders
         Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonStatusBar1 = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
         Me.GroupControl1 = New DevExpress.XtraEditors.GroupControl()
+        Me.LabelControl13 = New DevExpress.XtraEditors.LabelControl()
+        Me.tgControllerLocation = New DevExpress.XtraEditors.ToggleSwitch()
         Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
         Me.tgAll = New DevExpress.XtraEditors.ToggleSwitch()
         Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
@@ -396,8 +398,6 @@ Partial Class frmUpdateLoopFolders
         Me.SpreadsheetBarController1 = New DevExpress.XtraSpreadsheet.UI.SpreadsheetBarController(Me.components)
         Me.SpreadsheetFormulaBar1 = New DevExpress.XtraSpreadsheet.SpreadsheetFormulaBar()
         Me.SplitterControl1 = New DevExpress.XtraEditors.SplitterControl()
-        Me.LabelControl13 = New DevExpress.XtraEditors.LabelControl()
-        Me.tgControllerLocation = New DevExpress.XtraEditors.ToggleSwitch()
         CType(Me.RepositoryItemProgressBar2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemFontEdit1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -411,6 +411,7 @@ Partial Class frmUpdateLoopFolders
         CType(Me.RepositoryItemZoomTrackBar1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupControl1.SuspendLayout()
+        CType(Me.tgControllerLocation.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgAll.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgPDSModel.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgPriority.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -424,7 +425,6 @@ Partial Class frmUpdateLoopFolders
         CType(Me.tgDescription.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgType.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SpreadsheetBarController1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.tgControllerLocation.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RepositoryItemProgressBar2
@@ -441,7 +441,7 @@ Partial Class frmUpdateLoopFolders
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.HomeRibbonPage1, Me.FileRibbonPage1, Me.FormulasRibbonPage1, Me.DataRibbonPage1, Me.ViewRibbonPage1, Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemFontEdit1, Me.RepositoryItemSpreadsheetFontSizeEdit1, Me.RepositoryItemPopupGalleryEdit1, Me.RepositoryItemZoomTrackBar1})
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1306, 181)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1310, 181)
         Me.RibbonControl1.StatusBar = Me.RibbonStatusBar1
         '
         'btnUpdate
@@ -772,7 +772,7 @@ Partial Class frmUpdateLoopFolders
         Me.ss.Options.Behavior.Worksheet.Rename = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.TabColor = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.Unhide = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
-        Me.ss.Size = New System.Drawing.Size(1093, 522)
+        Me.ss.Size = New System.Drawing.Size(1097, 526)
         Me.ss.TabIndex = 10
         Me.ss.Text = "Loop Folders"
         '
@@ -2432,10 +2432,10 @@ Partial Class frmUpdateLoopFolders
         Me.RibbonStatusBar1.ItemLinks.Add(Me.SumInfoStaticItem1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.ZoomEditItem1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.ShowZoomButtonItem1)
-        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 737)
+        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 741)
         Me.RibbonStatusBar1.Name = "RibbonStatusBar1"
         Me.RibbonStatusBar1.Ribbon = Me.RibbonControl1
-        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1306, 26)
+        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1310, 24)
         '
         'GroupControl1
         '
@@ -2468,9 +2468,29 @@ Partial Class frmUpdateLoopFolders
         Me.GroupControl1.Dock = System.Windows.Forms.DockStyle.Left
         Me.GroupControl1.Location = New System.Drawing.Point(0, 215)
         Me.GroupControl1.Name = "GroupControl1"
-        Me.GroupControl1.Size = New System.Drawing.Size(213, 522)
+        Me.GroupControl1.Size = New System.Drawing.Size(213, 526)
         Me.GroupControl1.TabIndex = 1
         Me.GroupControl1.Text = "What To Update"
+        '
+        'LabelControl13
+        '
+        Me.LabelControl13.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl13.Location = New System.Drawing.Point(21, 333)
+        Me.LabelControl13.Name = "LabelControl13"
+        Me.LabelControl13.Size = New System.Drawing.Size(93, 20)
+        Me.LabelControl13.TabIndex = 31
+        Me.LabelControl13.Text = "Controller Location"
+        '
+        'tgControllerLocation
+        '
+        Me.tgControllerLocation.EditValue = True
+        Me.tgControllerLocation.Location = New System.Drawing.Point(120, 335)
+        Me.tgControllerLocation.MenuManager = Me.RibbonControl1
+        Me.tgControllerLocation.Name = "tgControllerLocation"
+        Me.tgControllerLocation.Properties.OffText = "Off"
+        Me.tgControllerLocation.Properties.OnText = "On"
+        Me.tgControllerLocation.Size = New System.Drawing.Size(96, 20)
+        Me.tgControllerLocation.TabIndex = 30
         '
         'LabelControl12
         '
@@ -2934,7 +2954,7 @@ Partial Class frmUpdateLoopFolders
         Me.SpreadsheetFormulaBar1.Location = New System.Drawing.Point(0, 181)
         Me.SpreadsheetFormulaBar1.MinimumSize = New System.Drawing.Size(0, 24)
         Me.SpreadsheetFormulaBar1.Name = "SpreadsheetFormulaBar1"
-        Me.SpreadsheetFormulaBar1.Size = New System.Drawing.Size(1306, 24)
+        Me.SpreadsheetFormulaBar1.Size = New System.Drawing.Size(1310, 24)
         Me.SpreadsheetFormulaBar1.SpreadsheetControl = Me.ss
         Me.SpreadsheetFormulaBar1.TabIndex = 14
         '
@@ -2944,35 +2964,15 @@ Partial Class frmUpdateLoopFolders
         Me.SplitterControl1.Location = New System.Drawing.Point(0, 205)
         Me.SplitterControl1.MinSize = 20
         Me.SplitterControl1.Name = "SplitterControl1"
-        Me.SplitterControl1.Size = New System.Drawing.Size(1306, 10)
+        Me.SplitterControl1.Size = New System.Drawing.Size(1310, 10)
         Me.SplitterControl1.TabIndex = 13
         Me.SplitterControl1.TabStop = False
-        '
-        'LabelControl13
-        '
-        Me.LabelControl13.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl13.Location = New System.Drawing.Point(21, 333)
-        Me.LabelControl13.Name = "LabelControl13"
-        Me.LabelControl13.Size = New System.Drawing.Size(93, 20)
-        Me.LabelControl13.TabIndex = 31
-        Me.LabelControl13.Text = "Controller Location"
-        '
-        'tgControllerLocation
-        '
-        Me.tgControllerLocation.EditValue = True
-        Me.tgControllerLocation.Location = New System.Drawing.Point(120, 335)
-        Me.tgControllerLocation.MenuManager = Me.RibbonControl1
-        Me.tgControllerLocation.Name = "tgControllerLocation"
-        Me.tgControllerLocation.Properties.OffText = "Off"
-        Me.tgControllerLocation.Properties.OnText = "On"
-        Me.tgControllerLocation.Size = New System.Drawing.Size(96, 20)
-        Me.tgControllerLocation.TabIndex = 30
         '
         'frmUpdateLoopFolders
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1306, 763)
+        Me.ClientSize = New System.Drawing.Size(1310, 765)
         Me.Controls.Add(Me.ss)
         Me.Controls.Add(Me.GroupControl1)
         Me.Controls.Add(Me.RibbonStatusBar1)
@@ -3000,6 +3000,7 @@ Partial Class frmUpdateLoopFolders
         CType(Me.RepositoryItemZoomTrackBar1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupControl1.ResumeLayout(False)
+        CType(Me.tgControllerLocation.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgAll.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgPDSModel.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgPriority.Properties, System.ComponentModel.ISupportInitialize).EndInit()
@@ -3013,7 +3014,6 @@ Partial Class frmUpdateLoopFolders
         CType(Me.tgDescription.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgType.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SpreadsheetBarController1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.tgControllerLocation.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

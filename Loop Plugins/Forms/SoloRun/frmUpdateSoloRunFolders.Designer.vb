@@ -441,7 +441,7 @@ Partial Class frmUpdateSoloRunFolders
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.HomeRibbonPage1, Me.FileRibbonPage1, Me.FormulasRibbonPage1, Me.DataRibbonPage1, Me.ViewRibbonPage1, Me.RibbonPage1, Me.RibbonPage2})
         Me.RibbonControl1.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemFontEdit1, Me.RepositoryItemSpreadsheetFontSizeEdit1, Me.RepositoryItemPopupGalleryEdit1, Me.RepositoryItemZoomTrackBar1})
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1306, 181)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1308, 181)
         Me.RibbonControl1.StatusBar = Me.RibbonStatusBar1
         '
         'btnUpdate
@@ -772,7 +772,7 @@ Partial Class frmUpdateSoloRunFolders
         Me.ss.Options.Behavior.Worksheet.Rename = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.TabColor = DevExpress.XtraSpreadsheet.DocumentCapability.Enabled
         Me.ss.Options.Behavior.Worksheet.Unhide = DevExpress.XtraSpreadsheet.DocumentCapability.Disabled
-        Me.ss.Size = New System.Drawing.Size(1083, 522)
+        Me.ss.Size = New System.Drawing.Size(1085, 525)
         Me.ss.TabIndex = 10
         Me.ss.Text = "Loop Folders"
         '
@@ -2432,10 +2432,10 @@ Partial Class frmUpdateSoloRunFolders
         Me.RibbonStatusBar1.ItemLinks.Add(Me.SumInfoStaticItem1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.ZoomEditItem1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.ShowZoomButtonItem1)
-        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 737)
+        Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 740)
         Me.RibbonStatusBar1.Name = "RibbonStatusBar1"
         Me.RibbonStatusBar1.Ribbon = Me.RibbonControl1
-        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1306, 26)
+        Me.RibbonStatusBar1.Size = New System.Drawing.Size(1308, 24)
         '
         'GroupControl1
         '
@@ -2468,7 +2468,7 @@ Partial Class frmUpdateSoloRunFolders
         Me.GroupControl1.Dock = System.Windows.Forms.DockStyle.Left
         Me.GroupControl1.Location = New System.Drawing.Point(0, 215)
         Me.GroupControl1.Name = "GroupControl1"
-        Me.GroupControl1.Size = New System.Drawing.Size(223, 522)
+        Me.GroupControl1.Size = New System.Drawing.Size(223, 525)
         Me.GroupControl1.TabIndex = 1
         Me.GroupControl1.Text = "What To Update"
         '
@@ -2954,7 +2954,7 @@ Partial Class frmUpdateSoloRunFolders
         Me.SpreadsheetFormulaBar1.Location = New System.Drawing.Point(0, 181)
         Me.SpreadsheetFormulaBar1.MinimumSize = New System.Drawing.Size(0, 24)
         Me.SpreadsheetFormulaBar1.Name = "SpreadsheetFormulaBar1"
-        Me.SpreadsheetFormulaBar1.Size = New System.Drawing.Size(1306, 24)
+        Me.SpreadsheetFormulaBar1.Size = New System.Drawing.Size(1308, 24)
         Me.SpreadsheetFormulaBar1.SpreadsheetControl = Me.ss
         Me.SpreadsheetFormulaBar1.TabIndex = 14
         '
@@ -2964,7 +2964,7 @@ Partial Class frmUpdateSoloRunFolders
         Me.SplitterControl1.Location = New System.Drawing.Point(0, 205)
         Me.SplitterControl1.MinSize = 20
         Me.SplitterControl1.Name = "SplitterControl1"
-        Me.SplitterControl1.Size = New System.Drawing.Size(1306, 10)
+        Me.SplitterControl1.Size = New System.Drawing.Size(1308, 10)
         Me.SplitterControl1.TabIndex = 13
         Me.SplitterControl1.TabStop = False
         '
@@ -2972,7 +2972,7 @@ Partial Class frmUpdateSoloRunFolders
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1306, 763)
+        Me.ClientSize = New System.Drawing.Size(1308, 764)
         Me.Controls.Add(Me.ss)
         Me.Controls.Add(Me.GroupControl1)
         Me.Controls.Add(Me.RibbonStatusBar1)

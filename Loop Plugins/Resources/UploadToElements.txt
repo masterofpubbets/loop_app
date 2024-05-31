@@ -1,0 +1,50 @@
+TRUNCATE TABLE HCS.ProjectElements
+INSERT INTO HCS.ProjectElements (Active, ElementTag, NodeLevel, Location, [Type], [Class], Subcontract, [Discipline], Area, Unit, Subsystem, [Group], [GroupType], [GroupClass], [Module], [ImportSource])
+SELECT DISTINCT [Active]
+      ,[ElementTag]
+      ,[NodeLevel]
+      ,[Location]
+      ,[Type]
+      ,[Class]
+      ,[TaskSubcontract] AS Subcontract
+      ,[Discipline]
+      ,[Area]
+      ,[Unit]
+      ,[Subsystem]
+      ,[Group]
+      ,[TestPackageType] AS [GroupType]
+      ,Class AS [GroupClass]
+      ,[Module]
+      ,'SQMS' AS [ImportSource]
+      FROM HCS.SQMSTasks
+      WHERE [Discipline] NOT IN ('Mechanical')
+INSERT INTO HCS.ProjectElements (ElementTag, Subcontract, Discipline, [Group], GroupActive, ImportSource)
+SELECT AItems.ElementTag, Subcontract, AItems.Discipline, AItems.[Group], GroupActive, 'AdditionalMultiple' AS ImportSource 
+FROM [HCS].[ProjectAdditionalElements] AS AItems
+LEFT JOIN HCS.SQMSTasks AS SQMS
+ON AItems.ElementTag = SQMS.ElementTag AND AItems.[Group] = SQMS.[Group]
+WHERE SQMS.ElementTag IS NULL
+TRUNCATE TABLE TEMPDATA.LoopTasks
+TRUNCATE TABLE TEMPDATA.Tasks
+TRUNCATE TABLE TEMPDATA.LoopSQMSTasks
+TRUNCATE TABLE TEMPDATA.SoloRunTasks
+TRUNCATE TABLE TEMPDATA.SoloRunSQMSTasks
+INSERT INTO HCS.ProjectElements (Active, ElementTag, NodeLevel, Location, [Type], [Class], Subcontract, [Discipline], Area, Unit, Subsystem, [Group], [GroupType], [GroupClass], [Module], [ImportSource])
+SELECT DISTINCT [Active]
+      ,[ElementTag]
+      ,[NodeLevel]
+      ,[Location]
+      ,[Type]
+      ,[Class]
+      ,[TaskSubcontract] AS Subcontract
+      ,[Discipline]
+      ,[Area]
+      ,[Unit]
+      ,[Subsystem]
+      ,[ElementTag] AS [Group]
+      ,[TestPackageType] AS [GroupType]
+      ,Class AS [GroupClass]
+      ,[Module]
+      ,'SQMS' AS [ImportSource]
+      FROM HCS.SQMSTasks
+      WHERE [Discipline] ='Mechanical'

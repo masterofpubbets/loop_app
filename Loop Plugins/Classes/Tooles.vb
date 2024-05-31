@@ -930,7 +930,7 @@ Namespace EAMS
                 Return ""
             End Function
 
-            Public Overloads Sub FillGrd(ByRef grd As DataGridView, ByVal SQL As String, Optional ByVal Timeout As Integer = 30)
+            Public Overloads Sub FillGrd(ByRef grd As DataGridView, ByVal SQL As String, Optional ByVal Timeout As Integer = 0)
                 Dim DT As New DataTable
                 Dim DA As New SqlClient.SqlDataAdapter(SQL, DB)
                 Try
@@ -955,7 +955,7 @@ Namespace EAMS
                 Catch ex As Exception
                 End Try
             End Sub
-            Public Overloads Function ReturnDataTableExcuteFromSP(ByVal SPName As String, Optional ByVal Timeout As Integer = 15) As DataTable
+            Public Overloads Function ReturnDataTableExcuteFromSP(ByVal SPName As String, Optional ByVal Timeout As Integer = 0) As DataTable
                 Dim SQL As String = ""
                 Dim dt As New DataTable
                 Dim cmd As New SqlCommand(SPName, DB)
@@ -969,7 +969,7 @@ Namespace EAMS
                     Return Nothing
                 End Try
             End Function
-            Public Overloads Function ReturnDataTableExcuteFromFile(ByVal SQLFilePath As String, Optional ByVal Timeout As Integer = 15) As DataTable
+            Public Overloads Function ReturnDataTableExcuteFromFile(ByVal SQLFilePath As String, Optional ByVal Timeout As Integer = 0) As DataTable
                 Dim SQL As String = ""
                 Dim dt As New DataTable
                 Try

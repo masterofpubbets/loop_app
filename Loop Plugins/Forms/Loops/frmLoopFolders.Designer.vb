@@ -58,6 +58,8 @@ Partial Class frmLoopFolders
         Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
         Me.rMenuShare = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenuSetFolderConsTargetDate = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenuSetFolderFailed = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup1 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
@@ -94,16 +96,16 @@ Partial Class frmLoopFolders
         Me.RibbonControl1.CaptionBarItemLinks.Add(Me.lblInfo)
         Me.RibbonControl1.EmptyAreaImageOptions.ImagePadding = New System.Windows.Forms.Padding(26, 24, 26, 24)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblInfo, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.rMenuRefresh, Me.rMenuFilter, Me.rMenuSetFolderPrinted, Me.rMenuSetFolderApproved, Me.rMenuExportToExcel, Me.BarButtonItem8, Me.BarButtonItem9, Me.rMenuSetFolderSubmitToSupportTeam, Me.rMenuSetFolderReleased, Me.rMenuSetFolderReady, Me.rMenuSetFolderSubmitToPrecomm, Me.rMenuSetFolderDone, Me.rMenuAddBlockage, Me.BarButtonItem16, Me.rMenuShowBlockage, Me.BarButtonItem18, Me.rMenuOpenILD, Me.BarSubItem1, Me.rMenuCopyLoop, Me.BarButtonItem21, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem22, Me.rMenuSetFolderSubmitToQC, Me.BarButtonItem24, Me.rMenuSetFolderReturnFromQC, Me.rMenuLoopTasks, Me.rMenuSetFolderConsComplete, Me.BarButtonItem1, Me.rMenuShare, Me.BarButtonItem2})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblInfo, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.rMenuRefresh, Me.rMenuFilter, Me.rMenuSetFolderPrinted, Me.rMenuSetFolderApproved, Me.rMenuExportToExcel, Me.BarButtonItem8, Me.BarButtonItem9, Me.rMenuSetFolderSubmitToSupportTeam, Me.rMenuSetFolderReleased, Me.rMenuSetFolderReady, Me.rMenuSetFolderSubmitToPrecomm, Me.rMenuSetFolderDone, Me.rMenuAddBlockage, Me.BarButtonItem16, Me.rMenuShowBlockage, Me.BarButtonItem18, Me.rMenuOpenILD, Me.BarSubItem1, Me.rMenuCopyLoop, Me.BarButtonItem21, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem22, Me.rMenuSetFolderSubmitToQC, Me.BarButtonItem24, Me.rMenuSetFolderReturnFromQC, Me.rMenuLoopTasks, Me.rMenuSetFolderConsComplete, Me.BarButtonItem1, Me.rMenuShare, Me.BarButtonItem2, Me.rMenuSetFolderConsTargetDate, Me.rMenuSetFolderFailed})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.RibbonControl1.MaxItemId = 36
+        Me.RibbonControl1.MaxItemId = 38
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage1, Me.RibbonPage2, Me.rpConstruction, Me.rpHandover, Me.rpSupportTeam, Me.rpQC, Me.rpPrecom, Me.rpBlockage})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1206, 110)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1208, 110)
         '
         'lblInfo
         '
@@ -436,6 +438,28 @@ Partial Class frmLoopFolders
         Me.BarButtonItem2.Name = "BarButtonItem2"
         Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
+        'rMenuSetFolderConsTargetDate
+        '
+        Me.rMenuSetFolderConsTargetDate.Caption = "Set Const Target Date"
+        Me.rMenuSetFolderConsTargetDate.CloseRadialMenuOnItemClick = True
+        Me.rMenuSetFolderConsTargetDate.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.rMenuSetFolderConsTargetDate.Id = 36
+        Me.rMenuSetFolderConsTargetDate.ImageOptions.Image = CType(resources.GetObject("rMenuSetFolderConsTargetDate.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuSetFolderConsTargetDate.ImageOptions.LargeImage = CType(resources.GetObject("rMenuSetFolderConsTargetDate.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuSetFolderConsTargetDate.Name = "rMenuSetFolderConsTargetDate"
+        Me.rMenuSetFolderConsTargetDate.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'rMenuSetFolderFailed
+        '
+        Me.rMenuSetFolderFailed.Caption = "Set Loop Failed"
+        Me.rMenuSetFolderFailed.CloseRadialMenuOnItemClick = True
+        Me.rMenuSetFolderFailed.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.rMenuSetFolderFailed.Id = 37
+        Me.rMenuSetFolderFailed.ImageOptions.Image = CType(resources.GetObject("rMenuSetFolderFailed.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuSetFolderFailed.ImageOptions.LargeImage = CType(resources.GetObject("rMenuSetFolderFailed.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuSetFolderFailed.Name = "rMenuSetFolderFailed"
+        Me.rMenuSetFolderFailed.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
         'RibbonPage1
         '
         Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup1})
@@ -485,6 +509,7 @@ Partial Class frmLoopFolders
         'RibbonPageGroup3
         '
         Me.RibbonPageGroup3.ItemLinks.Add(Me.rMenuSetFolderConsComplete)
+        Me.RibbonPageGroup3.ItemLinks.Add(Me.rMenuSetFolderConsTargetDate)
         Me.RibbonPageGroup3.Name = "RibbonPageGroup3"
         Me.RibbonPageGroup3.Text = "Construction"
         '
@@ -546,6 +571,7 @@ Partial Class frmLoopFolders
         '
         Me.rgPrecomm.ItemLinks.Add(Me.rMenuSetFolderSubmitToPrecomm)
         Me.rgPrecomm.ItemLinks.Add(Me.rMenuSetFolderDone)
+        Me.rgPrecomm.ItemLinks.Add(Me.rMenuSetFolderFailed)
         Me.rgPrecomm.Name = "rgPrecomm"
         Me.rgPrecomm.Text = "Precomm Options"
         '
@@ -569,7 +595,7 @@ Partial Class frmLoopFolders
         Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1206, 593)
+        Me.grd.Size = New System.Drawing.Size(1208, 594)
         Me.grd.TabIndex = 67
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -633,11 +659,13 @@ Partial Class frmLoopFolders
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderReady)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderReleased)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderDone)
+        Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderFailed)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderReturnFromQC)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderSubmitToPrecomm)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderSubmitToQC)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderSubmitToSupportTeam)
         Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderConsComplete)
+        Me.rMenu.ItemLinks.Add(Me.rMenuSetFolderConsTargetDate)
         Me.rMenu.Name = "rMenu"
         Me.rMenu.Ribbon = Me.RibbonControl1
         '
@@ -645,7 +673,7 @@ Partial Class frmLoopFolders
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1206, 703)
+        Me.ClientSize = New System.Drawing.Size(1208, 704)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
         Me.IconOptions.Image = CType(resources.GetObject("frmLoopFolders.IconOptions.Image"), System.Drawing.Image)
@@ -719,4 +747,6 @@ Partial Class frmLoopFolders
     Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents rMenuShare As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenuSetFolderConsTargetDate As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenuSetFolderFailed As DevExpress.XtraBars.BarButtonItem
 End Class

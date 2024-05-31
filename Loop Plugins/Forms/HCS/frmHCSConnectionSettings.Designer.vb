@@ -57,7 +57,7 @@ Partial Class frmHCSConnectionSettings
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 58)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1200, 60)
         '
         'txtDBLocation
         '

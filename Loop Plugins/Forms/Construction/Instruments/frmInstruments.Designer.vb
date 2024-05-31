@@ -22,13 +22,13 @@ Partial Class frmInstruments
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim SplashScreenManager As DevExpress.XtraSplashScreen.SplashScreenManager = New DevExpress.XtraSplashScreen.SplashScreenManager(Me, Nothing, True, True)
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInstruments))
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
-        Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenuRefresh = New DevExpress.XtraBars.BarButtonItem()
+        Me.rMenuFIlter = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem3 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem4 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem6 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem8 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem9 = New DevExpress.XtraBars.BarButtonItem()
@@ -42,11 +42,11 @@ Partial Class frmInstruments
         Me.BarButtonItem16 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem17 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem18 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarSubItem3 = New DevExpress.XtraBars.BarSubItem()
+        Me.rMenuSetProduction = New DevExpress.XtraBars.BarSubItem()
         Me.BarButtonItem12 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem19 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem20 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarSubItem4 = New DevExpress.XtraBars.BarSubItem()
+        Me.rMenuAssignActivity = New DevExpress.XtraBars.BarSubItem()
         Me.BarSubItem5 = New DevExpress.XtraBars.BarSubItem()
         Me.BarButtonItem7 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem21 = New DevExpress.XtraBars.BarButtonItem()
@@ -79,6 +79,8 @@ Partial Class frmInstruments
         Me.BarButtonItem40 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem41 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem42 = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarSubItem13 = New DevExpress.XtraBars.BarSubItem()
+        Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup7 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
@@ -97,9 +99,11 @@ Partial Class frmInstruments
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
+        Me.rMenu = New DevExpress.XtraBars.Ribbon.RadialMenu(Me.components)
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SplashScreenManager
@@ -110,34 +114,38 @@ Partial Class frmInstruments
         '
         Me.RibbonControl1.EmptyAreaImageOptions.ImagePadding = New System.Windows.Forms.Padding(26, 24, 26, 24)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem1, Me.BarButtonItem2, Me.BarButtonItem3, Me.BarButtonItem4, Me.BarButtonItem6, Me.BarButtonItem8, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.BarSubItem1, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarSubItem2, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.BarSubItem3, Me.BarButtonItem12, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarSubItem4, Me.BarButtonItem5, Me.BarSubItem5, Me.BarSubItem6, Me.BarSubItem7, Me.BarButtonItem7, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem25, Me.BarButtonItem26, Me.BarButtonItem28, Me.BarSubItem8, Me.BarButtonItem24, Me.BarButtonItem27, Me.BarButtonItem29, Me.BarSubItem9, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarSubItem10, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarSubItem11, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarSubItem12, Me.BarButtonItem39, Me.BarButtonItem40, Me.BarButtonItem41, Me.BarButtonItem42})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.rMenuRefresh, Me.rMenuFIlter, Me.BarButtonItem3, Me.BarButtonItem6, Me.BarButtonItem8, Me.BarButtonItem9, Me.BarButtonItem10, Me.BarButtonItem11, Me.BarSubItem1, Me.BarButtonItem13, Me.BarButtonItem14, Me.BarButtonItem15, Me.BarSubItem2, Me.BarButtonItem16, Me.BarButtonItem17, Me.BarButtonItem18, Me.rMenuSetProduction, Me.BarButtonItem12, Me.BarButtonItem19, Me.BarButtonItem20, Me.rMenuAssignActivity, Me.BarButtonItem5, Me.BarSubItem5, Me.BarSubItem6, Me.BarSubItem7, Me.BarButtonItem7, Me.BarButtonItem21, Me.BarButtonItem22, Me.BarButtonItem23, Me.BarButtonItem25, Me.BarButtonItem26, Me.BarButtonItem28, Me.BarSubItem8, Me.BarButtonItem24, Me.BarButtonItem27, Me.BarButtonItem29, Me.BarSubItem9, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarSubItem10, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarSubItem11, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem38, Me.BarSubItem12, Me.BarButtonItem39, Me.BarButtonItem40, Me.BarButtonItem41, Me.BarButtonItem42, Me.BarSubItem13, Me.BarButtonItem1})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.RibbonControl1.MaxItemId = 60
+        Me.RibbonControl1.MaxItemId = 62
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage2, Me.RibbonPage1, Me.rpEngineering, Me.rpPlanning, Me.rpQC, Me.rpProductionControl, Me.RibbonPage3})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
-        Me.RibbonControl1.Size = New System.Drawing.Size(1334, 110)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1338, 110)
         '
-        'BarButtonItem1
+        'rMenuRefresh
         '
-        Me.BarButtonItem1.Caption = "Refresh"
-        Me.BarButtonItem1.Id = 1
-        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem1.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem1.Name = "BarButtonItem1"
-        Me.BarButtonItem1.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.rMenuRefresh.Caption = "Refresh"
+        Me.rMenuRefresh.CloseRadialMenuOnItemClick = True
+        Me.rMenuRefresh.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.rMenuRefresh.Id = 1
+        Me.rMenuRefresh.ImageOptions.Image = CType(resources.GetObject("rMenuRefresh.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuRefresh.ImageOptions.LargeImage = CType(resources.GetObject("rMenuRefresh.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuRefresh.Name = "rMenuRefresh"
+        Me.rMenuRefresh.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'BarButtonItem2
+        'rMenuFIlter
         '
-        Me.BarButtonItem2.Caption = "Filter"
-        Me.BarButtonItem2.Id = 2
-        Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem2.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem2.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem2.Name = "BarButtonItem2"
-        Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        Me.rMenuFIlter.Caption = "Filter"
+        Me.rMenuFIlter.CloseRadialMenuOnItemClick = True
+        Me.rMenuFIlter.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.rMenuFIlter.Id = 2
+        Me.rMenuFIlter.ImageOptions.Image = CType(resources.GetObject("rMenuFIlter.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuFIlter.ImageOptions.LargeImage = CType(resources.GetObject("rMenuFIlter.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuFIlter.Name = "rMenuFIlter"
+        Me.rMenuFIlter.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem3
         '
@@ -147,15 +155,6 @@ Partial Class frmInstruments
         Me.BarButtonItem3.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem3.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem3.Name = "BarButtonItem3"
         Me.BarButtonItem3.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem4
-        '
-        Me.BarButtonItem4.Caption = "Copy Selected Tag"
-        Me.BarButtonItem4.Id = 4
-        Me.BarButtonItem4.ImageOptions.Image = CType(resources.GetObject("BarButtonItem4.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem4.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem4.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem4.Name = "BarButtonItem4"
-        Me.BarButtonItem4.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem6
         '
@@ -265,18 +264,20 @@ Partial Class frmInstruments
         Me.BarButtonItem18.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem18.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem18.Name = "BarButtonItem18"
         '
-        'BarSubItem3
+        'rMenuSetProduction
         '
-        Me.BarSubItem3.Caption = "Set Production"
-        Me.BarSubItem3.Id = 21
-        Me.BarSubItem3.ImageOptions.Image = CType(resources.GetObject("BarSubItem3.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarSubItem3.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem3.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarSubItem3.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem12), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem19), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem20)})
-        Me.BarSubItem3.Name = "BarSubItem3"
+        Me.rMenuSetProduction.Caption = "Set Production"
+        Me.rMenuSetProduction.Id = 21
+        Me.rMenuSetProduction.ImageOptions.Image = CType(resources.GetObject("rMenuSetProduction.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuSetProduction.ImageOptions.LargeImage = CType(resources.GetObject("rMenuSetProduction.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuSetProduction.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem12), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem19), New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem20)})
+        Me.rMenuSetProduction.Name = "rMenuSetProduction"
         '
         'BarButtonItem12
         '
         Me.BarButtonItem12.Caption = "Set As Calibrated"
+        Me.BarButtonItem12.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem12.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem12.Id = 22
         Me.BarButtonItem12.ImageOptions.Image = CType(resources.GetObject("BarButtonItem12.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem12.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem12.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -285,6 +286,8 @@ Partial Class frmInstruments
         'BarButtonItem19
         '
         Me.BarButtonItem19.Caption = "Set As Installed"
+        Me.BarButtonItem19.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem19.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem19.Id = 23
         Me.BarButtonItem19.ImageOptions.Image = CType(resources.GetObject("BarButtonItem19.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem19.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem19.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -293,19 +296,21 @@ Partial Class frmInstruments
         'BarButtonItem20
         '
         Me.BarButtonItem20.Caption = "Set As Hookup"
+        Me.BarButtonItem20.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem20.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem20.Id = 24
         Me.BarButtonItem20.ImageOptions.Image = CType(resources.GetObject("BarButtonItem20.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem20.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem20.ImageOptions.LargeImage"), System.Drawing.Image)
         Me.BarButtonItem20.Name = "BarButtonItem20"
         '
-        'BarSubItem4
+        'rMenuAssignActivity
         '
-        Me.BarSubItem4.Caption = "Assign Activity ID"
-        Me.BarSubItem4.Id = 25
-        Me.BarSubItem4.ImageOptions.Image = CType(resources.GetObject("BarSubItem4.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarSubItem4.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem4.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarSubItem4.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarSubItem5), New DevExpress.XtraBars.LinkPersistInfo(Me.BarSubItem6), New DevExpress.XtraBars.LinkPersistInfo(Me.BarSubItem7)})
-        Me.BarSubItem4.Name = "BarSubItem4"
+        Me.rMenuAssignActivity.Caption = "Assign Activity ID"
+        Me.rMenuAssignActivity.Id = 25
+        Me.rMenuAssignActivity.ImageOptions.Image = CType(resources.GetObject("rMenuAssignActivity.ImageOptions.Image"), System.Drawing.Image)
+        Me.rMenuAssignActivity.ImageOptions.LargeImage = CType(resources.GetObject("rMenuAssignActivity.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.rMenuAssignActivity.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarSubItem5), New DevExpress.XtraBars.LinkPersistInfo(Me.BarSubItem6), New DevExpress.XtraBars.LinkPersistInfo(Me.BarSubItem7)})
+        Me.rMenuAssignActivity.Name = "rMenuAssignActivity"
         '
         'BarSubItem5
         '
@@ -318,7 +323,9 @@ Partial Class frmInstruments
         '
         'BarButtonItem7
         '
-        Me.BarButtonItem7.Caption = "Assign"
+        Me.BarButtonItem7.Caption = "Assign ActId"
+        Me.BarButtonItem7.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem7.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem7.Id = 30
         Me.BarButtonItem7.ImageOptions.Image = CType(resources.GetObject("BarButtonItem7.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem7.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem7.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -327,6 +334,8 @@ Partial Class frmInstruments
         'BarButtonItem21
         '
         Me.BarButtonItem21.Caption = "Assign ActId With Area"
+        Me.BarButtonItem21.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem21.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem21.Id = 31
         Me.BarButtonItem21.ImageOptions.Image = CType(resources.GetObject("BarButtonItem21.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem21.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem21.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -334,7 +343,9 @@ Partial Class frmInstruments
         '
         'BarButtonItem22
         '
-        Me.BarButtonItem22.Caption = "Clear"
+        Me.BarButtonItem22.Caption = "Clear ActId"
+        Me.BarButtonItem22.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem22.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem22.Id = 32
         Me.BarButtonItem22.ImageOptions.Image = CType(resources.GetObject("BarButtonItem22.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem22.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem22.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -351,7 +362,9 @@ Partial Class frmInstruments
         '
         'BarButtonItem23
         '
-        Me.BarButtonItem23.Caption = "Assign"
+        Me.BarButtonItem23.Caption = "Assign ActId"
+        Me.BarButtonItem23.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem23.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem23.Id = 33
         Me.BarButtonItem23.ImageOptions.Image = CType(resources.GetObject("BarButtonItem23.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem23.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem23.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -359,7 +372,9 @@ Partial Class frmInstruments
         '
         'BarButtonItem25
         '
-        Me.BarButtonItem25.Caption = "Clear"
+        Me.BarButtonItem25.Caption = "Clear ActId"
+        Me.BarButtonItem25.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem25.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem25.Id = 35
         Me.BarButtonItem25.ImageOptions.Image = CType(resources.GetObject("BarButtonItem25.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem25.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem25.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -376,7 +391,9 @@ Partial Class frmInstruments
         '
         'BarButtonItem26
         '
-        Me.BarButtonItem26.Caption = "Assign"
+        Me.BarButtonItem26.Caption = "Assign ActId"
+        Me.BarButtonItem26.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem26.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem26.Id = 36
         Me.BarButtonItem26.ImageOptions.Image = CType(resources.GetObject("BarButtonItem26.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem26.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem26.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -384,7 +401,9 @@ Partial Class frmInstruments
         '
         'BarButtonItem28
         '
-        Me.BarButtonItem28.Caption = "Clear"
+        Me.BarButtonItem28.Caption = "Clear ActId"
+        Me.BarButtonItem28.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem28.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem28.Id = 38
         Me.BarButtonItem28.ImageOptions.Image = CType(resources.GetObject("BarButtonItem28.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem28.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem28.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -578,6 +597,26 @@ Partial Class frmInstruments
         Me.BarButtonItem42.Name = "BarButtonItem42"
         Me.BarButtonItem42.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
+        'BarSubItem13
+        '
+        Me.BarSubItem13.Caption = "Clipboard"
+        Me.BarSubItem13.Id = 60
+        Me.BarSubItem13.ImageOptions.Image = CType(resources.GetObject("BarSubItem13.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarSubItem13.ImageOptions.LargeImage = CType(resources.GetObject("BarSubItem13.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarSubItem13.LinksPersistInfo.AddRange(New DevExpress.XtraBars.LinkPersistInfo() {New DevExpress.XtraBars.LinkPersistInfo(Me.BarButtonItem1)})
+        Me.BarSubItem13.Name = "BarSubItem13"
+        Me.BarSubItem13.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
+        'BarButtonItem1
+        '
+        Me.BarButtonItem1.Caption = "Copy Tag"
+        Me.BarButtonItem1.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem1.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
+        Me.BarButtonItem1.Id = 61
+        Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem1.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem1.Name = "BarButtonItem1"
+        '
         'RibbonPage2
         '
         Me.RibbonPage2.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup7})
@@ -587,10 +626,10 @@ Partial Class frmInstruments
         '
         'RibbonPageGroup7
         '
-        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem1)
-        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem2)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.rMenuRefresh)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.rMenuFIlter)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem3)
-        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem4)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarSubItem13)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarSubItem2)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem41)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem42)
@@ -606,7 +645,7 @@ Partial Class frmInstruments
         '
         'rpProduction
         '
-        Me.rpProduction.ItemLinks.Add(Me.BarSubItem3)
+        Me.rpProduction.ItemLinks.Add(Me.rMenuSetProduction)
         Me.rpProduction.Name = "rpProduction"
         Me.rpProduction.Text = "Production"
         '
@@ -632,7 +671,7 @@ Partial Class frmInstruments
         '
         'RibbonPageGroup3
         '
-        Me.RibbonPageGroup3.ItemLinks.Add(Me.BarSubItem4)
+        Me.RibbonPageGroup3.ItemLinks.Add(Me.rMenuAssignActivity)
         Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem5)
         Me.RibbonPageGroup3.ItemLinks.Add(Me.BarSubItem9)
         Me.RibbonPageGroup3.ItemLinks.Add(Me.BarSubItem10)
@@ -687,7 +726,7 @@ Partial Class frmInstruments
         Me.grd.Location = New System.Drawing.Point(0, 110)
         Me.grd.MainView = Me.gv
         Me.grd.Name = "grd"
-        Me.grd.Size = New System.Drawing.Size(1334, 458)
+        Me.grd.Size = New System.Drawing.Size(1338, 460)
         Me.grd.TabIndex = 71
         Me.grd.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gv})
         '
@@ -736,11 +775,23 @@ Partial Class frmInstruments
         '
         Me.opnFle.Filter = "View Files|*.xml"
         '
+        'rMenu
+        '
+        Me.rMenu.AutoExpand = True
+        Me.rMenu.Glyph = CType(resources.GetObject("rMenu.Glyph"), System.Drawing.Image)
+        Me.rMenu.ItemLinks.Add(Me.rMenuRefresh)
+        Me.rMenu.ItemLinks.Add(Me.rMenuFIlter)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem1)
+        Me.rMenu.ItemLinks.Add(Me.rMenuAssignActivity)
+        Me.rMenu.ItemLinks.Add(Me.rMenuSetProduction)
+        Me.rMenu.Name = "rMenu"
+        Me.rMenu.Ribbon = Me.RibbonControl1
+        '
         'frmInstruments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1334, 568)
+        Me.ClientSize = New System.Drawing.Size(1338, 570)
         Me.Controls.Add(Me.grd)
         Me.Controls.Add(Me.RibbonControl1)
         Me.IconOptions.Image = CType(resources.GetObject("frmInstruments.IconOptions.Image"), System.Drawing.Image)
@@ -754,6 +805,7 @@ Partial Class frmInstruments
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -761,10 +813,9 @@ Partial Class frmInstruments
 
     Friend WithEvents RibbonControl1 As DevExpress.XtraBars.Ribbon.RibbonControl
     Friend WithEvents RibbonPage1 As DevExpress.XtraBars.Ribbon.RibbonPage
-    Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenuRefresh As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenuFIlter As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem3 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem4 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents grd As DevExpress.XtraGrid.GridControl
     Friend WithEvents gv As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents sveFle As SaveFileDialog
@@ -787,11 +838,11 @@ Partial Class frmInstruments
     Friend WithEvents BarButtonItem16 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem17 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem18 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarSubItem3 As DevExpress.XtraBars.BarSubItem
+    Friend WithEvents rMenuSetProduction As DevExpress.XtraBars.BarSubItem
     Friend WithEvents BarButtonItem12 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem19 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem20 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarSubItem4 As DevExpress.XtraBars.BarSubItem
+    Friend WithEvents rMenuAssignActivity As DevExpress.XtraBars.BarSubItem
     Friend WithEvents BarButtonItem5 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarSubItem5 As DevExpress.XtraBars.BarSubItem
     Friend WithEvents BarSubItem6 As DevExpress.XtraBars.BarSubItem
@@ -832,4 +883,7 @@ Partial Class frmInstruments
     Friend WithEvents BarButtonItem42 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents RibbonPage3 As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup1 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarSubItem13 As DevExpress.XtraBars.BarSubItem
+    Friend WithEvents BarButtonItem1 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rMenu As DevExpress.XtraBars.Ribbon.RadialMenu
 End Class

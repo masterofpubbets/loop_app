@@ -25,7 +25,21 @@ Public Class frmInstruments
         ' Add any initialization after the InitializeComponent() call.
         _IsFullView = isFullView
     End Sub
-
+    Private Sub ShowRadialMenu()
+        ' Display Radial Menu
+        If rMenu Is Nothing Then
+            Return
+        End If
+        Dim pt As Point = Me.Location
+        pt.Offset(Me.Width \ 2, Me.Height \ 2)
+        rMenu.ShowPopup(pt)
+    End Sub
+    Private Sub grd_KeyDown(sender As Object, e As KeyEventArgs) Handles grd.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Space
+                ShowRadialMenu()
+        End Select
+    End Sub
     Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
         opnedHandle = SplashScreenManager.ShowOverlayForm(Me)
         Return opnedHandle
@@ -40,6 +54,8 @@ Public Class frmInstruments
         rpPlanning.Visible = False
         rpProductionControl.Visible = False
         rpEngineering.Visible = False
+        rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        rMenuAssignActivity.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
 
         If InStr(Users.userType, "admin", CompareMethod.Text) > 0 Then
             rpProduction.Visible = True
@@ -47,6 +63,8 @@ Public Class frmInstruments
             rpQC.Visible = True
             rpProductionControl.Visible = True
             rpEngineering.Visible = True
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            rMenuAssignActivity.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
             Exit Sub
         End If
         If InStr(Users.userType, "construction", CompareMethod.Text) > 0 Then
@@ -57,9 +75,11 @@ Public Class frmInstruments
         End If
         If InStr(Users.userType, "planning", CompareMethod.Text) > 0 Then
             rpPlanning.Visible = True
+            rMenuAssignActivity.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "Production", CompareMethod.Text) > 0 Then
             rpProductionControl.Visible = True
+            rMenuSetProduction.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
         End If
         If InStr(Users.userType, "engineer", CompareMethod.Text) > 0 Then
             rpEngineering.Visible = True
@@ -155,13 +175,13 @@ Public Class frmInstruments
 
     End Sub
 
-    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+    Private Sub BarButtonItem1_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuRefresh.ItemClick
         ShowProgressPanel()
         getData()
         CloseProgressPanel(opnedHandle)
     End Sub
 
-    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem2.ItemClick
+    Private Sub BarButtonItem2_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles rMenuFIlter.ItemClick
         Dim frm As New frmFilter
         frm.Text = "Instruments Filter"
         For inx As Integer = 0 To gv.Columns.Count - 1
@@ -206,10 +226,6 @@ Public Class frmInstruments
         Catch ex As Exception
 
         End Try
-    End Sub
-
-    Private Sub BarButtonItem4_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem4.ItemClick
-        grdView.CopySelectedItems(gv, "Tag")
     End Sub
 
     Private Sub BarButtonItem8_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem8.ItemClick
@@ -711,5 +727,9 @@ Public Class frmInstruments
 
     Private Sub frmInstruments_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         frmMain.MdiChildClosed(Me.Text)
+    End Sub
+
+    Private Sub BarButtonItem1_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem1.ItemClick
+        grdView.CopySelectedItems(gv, "Tag")
     End Sub
 End Class

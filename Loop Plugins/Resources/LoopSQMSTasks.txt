@@ -1,0 +1,14 @@
+SELECT DISTINCT
+    FolderName,
+    TEMPDATA.LoopSQMSTasks.ElementTag AS Tag,
+    TEMPDATA.LoopSQMSTasks.ItemType AS [Item Type],
+    TEMPDATA.LoopSQMSTasks.FormName,
+    DocType AS Description,
+    [Subcontractor],
+    [ClosingDate],
+    Source,
+    [ClosingRemarks]
+
+FROM TEMPDATA.LoopSQMSTasks
+INNER JOIN TEMPDATA.GroupFilter ON TEMPDATA.LoopSQMSTasks.FolderName = TEMPDATA.GroupFilter.GroupName COLLATE Modern_Spanish_CI_AS
+WHERE TEMPDATA.GroupFilter.UserName = 'XXXUserXXX'

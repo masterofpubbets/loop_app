@@ -22,7 +22,9 @@
                    Optional lSubsystem As String = "",
                    Optional lPriority As Integer = 0,
                    Optional lPDSModel As String = "",
-                   Optional lControllerLocation As String = ""
+                   Optional lControllerLocation As String = "",
+                   Optional lConsTargetDate As Date = Nothing,
+                   Optional lFailedDate As Date = Nothing
                    )
 
         Me.Name = folderName
@@ -42,6 +44,8 @@
         If Not IsNothing(lFinalApproval) Then Me.FinalApproval = lFinalApproval
         If Not IsNothing(lSubmitToQC) Then Me.SubmittedToQC = lSubmitToQC
         If Not IsNothing(lReturnFromQC) Then Me.ReturnFromQC = lReturnFromQC
+        If Not IsNothing(lConsTargetDate) Then Me.ConsTarget = lConsTargetDate
+        If Not IsNothing(lFailedDate) Then Me.Failed = lFailedDate
 
         Me.Area = lArea
         Me.Type = lType
@@ -75,4 +79,6 @@
     Public Property Priority() As Integer
     Public Property PDSModel() As String
     Public Property ControllerLocation() As String
+    Public Property ConsTarget() As Date
+    Public Property Failed() As Date
 End Class

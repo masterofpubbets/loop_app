@@ -1,0 +1,53 @@
+DECLARE @proID NVARCHAR(255)
+SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1;
+
+WITH SQMS AS (
+SELECT [Group] FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-INS-19'
+XXXFilterXXX
+)
+
+--Update Deactivated
+UPDATE V
+    SET Active = 0
+FROM (
+    SELECT
+    tblInsLoop.LoopName, tblInsLoop.Active
+    FROM tblInsLoop
+    LEFT JOIN SQMS AS H ON tblInsLoop.LoopName = H.[Group]
+    WHERE tblInsLoop.Active = 1 
+    AND H.[Group] IS NULL
+) AS V;
+
+WITH SQMS AS (
+SELECT [Group] FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-INS-19'
+XXXFilterXXX
+)
+
+--Update Reactivated
+UPDATE V
+    SET Active = 1
+FROM (
+    SELECT
+    tblInsLoop.LoopName, tblInsLoop.Active
+    FROM tblInsLoop
+    INNER JOIN SQMS AS H ON tblInsLoop.LoopName = H.[Group]
+    WHERE tblInsLoop.Active = 0 
+    AND H.[Group] = '10160-CON-INS-19'
+) AS V;
+
+WITH SQMS AS (
+SELECT [Group],ElementTag, Area, SubSystem, TaskSubcontract,Type  FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-INS-19'
+XXXFilterXXX
+)
+
+--Insert New
+INSERT INTO tblInsLoop (LoopName, Area, Subsystem, Subcontractor, L_Description, L_Type, L_Remarks, Active, ProUUID)
+SELECT
+H.ElementTag, H.Area, H.SubSystem, H.TaskSubcontract, H.[Type], H.[Type], 'Added From HCS Automation' AS Remarks,
+1 AS Active, @proId
+FROM SQMS AS H
+LEFT JOIN tblInsLoop ON H.[Group] = tblInsLoop.LoopName
+WHERE tblInsLoop.LoopName IS NULL

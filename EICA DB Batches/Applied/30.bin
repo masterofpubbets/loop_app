@@ -1,0 +1,603 @@
+--version12.0.8
+UPDATE [dbo].[tblSettings] SET SetValue = '12.0.8' WHERE SetName = 'VERSION'
+GO
+CREATE SCHEMA BOXUP
+GO
+CREATE SCHEMA TESTPACK
+GO
+ALTER PROC [dbo].[AddPermissions]
+AS
+EXEC dbo.GrantExecuteType 'db_executer', 'FUNCTION', 'dbo'
+
+EXEC dbo.GrantExecuteType 'db_executer', 'FUNCTION', 'CONSTRUCTION'
+
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'dbo'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'TEMPDATA'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'PRECOMM'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'MOTORS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'CONSTRUCTION'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'LOOPS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'PLANNING'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'ENGINEERING'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'HCS'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'BOXUP'
+EXEC dbo.GrantExecuteType 'db_executer', 'PROCEDURE', 'TESTPACK'
+GO
+
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'tblBoxup'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP TABLE dbo.tblBoxup
+END
+GO
+CREATE TABLE [dbo].[tblBoxup](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[FolderName] [nvarchar](100) NULL,
+	[L_Type] [nvarchar](100) NULL,
+	[Sub_Type] [nvarchar](50) NULL,
+	[L_Description] [nvarchar](255) NULL,
+	[L_HookUp] [nvarchar](100) NULL,
+	[Folder_Preparation] [date] NULL,
+	[ReInstatement_Date] [date] NULL,
+	[L_Constr_Release] [date] NULL,
+	[L_Constr_Remarks] [nvarchar](max) NULL,
+	[TR_Loop_Folder_QC_Release] [date] NULL,
+	[L_TRQC_Remarks] [nvarchar](max) NULL,
+	[Punch_To_SubContractor] [date] NULL,
+	[SubContractor_To_Cons] [date] NULL,
+	[Loops_Client_QC_Release] [date] NULL,
+	[L_ClientQC_Remarks] [nvarchar](max) NULL,
+	[HCS_Folder_Ready] [date] NULL,
+	[L_HCS_Remarks] [nvarchar](max) NULL,
+	[HCS_Submitted_To_Client] [date] NULL,
+	[Client_Reject] [date] NULL,
+	[Folder_Client_Approved] [date] NULL,
+	[Submitted_to_Precom] [date] NULL,
+	[Precom_Reject] [date] NULL,
+	[L_Precom_Remarks] [nvarchar](max) NULL,
+	[Submitted_To_Client_Precom] [date] NULL,
+	[Client_Precom_Reject] [date] NULL,
+	[Client_Precom_Approved] [date] NULL,
+	[L_Done] [date] NULL,
+	[Submitted_For_Certificate] [date] NULL,
+	[L_FinalApproval] [date] NULL,
+	[L_Remarks] [nvarchar](255) NULL,
+	[Subsystem] [nvarchar](50) NULL,
+	[Planning_START_Date] [date] NULL,
+	[Planning_FINISH_Date] [date] NULL,
+	[Active] [bit] NULL,
+	[PID] [nvarchar](50) NULL,
+	[ACTIVITYID] [nvarchar](50) NULL,
+	[FolderPriority] [int] NULL,
+	[Subcontractor] [nvarchar](50) NULL,
+	[Vendor] [nvarchar](50) NULL,
+	[Team] [nvarchar](255) NULL,
+	[qrCode] [varbinary](max) NULL,
+	[ProUUID] [nvarchar](255) NULL,
+	[SubmitToQC] [date] NULL,
+	[ReturnFromQC] [date] NULL,
+	[PDSModel] [nvarchar](100) NULL,
+	[Area] [nvarchar](50) NULL,
+	[ControllerLocation] [nvarchar](250) NULL,
+	[ConsTargetDate] [date] NULL,
+	[FailedDate] [date] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblSolorun_Del'
+			)
+BEGIN
+	DROP TRIGGER tr_tblSolorun_Del
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblSolorun_Del]
+   ON [dbo].[tblSolorun]
+   FOR DELETE
+AS BEGIN
+    SET NOCOUNT ON;
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT deleted.FolderName from deleted
+		DECLARE @TAG NVARCHAR(50)
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG
+				insert into tblSolorun_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Deleted',system_user,getdate(),null)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+
+END
+GO
+ALTER TABLE [dbo].[tblSolorun] ENABLE TRIGGER [tr_tblSolorun_Del]
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'tblBoxup_Log'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP TABLE dbo.tblBoxup_Log
+END
+GO
+CREATE TABLE [dbo].[tblBoxup_Log](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Tag] [nvarchar](50) NOT NULL,
+	[Step_Name] [nvarchar](50) NOT NULL,
+	[uname] [nvarchar](50) NOT NULL,
+	[udate] [datetime] NOT NULL,
+	[uvalue] [nvarchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_SubmitToPrecom'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_SubmitToPrecom
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_SubmitToPrecom]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE (Submitted_to_Precom) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.Submitted_to_Precom from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @L_FinalApproval DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Submit To Precomm',system_user,getdate(),@L_FinalApproval)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_SubmitToPrecom]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Del'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Del
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Del]
+   ON [dbo].[tblBoxup]
+   FOR DELETE
+AS BEGIN
+    SET NOCOUNT ON;
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT deleted.FolderName from deleted
+		DECLARE @TAG NVARCHAR(50)
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Deleted',system_user,getdate(),null)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Del]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_DONE'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_DONE
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_DONE]
+   ON [dbo].[tblBoxup]
+   AFTER UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE (L_Done) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName,inserted.L_Done from inserted
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @OLDVALUE DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@OLDVALUE
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@OLDVALUE
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Loop Done Updated',system_user,getdate(),@OLDVALUE)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_DONE]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_FolderReady'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_FolderReady
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_FolderReady]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE (HCS_Folder_Ready) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.HCS_Folder_Ready from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @L_FinalApproval DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Folder Ready',system_user,getdate(),@L_FinalApproval)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_FolderReady]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_HCSFApproved'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_HCSFApproved
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_HCSFApproved]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE (L_FinalApproval) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.L_FinalApproval from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @L_FinalApproval DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Folder Approved',system_user,getdate(),@L_FinalApproval)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_HCSFApproved]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_HCSFReady'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_HCSFReady
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_HCSFReady]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE ([Folder_Preparation]) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.Folder_Preparation from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @Folder_Preparation DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@Folder_Preparation
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@Folder_Preparation
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Folder Prepared',system_user,getdate(),@Folder_Preparation)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_HCSFReady]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_QCReleased'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_QCReleased
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_QCReleased]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE (TR_Loop_Folder_QC_Release) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.TR_Loop_Folder_QC_Release from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @L_FinalApproval DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@L_FinalApproval
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'QC Released',system_user,getdate(),@L_FinalApproval)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_QCReleased]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_Ren'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_Ren
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_Ren]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE (FolderName) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as newTag,deleted.FolderName as oldTag from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @oldTAG NVARCHAR(50)
+		DECLARE @newTAG NVARCHAR(50)
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @newTAG,@oldTAG
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @newTAG,@oldTAG
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@oldTAG,'Tag Changed',system_user,getdate(),@newTAG)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_Ren]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_ReturnFromQC'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_ReturnFromQC
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_ReturnFromQC]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE ([ReturnFromQC]) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.ReturnFromQC from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @ReturnFromQC DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@ReturnFromQC
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@ReturnFromQC
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Return From QC',system_user,getdate(),@ReturnFromQC)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_ReturnFromQC]
+GO
+IF EXISTS (SELECT 1 FROM sys.triggers 
+			WHERE name = 'tr_tblBoxup_Log_SubmitToQC'
+			)
+BEGIN
+	DROP TRIGGER tr_tblBoxup_Log_SubmitToQC
+END
+GO
+CREATE TRIGGER [dbo].[tr_tblBoxup_Log_SubmitToQC]
+   ON [dbo].[tblBoxup]
+   FOR UPDATE
+AS BEGIN
+    SET NOCOUNT ON;
+    IF UPDATE ([SubmitToQC]) 
+    BEGIN
+
+		DECLARE Log_cursor CURSOR FORWARD_ONLY FOR
+		SELECT inserted.FolderName as Tag,inserted.SubmitToQC from inserted
+		inner join deleted on inserted.Id = deleted.Id
+		DECLARE @TAG NVARCHAR(50)
+		DECLARE @SubmitToQC DATE
+		OPEN Log_cursor
+		FETCH NEXT FROM Log_cursor INTO @TAG,@SubmitToQC
+		WHILE @@FETCH_STATUS = 0  
+			BEGIN
+				FETCH NEXT FROM Log_cursor INTO @TAG,@SubmitToQC
+				insert into tblBoxup_Log ([Tag], [Step_Name], [uname], [udate],uvalue)
+				values (@TAG,'Submit To QC',system_user,getdate(),@SubmitToQC)
+			END
+		CLOSE Log_cursor
+		DEALLOCATE Log_cursor
+    END 
+END
+GO
+ALTER TABLE [dbo].[tblBoxup] ENABLE TRIGGER [tr_tblBoxup_Log_SubmitToQC]
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'tblFoldersCons'
+			AND schema_id = (select schema_id from sys.schemas where name = 'BOXUP')
+			)
+BEGIN
+	DROP TABLE BOXUP.tblFoldersCons
+END
+GO
+CREATE TABLE [BOXUP].[tblFoldersCons](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[conCatId] [int] NOT NULL,
+	[folderId] [int] NOT NULL,
+	[description] [nvarchar](255) NOT NULL,
+	[issuedById] [int] NOT NULL,
+	[issuedToId] [int] NOT NULL,
+	[issuedDate] [date] NOT NULL,
+	[isClosed] [bit] NOT NULL,
+	[comments] [nvarchar](max) NULL,
+	[closedDate] [date] NULL,
+	[prevId] [int] NULL,
+	[CLoseById] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [BOXUP].[tblFoldersCons] ADD  DEFAULT ((0)) FOR [isClosed]
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'BoxupSQMSTasksS'
+			AND schema_id = (select schema_id from sys.schemas where name = 'HCS')
+			)
+BEGIN
+	DROP TABLE HCS.BoxupSQMSTasksS
+END
+GO
+CREATE TABLE [HCS].[BoxupSQMSTasksS](
+	[FolderName] [nvarchar](100) NULL,
+	[TaskCount] [int] NULL,
+	[TaskClosed] [int] NULL
+) ON [PRIMARY]
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'P' 
+			AND name = 'CheckBoxupIntgerity'
+			AND schema_id = (select schema_id from sys.schemas where name = 'dbo')
+			)
+BEGIN
+	DROP PROC dbo.CheckBoxupIntgerity
+END
+GO
+CREATE PROC [dbo].[CheckBoxupIntgerity]
+AS
+IF (SELECT SolorunIntegrity FROM dbo.AppSettings) = 1
+    BEGIN
+        UPDATE tblBoxup
+            SET L_Done = L_FinalApproval
+        WHERE L_Done IS NULL AND L_FinalApproval IS NOT NULL
+
+        UPDATE tblBoxup
+            SET Submitted_to_Precom = L_Done
+        WHERE Submitted_to_Precom IS NULL AND L_Done IS NOT NULL
+
+        UPDATE tblBoxup
+            SET HCS_Folder_Ready = Submitted_to_Precom
+        WHERE HCS_Folder_Ready IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblBoxup
+            SET SubmitToQC = HCS_Folder_Ready
+        WHERE SubmitToQC IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblBoxup
+            SET Folder_Preparation = HCS_Folder_Ready
+        WHERE Folder_Preparation IS NULL AND HCS_Folder_Ready IS NOT NULL
+
+        UPDATE tblBoxup
+            SET ReturnFromQC = Submitted_to_Precom
+        WHERE ReturnFromQC IS NULL AND Submitted_to_Precom IS NOT NULL
+
+        UPDATE tblBoxup
+            SET SubmitToQC = ReturnFromQC
+        WHERE SubmitToQC IS NULL AND ReturnFromQC IS NOT NULL
+        
+        UPDATE tblBoxup
+            SET Folder_Preparation = SubmitToQC
+        WHERE Folder_Preparation IS NULL AND SubmitToQC IS NOT NULL
+
+    END
+GO
+IF EXISTS (SELECT 1 FROM sys.objects 
+			WHERE type = 'U' 
+			AND name = 'BoxupTasks'
+			AND schema_id = (select schema_id from sys.schemas where name = 'TEMPDATA')
+			)
+BEGIN
+	DROP TABLE TEMPDATA.BoxupTasks
+END
+GO
+CREATE TABLE [TEMPDATA].[BoxupTasks](
+	[FolderName] [nvarchar](250) NOT NULL,
+	[ElementTag] [nvarchar](250) NOT NULL,
+	[Source] [nvarchar](100) NULL,
+	[ItemType] [nvarchar](100) NULL,
+	[UUID] [nvarchar](250) NOT NULL
+) ON [PRIMARY]
+GO
+
+
+
+EXEC dbo.AddPermissions

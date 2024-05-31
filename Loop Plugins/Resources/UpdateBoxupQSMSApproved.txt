@@ -1,0 +1,21 @@
+WITH SQMS AS (
+SELECT 
+[Group],
+COUNT([Group]) AS Scope,
+COUNT(ClosingDate) AS Done
+FROM HCS.SQMSTasks
+XXXFilterXXX
+GROUP BY [Group]
+HAVING COUNT([Group]) = COUNT(ClosingDate)
+
+)
+
+UPDATE V
+    SET V.L_FinalApproval = GETDATE()
+FROM (
+    SELECT
+    tblBoxup.FolderName, L_FinalApproval
+    FROM tblBoxup
+    INNER JOIN SQMS ON tblBoxup.FolderName = SQMS.[Group]
+    WHERE tblBoxup.L_FinalApproval IS NULL
+) AS V

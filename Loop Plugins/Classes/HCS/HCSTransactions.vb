@@ -121,6 +121,7 @@
             End If
         End Set
     End Property
+
     Private Function GetHCSElements() As DataTable
         Try
             Dim HCSDB As New EAMS.DataBaseTools.SQLServerTools With {

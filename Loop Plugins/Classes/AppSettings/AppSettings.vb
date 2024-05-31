@@ -53,6 +53,31 @@ Public Class AppSettings
             End Try
         End Set
     End Property
+    Public Property BoxupIntegrity() As Boolean
+        Get
+            Try
+                Return (
+                    IIf(
+                    DB.ExcutResult("SELECT BoxupIntegrity FROM dbo.AppSettings WHERE Id = (SELECT MAX(Id) FROM dbo.AppSettings)") = "True",
+                    True, False
+                    ))
+            Catch ex As Exception
+                pe.RaiseDataReadError(ex.Message)
+            End Try
+            Return False
+        End Get
+        Set(ByVal value As Boolean)
+            Try
+                If value Then
+                    DB.ExcuteNoneResult("UPDATE dbo.AppSettings SET BoxupIntegrity = 1")
+                Else
+                    DB.ExcuteNoneResult("UPDATE dbo.AppSettings SET BoxupIntegrity = 0")
+                End If
+            Catch ex As Exception
+                pe.RaiseDataExecuteError(ex.Message)
+            End Try
+        End Set
+    End Property
     Public ReadOnly Property DBVersion() As String
         Get
             Try
@@ -101,6 +126,14 @@ Public Class AppSettings
                 Return ""
             End Try
             Return ""
+        End Get
+    End Property
+    Public Property ReportTargetDate As Date
+        Set(value As Date)
+            DB.ExcuteNoneResult("UPDATE dbo.[tblTMP] SET tmp_date2 ='" & Format(value, "MM/dd/yyyy") & "' WHERE tmp_id = 1")
+        End Set
+        Get
+            Return CDate(DB.ExcutResult("SELECT tmp_date2 FROM [dbo].[tblTMP] WHERE tmp_id = 1"))
         End Get
     End Property
 

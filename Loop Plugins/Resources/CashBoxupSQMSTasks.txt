@@ -1,0 +1,55 @@
+
+IF OBJECT_ID('tempdb..#BoxupTasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #BoxupTasks
+    END
+CREATE TABLE  #BoxupTasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    Source NVARCHAR(100) NULL,
+    ItemType NVARCHAR(100)
+)
+
+IF OBJECT_ID('tempdb..#Tasks') IS NOT NULL
+    BEGIN
+        DROP TABLE #Tasks
+    END
+CREATE TABLE  #Tasks (
+    FolderName NVARCHAR(250) NOT NULL,
+    ElementTag NVARCHAR(250) NOT NULL,
+    FormName NVARCHAR(250) NOT NULL,
+    ClosedDate NVARCHAR(50) NULL,
+    ClosingRemarks NVARCHAR(MAX),
+    Source NVARCHAR(50),
+    ItemType NVARCHAR(100),
+    SubContractor NVARCHAR(150),
+    DocType NVARCHAR(250)
+)
+
+
+INSERT INTO #BoxupTasks
+SELECT DISTINCT
+    tblBoxup.FolderName,
+    [HCS].[ProjectElements].[ElementTag],
+    HCS.ProjectElements.ImportSource,
+    HCS.ProjectElements.[Type]
+FROM [HCS].[ProjectElements]
+INNER JOIN tblBoxup ON [HCS].[ProjectElements].[Group] = tblBoxup.FolderName
+
+INSERT INTO #Tasks
+SELECT
+    [Group], ElementTag, FormName, ClosingDate, ClosingRemarks,Source,ITPType,HCS.SQMSTasks.TaskSubcontract, HCS.SQMSTasks.FormDescription
+FROM HCS.SQMSTasks
+XXFilterXX
+
+TRUNCATE TABLE TEMPDATA.BoxupSQMSTasks
+
+INSERT INTO TEMPDATA.BoxupSQMSTasks
+SELECT DISTINCT
+#BoxupTasks.FolderName,
+#Tasks.ElementTag, #Tasks.FormName, #Tasks.ClosedDate, #Tasks.Source,
+#BoxupTasks.ItemType, #Tasks.SubContractor,
+#Tasks.ClosingRemarks, #Tasks.DocType,
+'XXXUUIDXXX' AS UUID
+FROM #BoxupTasks
+INNER JOIN #Tasks ON #BoxupTasks.ElementTag = #Tasks.ElementTag COLLATE Modern_Spanish_CI_AS

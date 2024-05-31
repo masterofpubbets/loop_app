@@ -35,7 +35,6 @@ Partial Class frmAddActivity
         Me.txtPCSBudget = New DevExpress.XtraEditors.TextEdit()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.chkKeyQnty = New System.Windows.Forms.CheckBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -52,7 +51,6 @@ Partial Class frmAddActivity
         Me.Label19 = New System.Windows.Forms.Label()
         Me.txtFamily = New System.Windows.Forms.TextBox()
         Me.txtEICABudget = New DevExpress.XtraEditors.TextEdit()
-        Me.txtEstBudget = New DevExpress.XtraEditors.TextEdit()
         Me.txtPackage = New System.Windows.Forms.TextBox()
         Me.txtLocation = New System.Windows.Forms.TextBox()
         Me.txtResourceId = New System.Windows.Forms.TextBox()
@@ -66,7 +64,6 @@ Partial Class frmAddActivity
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtPCSBudget.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtEICABudget.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.txtEstBudget.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl1
@@ -76,7 +73,7 @@ Partial Class frmAddActivity
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.MaxItemId = 1
         Me.RibbonControl1.Name = "RibbonControl1"
-        Me.RibbonControl1.Size = New System.Drawing.Size(1011, 58)
+        Me.RibbonControl1.Size = New System.Drawing.Size(1011, 60)
         '
         'Label1
         '
@@ -116,7 +113,7 @@ Partial Class frmAddActivity
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(565, 170)
+        Me.Label4.Location = New System.Drawing.Point(563, 137)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(61, 13)
         Me.Label4.TabIndex = 5
@@ -126,10 +123,10 @@ Partial Class frmAddActivity
         '
         Me.cmbEICAArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbEICAArea.FormattingEnabled = True
-        Me.cmbEICAArea.Location = New System.Drawing.Point(655, 167)
+        Me.cmbEICAArea.Location = New System.Drawing.Point(653, 134)
         Me.cmbEICAArea.Name = "cmbEICAArea"
         Me.cmbEICAArea.Size = New System.Drawing.Size(312, 21)
-        Me.cmbEICAArea.TabIndex = 3
+        Me.cmbEICAArea.TabIndex = 10
         '
         'Label5
         '
@@ -160,12 +157,12 @@ Partial Class frmAddActivity
         Me.txtPCSBudget.Properties.NullText = "0"
         Me.txtPCSBudget.Properties.ValidateOnEnterKey = True
         Me.txtPCSBudget.Size = New System.Drawing.Size(312, 20)
-        Me.txtPCSBudget.TabIndex = 6
+        Me.txtPCSBudget.TabIndex = 4
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(565, 238)
+        Me.Label8.Location = New System.Drawing.Point(563, 205)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(72, 13)
         Me.Label8.TabIndex = 15
@@ -174,37 +171,28 @@ Partial Class frmAddActivity
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(52, 308)
+        Me.Label9.Location = New System.Drawing.Point(52, 274)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(51, 13)
         Me.Label9.TabIndex = 16
         Me.Label9.Text = "Package:"
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(52, 273)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(95, 13)
-        Me.Label10.TabIndex = 17
-        Me.Label10.Text = "Estimated Budget:"
         '
         'chkKeyQnty
         '
         Me.chkKeyQnty.AutoSize = True
         Me.chkKeyQnty.Checked = True
         Me.chkKeyQnty.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkKeyQnty.Location = New System.Drawing.Point(55, 455)
+        Me.chkKeyQnty.Location = New System.Drawing.Point(653, 384)
         Me.chkKeyQnty.Name = "chkKeyQnty"
         Me.chkKeyQnty.Size = New System.Drawing.Size(71, 17)
-        Me.chkKeyQnty.TabIndex = 18
+        Me.chkKeyQnty.TabIndex = 17
         Me.chkKeyQnty.Text = "Key Qnty"
         Me.chkKeyQnty.UseVisualStyleBackColor = True
         '
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(52, 380)
+        Me.Label11.Location = New System.Drawing.Point(52, 346)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(33, 13)
         Me.Label11.TabIndex = 19
@@ -213,7 +201,7 @@ Partial Class frmAddActivity
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(52, 344)
+        Me.Label12.Location = New System.Drawing.Point(52, 310)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(69, 13)
         Me.Label12.TabIndex = 20
@@ -222,7 +210,7 @@ Partial Class frmAddActivity
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(565, 344)
+        Me.Label13.Location = New System.Drawing.Point(563, 311)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(86, 13)
         Me.Label13.TabIndex = 21
@@ -231,7 +219,7 @@ Partial Class frmAddActivity
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(565, 308)
+        Me.Label14.Location = New System.Drawing.Point(563, 275)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(51, 13)
         Me.Label14.TabIndex = 22
@@ -240,7 +228,7 @@ Partial Class frmAddActivity
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(565, 383)
+        Me.Label15.Location = New System.Drawing.Point(563, 350)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(37, 13)
         Me.Label15.TabIndex = 23
@@ -249,7 +237,7 @@ Partial Class frmAddActivity
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(52, 417)
+        Me.Label16.Location = New System.Drawing.Point(52, 383)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(61, 13)
         Me.Label16.TabIndex = 24
@@ -258,7 +246,7 @@ Partial Class frmAddActivity
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(565, 417)
+        Me.Label17.Location = New System.Drawing.Point(52, 415)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(55, 13)
         Me.Label17.TabIndex = 25
@@ -266,15 +254,15 @@ Partial Class frmAddActivity
         '
         'dteStartDate
         '
-        Me.dteStartDate.Location = New System.Drawing.Point(154, 413)
+        Me.dteStartDate.Location = New System.Drawing.Point(154, 379)
         Me.dteStartDate.Name = "dteStartDate"
         Me.dteStartDate.Size = New System.Drawing.Size(312, 21)
-        Me.dteStartDate.TabIndex = 16
+        Me.dteStartDate.TabIndex = 8
         '
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(565, 273)
+        Me.Label18.Location = New System.Drawing.Point(563, 240)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(34, 13)
         Me.Label18.TabIndex = 27
@@ -302,12 +290,12 @@ Partial Class frmAddActivity
         Me.txtSubcon.Location = New System.Drawing.Point(154, 200)
         Me.txtSubcon.Name = "txtSubcon"
         Me.txtSubcon.Size = New System.Drawing.Size(312, 21)
-        Me.txtSubcon.TabIndex = 4
+        Me.txtSubcon.TabIndex = 3
         '
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(565, 203)
+        Me.Label19.Location = New System.Drawing.Point(563, 170)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(41, 13)
         Me.Label19.TabIndex = 31
@@ -316,14 +304,14 @@ Partial Class frmAddActivity
         'txtFamily
         '
         Me.txtFamily.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtFamily.Location = New System.Drawing.Point(655, 200)
+        Me.txtFamily.Location = New System.Drawing.Point(653, 167)
         Me.txtFamily.Name = "txtFamily"
         Me.txtFamily.Size = New System.Drawing.Size(312, 21)
-        Me.txtFamily.TabIndex = 5
+        Me.txtFamily.TabIndex = 11
         '
         'txtEICABudget
         '
-        Me.txtEICABudget.Location = New System.Drawing.Point(655, 235)
+        Me.txtEICABudget.Location = New System.Drawing.Point(653, 202)
         Me.txtEICABudget.MenuManager = Me.RibbonControl1
         Me.txtEICABudget.Name = "txtEICABudget"
         Me.txtEICABudget.Properties.EditFormat.FormatString = "n"
@@ -332,83 +320,70 @@ Partial Class frmAddActivity
         Me.txtEICABudget.Properties.NullText = "0"
         Me.txtEICABudget.Properties.ValidateOnEnterKey = True
         Me.txtEICABudget.Size = New System.Drawing.Size(312, 20)
-        Me.txtEICABudget.TabIndex = 7
-        '
-        'txtEstBudget
-        '
-        Me.txtEstBudget.Location = New System.Drawing.Point(154, 270)
-        Me.txtEstBudget.MenuManager = Me.RibbonControl1
-        Me.txtEstBudget.Name = "txtEstBudget"
-        Me.txtEstBudget.Properties.EditFormat.FormatString = "n"
-        Me.txtEstBudget.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric
-        Me.txtEstBudget.Properties.MaskSettings.Set("MaskManagerType", GetType(DevExpress.Data.Mask.NumericMaskManager))
-        Me.txtEstBudget.Properties.NullText = "0"
-        Me.txtEstBudget.Properties.ValidateOnEnterKey = True
-        Me.txtEstBudget.Size = New System.Drawing.Size(312, 20)
-        Me.txtEstBudget.TabIndex = 8
+        Me.txtEICABudget.TabIndex = 12
         '
         'txtPackage
         '
         Me.txtPackage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtPackage.Location = New System.Drawing.Point(154, 305)
+        Me.txtPackage.Location = New System.Drawing.Point(154, 271)
         Me.txtPackage.Name = "txtPackage"
         Me.txtPackage.Size = New System.Drawing.Size(312, 21)
-        Me.txtPackage.TabIndex = 10
+        Me.txtPackage.TabIndex = 5
         '
         'txtLocation
         '
         Me.txtLocation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtLocation.Location = New System.Drawing.Point(655, 305)
+        Me.txtLocation.Location = New System.Drawing.Point(653, 272)
         Me.txtLocation.Name = "txtLocation"
         Me.txtLocation.Size = New System.Drawing.Size(312, 21)
-        Me.txtLocation.TabIndex = 11
+        Me.txtLocation.TabIndex = 14
         '
         'txtResourceId
         '
         Me.txtResourceId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtResourceId.Location = New System.Drawing.Point(154, 340)
+        Me.txtResourceId.Location = New System.Drawing.Point(154, 306)
         Me.txtResourceId.Name = "txtResourceId"
         Me.txtResourceId.Size = New System.Drawing.Size(312, 21)
-        Me.txtResourceId.TabIndex = 12
+        Me.txtResourceId.TabIndex = 6
         '
         'txtResourceName
         '
         Me.txtResourceName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtResourceName.Location = New System.Drawing.Point(655, 341)
+        Me.txtResourceName.Location = New System.Drawing.Point(653, 308)
         Me.txtResourceName.Name = "txtResourceName"
         Me.txtResourceName.Size = New System.Drawing.Size(312, 21)
-        Me.txtResourceName.TabIndex = 13
+        Me.txtResourceName.TabIndex = 15
         '
         'txtUOM
         '
         Me.txtUOM.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtUOM.Location = New System.Drawing.Point(655, 269)
+        Me.txtUOM.Location = New System.Drawing.Point(653, 236)
         Me.txtUOM.Name = "txtUOM"
         Me.txtUOM.Size = New System.Drawing.Size(312, 21)
-        Me.txtUOM.TabIndex = 9
+        Me.txtUOM.TabIndex = 13
         '
         'txtWPS
         '
         Me.txtWPS.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtWPS.Location = New System.Drawing.Point(154, 376)
+        Me.txtWPS.Location = New System.Drawing.Point(154, 342)
         Me.txtWPS.Name = "txtWPS"
         Me.txtWPS.Size = New System.Drawing.Size(312, 21)
-        Me.txtWPS.TabIndex = 14
+        Me.txtWPS.TabIndex = 7
         '
         'txtTeam
         '
         Me.txtTeam.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtTeam.Location = New System.Drawing.Point(655, 378)
+        Me.txtTeam.Location = New System.Drawing.Point(653, 345)
         Me.txtTeam.Name = "txtTeam"
         Me.txtTeam.Size = New System.Drawing.Size(312, 21)
-        Me.txtTeam.TabIndex = 15
+        Me.txtTeam.TabIndex = 16
         '
         'dteEndDate
         '
-        Me.dteEndDate.Location = New System.Drawing.Point(655, 413)
+        Me.dteEndDate.Location = New System.Drawing.Point(154, 412)
         Me.dteEndDate.Name = "dteEndDate"
         Me.dteEndDate.Size = New System.Drawing.Size(312, 21)
-        Me.dteEndDate.TabIndex = 17
+        Me.dteEndDate.TabIndex = 9
         '
         'SimpleButton1
         '
@@ -417,7 +392,7 @@ Partial Class frmAddActivity
         Me.SimpleButton1.Location = New System.Drawing.Point(849, 554)
         Me.SimpleButton1.Name = "SimpleButton1"
         Me.SimpleButton1.Size = New System.Drawing.Size(150, 56)
-        Me.SimpleButton1.TabIndex = 20
+        Me.SimpleButton1.TabIndex = 19
         Me.SimpleButton1.Text = "Cancel"
         '
         'SimpleButton2
@@ -427,7 +402,7 @@ Partial Class frmAddActivity
         Me.SimpleButton2.Location = New System.Drawing.Point(693, 554)
         Me.SimpleButton2.Name = "SimpleButton2"
         Me.SimpleButton2.Size = New System.Drawing.Size(150, 56)
-        Me.SimpleButton2.TabIndex = 19
+        Me.SimpleButton2.TabIndex = 18
         Me.SimpleButton2.Text = "Add"
         '
         'frmAddActivity
@@ -446,7 +421,6 @@ Partial Class frmAddActivity
         Me.Controls.Add(Me.txtResourceId)
         Me.Controls.Add(Me.txtLocation)
         Me.Controls.Add(Me.txtPackage)
-        Me.Controls.Add(Me.txtEstBudget)
         Me.Controls.Add(Me.txtEICABudget)
         Me.Controls.Add(Me.txtFamily)
         Me.Controls.Add(Me.Label19)
@@ -463,7 +437,6 @@ Partial Class frmAddActivity
         Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.chkKeyQnty)
-        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.txtPCSBudget)
@@ -485,7 +458,6 @@ Partial Class frmAddActivity
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtPCSBudget.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtEICABudget.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.txtEstBudget.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -503,7 +475,6 @@ Partial Class frmAddActivity
     Friend WithEvents txtPCSBudget As DevExpress.XtraEditors.TextEdit
     Friend WithEvents Label8 As Label
     Friend WithEvents Label9 As Label
-    Friend WithEvents Label10 As Label
     Friend WithEvents chkKeyQnty As CheckBox
     Friend WithEvents Label11 As Label
     Friend WithEvents Label12 As Label
@@ -520,7 +491,6 @@ Partial Class frmAddActivity
     Friend WithEvents Label19 As Label
     Friend WithEvents txtFamily As TextBox
     Friend WithEvents txtEICABudget As DevExpress.XtraEditors.TextEdit
-    Friend WithEvents txtEstBudget As DevExpress.XtraEditors.TextEdit
     Friend WithEvents txtPackage As TextBox
     Friend WithEvents txtLocation As TextBox
     Friend WithEvents txtResourceId As TextBox

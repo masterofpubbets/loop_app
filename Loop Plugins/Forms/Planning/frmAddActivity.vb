@@ -67,7 +67,7 @@
         If IsValida() Then
             Dim keyQnty As Byte = 0
             If chkKeyQnty.Checked Then keyQnty = 1
-            If Act.AddActivity(txtActId.Text, txtActName.Text, txtPCSArea.Text, txtSubcon.Text, Val(txtPCSBudget.Text), txtFamily.Text, cmbEICAArea.SelectedItem, Val(txtEICABudget.Text), txtPackage.Text, Val(txtEstBudget.Text), keyQnty, txtWPS.Text, txtResourceId.Text, txtResourceName.Text, txtLocation.Text, txtTeam.Text, dteStartDate.Value, dteEndDate.Value, txtUOM.Text) Then
+            If Act.AddActivity(txtActId.Text, txtActName.Text, txtPCSArea.Text, txtSubcon.Text, Val(txtPCSBudget.Text), txtFamily.Text, cmbEICAArea.SelectedItem, Val(txtEICABudget.Text), txtPackage.Text, 0, keyQnty, txtWPS.Text, txtResourceId.Text, txtResourceName.Text, txtLocation.Text, txtTeam.Text, dteStartDate.Value, dteEndDate.Value, txtUOM.Text) Then
                 isAdded = True
                 If MsgBox("Activity Has Been Added." & vbCrLf & "Do You Want to Add Another One?", MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then Me.Close()
                 txtActId.Text = ""

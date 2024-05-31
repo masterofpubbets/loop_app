@@ -37,50 +37,24 @@ Partial Class frmMain
         Dim ToolTipSeparatorItem2 As DevExpress.Utils.ToolTipSeparatorItem = New DevExpress.Utils.ToolTipSeparatorItem()
         Dim ToolTipTitleItem4 As DevExpress.Utils.ToolTipTitleItem = New DevExpress.Utils.ToolTipTitleItem()
         Dim ToolTipItem4 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
-        Dim SuperToolTip3 As DevExpress.Utils.SuperToolTip = New DevExpress.Utils.SuperToolTip()
-        Dim ToolTipTitleItem5 As DevExpress.Utils.ToolTipTitleItem = New DevExpress.Utils.ToolTipTitleItem()
-        Dim ToolTipItem5 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
-        Dim SuperToolTip4 As DevExpress.Utils.SuperToolTip = New DevExpress.Utils.SuperToolTip()
-        Dim ToolTipItem6 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
-        Dim ToolTipItem7 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
-        Dim SuperToolTip5 As DevExpress.Utils.SuperToolTip = New DevExpress.Utils.SuperToolTip()
-        Dim ToolTipItem8 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
-        Dim ToolTipItem9 As DevExpress.Utils.ToolTipItem = New DevExpress.Utils.ToolTipItem()
         Dim SnapOptions1 As DevExpress.Utils.Controls.SnapOptions = New DevExpress.Utils.Controls.SnapOptions()
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.BackstageViewControl1 = New DevExpress.XtraBars.Ribbon.BackstageViewControl()
-        Me.BackstageViewClientControl5 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
-        Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
-        Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
-        Me.lblDBVersion = New DevExpress.XtraEditors.LabelControl()
-        Me.LabelControl9 = New DevExpress.XtraEditors.LabelControl()
-        Me.BackstageViewClientControl1 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
-        Me.PanelControl1 = New DevExpress.XtraEditors.PanelControl()
-        Me.LabelControl10 = New DevExpress.XtraEditors.LabelControl()
-        Me.lblCutoffDate = New DevExpress.XtraEditors.LabelControl()
-        Me.BackstageViewClientControl3 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
-        Me.BackstageViewClientControl2 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
-        Me.BackstageViewClientControl6 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
-        Me.SimpleButton9 = New DevExpress.XtraEditors.SimpleButton()
-        Me.SimpleButton5 = New DevExpress.XtraEditors.SimpleButton()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.LabelControl14 = New DevExpress.XtraEditors.LabelControl()
-        Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
-        Me.LabelControl1 = New DevExpress.XtraEditors.LabelControl()
         Me.BackstageViewClientControl4 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
         Me.GroupControl1 = New DevExpress.XtraEditors.GroupControl()
         Me.SimpleButton8 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton6 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton7 = New DevExpress.XtraEditors.SimpleButton()
         Me.gpAdmin = New DevExpress.XtraEditors.GroupControl()
+        Me.btnReportCutoddDate = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton4 = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnCloseWeek = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnProCutoffDate = New DevExpress.XtraEditors.SimpleButton()
         Me.SeparatorControl1 = New DevExpress.XtraEditors.SeparatorControl()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
+        Me.tgBoxupIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
         Me.tgLoopIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
         Me.tgInstrumentsIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
         Me.tgEquipmentIntegrity = New DevExpress.XtraEditors.ToggleSwitch()
@@ -91,6 +65,30 @@ Partial Class frmMain
         Me.LabelControl7 = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl6 = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl5 = New DevExpress.XtraEditors.LabelControl()
+        Me.BackstageViewClientControl1 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
+        Me.PanelControl1 = New DevExpress.XtraEditors.PanelControl()
+        Me.lblReportCutoffDate = New DevExpress.XtraEditors.LabelControl()
+        Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
+        Me.LabelControl10 = New DevExpress.XtraEditors.LabelControl()
+        Me.lblCutoffDate = New DevExpress.XtraEditors.LabelControl()
+        Me.BackstageViewClientControl3 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
+        Me.BackstageViewClientControl2 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
+        Me.BackstageViewClientControl6 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
+        Me.SimpleButton11 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton10 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton9 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton5 = New DevExpress.XtraEditors.SimpleButton()
+        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.LabelControl14 = New DevExpress.XtraEditors.LabelControl()
+        Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
+        Me.LabelControl1 = New DevExpress.XtraEditors.LabelControl()
+        Me.BackstageViewClientControl5 = New DevExpress.XtraBars.Ribbon.BackstageViewClientControl()
+        Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
+        Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
+        Me.lblDBVersion = New DevExpress.XtraEditors.LabelControl()
+        Me.LabelControl9 = New DevExpress.XtraEditors.LabelControl()
         Me.BackstageViewTabItem1 = New DevExpress.XtraBars.Ribbon.BackstageViewTabItem()
         Me.BackstageViewTabItem3 = New DevExpress.XtraBars.Ribbon.BackstageViewTabItem()
         Me.BackstageViewTabItem2 = New DevExpress.XtraBars.Ribbon.BackstageViewTabItem()
@@ -101,7 +99,6 @@ Partial Class frmMain
         Me.BackstageViewTabItem5 = New DevExpress.XtraBars.Ribbon.BackstageViewTabItem()
         Me.lblUserName = New DevExpress.XtraBars.BarStaticItem()
         Me.BarButtonItem2 = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarButtonItem9 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem11 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem14 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem16 = New DevExpress.XtraBars.BarButtonItem()
@@ -119,7 +116,6 @@ Partial Class frmMain
         Me.BarButtonItem36 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem37 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem41 = New DevExpress.XtraBars.BarButtonItem()
-        Me.barBtnHandoverData = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem38 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem23 = New DevExpress.XtraBars.BarButtonItem()
         Me.BarButtonItem26 = New DevExpress.XtraBars.BarButtonItem()
@@ -159,8 +155,8 @@ Partial Class frmMain
         Me.BarButtonGroup1 = New DevExpress.XtraBars.BarButtonGroup()
         Me.BarButtonGroup2 = New DevExpress.XtraBars.BarButtonGroup()
         Me.BarMdiChildrenListItem1 = New DevExpress.XtraBars.BarMdiChildrenListItem()
-        Me.lblLoopBlockages = New DevExpress.XtraBars.BarStaticItem()
-        Me.lblSolorunBlockages = New DevExpress.XtraBars.BarStaticItem()
+        Me.barBtnSQMSData = New DevExpress.XtraBars.BarButtonItem()
+        Me.BarButtonItem18 = New DevExpress.XtraBars.BarButtonItem()
         Me.rpHome = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup13 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage2 = New DevExpress.XtraBars.Ribbon.RibbonPage()
@@ -187,6 +183,7 @@ Partial Class frmMain
         Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPageGroup5 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPageGroup2 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.RibbonPageGroup17 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpBlockage = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup3 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonStatusBar1 = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
@@ -202,17 +199,11 @@ Partial Class frmMain
         Me.stackPanel = New DevExpress.Utils.Layout.StackPanel()
         Me.notificationsTimer = New System.Windows.Forms.Timer(Me.components)
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
+        Me.sveFile = New DevExpress.XtraEditors.XtraSaveFileDialog(Me.components)
+        Me.BarButtonItem9 = New DevExpress.XtraBars.BarButtonItem()
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BackstageViewControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.BackstageViewControl1.SuspendLayout()
-        Me.BackstageViewClientControl5.SuspendLayout()
-        Me.BackstageViewClientControl1.SuspendLayout()
-        CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PanelControl1.SuspendLayout()
-        Me.BackstageViewClientControl6.SuspendLayout()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.BackstageViewClientControl4.SuspendLayout()
         CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupControl1.SuspendLayout()
@@ -220,11 +211,19 @@ Partial Class frmMain
         Me.gpAdmin.SuspendLayout()
         CType(Me.SeparatorControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
+        CType(Me.tgBoxupIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgLoopIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgInstrumentsIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgEquipmentIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgCableIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tgSolorunIntegrity.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.BackstageViewClientControl1.SuspendLayout()
+        CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.PanelControl1.SuspendLayout()
+        Me.BackstageViewClientControl6.SuspendLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.BackstageViewClientControl5.SuspendLayout()
         CType(Me.ToastNotificationsManager, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BehaviorManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dm, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -244,10 +243,10 @@ Partial Class frmMain
         Me.RibbonControl1.ApplicationButtonImageOptions.Image = Global.EEICA.My.Resources.Resources.EEICA_Logo
         Me.RibbonControl1.CaptionBarItemLinks.Add(Me.lblUserName)
         Me.RibbonControl1.ExpandCollapseItem.Id = 0
-        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblUserName, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem2, Me.BarButtonItem9, Me.BarButtonItem11, Me.BarButtonItem14, Me.BarButtonItem16, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem27, Me.BarButtonItem24, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem41, Me.barBtnHandoverData, Me.BarButtonItem38, Me.BarButtonItem23, Me.BarButtonItem26, Me.BarButtonItem48, Me.BarButtonItem45, Me.BarButtonItem47, Me.BarButtonItem50, Me.BarSubItem1, Me.BarButtonItem52, Me.BarButtonItem53, Me.BarButtonItem1, Me.lblDBName, Me.lblServer, Me.BarButtonItem5, Me.BarSubItem2, Me.BarButtonItem12, Me.BarButtonItem15, Me.BarButtonItem54, Me.BarButtonItem46, Me.BarSubItem3, Me.BarButtonItem51, Me.BarButtonItem55, Me.BarSubItem4, Me.BarButtonItem49, Me.BarButtonItem56, Me.BarButtonItem4, Me.BarButtonItem25, Me.BarButtonItem3, Me.BarButtonItem39, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem10, Me.BarButtonItem13, Me.SkinDropDownButtonItem, Me.SkinPaletteRibbonGalleryBarItem, Me.BarButtonItem17, Me.BarButtonGroup1, Me.BarButtonGroup2, Me.BarMdiChildrenListItem1, Me.lblLoopBlockages, Me.lblSolorunBlockages})
+        Me.RibbonControl1.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.lblUserName, Me.RibbonControl1.ExpandCollapseItem, Me.RibbonControl1.SearchEditItem, Me.BarButtonItem2, Me.BarButtonItem11, Me.BarButtonItem14, Me.BarButtonItem16, Me.BarButtonItem19, Me.BarButtonItem20, Me.BarButtonItem21, Me.BarButtonItem27, Me.BarButtonItem24, Me.BarButtonItem30, Me.BarButtonItem31, Me.BarButtonItem32, Me.BarButtonItem33, Me.BarButtonItem34, Me.BarButtonItem35, Me.BarButtonItem36, Me.BarButtonItem37, Me.BarButtonItem41, Me.BarButtonItem38, Me.BarButtonItem23, Me.BarButtonItem26, Me.BarButtonItem48, Me.BarButtonItem45, Me.BarButtonItem47, Me.BarButtonItem50, Me.BarSubItem1, Me.BarButtonItem52, Me.BarButtonItem53, Me.BarButtonItem1, Me.lblDBName, Me.lblServer, Me.BarButtonItem5, Me.BarSubItem2, Me.BarButtonItem12, Me.BarButtonItem15, Me.BarButtonItem54, Me.BarButtonItem46, Me.BarSubItem3, Me.BarButtonItem51, Me.BarButtonItem55, Me.BarSubItem4, Me.BarButtonItem49, Me.BarButtonItem56, Me.BarButtonItem4, Me.BarButtonItem25, Me.BarButtonItem3, Me.BarButtonItem39, Me.BarButtonItem6, Me.BarButtonItem7, Me.BarButtonItem10, Me.BarButtonItem13, Me.SkinDropDownButtonItem, Me.SkinPaletteRibbonGalleryBarItem, Me.BarButtonItem17, Me.BarButtonGroup1, Me.BarButtonGroup2, Me.BarMdiChildrenListItem1, Me.barBtnSQMSData, Me.BarButtonItem18, Me.BarButtonItem9})
         Me.RibbonControl1.Location = New System.Drawing.Point(0, 0)
         Me.RibbonControl1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.RibbonControl1.MaxItemId = 129
+        Me.RibbonControl1.MaxItemId = 132
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpHome, Me.RibbonPage2, Me.rpEng, Me.rpPlanning, Me.rpHandover, Me.rpSupportTeam, Me.rpConstruction, Me.rpQC, Me.rpPrecom, Me.rpPC, Me.RibbonPage1, Me.rpBlockage})
         Me.RibbonControl1.QuickToolbarItemLinks.Add(Me.lblDBName)
@@ -258,12 +257,12 @@ Partial Class frmMain
         '
         'BackstageViewControl1
         '
-        Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl5)
+        Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl4)
         Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl1)
         Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl3)
         Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl2)
         Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl6)
-        Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl4)
+        Me.BackstageViewControl1.Controls.Add(Me.BackstageViewClientControl5)
         Me.BackstageViewControl1.Items.Add(Me.BackstageViewTabItem1)
         Me.BackstageViewControl1.Items.Add(Me.BackstageViewTabItem3)
         Me.BackstageViewControl1.Items.Add(Me.BackstageViewTabItem2)
@@ -275,242 +274,11 @@ Partial Class frmMain
         Me.BackstageViewControl1.Location = New System.Drawing.Point(32, 198)
         Me.BackstageViewControl1.Name = "BackstageViewControl1"
         Me.BackstageViewControl1.OwnerControl = Me.RibbonControl1
-        Me.BackstageViewControl1.SelectedTab = Me.BackstageViewTabItem5
-        Me.BackstageViewControl1.SelectedTabIndex = 7
+        Me.BackstageViewControl1.SelectedTab = Me.BackstageViewTabItem4
+        Me.BackstageViewControl1.SelectedTabIndex = 5
         Me.BackstageViewControl1.Size = New System.Drawing.Size(1022, 581)
         Me.BackstageViewControl1.TabIndex = 2
         Me.BackstageViewControl1.VisibleInDesignTime = True
-        '
-        'BackstageViewClientControl5
-        '
-        Me.BackstageViewClientControl5.Controls.Add(Me.LabelControl12)
-        Me.BackstageViewClientControl5.Controls.Add(Me.LabelControl11)
-        Me.BackstageViewClientControl5.Controls.Add(Me.lblDBVersion)
-        Me.BackstageViewClientControl5.Controls.Add(Me.LabelControl9)
-        Me.BackstageViewClientControl5.Location = New System.Drawing.Point(207, 63)
-        Me.BackstageViewClientControl5.Name = "BackstageViewClientControl5"
-        Me.BackstageViewClientControl5.Size = New System.Drawing.Size(814, 517)
-        Me.BackstageViewClientControl5.TabIndex = 5
-        '
-        'LabelControl12
-        '
-        Me.LabelControl12.AutoEllipsis = True
-        Me.LabelControl12.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl12.Location = New System.Drawing.Point(18, 52)
-        Me.LabelControl12.Name = "LabelControl12"
-        Me.LabelControl12.Size = New System.Drawing.Size(100, 39)
-        Me.LabelControl12.TabIndex = 3
-        Me.LabelControl12.Text = "Database Version:"
-        '
-        'LabelControl11
-        '
-        Me.LabelControl11.AutoEllipsis = True
-        Me.LabelControl11.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl11.Location = New System.Drawing.Point(125, 7)
-        Me.LabelControl11.Name = "LabelControl11"
-        Me.LabelControl11.Size = New System.Drawing.Size(399, 39)
-        Me.LabelControl11.TabIndex = 2
-        Me.LabelControl11.Text = "8.7"
-        '
-        'lblDBVersion
-        '
-        Me.lblDBVersion.AutoEllipsis = True
-        Me.lblDBVersion.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.lblDBVersion.Location = New System.Drawing.Point(125, 52)
-        Me.lblDBVersion.Name = "lblDBVersion"
-        Me.lblDBVersion.Size = New System.Drawing.Size(576, 39)
-        Me.lblDBVersion.TabIndex = 1
-        Me.lblDBVersion.Text = "Database Version: 0"
-        '
-        'LabelControl9
-        '
-        Me.LabelControl9.AutoEllipsis = True
-        Me.LabelControl9.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl9.Location = New System.Drawing.Point(18, 7)
-        Me.LabelControl9.Name = "LabelControl9"
-        Me.LabelControl9.Size = New System.Drawing.Size(101, 39)
-        Me.LabelControl9.TabIndex = 0
-        Me.LabelControl9.Text = "Application Version:"
-        '
-        'BackstageViewClientControl1
-        '
-        Me.BackstageViewClientControl1.Controls.Add(Me.PanelControl1)
-        Me.BackstageViewClientControl1.Location = New System.Drawing.Point(207, 63)
-        Me.BackstageViewClientControl1.Name = "BackstageViewClientControl1"
-        Me.BackstageViewClientControl1.Size = New System.Drawing.Size(814, 517)
-        Me.BackstageViewClientControl1.TabIndex = 1
-        '
-        'PanelControl1
-        '
-        Me.PanelControl1.Controls.Add(Me.LabelControl10)
-        Me.PanelControl1.Controls.Add(Me.lblCutoffDate)
-        Me.PanelControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PanelControl1.Location = New System.Drawing.Point(0, 0)
-        Me.PanelControl1.Name = "PanelControl1"
-        Me.PanelControl1.Size = New System.Drawing.Size(814, 517)
-        Me.PanelControl1.TabIndex = 0
-        '
-        'LabelControl10
-        '
-        Me.LabelControl10.AutoEllipsis = True
-        Me.LabelControl10.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl10.Location = New System.Drawing.Point(21, 25)
-        Me.LabelControl10.Name = "LabelControl10"
-        Me.LabelControl10.Size = New System.Drawing.Size(71, 39)
-        Me.LabelControl10.TabIndex = 4
-        Me.LabelControl10.Text = "Cutoff Date:"
-        '
-        'lblCutoffDate
-        '
-        Me.lblCutoffDate.AutoEllipsis = True
-        Me.lblCutoffDate.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.lblCutoffDate.Location = New System.Drawing.Point(98, 25)
-        Me.lblCutoffDate.Name = "lblCutoffDate"
-        Me.lblCutoffDate.Size = New System.Drawing.Size(590, 39)
-        Me.lblCutoffDate.TabIndex = 3
-        Me.lblCutoffDate.Text = "Cutoff Date:"
-        '
-        'BackstageViewClientControl3
-        '
-        Me.BackstageViewClientControl3.Location = New System.Drawing.Point(207, 63)
-        Me.BackstageViewClientControl3.Name = "BackstageViewClientControl3"
-        Me.BackstageViewClientControl3.Size = New System.Drawing.Size(814, 517)
-        Me.BackstageViewClientControl3.TabIndex = 3
-        '
-        'BackstageViewClientControl2
-        '
-        Me.BackstageViewClientControl2.Location = New System.Drawing.Point(207, 63)
-        Me.BackstageViewClientControl2.Name = "BackstageViewClientControl2"
-        Me.BackstageViewClientControl2.Size = New System.Drawing.Size(814, 517)
-        Me.BackstageViewClientControl2.TabIndex = 2
-        '
-        'BackstageViewClientControl6
-        '
-        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton9)
-        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton5)
-        Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox3)
-        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl14)
-        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton2)
-        Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox2)
-        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl3)
-        Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox1)
-        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton1)
-        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl1)
-        Me.BackstageViewClientControl6.Location = New System.Drawing.Point(207, 63)
-        Me.BackstageViewClientControl6.Name = "BackstageViewClientControl6"
-        Me.BackstageViewClientControl6.Size = New System.Drawing.Size(814, 517)
-        Me.BackstageViewClientControl6.TabIndex = 6
-        '
-        'SimpleButton9
-        '
-        Me.SimpleButton9.ImageOptions.Image = CType(resources.GetObject("SimpleButton9.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton9.Location = New System.Drawing.Point(271, 426)
-        Me.SimpleButton9.Name = "SimpleButton9"
-        Me.SimpleButton9.Size = New System.Drawing.Size(189, 53)
-        Me.SimpleButton9.TabIndex = 11
-        Me.SimpleButton9.Text = "Loop Blockages Responisble"
-        '
-        'SimpleButton5
-        '
-        Me.SimpleButton5.ImageOptions.Image = CType(resources.GetObject("SimpleButton5.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton5.Location = New System.Drawing.Point(76, 426)
-        Me.SimpleButton5.Name = "SimpleButton5"
-        Me.SimpleButton5.Size = New System.Drawing.Size(189, 53)
-        Me.SimpleButton5.TabIndex = 10
-        Me.SimpleButton5.Text = "Loop Summary"
-        '
-        'PictureBox3
-        '
-        Me.PictureBox3.Image = Global.EEICA.My.Resources.Resources.logo1
-        Me.PictureBox3.Location = New System.Drawing.Point(10, 367)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(60, 53)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox3.TabIndex = 9
-        Me.PictureBox3.TabStop = False
-        '
-        'LabelControl14
-        '
-        Me.LabelControl14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelControl14.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
-        Me.LabelControl14.Appearance.Options.UseFont = True
-        Me.LabelControl14.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl14.LineLocation = DevExpress.XtraEditors.LineLocation.Bottom
-        Me.LabelControl14.LineVisible = True
-        Me.LabelControl14.Location = New System.Drawing.Point(76, 367)
-        Me.LabelControl14.Name = "LabelControl14"
-        Me.LabelControl14.Size = New System.Drawing.Size(717, 53)
-        Me.LabelControl14.TabIndex = 8
-        Me.LabelControl14.Text = "Pre Commissioning"
-        '
-        'SimpleButton2
-        '
-        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton2.Location = New System.Drawing.Point(76, 226)
-        Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.Size = New System.Drawing.Size(189, 53)
-        Me.SimpleButton2.TabIndex = 6
-        Me.SimpleButton2.Text = "Resources Daily Tracking"
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = Global.EEICA.My.Resources.Resources.inst32
-        Me.PictureBox2.Location = New System.Drawing.Point(10, 167)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(60, 53)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 5
-        Me.PictureBox2.TabStop = False
-        '
-        'LabelControl3
-        '
-        Me.LabelControl3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelControl3.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
-        Me.LabelControl3.Appearance.Options.UseFont = True
-        Me.LabelControl3.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl3.LineLocation = DevExpress.XtraEditors.LineLocation.Bottom
-        Me.LabelControl3.LineVisible = True
-        Me.LabelControl3.Location = New System.Drawing.Point(76, 167)
-        Me.LabelControl3.Name = "LabelControl3"
-        Me.LabelControl3.Size = New System.Drawing.Size(717, 53)
-        Me.LabelControl3.TabIndex = 4
-        Me.LabelControl3.Text = "Instrumentation"
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.EEICA.My.Resources.Resources.wire
-        Me.PictureBox1.Location = New System.Drawing.Point(10, 1)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(60, 53)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 3
-        Me.PictureBox1.TabStop = False
-        '
-        'SimpleButton1
-        '
-        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
-        Me.SimpleButton1.Location = New System.Drawing.Point(76, 60)
-        Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.Size = New System.Drawing.Size(189, 53)
-        Me.SimpleButton1.TabIndex = 1
-        Me.SimpleButton1.Text = "Resources Daily Tracking"
-        '
-        'LabelControl1
-        '
-        Me.LabelControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelControl1.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
-        Me.LabelControl1.Appearance.Options.UseFont = True
-        Me.LabelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.LabelControl1.LineLocation = DevExpress.XtraEditors.LineLocation.Bottom
-        Me.LabelControl1.LineVisible = True
-        Me.LabelControl1.Location = New System.Drawing.Point(76, 1)
-        Me.LabelControl1.Name = "LabelControl1"
-        Me.LabelControl1.Size = New System.Drawing.Size(717, 53)
-        Me.LabelControl1.TabIndex = 0
-        Me.LabelControl1.Text = "Electrical"
         '
         'BackstageViewClientControl4
         '
@@ -528,7 +296,7 @@ Partial Class frmMain
         Me.GroupControl1.Controls.Add(Me.SimpleButton6)
         Me.GroupControl1.Controls.Add(Me.SimpleButton7)
         Me.GroupControl1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.GroupControl1.Location = New System.Drawing.Point(0, 290)
+        Me.GroupControl1.Location = New System.Drawing.Point(0, 351)
         Me.GroupControl1.Name = "GroupControl1"
         Me.GroupControl1.Size = New System.Drawing.Size(814, 221)
         Me.GroupControl1.TabIndex = 1
@@ -567,16 +335,29 @@ Partial Class frmMain
         'gpAdmin
         '
         Me.gpAdmin.CaptionImageOptions.Image = CType(resources.GetObject("gpAdmin.CaptionImageOptions.Image"), System.Drawing.Image)
+        Me.gpAdmin.Controls.Add(Me.btnReportCutoddDate)
         Me.gpAdmin.Controls.Add(Me.SimpleButton4)
+        Me.gpAdmin.Controls.Add(Me.btnCloseWeek)
         Me.gpAdmin.Controls.Add(Me.SimpleButton3)
+        Me.gpAdmin.Controls.Add(Me.btnProCutoffDate)
         Me.gpAdmin.Controls.Add(Me.SeparatorControl1)
         Me.gpAdmin.Controls.Add(Me.GroupBox1)
         Me.gpAdmin.Dock = System.Windows.Forms.DockStyle.Top
         Me.gpAdmin.Location = New System.Drawing.Point(0, 0)
         Me.gpAdmin.Name = "gpAdmin"
-        Me.gpAdmin.Size = New System.Drawing.Size(814, 290)
+        Me.gpAdmin.Size = New System.Drawing.Size(814, 351)
         Me.gpAdmin.TabIndex = 0
         Me.gpAdmin.Text = "Admin (Global Settings)"
+        '
+        'btnReportCutoddDate
+        '
+        Me.btnReportCutoddDate.ImageOptions.Image = CType(resources.GetObject("btnReportCutoddDate.ImageOptions.Image"), System.Drawing.Image)
+        Me.btnReportCutoddDate.Location = New System.Drawing.Point(433, 265)
+        Me.btnReportCutoddDate.Name = "btnReportCutoddDate"
+        Me.btnReportCutoddDate.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btnReportCutoddDate.Size = New System.Drawing.Size(156, 47)
+        Me.btnReportCutoddDate.TabIndex = 10
+        Me.btnReportCutoddDate.Text = "Report Cutoff Date"
         '
         'SimpleButton4
         '
@@ -588,6 +369,16 @@ Partial Class frmMain
         Me.SimpleButton4.TabIndex = 6
         Me.SimpleButton4.Text = "System Log"
         '
+        'btnCloseWeek
+        '
+        Me.btnCloseWeek.ImageOptions.Image = CType(resources.GetObject("btnCloseWeek.ImageOptions.Image"), System.Drawing.Image)
+        Me.btnCloseWeek.Location = New System.Drawing.Point(251, 265)
+        Me.btnCloseWeek.Name = "btnCloseWeek"
+        Me.btnCloseWeek.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btnCloseWeek.Size = New System.Drawing.Size(156, 47)
+        Me.btnCloseWeek.TabIndex = 9
+        Me.btnCloseWeek.Text = "Close the Week"
+        '
         'SimpleButton3
         '
         Me.SimpleButton3.ImageOptions.Image = CType(resources.GetObject("SimpleButton3.ImageOptions.Image"), System.Drawing.Image)
@@ -597,6 +388,16 @@ Partial Class frmMain
         Me.SimpleButton3.Size = New System.Drawing.Size(156, 47)
         Me.SimpleButton3.TabIndex = 5
         Me.SimpleButton3.Text = "Users Management"
+        '
+        'btnProCutoffDate
+        '
+        Me.btnProCutoffDate.ImageOptions.Image = CType(resources.GetObject("btnProCutoffDate.ImageOptions.Image"), System.Drawing.Image)
+        Me.btnProCutoffDate.Location = New System.Drawing.Point(40, 265)
+        Me.btnProCutoffDate.Name = "btnProCutoffDate"
+        Me.btnProCutoffDate.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btnProCutoffDate.Size = New System.Drawing.Size(156, 47)
+        Me.btnProCutoffDate.TabIndex = 8
+        Me.btnProCutoffDate.Text = "Production Cutoff Date"
         '
         'SeparatorControl1
         '
@@ -610,6 +411,8 @@ Partial Class frmMain
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.LabelControl3)
+        Me.GroupBox1.Controls.Add(Me.tgBoxupIntegrity)
         Me.GroupBox1.Controls.Add(Me.tgLoopIntegrity)
         Me.GroupBox1.Controls.Add(Me.tgInstrumentsIntegrity)
         Me.GroupBox1.Controls.Add(Me.tgEquipmentIntegrity)
@@ -622,10 +425,29 @@ Partial Class frmMain
         Me.GroupBox1.Controls.Add(Me.LabelControl5)
         Me.GroupBox1.Location = New System.Drawing.Point(40, 47)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(574, 112)
+        Me.GroupBox1.Size = New System.Drawing.Size(645, 112)
         Me.GroupBox1.TabIndex = 3
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Actual Steps Integration"
+        '
+        'LabelControl3
+        '
+        Me.LabelControl3.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl3.Location = New System.Drawing.Point(410, 71)
+        Me.LabelControl3.Name = "LabelControl3"
+        Me.LabelControl3.Size = New System.Drawing.Size(72, 25)
+        Me.LabelControl3.TabIndex = 14
+        Me.LabelControl3.Text = "Box Up:"
+        '
+        'tgBoxupIntegrity
+        '
+        Me.tgBoxupIntegrity.Location = New System.Drawing.Point(482, 74)
+        Me.tgBoxupIntegrity.MenuManager = Me.RibbonControl1
+        Me.tgBoxupIntegrity.Name = "tgBoxupIntegrity"
+        Me.tgBoxupIntegrity.Properties.OffText = "No"
+        Me.tgBoxupIntegrity.Properties.OnText = "Yes"
+        Me.tgBoxupIntegrity.Size = New System.Drawing.Size(82, 20)
+        Me.tgBoxupIntegrity.TabIndex = 13
         '
         'tgLoopIntegrity
         '
@@ -661,7 +483,7 @@ Partial Class frmMain
         '
         'tgInstrumentsIntegrity
         '
-        Me.tgInstrumentsIntegrity.Location = New System.Drawing.Point(480, 37)
+        Me.tgInstrumentsIntegrity.Location = New System.Drawing.Point(482, 37)
         Me.tgInstrumentsIntegrity.MenuManager = Me.RibbonControl1
         Me.tgInstrumentsIntegrity.Name = "tgInstrumentsIntegrity"
         Me.tgInstrumentsIntegrity.Properties.OffText = "No"
@@ -764,6 +586,252 @@ Partial Class frmMain
         Me.LabelControl5.TabIndex = 4
         Me.LabelControl5.Text = "Instruments:"
         '
+        'BackstageViewClientControl1
+        '
+        Me.BackstageViewClientControl1.Controls.Add(Me.PanelControl1)
+        Me.BackstageViewClientControl1.Location = New System.Drawing.Point(207, 63)
+        Me.BackstageViewClientControl1.Name = "BackstageViewClientControl1"
+        Me.BackstageViewClientControl1.Size = New System.Drawing.Size(814, 517)
+        Me.BackstageViewClientControl1.TabIndex = 1
+        '
+        'PanelControl1
+        '
+        Me.PanelControl1.Controls.Add(Me.lblReportCutoffDate)
+        Me.PanelControl1.Controls.Add(Me.LabelControl2)
+        Me.PanelControl1.Controls.Add(Me.LabelControl10)
+        Me.PanelControl1.Controls.Add(Me.lblCutoffDate)
+        Me.PanelControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PanelControl1.Location = New System.Drawing.Point(0, 0)
+        Me.PanelControl1.Name = "PanelControl1"
+        Me.PanelControl1.Size = New System.Drawing.Size(814, 517)
+        Me.PanelControl1.TabIndex = 0
+        '
+        'lblReportCutoffDate
+        '
+        Me.lblReportCutoffDate.AutoEllipsis = True
+        Me.lblReportCutoffDate.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.lblReportCutoffDate.Location = New System.Drawing.Point(164, 70)
+        Me.lblReportCutoffDate.Name = "lblReportCutoffDate"
+        Me.lblReportCutoffDate.Size = New System.Drawing.Size(371, 39)
+        Me.lblReportCutoffDate.TabIndex = 6
+        Me.lblReportCutoffDate.Text = "Cutoff Date:"
+        '
+        'LabelControl2
+        '
+        Me.LabelControl2.AutoEllipsis = True
+        Me.LabelControl2.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl2.Location = New System.Drawing.Point(21, 70)
+        Me.LabelControl2.Name = "LabelControl2"
+        Me.LabelControl2.Size = New System.Drawing.Size(137, 39)
+        Me.LabelControl2.TabIndex = 5
+        Me.LabelControl2.Text = "Report Cutoff Date:"
+        '
+        'LabelControl10
+        '
+        Me.LabelControl10.AutoEllipsis = True
+        Me.LabelControl10.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl10.Location = New System.Drawing.Point(21, 25)
+        Me.LabelControl10.Name = "LabelControl10"
+        Me.LabelControl10.Size = New System.Drawing.Size(137, 39)
+        Me.LabelControl10.TabIndex = 4
+        Me.LabelControl10.Text = "Production Cutoff Date:"
+        '
+        'lblCutoffDate
+        '
+        Me.lblCutoffDate.AutoEllipsis = True
+        Me.lblCutoffDate.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.lblCutoffDate.Location = New System.Drawing.Point(164, 25)
+        Me.lblCutoffDate.Name = "lblCutoffDate"
+        Me.lblCutoffDate.Size = New System.Drawing.Size(371, 39)
+        Me.lblCutoffDate.TabIndex = 3
+        Me.lblCutoffDate.Text = "Cutoff Date:"
+        '
+        'BackstageViewClientControl3
+        '
+        Me.BackstageViewClientControl3.Location = New System.Drawing.Point(207, 63)
+        Me.BackstageViewClientControl3.Name = "BackstageViewClientControl3"
+        Me.BackstageViewClientControl3.Size = New System.Drawing.Size(814, 517)
+        Me.BackstageViewClientControl3.TabIndex = 3
+        '
+        'BackstageViewClientControl2
+        '
+        Me.BackstageViewClientControl2.Location = New System.Drawing.Point(207, 63)
+        Me.BackstageViewClientControl2.Name = "BackstageViewClientControl2"
+        Me.BackstageViewClientControl2.Size = New System.Drawing.Size(814, 517)
+        Me.BackstageViewClientControl2.TabIndex = 2
+        '
+        'BackstageViewClientControl6
+        '
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton11)
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton10)
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton9)
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton5)
+        Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox3)
+        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl14)
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton2)
+        Me.BackstageViewClientControl6.Controls.Add(Me.PictureBox1)
+        Me.BackstageViewClientControl6.Controls.Add(Me.SimpleButton1)
+        Me.BackstageViewClientControl6.Controls.Add(Me.LabelControl1)
+        Me.BackstageViewClientControl6.Location = New System.Drawing.Point(207, 63)
+        Me.BackstageViewClientControl6.Name = "BackstageViewClientControl6"
+        Me.BackstageViewClientControl6.Size = New System.Drawing.Size(814, 517)
+        Me.BackstageViewClientControl6.TabIndex = 6
+        '
+        'SimpleButton11
+        '
+        Me.SimpleButton11.ImageOptions.Image = CType(resources.GetObject("SimpleButton11.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton11.Location = New System.Drawing.Point(466, 60)
+        Me.SimpleButton11.Name = "SimpleButton11"
+        Me.SimpleButton11.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton11.TabIndex = 13
+        Me.SimpleButton11.Text = "Subsystem"
+        '
+        'SimpleButton10
+        '
+        Me.SimpleButton10.ImageOptions.Image = CType(resources.GetObject("SimpleButton10.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton10.Location = New System.Drawing.Point(466, 426)
+        Me.SimpleButton10.Name = "SimpleButton10"
+        Me.SimpleButton10.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton10.TabIndex = 12
+        Me.SimpleButton10.Text = "Loop Construction Overview"
+        '
+        'SimpleButton9
+        '
+        Me.SimpleButton9.ImageOptions.Image = CType(resources.GetObject("SimpleButton9.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton9.Location = New System.Drawing.Point(271, 426)
+        Me.SimpleButton9.Name = "SimpleButton9"
+        Me.SimpleButton9.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton9.TabIndex = 11
+        Me.SimpleButton9.Text = "Loop Blockages Responisble"
+        '
+        'SimpleButton5
+        '
+        Me.SimpleButton5.ImageOptions.Image = CType(resources.GetObject("SimpleButton5.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton5.Location = New System.Drawing.Point(76, 426)
+        Me.SimpleButton5.Name = "SimpleButton5"
+        Me.SimpleButton5.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton5.TabIndex = 10
+        Me.SimpleButton5.Text = "Loop Summary"
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Image = Global.EEICA.My.Resources.Resources.logo1
+        Me.PictureBox3.Location = New System.Drawing.Point(10, 367)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(60, 53)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox3.TabIndex = 9
+        Me.PictureBox3.TabStop = False
+        '
+        'LabelControl14
+        '
+        Me.LabelControl14.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LabelControl14.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.LabelControl14.Appearance.Options.UseFont = True
+        Me.LabelControl14.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl14.LineLocation = DevExpress.XtraEditors.LineLocation.Bottom
+        Me.LabelControl14.LineVisible = True
+        Me.LabelControl14.Location = New System.Drawing.Point(76, 367)
+        Me.LabelControl14.Name = "LabelControl14"
+        Me.LabelControl14.Size = New System.Drawing.Size(717, 53)
+        Me.LabelControl14.TabIndex = 8
+        Me.LabelControl14.Text = "Pre Commissioning"
+        '
+        'SimpleButton2
+        '
+        Me.SimpleButton2.ImageOptions.Image = CType(resources.GetObject("SimpleButton2.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton2.Location = New System.Drawing.Point(271, 60)
+        Me.SimpleButton2.Name = "SimpleButton2"
+        Me.SimpleButton2.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton2.TabIndex = 6
+        Me.SimpleButton2.Text = "Instrumentation Resources"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.EEICA.My.Resources.Resources.wire
+        Me.PictureBox1.Location = New System.Drawing.Point(10, 1)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(60, 53)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 3
+        Me.PictureBox1.TabStop = False
+        '
+        'SimpleButton1
+        '
+        Me.SimpleButton1.ImageOptions.Image = CType(resources.GetObject("SimpleButton1.ImageOptions.Image"), System.Drawing.Image)
+        Me.SimpleButton1.Location = New System.Drawing.Point(76, 60)
+        Me.SimpleButton1.Name = "SimpleButton1"
+        Me.SimpleButton1.Size = New System.Drawing.Size(189, 53)
+        Me.SimpleButton1.TabIndex = 1
+        Me.SimpleButton1.Text = "Electrical Resources"
+        '
+        'LabelControl1
+        '
+        Me.LabelControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LabelControl1.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.LabelControl1.Appearance.Options.UseFont = True
+        Me.LabelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl1.LineLocation = DevExpress.XtraEditors.LineLocation.Bottom
+        Me.LabelControl1.LineVisible = True
+        Me.LabelControl1.Location = New System.Drawing.Point(76, 1)
+        Me.LabelControl1.Name = "LabelControl1"
+        Me.LabelControl1.Size = New System.Drawing.Size(717, 53)
+        Me.LabelControl1.TabIndex = 0
+        Me.LabelControl1.Text = "Daily Tracking"
+        '
+        'BackstageViewClientControl5
+        '
+        Me.BackstageViewClientControl5.Controls.Add(Me.LabelControl12)
+        Me.BackstageViewClientControl5.Controls.Add(Me.LabelControl11)
+        Me.BackstageViewClientControl5.Controls.Add(Me.lblDBVersion)
+        Me.BackstageViewClientControl5.Controls.Add(Me.LabelControl9)
+        Me.BackstageViewClientControl5.Location = New System.Drawing.Point(207, 63)
+        Me.BackstageViewClientControl5.Name = "BackstageViewClientControl5"
+        Me.BackstageViewClientControl5.Size = New System.Drawing.Size(814, 517)
+        Me.BackstageViewClientControl5.TabIndex = 5
+        '
+        'LabelControl12
+        '
+        Me.LabelControl12.AutoEllipsis = True
+        Me.LabelControl12.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl12.Location = New System.Drawing.Point(18, 52)
+        Me.LabelControl12.Name = "LabelControl12"
+        Me.LabelControl12.Size = New System.Drawing.Size(100, 39)
+        Me.LabelControl12.TabIndex = 3
+        Me.LabelControl12.Text = "Database Version:"
+        '
+        'LabelControl11
+        '
+        Me.LabelControl11.AutoEllipsis = True
+        Me.LabelControl11.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl11.Location = New System.Drawing.Point(125, 7)
+        Me.LabelControl11.Name = "LabelControl11"
+        Me.LabelControl11.Size = New System.Drawing.Size(399, 39)
+        Me.LabelControl11.TabIndex = 2
+        Me.LabelControl11.Text = "9.5"
+        '
+        'lblDBVersion
+        '
+        Me.lblDBVersion.AutoEllipsis = True
+        Me.lblDBVersion.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.lblDBVersion.Location = New System.Drawing.Point(125, 52)
+        Me.lblDBVersion.Name = "lblDBVersion"
+        Me.lblDBVersion.Size = New System.Drawing.Size(576, 39)
+        Me.lblDBVersion.TabIndex = 1
+        Me.lblDBVersion.Text = "Database Version: 0"
+        '
+        'LabelControl9
+        '
+        Me.LabelControl9.AutoEllipsis = True
+        Me.LabelControl9.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
+        Me.LabelControl9.Location = New System.Drawing.Point(18, 7)
+        Me.LabelControl9.Name = "LabelControl9"
+        Me.LabelControl9.Size = New System.Drawing.Size(101, 39)
+        Me.LabelControl9.TabIndex = 0
+        Me.LabelControl9.Text = "Application Version:"
+        '
         'BackstageViewTabItem1
         '
         Me.BackstageViewTabItem1.Caption = "Home"
@@ -802,6 +870,7 @@ Partial Class frmMain
         Me.BackstageViewTabItem4.ContentControl = Me.BackstageViewClientControl4
         Me.BackstageViewTabItem4.ImageOptions.ItemNormal.Image = CType(resources.GetObject("BackstageViewTabItem4.ImageOptions.ItemNormal.Image"), System.Drawing.Image)
         Me.BackstageViewTabItem4.Name = "BackstageViewTabItem4"
+        Me.BackstageViewTabItem4.Selected = True
         '
         'BackstageViewButtonItem1
         '
@@ -815,7 +884,6 @@ Partial Class frmMain
         Me.BackstageViewTabItem5.ContentControl = Me.BackstageViewClientControl5
         Me.BackstageViewTabItem5.ImageOptions.ItemNormal.Image = CType(resources.GetObject("BackstageViewTabItem5.ImageOptions.ItemNormal.Image"), System.Drawing.Image)
         Me.BackstageViewTabItem5.Name = "BackstageViewTabItem5"
-        Me.BackstageViewTabItem5.Selected = True
         '
         'lblUserName
         '
@@ -833,15 +901,6 @@ Partial Class frmMain
         Me.BarButtonItem2.ImageOptions.Image = CType(resources.GetObject("BarButtonItem2.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem2.Name = "BarButtonItem2"
         Me.BarButtonItem2.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'BarButtonItem9
-        '
-        Me.BarButtonItem9.Caption = "Loop Map"
-        Me.BarButtonItem9.Id = 15
-        Me.BarButtonItem9.ImageOptions.Image = CType(resources.GetObject("BarButtonItem9.ImageOptions.Image"), System.Drawing.Image)
-        Me.BarButtonItem9.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem9.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.BarButtonItem9.Name = "BarButtonItem9"
-        Me.BarButtonItem9.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
         'BarButtonItem11
         '
@@ -971,24 +1030,6 @@ Partial Class frmMain
         Me.BarButtonItem41.ImageOptions.Image = CType(resources.GetObject("BarButtonItem41.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem41.Name = "BarButtonItem41"
         Me.BarButtonItem41.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        '
-        'barBtnHandoverData
-        '
-        Me.barBtnHandoverData.Caption = "Update EICA With HCS"
-        Me.barBtnHandoverData.Id = 61
-        Me.barBtnHandoverData.ImageOptions.Image = CType(resources.GetObject("barBtnHandoverData.ImageOptions.Image"), System.Drawing.Image)
-        Me.barBtnHandoverData.ImageOptions.LargeImage = CType(resources.GetObject("barBtnHandoverData.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.barBtnHandoverData.Name = "barBtnHandoverData"
-        Me.barBtnHandoverData.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        ToolTipTitleItem5.AllowHtmlText = DevExpress.Utils.DefaultBoolean.[True]
-        ToolTipTitleItem5.ImageOptions.Image = CType(resources.GetObject("resource.Image2"), System.Drawing.Image)
-        ToolTipTitleItem5.Text = "<b>What is this?</b>"
-        ToolTipItem5.AllowHtmlText = DevExpress.Utils.DefaultBoolean.[True]
-        ToolTipItem5.Text = resources.GetString("ToolTipItem5.Text")
-        SuperToolTip3.Items.Add(ToolTipTitleItem5)
-        SuperToolTip3.Items.Add(ToolTipItem5)
-        Me.barBtnHandoverData.SuperTip = SuperToolTip3
-        Me.barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
         '
         'BarButtonItem38
         '
@@ -1310,38 +1351,22 @@ Partial Class frmMain
         Me.BarMdiChildrenListItem1.Id = 125
         Me.BarMdiChildrenListItem1.Name = "BarMdiChildrenListItem1"
         '
-        'lblLoopBlockages
+        'barBtnSQMSData
         '
-        Me.lblLoopBlockages.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right
-        Me.lblLoopBlockages.Caption = "Loop Blockages: 0"
-        Me.lblLoopBlockages.Id = 126
-        Me.lblLoopBlockages.ImageOptions.Image = CType(resources.GetObject("lblLoopBlockages.ImageOptions.Image"), System.Drawing.Image)
-        Me.lblLoopBlockages.ImageOptions.LargeImage = CType(resources.GetObject("lblLoopBlockages.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.lblLoopBlockages.Name = "lblLoopBlockages"
-        Me.lblLoopBlockages.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
-        Me.lblLoopBlockages.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
-        ToolTipItem6.ImageOptions.Image = CType(resources.GetObject("resource.Image3"), System.Drawing.Image)
-        ToolTipItem6.Text = "Loop Blockages"
-        ToolTipItem7.Text = "All blockages for the Loop Folders assigned to be resolved by me."
-        SuperToolTip4.Items.Add(ToolTipItem6)
-        SuperToolTip4.Items.Add(ToolTipItem7)
-        Me.lblLoopBlockages.SuperTip = SuperToolTip4
+        Me.barBtnSQMSData.Caption = "Update With SQMS"
+        Me.barBtnSQMSData.Id = 129
+        Me.barBtnSQMSData.ImageOptions.Image = CType(resources.GetObject("barBtnSQMSData.ImageOptions.Image"), System.Drawing.Image)
+        Me.barBtnSQMSData.ImageOptions.LargeImage = CType(resources.GetObject("barBtnSQMSData.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.barBtnSQMSData.Name = "barBtnSQMSData"
+        Me.barBtnSQMSData.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
         '
-        'lblSolorunBlockages
+        'BarButtonItem18
         '
-        Me.lblSolorunBlockages.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right
-        Me.lblSolorunBlockages.Caption = "Solo Run Blockages: 0"
-        Me.lblSolorunBlockages.Id = 127
-        Me.lblSolorunBlockages.ImageOptions.Image = CType(resources.GetObject("lblSolorunBlockages.ImageOptions.Image"), System.Drawing.Image)
-        Me.lblSolorunBlockages.ImageOptions.LargeImage = CType(resources.GetObject("lblSolorunBlockages.ImageOptions.LargeImage"), System.Drawing.Image)
-        Me.lblSolorunBlockages.Name = "lblSolorunBlockages"
-        Me.lblSolorunBlockages.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph
-        ToolTipItem8.ImageOptions.Image = CType(resources.GetObject("resource.Image4"), System.Drawing.Image)
-        ToolTipItem8.Text = "Solo Run Blockages"
-        ToolTipItem9.Text = "All blockages for the Solo Run folders assigned to be resolved by me."
-        SuperToolTip5.Items.Add(ToolTipItem8)
-        SuperToolTip5.Items.Add(ToolTipItem9)
-        Me.lblSolorunBlockages.SuperTip = SuperToolTip5
+        Me.BarButtonItem18.Caption = "Box Up"
+        Me.BarButtonItem18.Id = 130
+        Me.BarButtonItem18.ImageOptions.Image = CType(resources.GetObject("BarButtonItem18.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem18.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem18.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem18.Name = "BarButtonItem18"
         '
         'rpHome
         '
@@ -1493,20 +1518,21 @@ Partial Class frmMain
         '
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem1)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem7)
+        Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem9)
         Me.RibbonPageGroup7.ItemLinks.Add(Me.BarButtonItem16)
         Me.RibbonPageGroup7.Name = "RibbonPageGroup7"
         Me.RibbonPageGroup7.Text = "Folders"
         '
         'RibbonPage1
         '
-        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4, Me.RibbonPageGroup5, Me.RibbonPageGroup2})
+        Me.RibbonPage1.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup4, Me.RibbonPageGroup5, Me.RibbonPageGroup2, Me.RibbonPageGroup17})
         Me.RibbonPage1.ImageOptions.Image = CType(resources.GetObject("RibbonPage1.ImageOptions.Image"), System.Drawing.Image)
         Me.RibbonPage1.Name = "RibbonPage1"
         Me.RibbonPage1.Text = "Folders"
         '
         'RibbonPageGroup4
         '
-        Me.RibbonPageGroup4.ItemLinks.Add(Me.barBtnHandoverData)
+        Me.RibbonPageGroup4.ItemLinks.Add(Me.barBtnSQMSData)
         Me.RibbonPageGroup4.ItemLinks.Add(Me.BarButtonItem6)
         Me.RibbonPageGroup4.Name = "RibbonPageGroup4"
         Me.RibbonPageGroup4.Text = "Folders Options"
@@ -1514,7 +1540,6 @@ Partial Class frmMain
         'RibbonPageGroup5
         '
         Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem38)
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem9)
         Me.RibbonPageGroup5.Name = "RibbonPageGroup5"
         Me.RibbonPageGroup5.Text = "Loops"
         '
@@ -1523,6 +1548,12 @@ Partial Class frmMain
         Me.RibbonPageGroup2.ItemLinks.Add(Me.BarButtonItem10)
         Me.RibbonPageGroup2.Name = "RibbonPageGroup2"
         Me.RibbonPageGroup2.Text = "Solo Run"
+        '
+        'RibbonPageGroup17
+        '
+        Me.RibbonPageGroup17.ItemLinks.Add(Me.BarButtonItem18)
+        Me.RibbonPageGroup17.Name = "RibbonPageGroup17"
+        Me.RibbonPageGroup17.Text = "Mechanical"
         '
         'rpBlockage
         '
@@ -1544,8 +1575,6 @@ Partial Class frmMain
         Me.RibbonStatusBar1.ItemLinks.Add(Me.BarButtonGroup1)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.BarButtonGroup2)
         Me.RibbonStatusBar1.ItemLinks.Add(Me.BarMdiChildrenListItem1)
-        Me.RibbonStatusBar1.ItemLinks.Add(Me.lblLoopBlockages)
-        Me.RibbonStatusBar1.ItemLinks.Add(Me.lblSolorunBlockages)
         Me.RibbonStatusBar1.Location = New System.Drawing.Point(0, 792)
         Me.RibbonStatusBar1.Name = "RibbonStatusBar1"
         Me.RibbonStatusBar1.Ribbon = Me.RibbonControl1
@@ -1633,6 +1662,19 @@ Partial Class frmMain
         '
         Me.sveFle.Filter = "Excel File|*.xlsx"
         '
+        'sveFile
+        '
+        Me.sveFile.Filter = "PDF|*.pdf"
+        '
+        'BarButtonItem9
+        '
+        Me.BarButtonItem9.Caption = "Box Up Management"
+        Me.BarButtonItem9.Id = 131
+        Me.BarButtonItem9.ImageOptions.Image = CType(resources.GetObject("BarButtonItem9.ImageOptions.Image"), System.Drawing.Image)
+        Me.BarButtonItem9.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem9.ImageOptions.LargeImage"), System.Drawing.Image)
+        Me.BarButtonItem9.Name = "BarButtonItem9"
+        Me.BarButtonItem9.RibbonStyle = CType((DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large Or DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText), DevExpress.XtraBars.Ribbon.RibbonItemStyles)
+        '
         'frmMain
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -1656,14 +1698,6 @@ Partial Class frmMain
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.BackstageViewControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.BackstageViewControl1.ResumeLayout(False)
-        Me.BackstageViewClientControl5.ResumeLayout(False)
-        Me.BackstageViewClientControl1.ResumeLayout(False)
-        CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.PanelControl1.ResumeLayout(False)
-        Me.BackstageViewClientControl6.ResumeLayout(False)
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.BackstageViewClientControl4.ResumeLayout(False)
         CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupControl1.ResumeLayout(False)
@@ -1671,11 +1705,19 @@ Partial Class frmMain
         Me.gpAdmin.ResumeLayout(False)
         CType(Me.SeparatorControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
+        CType(Me.tgBoxupIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgLoopIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgInstrumentsIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgEquipmentIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgCableIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tgSolorunIntegrity.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.BackstageViewClientControl1.ResumeLayout(False)
+        CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.PanelControl1.ResumeLayout(False)
+        Me.BackstageViewClientControl6.ResumeLayout(False)
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.BackstageViewClientControl5.ResumeLayout(False)
         CType(Me.ToastNotificationsManager, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.BehaviorManager1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dm, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1694,7 +1736,6 @@ Partial Class frmMain
     Friend WithEvents BarButtonItem2 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents rpPC As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents BarButtonItem8 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents BarButtonItem9 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem11 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents BarButtonItem14 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents RibbonPageGroup7 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
@@ -1720,7 +1761,6 @@ Partial Class frmMain
     Friend WithEvents BarButtonItem41 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents rpEng As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup11 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
-    Friend WithEvents barBtnHandoverData As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents rpConstruction As DevExpress.XtraBars.Ribbon.RibbonPage
     Friend WithEvents RibbonPageGroup15 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents rpHandover As DevExpress.XtraBars.Ribbon.RibbonPage
@@ -1781,8 +1821,6 @@ Partial Class frmMain
     Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents LabelControl1 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents PictureBox2 As PictureBox
-    Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents SimpleButton2 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents BarButtonItem56 As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents RibbonPage2 As DevExpress.XtraBars.Ribbon.RibbonPage
@@ -1841,7 +1879,19 @@ Partial Class frmMain
     Friend WithEvents BarButtonGroup2 As DevExpress.XtraBars.BarButtonGroup
     Friend WithEvents BarMdiChildrenListItem1 As DevExpress.XtraBars.BarMdiChildrenListItem
     Friend WithEvents notificationsTimer As Timer
-    Friend WithEvents lblLoopBlockages As DevExpress.XtraBars.BarStaticItem
-    Friend WithEvents lblSolorunBlockages As DevExpress.XtraBars.BarStaticItem
     Friend WithEvents sveFle As SaveFileDialog
+    Friend WithEvents SimpleButton10 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents sveFile As DevExpress.XtraEditors.XtraSaveFileDialog
+    Friend WithEvents SimpleButton11 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents barBtnSQMSData As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents btnReportCutoddDate As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnCloseWeek As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnProCutoffDate As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents lblReportCutoffDate As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents LabelControl2 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents tgBoxupIntegrity As DevExpress.XtraEditors.ToggleSwitch
+    Friend WithEvents BarButtonItem18 As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents RibbonPageGroup17 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents BarButtonItem9 As DevExpress.XtraBars.BarButtonItem
 End Class

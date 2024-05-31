@@ -43,4 +43,9 @@
     Private Sub frmFilter_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
         Me.WindowState = FormWindowState.Normal
     End Sub
+    Private Sub frmFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown, txt.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            Me.Close()
+        End If
+    End Sub
 End Class

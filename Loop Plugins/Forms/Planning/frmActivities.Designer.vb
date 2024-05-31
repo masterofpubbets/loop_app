@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmActivities
     Inherits DevExpress.XtraBars.Ribbon.RibbonForm
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,8 +20,9 @@ Partial Class frmActivities
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmActivities))
         Me.RibbonControl1 = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.BarButtonItem1 = New DevExpress.XtraBars.BarButtonItem()
@@ -41,15 +42,15 @@ Partial Class frmActivities
         Me.RibbonPageGroup4 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.RibbonPage1 = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.RibbonPageGroup3 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.RibbonPage4 = New DevExpress.XtraBars.Ribbon.RibbonPage()
-        Me.RibbonPageGroup5 = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.grd = New DevExpress.XtraGrid.GridControl()
         Me.gv = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.sveFle = New System.Windows.Forms.SaveFileDialog()
         Me.opnFle = New System.Windows.Forms.OpenFileDialog()
+        Me.rMenu = New DevExpress.XtraBars.Ribbon.RadialMenu(Me.components)
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl1
@@ -62,7 +63,7 @@ Partial Class frmActivities
         Me.RibbonControl1.MaxItemId = 13
         Me.RibbonControl1.Name = "RibbonControl1"
         Me.RibbonControl1.OptionsMenuMinWidth = 283
-        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage3, Me.RibbonPage2, Me.RibbonPage1, Me.RibbonPage4})
+        Me.RibbonControl1.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.RibbonPage3, Me.RibbonPage2, Me.RibbonPage1})
         Me.RibbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal
         Me.RibbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.[False]
         Me.RibbonControl1.Size = New System.Drawing.Size(1200, 110)
@@ -70,6 +71,8 @@ Partial Class frmActivities
         'BarButtonItem1
         '
         Me.BarButtonItem1.Caption = "Refresh"
+        Me.BarButtonItem1.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem1.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem1.Id = 1
         Me.BarButtonItem1.ImageOptions.Image = CType(resources.GetObject("BarButtonItem1.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem1.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem1.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -88,6 +91,8 @@ Partial Class frmActivities
         'BarButtonItem3
         '
         Me.BarButtonItem3.Caption = "Filter"
+        Me.BarButtonItem3.CloseRadialMenuOnItemClick = True
+        Me.BarButtonItem3.CloseSubMenuOnClickMode = DevExpress.Utils.DefaultBoolean.[True]
         Me.BarButtonItem3.Id = 3
         Me.BarButtonItem3.ImageOptions.Image = CType(resources.GetObject("BarButtonItem3.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem3.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem3.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -156,6 +161,8 @@ Partial Class frmActivities
         'BarButtonItem11
         '
         Me.BarButtonItem11.Caption = "Copy ActIDs"
+        Me.BarButtonItem11.CausesValidation = True
+        Me.BarButtonItem11.CloseRadialMenuOnItemClick = True
         Me.BarButtonItem11.Id = 12
         Me.BarButtonItem11.ImageOptions.Image = CType(resources.GetObject("BarButtonItem11.ImageOptions.Image"), System.Drawing.Image)
         Me.BarButtonItem11.ImageOptions.LargeImage = CType(resources.GetObject("BarButtonItem11.ImageOptions.LargeImage"), System.Drawing.Image)
@@ -201,23 +208,11 @@ Partial Class frmActivities
         '
         'RibbonPageGroup3
         '
+        Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem8)
+        Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem9)
         Me.RibbonPageGroup3.ItemLinks.Add(Me.BarButtonItem5)
         Me.RibbonPageGroup3.Name = "RibbonPageGroup3"
         Me.RibbonPageGroup3.Text = "PCS"
-        '
-        'RibbonPage4
-        '
-        Me.RibbonPage4.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.RibbonPageGroup5})
-        Me.RibbonPage4.ImageOptions.Image = CType(resources.GetObject("RibbonPage4.ImageOptions.Image"), System.Drawing.Image)
-        Me.RibbonPage4.Name = "RibbonPage4"
-        Me.RibbonPage4.Text = "New"
-        '
-        'RibbonPageGroup5
-        '
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem8)
-        Me.RibbonPageGroup5.ItemLinks.Add(Me.BarButtonItem9)
-        Me.RibbonPageGroup5.Name = "RibbonPageGroup5"
-        Me.RibbonPageGroup5.Text = "New Activities"
         '
         'grd
         '
@@ -283,6 +278,16 @@ Partial Class frmActivities
         '
         Me.opnFle.Filter = "View Files|*.xml"
         '
+        'rMenu
+        '
+        Me.rMenu.AutoExpand = True
+        Me.rMenu.Glyph = CType(resources.GetObject("rMenu.Glyph"), System.Drawing.Image)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem1)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem3)
+        Me.rMenu.ItemLinks.Add(Me.BarButtonItem11)
+        Me.rMenu.Name = "rMenu"
+        Me.rMenu.Ribbon = Me.RibbonControl1
+        '
         'frmActivities
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -301,6 +306,7 @@ Partial Class frmActivities
         CType(Me.RibbonControl1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grd, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.gv, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.rMenu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -328,6 +334,5 @@ Partial Class frmActivities
     Friend WithEvents RibbonPageGroup2 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents BarSubItem1 As DevExpress.XtraBars.BarSubItem
     Friend WithEvents BarButtonItem11 As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents RibbonPage4 As DevExpress.XtraBars.Ribbon.RibbonPage
-    Friend WithEvents RibbonPageGroup5 As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents rMenu As DevExpress.XtraBars.Ribbon.RadialMenu
 End Class

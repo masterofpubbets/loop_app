@@ -6,6 +6,7 @@
         LOOPSUMMARY = 3
         EICAITRCLOSED = 4
         LOOPBLOCKAGERESPONSIBLE = 5
+        SubsystemDailyTracking = 6
     End Enum
 
     Public Overloads Function GetItems(ByVal reportType As ReportTypes) As DataTable
@@ -21,6 +22,8 @@
                     Return (DB.ReturnDataTableExcuteFromFile(Application.StartupPath & "\sqries\PendingItems.txt"))
                 Case ReportTypes.LOOPBLOCKAGERESPONSIBLE
                     Return (DB.ReturnDataTableExcuteFromFile(Application.StartupPath & "\sqries\LoopFolderBlockageRespSummary.txt"))
+                Case ReportTypes.SubsystemDailyTracking
+                    Return (DB.ReturnDataTable("EXEC [dbo].[DailyTrackingSubsystem]"))
             End Select
 
         Catch ex As Exception

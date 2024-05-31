@@ -28,7 +28,7 @@
                     frmCable._filterColumn = "Tag"
                     frmCable.Show()
                 Case "Solo Run"
-                    Dim frmSolorun As New frmSolorunFolders
+                    Dim frmSolorun As New frmBoxupFolders
                     frmSolorun._filter = Me.MapFilter
                     frmSolorun._filterColumn = "Folder Name"
                     frmSolorun.Show()

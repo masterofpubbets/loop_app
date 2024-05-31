@@ -29,6 +29,8 @@
         FolderProgressColumns.Add(New ColumnObject(6, "H1", "SubmittedToPrecom", False, ColumnObject.en_SystemType.DataDate, True))
         FolderProgressColumns.Add(New ColumnObject(6, "I1", "Done", False, ColumnObject.en_SystemType.DataDate, True))
         FolderProgressColumns.Add(New ColumnObject(6, "J1", "FinalApproval", False, ColumnObject.en_SystemType.DataDate, True))
+        FolderProgressColumns.Add(New ColumnObject(6, "K1", "ConsTargetDate", False, ColumnObject.en_SystemType.DataDate, True))
+        FolderProgressColumns.Add(New ColumnObject(6, "L1", "FailedDate", False, ColumnObject.en_SystemType.DataDate, True))
 
 
     End Sub
@@ -278,6 +280,7 @@
         Try
             Dim dt As New DataTable
             Dim dtTemp As New DataTable
+            Dim sqms As New SQMSTransaction
 
             DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
 
@@ -300,8 +303,55 @@
                 bcp.WriteToServer(dtTemp)
             End Using
 
-            Return (DB.ReturnDataTable("EXEC HCS.GetGroupTasks '" & Users.userName & "'"))
 
+            dt = DB.ReturnDataTable(
+            Replace(My.Resources.SoloRunSQMSTasks, "XXXUserXXX", Users.userName,,, CompareMethod.Text)
+            )
+
+            DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
+
+            Return (dt)
+        Catch ex As Exception
+            pe.RaiseUnknownError(ex.Message)
+            Return Nothing
+        End Try
+        Return Nothing
+    End Function
+    Public Function HCSPendingTasks(ByRef folders As List(Of String)) As DataTable
+        Try
+            Dim dt As New DataTable
+            Dim dtTemp As New DataTable
+            Dim sqms As New SQMSTransaction
+
+            DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
+
+            dtTemp.Columns.Add("GroupName", System.Type.GetType("System.String"))
+            dtTemp.Columns.Add("UserName", System.Type.GetType("System.String"), "'" & Users.userName & "'")
+
+            For Each gName As String In folders
+                dtTemp.Rows.Add(gName)
+            Next
+
+
+            Using bcp As New SqlClient.SqlBulkCopy((DB.DBConnection))
+                bcp.BulkCopyTimeout = 0
+                bcp.DestinationTableName = "TEMPDATA.GroupFilter"
+                bcp.BatchSize = 1000
+                bcp.ColumnMappings.Clear()
+                bcp.ColumnMappings.Add("GroupName", "GroupName")
+                bcp.ColumnMappings.Add("UserName", "UserName")
+
+                bcp.WriteToServer(dtTemp)
+            End Using
+
+
+            dt = DB.ReturnDataTable(
+            Replace(My.Resources.SoloRunSQMSTasks, "'XXXUserXXX'", "'" & Users.userName & "' AND ClosingDate IS NULL OR ClosingDate = ''",,, CompareMethod.Text)
+            )
+
+            DB.ExcuteNoneResult("DELETE FROM TEMPDATA.GroupFilter WHERE UserName = '" & Users.userName & "'")
+
+            Return (dt)
         Catch ex As Exception
             pe.RaiseUnknownError(ex.Message)
             Return Nothing

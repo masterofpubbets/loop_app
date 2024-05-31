@@ -1,0 +1,98 @@
+--Loop
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblInsLoop.LoopName, tblInsLoop.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblInsLoop ON tblInsLoop.LoopName = Tasks.ElementTag
+) AS V
+
+--Solo RUN
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblSolorun.FolderName, tblSolorun.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblSolorun ON tblSolorun.FolderName = Tasks.ElementTag
+) AS V
+
+--Ele Cables
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblEleCableList.ec_id, tblEleCableList.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblEleCableList ON tblEleCableList.ec_id = Tasks.ElementTag
+) AS V
+
+--Ele Cables
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblEleCableList.ec_id, tblEleCableList.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblEleCableList ON tblEleCableList.ec_id = Tasks.ElementTag
+) AS V
+
+--Ins Cables
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblInsCableList.ic_id, tblInsCableList.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblInsCableList ON tblInsCableList.ic_id = Tasks.ElementTag
+) AS V
+
+--Equipment
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblEquipment.Tag, tblEquipment.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblEquipment ON tblEquipment.Tag = Tasks.ElementTag
+) AS V
+
+--Fixture
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblLightingFixture.Tag, tblLightingFixture.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblLightingFixture ON tblLightingFixture.Tag = Tasks.ElementTag
+) AS V
+
+--Fixture FIxed
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblLightingFixture.Tag, tblLightingFixture.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblLightingFixture ON REPLACE(tblLightingFixture.Tag, ' ', '_') = Tasks.ElementTag
+) AS V
+
+--Instrument
+UPDATE V
+    SET Subsystem = [NewSubsystem]
+FROM (
+    SELECT 
+        [ElementTag], Tasks.[Subsystem] AS [NewSubsystem],
+        tblInstruments.Instrument_Tag, tblInstruments.Subsystem
+    FROM [HCS].[SQMSTasks] AS Tasks
+    INNER JOIN tblInstruments ON tblInstruments.Instrument_Tag = Tasks.ElementTag
+) AS V

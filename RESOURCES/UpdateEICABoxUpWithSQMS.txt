@@ -1,0 +1,51 @@
+DECLARE @proID NVARCHAR(255)
+SELECT @proId = UUID FROM dbo.tblProject WHERE DefaultProject = 1;
+
+WITH SQMS AS (
+SELECT [Group] FROM HCS.SQMSTasks 
+XXXFilterXXX
+)
+
+--Update Deactivated
+UPDATE V
+    SET Active = 0
+FROM (
+    SELECT
+    tblBoxup.FolderName, tblBoxup.Active
+    FROM tblBoxup
+    LEFT JOIN SQMS AS H ON tblBoxup.FolderName = H.[Group]
+    WHERE tblBoxup.Active = 1 
+    AND H.[Group] IS NULL
+) AS V;
+
+WITH SQMS AS (
+SELECT [Group] FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-ELE-49'
+XXXFilterXXX
+)
+
+--Update Reactivated
+UPDATE V
+    SET Active = 1
+FROM (
+    SELECT
+    tblBoxup.FolderName, tblBoxup.Active
+    FROM tblBoxup
+    INNER JOIN SQMS AS H ON tblBoxup.FolderName = H.[Group]
+    WHERE tblBoxup.Active = 0 
+) AS V;
+
+WITH SQMS AS (
+SELECT [Group],ElementTag, Area, SubSystem, TaskSubcontract,Type  FROM HCS.SQMSTasks 
+--WHERE HCS.SQMSTasks.FormName = '10160-CON-ELE-49'
+XXXFilterXXX
+)
+
+--Insert New
+INSERT INTO tblBoxup (FolderName, Area, Subsystem, Subcontractor, L_Description, L_Type, L_Remarks, Active, ProUUID)
+SELECT
+H.ElementTag, H.Area, H.SubSystem, H.TaskSubcontract, H.[Type], H.[Type], 'Added From HCS Automation' AS Remarks,
+1 AS Active, @proId
+FROM SQMS AS H
+LEFT JOIN tblBoxup ON H.[Group] = tblBoxup.FolderName
+WHERE tblBoxup.FolderName IS NULL

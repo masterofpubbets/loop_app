@@ -1,0 +1,25 @@
+INSERT INTO TEMPDATA.LoopTasks
+SELECT DISTINCT
+    tblInsLoop.LoopName AS FolderName,
+    [HCS].[ProjectElements].[ElementTag],
+    HCS.ProjectElements.ImportSource,
+    HCS.ProjectElements.[Type],
+    'XXXUUIDXXX' AS [UUID]
+FROM [HCS].[ProjectElements]
+INNER JOIN tblInsLoop ON [HCS].[ProjectElements].[Group] = tblInsLoop.LoopName
+
+INSERT INTO TEMPDATA.Tasks
+SELECT
+    [Group], ElementTag, FormName, ClosingDate,HCS.SQMSTasks.ActivityDescription,TaskSubcontract,ClosingRemarks, HCS.SQMSTasks.FormDescription, 'XXXUUIDXXX' AS [UUID]
+FROM HCS.SQMSTasks
+--WHERE (NodeLevel <> 'Gr' AND Phase = 'Construction' AND FormName NOT IN ('10160-CON-INS-26', '10160-CON-INS-26_Double','10160-CON-INS-11', '10160-CON-ROT-10', '10160-PACKAGE-INS-01', '10160-PACKAGE-ELE-01', '10160-CON-PIP-02'))
+--OR (FormName IN ('10160-CON-ELE-28', '10160-CON-ELE-29'))
+XXFilterXX
+
+INSERT INTO TEMPDATA.LoopSQMSTasks
+SELECT DISTINCT
+TEMPDATA.LoopTasks.FolderName,
+TEMPDATA.Tasks.ElementTag, TEMPDATA.Tasks.FormName, TEMPDATA.Tasks.ClosedDate, TEMPDATA.LoopTasks.Source,
+TEMPDATA.LoopTasks.ItemType, TEMPDATA.Tasks.Subcontractor, TEMPDATA.Tasks.ClosingRemarks,TEMPDATA.Tasks.DocType, 'XXXUUIDXXX' AS [UUID]
+FROM TEMPDATA.LoopTasks
+INNER JOIN TEMPDATA.Tasks ON TEMPDATA.LoopTasks.ElementTag = TEMPDATA.Tasks.ElementTag COLLATE Modern_Spanish_CI_AS

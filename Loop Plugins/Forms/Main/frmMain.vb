@@ -1,7 +1,4 @@
-﻿Imports System.Drawing.Imaging
-Imports DevExpress.Utils
-Imports DevExpress.XtraBars
-Imports DevExpress.XtraBars.Ribbon
+﻿Imports DevExpress.XtraBars
 Imports DevExpress.XtraBars.ToastNotifications
 Imports DevExpress.XtraSplashScreen
 
@@ -18,21 +15,21 @@ Public Class frmMain
     Private Sub GetNotifications(loopBlockagesCount As Integer, solorunBlockagesCount As Integer, pushedNotification As DataTable, pushedMappedNotification As DataTable)
         notify.Cancel()
 
-        'Loop BLockages
-        If loopBlockagesCount = 0 Then
-            lblLoopBlockages.Visibility = BarItemVisibility.OnlyInCustomizing
-        Else
-            lblLoopBlockages.Visibility = BarItemVisibility.Always
-        End If
-        lblLoopBlockages.Caption = "My Loop Blockages: " & loopBlockagesCount
+        ''Loop BLockages
+        'If loopBlockagesCount = 0 Then
+        '    lblLoopBlockages.Visibility = BarItemVisibility.OnlyInCustomizing
+        'Else
+        '    lblLoopBlockages.Visibility = BarItemVisibility.Always
+        'End If
+        'lblLoopBlockages.Caption = "My Loop Blockages: " & loopBlockagesCount
 
-        'Solo Run BLockages
-        If solorunBlockagesCount = 0 Then
-            lblSolorunBlockages.Visibility = BarItemVisibility.OnlyInCustomizing
-        Else
-            lblSolorunBlockages.Visibility = BarItemVisibility.Always
-        End If
-        lblSolorunBlockages.Caption = "My Solo Run Blockages: " & solorunBlockagesCount
+        ''Solo Run BLockages
+        'If solorunBlockagesCount = 0 Then
+        '    lblSolorunBlockages.Visibility = BarItemVisibility.OnlyInCustomizing
+        'Else
+        '    lblSolorunBlockages.Visibility = BarItemVisibility.Always
+        'End If
+        'lblSolorunBlockages.Caption = "My Solo Run Blockages: " & solorunBlockagesCount
 
         'Pushed Notification
         If pushedNotification.Rows.Count > 0 Then
@@ -146,8 +143,10 @@ Public Class frmMain
             gpAdmin.Visible = True
         End If
         tgLoopIntegrity.IsOn = appset.LoopIntegrity
+        tgBoxupIntegrity.IsOn = appset.BoxupIntegrity
         tgSolorunIntegrity.IsOn = appset.SolorunIntegrity
         lblCutoffDate.Text = Format(coDate.CurrentCutoffDate(), "dddd, dd-MMMM-yyyy")
+        lblReportCutoffDate.Text = Format(coDate.ReportCutoffDate(), "dddd, dd-MMMM-yyyy")
         lblDBVersion.Text = appset.DBVersion
     End Sub
     Private Function ShowProgressPanel() As IOverlaySplashScreenHandle
@@ -169,7 +168,7 @@ Public Class frmMain
         rpPC.Visible = False
         rpHandover.Visible = False
         rpSupportTeam.Visible = False
-        barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
+        barBtnSQMSData.Visibility = DevExpress.XtraBars.BarItemVisibility.OnlyInCustomizing
         gpAdmin.Visible = False
     End Sub
     Private Sub HandleDataReadError(ByVal er As String)
@@ -259,7 +258,7 @@ Public Class frmMain
             rpSupportTeam.Visible = True
         End If
         If InStr(Users.userType, "folder admin", CompareMethod.Text) > 0 Then
-            barBtnHandoverData.Visibility = DevExpress.XtraBars.BarItemVisibility.Always
+            barBtnSQMSData.Visibility = BarItemVisibility.Always
         End If
     End Sub
 
@@ -330,7 +329,7 @@ Public Class frmMain
         Dim frm As New frmEICALogin
         frm.Show()
     End Sub
-    Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem9.ItemClick
+    Private Sub BarButtonItem9_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs)
         ShowProgressPanel()
         Dim frm As New frmEICALoopMap() With {.MdiParent = Me}
         AddToQuickAccess(frm)
@@ -624,6 +623,9 @@ Public Class frmMain
     Private Sub tgLoopIntegrity_IsOnChanged(sender As Object, e As EventArgs) Handles tgLoopIntegrity.IsOnChanged
         appset.LoopIntegrity = tgLoopIntegrity.IsOn
     End Sub
+    Private Sub tgboxupIntegrity_IsOnChanged(sender As Object, e As EventArgs) Handles tgBoxupIntegrity.IsOnChanged
+        appset.BoxupIntegrity = tgBoxupIntegrity.IsOn
+    End Sub
 
     Private Sub SimpleButton3_Click(sender As Object, e As EventArgs) Handles SimpleButton3.Click
         BackstageViewControl1.Close()
@@ -649,25 +651,32 @@ Public Class frmMain
             btn.Width = stackPanel.Width
         Next
     End Sub
-
-    Private Sub barBtnHandoverData_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles barBtnHandoverData.ItemClick
-        Dim frm As New frmUpdateEICAWithHCS
-        frm.MdiParent = Me
-        frm.Show()
-    End Sub
     Private Sub BarButtonItem25_ItemClick_1(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles BarButtonItem25.ItemClick
         dpQuickAccess.Show()
     End Sub
 
     Private Sub SimpleButton5_Click(sender As Object, e As EventArgs) Handles SimpleButton5.Click
         BackstageViewControl1.Close()
-        ShowProgressPanel()
-        Application.DoEvents()
-        Dim frm As New frmReports(Reports.ReportTypes.LOOPSUMMARY)
-        AddToQuickAccess(frm)
-        frm.MdiParent = Me
-        frm.Show()
-        CloseProgressPanel(opnedHandle)
+        sveFile.FileName = ""
+        sveFile.ShowDialog()
+        If sveFile.FileName <> "" Then
+            ShowProgressPanel()
+            Application.DoEvents()
+            If IO.File.Exists(Application.StartupPath & "\Reports\Loops\LoopSummary.rpt") Then
+                Dim crr As New CReport
+                If crr.CrExportToPDF(
+                    Application.StartupPath & "\Reports\Loops\LoopSummary.rpt",
+                    sveFile.FileName,
+                    DB.DataBaseLocation,
+                    DB.DataBaseName
+                                  ) Then
+                    CloseProgressPanel(opnedHandle)
+                    Process.Start(sveFile.FileName)
+                Else
+                    CloseProgressPanel(opnedHandle)
+                End If
+            End If
+        End If
     End Sub
 
     Private Sub SimpleButton6_Click(sender As Object, e As EventArgs) Handles SimpleButton6.Click
@@ -755,7 +764,7 @@ Public Class frmMain
         notify.Start()
     End Sub
 
-    Private Sub lblLoopBlockages_ItemClick(sender As Object, e As ItemClickEventArgs) Handles lblLoopBlockages.ItemClick
+    Private Sub lblLoopBlockages_ItemClick(sender As Object, e As ItemClickEventArgs)
         Dim filter As String = "[Issued To] LIKE '" & Users.userFullName & "'"
         Dim frm As New frmLoopConstraints2 With {
             ._filterColumn = "Issued To",
@@ -764,7 +773,7 @@ Public Class frmMain
         frm.Show()
     End Sub
 
-    Private Sub lblSolorunBlockages_ItemClick(sender As Object, e As ItemClickEventArgs) Handles lblSolorunBlockages.ItemClick
+    Private Sub lblSolorunBlockages_ItemClick(sender As Object, e As ItemClickEventArgs)
         Dim filter As String = "[Issued To] LIKE '" & Users.userFullName & "'"
         Dim frm As New frmSoloRunConstraints With {
             ._filterColumn = "Issued To",
@@ -773,4 +782,97 @@ Public Class frmMain
         frm.Show()
     End Sub
 
+    Private Sub SimpleButton10_Click(sender As Object, e As EventArgs) Handles SimpleButton10.Click
+        BackstageViewControl1.Close()
+        sveFile.FileName = ""
+        sveFile.ShowDialog()
+        If sveFile.FileName <> "" Then
+            ShowProgressPanel()
+            Application.DoEvents()
+            If IO.File.Exists(Application.StartupPath & "\Reports\Loops\ConstructionSummary.rpt") Then
+                Dim crr As New CReport
+                If crr.CrExportToPDF(
+                    Application.StartupPath & "\Reports\Loops\ConstructionSummary.rpt",
+                    sveFile.FileName,
+                    DB.DataBaseLocation,
+                    DB.DataBaseName
+                                  ) Then
+                    CloseProgressPanel(opnedHandle)
+                    Process.Start(sveFile.FileName)
+                Else
+                    CloseProgressPanel(opnedHandle)
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub SimpleButton11_Click(sender As Object, e As EventArgs) Handles SimpleButton11.Click
+        BackstageViewControl1.Close()
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmReports(Reports.ReportTypes.SubsystemDailyTracking)
+        AddToQuickAccess(frm)
+        frm.MdiParent = Me
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub BarButtonItem18_ItemClick(sender As Object, e As ItemClickEventArgs) Handles barBtnSQMSData.ItemClick
+        Dim frm As New frmUpdateWithSQMS
+        frm.MdiParent = Me
+        AddToQuickAccess(frm)
+        frm.Show()
+    End Sub
+
+    Private Sub SimpleButton12_Click(sender As Object, e As EventArgs) Handles btnProCutoffDate.Click
+        Dim frm As New frmSelectDate
+        frm.ShowDialog(Me)
+        If frm.IsSelect Then
+            coDate.CurrentCutoffDate = frm.SelectedDate
+            lblCutoffDate.Text = Format(coDate.CurrentCutoffDate(), "dddd, dd-MMMM-yyyy")
+        End If
+    End Sub
+
+    Private Sub SimpleButton14_Click(sender As Object, e As EventArgs) Handles btnReportCutoddDate.Click
+        Dim frm As New frmSelectDate
+        frm.ShowDialog(Me)
+        If frm.IsSelect Then
+            coDate.ReportCutoffDate = frm.SelectedDate
+            lblReportCutoffDate.Text = Format(coDate.ReportCutoffDate(), "dddd, dd-MMMM-yyyy")
+        End If
+    End Sub
+
+    Private Sub SimpleButton13_Click(sender As Object, e As EventArgs) Handles btnCloseWeek.Click
+        Dim eng As New Engineering
+        eng.UpdateP6()
+        DB.ExcuteNoneResult("UPDATE tblActIDS SET Last_EICABudget = EICA_Budget, Last_EICADone = EICA_Done")
+        DB.ExcuteNoneResult("update tblTMP set tmp_date=DATEADD(WEEK,1, tmp_date)")
+        If DB.ExcutResult("select [validiate_data] from [tblTMP] where [tmp_id]=2") = "" Then
+            DB.ExcuteNoneResult("insert into tblTMP (tmp_id,validiate_data) values (2,0)")
+        Else
+            DB.ExcuteNoneResult("update tblTMP set validiate_data=0 where tmp_id=2")
+        End If
+        MsgBox(String.Format("Cutoff Date changed to {0}{1}", vbCrLf, DB.ExcutResult("SELECT FORMAT(tmp_date, 'dddd, dd - MMMM - yyyy') FROM tblTMP WHERE tmp_id = 1")))
+        lblCutoffDate.Text = Format(coDate.CurrentCutoffDate(), "dddd, dd-MMMM-yyyy")
+    End Sub
+
+    Private Sub BarButtonItem18_ItemClick_1(sender As Object, e As ItemClickEventArgs) Handles BarButtonItem18.ItemClick
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmBoxupFolders
+        frm.MdiParent = Me
+        AddToQuickAccess(frm)
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
+
+    Private Sub BarButtonItem9_ItemClick_1(sender As Object, e As ItemClickEventArgs) Handles BarButtonItem9.ItemClick
+        ShowProgressPanel()
+        Application.DoEvents()
+        Dim frm As New frmBoxupManagement
+        AddToQuickAccess(frm)
+        frm.MdiParent = Me
+        frm.Show()
+        CloseProgressPanel(opnedHandle)
+    End Sub
 End Class

@@ -2,6 +2,10 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\EEICA.exe.config
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\EEICA.exe
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\EEICA.pdb
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\EEICA.xml
+D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll
+D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\CrystalDecisions.ReportSource.dll
+D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\CrystalDecisions.Shared.dll
+D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\CrystalDecisions.Windows.Forms.dll
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.BonusSkins.v22.2.dll
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Charts.v22.2.Core.dll
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Data.Desktop.v22.2.dll
@@ -52,6 +56,7 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.XtraDiagram.v
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Diagram.v22.2.Core.dll
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Snap.v22.2.Core.dll
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.XtraVerticalGrid.v22.2.dll
+D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\stdole.dll
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Charts.v22.2.Core.xml
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Data.v22.2.xml
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.DataAccess.v22.2.xml
@@ -95,6 +100,9 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Diagram.v22.2
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.Snap.v22.2.Core.xml
 D:\Work\Programming\Loop Plugins\Loop Plugins\bin\Debug\DevExpress.XtraVerticalGrid.v22.2.xml
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EICA.vbproj.AssemblyReference.cache
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmBoxupFolders.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmBoxupManagement.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUpdateBoxupFolders.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmConfirmClose.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmEditText.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmNotifications.resources
@@ -182,9 +190,11 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmResources.resou
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSelectResource.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSet.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSoloRunConstraints.resources
-D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSolorunFolders.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSoloRunFolders.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSolorunManagement.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUpdateSoloRunFolders.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmSQMSSyncSettings.resources
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmUpdateWithSQMS.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmTests.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmAddUser.resources
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.frmEditUser.resources
@@ -196,7 +206,7 @@ D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.Resources.resource
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EICA.vbproj.GenerateResource.cache
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.exe.licenses
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EICA.vbproj.CoreCompileInputs.cache
-D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EICA.vbproj.CopyComplete
+D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EICA.vbproj.Up2Date
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.exe
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.xml
 D:\Work\Programming\Loop Plugins\Loop Plugins\obj\Debug\EEICA.pdb

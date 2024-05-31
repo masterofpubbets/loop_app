@@ -63,6 +63,14 @@ Public Class frmEICALogin
         txtConn.Text = DBPath
         txtDB.Text = DBName
         txtUser.Text = UserName
+        If Val(GetSetting("TR", "EIKA", "LOGINTRUST", "0")) = 1 Then
+            ckTrust.Checked = True
+            If txtUser.Text = GetSetting("TR", "EIKA", "LOGINUSR", "") Then
+                txtPass.Text = GetSetting("TR", "EIKA", "LOGINKEY", "")
+            End If
+        Else
+            ckTrust.Checked = False
+        End If
     End Sub
 
     Private Sub txtPass_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPass.KeyPress
@@ -93,6 +101,13 @@ Public Class frmEICALogin
             If checkpassword() Then
                 CloseProgressPanel(opnedHandle)
                 frmMain.Show()
+                If ckTrust.Checked Then
+                    SaveSetting("TR", "EIKA", "LOGINTRUST", "1")
+                    SaveSetting("TR", "EIKA", "LOGINKEY", txtPass.Text)
+                    SaveSetting("TR", "EIKA", "LOGINUSR", txtUser.Text)
+                Else
+                    SaveSetting("TR", "EIKA", "LOGINTRUST", "0")
+                End If
                 Me.Hide()
             Else
                 MsgBox("Wrong user name or password!", MsgBoxStyle.Exclamation, Me.Text)
@@ -121,4 +136,5 @@ Public Class frmEICALogin
             End If
         End If
     End Sub
+
 End Class

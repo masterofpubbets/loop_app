@@ -70,6 +70,22 @@
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CrystalReports Dll\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CrystalReports Dll\CrystalDecisions.ReportSource.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CrystalReports Dll\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CrystalReports Dll\CrystalDecisions.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="DevExpress.BonusSkins.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Charts.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Dialogs.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -158,7 +174,11 @@
     <Compile Include="Classes\Activities.vb" />
     <Compile Include="Classes\AppSettings\AppSettings.vb" />
     <Compile Include="Classes\Backgrounds\UpdateCloud.vb" />
+    <Compile Include="Classes\BoxUp\Boxup.vb" />
+    <Compile Include="Classes\BoxUp\Boxups.vb" />
+    <Compile Include="Classes\BoxUp\BoxupSteps.vb" />
     <Compile Include="Classes\Common\FormsHandle.vb" />
+    <Compile Include="Classes\CrystalReport\CReport.vb" />
     <Compile Include="Classes\HCS\HCSTransactions.vb" />
     <Compile Include="Classes\Infrastructure\Area.vb" />
     <Compile Include="Classes\Common\ColumnObject.vb" />
@@ -198,9 +218,28 @@
     <Compile Include="Classes\Solorun\Solorun.vb" />
     <Compile Include="Classes\Solorun\Soloruns.vb" />
     <Compile Include="Classes\Solorun\SolorunSteps.vb" />
+    <Compile Include="Classes\SQMS\SQMSTransaction.vb" />
     <Compile Include="Classes\Tooles.vb" />
     <Compile Include="Classes\Construction\Trays.vb" />
     <Compile Include="Classes\Users\Users.vb" />
+    <Compile Include="Forms\Boxup\frmBoxupFolders.Designer.vb">
+      <DependentUpon>frmBoxupFolders.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Boxup\frmBoxupFolders.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Boxup\frmBoxupManagement.Designer.vb">
+      <DependentUpon>frmBoxupManagement.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Boxup\frmBoxupManagement.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Boxup\frmUpdateBoxupFolders.Designer.vb">
+      <DependentUpon>frmUpdateBoxupFolders.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Boxup\frmUpdateBoxupFolders.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Common\frmConfirmClose.Designer.vb">
       <DependentUpon>frmConfirmClose.vb</DependentUpon>
     </Compile>
@@ -742,6 +781,18 @@
     <Compile Include="Forms\SoloRun\frmUpdateSoloRunFolders.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\SQMS\frmSQMSSyncSettings.Designer.vb">
+      <DependentUpon>frmSQMSSyncSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SQMS\frmSQMSSyncSettings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SQMS\frmUpdateWithSQMS.Designer.vb">
+      <DependentUpon>frmUpdateWithSQMS.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SQMS\frmUpdateWithSQMS.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Tests\frmTests.Designer.vb">
       <DependentUpon>frmTests.vb</DependentUpon>
     </Compile>
@@ -803,6 +854,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Boxup\frmBoxupFolders.resx">
+      <DependentUpon>frmBoxupFolders.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Boxup\frmBoxupManagement.resx">
+      <DependentUpon>frmBoxupManagement.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Boxup\frmUpdateBoxupFolders.resx">
+      <DependentUpon>frmUpdateBoxupFolders.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Common\frmConfirmClose.resx">
       <DependentUpon>frmConfirmClose.vb</DependentUpon>
     </EmbeddedResource>
@@ -1073,6 +1133,12 @@
     <EmbeddedResource Include="Forms\SoloRun\frmUpdateSoloRunFolders.resx">
       <DependentUpon>frmUpdateSoloRunFolders.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SQMS\frmSQMSSyncSettings.resx">
+      <DependentUpon>frmSQMSSyncSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SQMS\frmUpdateWithSQMS.resx">
+      <DependentUpon>frmUpdateWithSQMS.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Tests\frmTests.resx">
       <DependentUpon>frmTests.vb</DependentUpon>
     </EmbeddedResource>
@@ -1121,6 +1187,29 @@
     <Content Include="EICA Blue Trans.ico" />
     <Content Include="Life_Cycle_Loop.ico" />
     <Content Include="logo.ico" />
+    <None Include="Resources\BoxupSQMSTasks.txt" />
+    <None Include="Resources\20934.png" />
+    <None Include="Resources\20933.png" />
+    <None Include="Resources\20932.png" />
+    <None Include="Resources\2093.png" />
+    <None Include="Resources\CashBoxupSQMSTasks.txt" />
+    <None Include="Resources\UpdateBoxupQSMSApproved.txt" />
+    <None Include="Resources\UpdateBoxupQCRealeasedFromSQMS.txt" />
+    <None Include="Resources\UpdateEICABoxUpWithSQMS.txt" />
+    <None Include="Resources\UpdateSubsystem.txt" />
+    <None Include="Resources\CashSoloRunSQMSTasks.txt" />
+    <None Include="Resources\CashLoopSQMSTasks.txt" />
+    <None Include="Resources\UpdateSoloRunQSMSApproved.txt" />
+    <None Include="Resources\UpdateLoopQSMSApproved.txt" />
+    <None Include="Resources\UpdateEICALoopWithSQMS.txt" />
+    <None Include="Resources\UpdateEICASoloRunWithSQMS.txt" />
+    <None Include="Resources\LoopSQMSTasks.txt" />
+    <None Include="Resources\SoloRunSQMSTasks.txt" />
+    <None Include="Resources\UpdateSoloRunQCRealeasedFromSQMS.txt" />
+    <None Include="Resources\UpdateLoopQCRealeasedFromSQMS.txt" />
+    <None Include="..\RESOURCES\UploadToElements.txt">
+      <Link>Resources\UploadToElements.txt</Link>
+    </None>
     <None Include="Resources\icons8-motor-32.png" />
     <None Include="Resources\icons8-motor-16.png" />
     <None Include="Resources\ok-svgrepo-com.png" />
